@@ -1,0 +1,30 @@
+Some notes on generating documentation.
+
+To generate new documents I used 
+sphinx-apidoc -d 2 -F -o <output dir> waterchem
+
+This will overwrite some existing files.  It is better to manually
+keep track of conf.py, index.rst, waterchem.rst, subpackage files
+(e.g. waterchem.UGSS.rst), and class files
+(e.g. waterchem.general.solution.rst).  However, sphinx-apidoc will
+automatically generate new subpackage files and class files, which may
+be a useful start.  For the class files, I am inserting the :members:
+option right after the autoclass call.
+
+Once you are ready to generate new docs, go into doc directory and "make html"
+
+This generates new html in docs/_build/html/
+
+Currently there seems to be a problem with class method documentation
+and sphinx throws some warnings. (This was caused by
+numpydoc_show_class_members = True.  Now I've set this to false).
+
+List of doc files to maintain manually:
+conf.py
+index.rst (this may work without manual editing if I set max depth to 2 when sphinx-apidoc is run?)
+waterchem.rst
+waterchem.USGS.rst
+waterchem.general.solution.rst
+
+
+

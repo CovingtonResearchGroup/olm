@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>waterchem.general.DebyeHuckel &mdash; WaterChem 0.31 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.31',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="WaterChem 0.31 documentation" href="index.html" />
+    <link rel="up" title="waterchem Package" href="waterchem.html" />
+    <link rel="next" title="waterchem.general.neutralGamma" href="waterchem.general.neutralGamma.html" />
+    <link rel="prev" title="waterchem.general.KtoC" href="waterchem.general.KtoC.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="waterchem.general.neutralGamma.html" title="waterchem.general.neutralGamma"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="waterchem.general.KtoC.html" title="waterchem.general.KtoC"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">WaterChem 0.31 documentation</a> &raquo;</li>
+          <li><a href="waterchem.html" accesskey="U">waterchem Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="waterchem-general-debyehuckel">
+<h1>waterchem.general.DebyeHuckel<a class="headerlink" href="#waterchem-general-debyehuckel" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="waterchem.general.DebyeHuckel">
+<tt class="descclassname">waterchem.general.</tt><tt class="descname">DebyeHuckel</tt><big>(</big><em>I</em>, <em>z</em>, <em>r</em>, <em>T=25.0</em><big>)</big><a class="reference internal" href="_modules/waterchem/general.html#DebyeHuckel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#waterchem.general.DebyeHuckel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates activity coefficient, gamma, using the Debye-Huckel equation.</p>
+<p>Uses Equation 2.8 in Dreybrodt (1998) (Processes in Karst Systems).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>I</strong> : float or array</p>
+<blockquote>
+<div><p>ionic strength (mol/L)</p>
+</div></blockquote>
+<p><strong>z</strong> : float or array</p>
+<blockquote>
+<div><p>ion charge</p>
+</div></blockquote>
+<p><strong>r</strong> : float or array</p>
+<blockquote>
+<div><p>ionic radius (angstroms)</p>
+</div></blockquote>
+<p><strong>T</strong> : float or array, optional</p>
+<blockquote>
+<div><p>temperature in C, defaults to room temp</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>gamma</strong> : float or array</p>
+<blockquote class="last">
+<div><p>activity coefficient</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="waterchem.general.KtoC.html"
+                        title="previous chapter">waterchem.general.KtoC</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="waterchem.general.neutralGamma.html"
+                        title="next chapter">waterchem.general.neutralGamma</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/waterchem.general.DebyeHuckel.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="waterchem.general.neutralGamma.html" title="waterchem.general.neutralGamma"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="waterchem.general.KtoC.html" title="waterchem.general.KtoC"
+             >previous</a> |</li>
+        <li><a href="index.html">WaterChem 0.31 documentation</a> &raquo;</li>
+          <li><a href="waterchem.html" >waterchem Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

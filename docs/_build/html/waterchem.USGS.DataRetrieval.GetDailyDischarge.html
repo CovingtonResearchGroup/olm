@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>waterchem.USGS.DataRetrieval.GetDailyDischarge &mdash; WaterChem 0.31 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.31',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="WaterChem 0.31 documentation" href="index.html" />
+    <link rel="up" title="waterchem.USGS package" href="waterchem.USGS.html" />
+    <link rel="next" title="waterchem.USGS.DataRetrieval.GetSiteData" href="waterchem.USGS.DataRetrieval.GetSiteData.html" />
+    <link rel="prev" title="waterchem.USGS.PhreeqcPandas.writePhreeqcInput" href="waterchem.USGS.PhreeqcPandas.writePhreeqcInput.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="waterchem.USGS.DataRetrieval.GetSiteData.html" title="waterchem.USGS.DataRetrieval.GetSiteData"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="waterchem.USGS.PhreeqcPandas.writePhreeqcInput.html" title="waterchem.USGS.PhreeqcPandas.writePhreeqcInput"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">WaterChem 0.31 documentation</a> &raquo;</li>
+          <li><a href="waterchem.html" >waterchem Package</a> &raquo;</li>
+          <li><a href="waterchem.USGS.html" accesskey="U">waterchem.USGS package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="waterchem-usgs-dataretrieval-getdailydischarge">
+<h1>waterchem.USGS.DataRetrieval.GetDailyDischarge<a class="headerlink" href="#waterchem-usgs-dataretrieval-getdailydischarge" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="waterchem.USGS.DataRetrieval.GetDailyDischarge">
+<tt class="descclassname">waterchem.USGS.DataRetrieval.</tt><tt class="descname">GetDailyDischarge</tt><big>(</big><em>location</em>, <em>date</em><big>)</big><a class="reference internal" href="_modules/waterchem/USGS/DataRetrieval.html#GetDailyDischarge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#waterchem.USGS.DataRetrieval.GetDailyDischarge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve daily average discharge value from USGS database for given date and USGS site.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>location</strong> : string</p>
+<blockquote>
+<div><p>Full USGS site number starting with &#8216;USGS-&#8216; or a string that just contains the bare integer number of a USGS site.</p>
+</div></blockquote>
+<p><strong>date</strong> : string</p>
+<blockquote>
+<div><p>String containing the date for which discharge will be retrieved.  Should be given as YYYY-MM-DD.</p>
+</div></blockquote>
+<p><strong>Returns</strong> :</p>
+<p><strong>&#8212;&#8212;-</strong> :</p>
+<p><strong>data</strong> : dict {&#8216;discharge&#8217;:float, &#8216;quality&#8217;:string, &#8216;name&#8217;:string}</p>
+<blockquote class="last">
+<div><p>Returns a dicionary that contains three items, the average discharge value for the site and date given, the quality code assigned to that discharge value, and the name of the site.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Currently hard-wired to retrieve USGS pcode 00060, daily discharge in cfs.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="waterchem.USGS.PhreeqcPandas.writePhreeqcInput.html"
+                        title="previous chapter">waterchem.USGS.PhreeqcPandas.writePhreeqcInput</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="waterchem.USGS.DataRetrieval.GetSiteData.html"
+                        title="next chapter">waterchem.USGS.DataRetrieval.GetSiteData</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/waterchem.USGS.DataRetrieval.GetDailyDischarge.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="waterchem.USGS.DataRetrieval.GetSiteData.html" title="waterchem.USGS.DataRetrieval.GetSiteData"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="waterchem.USGS.PhreeqcPandas.writePhreeqcInput.html" title="waterchem.USGS.PhreeqcPandas.writePhreeqcInput"
+             >previous</a> |</li>
+        <li><a href="index.html">WaterChem 0.31 documentation</a> &raquo;</li>
+          <li><a href="waterchem.html" >waterchem Package</a> &raquo;</li>
+          <li><a href="waterchem.USGS.html" >waterchem.USGS package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>
