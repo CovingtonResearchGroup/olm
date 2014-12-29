@@ -1,1 +1,1 @@
-numpydoc==0.4
+numpydoc
