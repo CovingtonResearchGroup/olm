@@ -1,5 +1,7 @@
 #!/usr/bin/env python
-from disutils.core import setup
+from distutils.core import setup
+
+
 setup(name='waterchem',
     version='0.33',
     author='Matt Covington',
