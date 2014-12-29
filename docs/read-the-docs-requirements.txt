@@ -2,4 +2,3 @@ numpydoc
 lxml
 xlrd
 requests
-scipy
