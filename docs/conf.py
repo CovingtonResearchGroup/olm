@@ -20,7 +20,7 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
             return Mock()
 
-MOCK_MODULES = ['numpy', 'pandas']
+MOCK_MODULES = ['numpy', 'pandas','scipy']
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 #end mock snippet
 
