@@ -6,3 +6,4 @@ setup(name='waterchem',
     url='https://github.com/speleophysics/waterchem/',
     packages=['waterchem', 'waterchem.USGS'],
     )
+    
