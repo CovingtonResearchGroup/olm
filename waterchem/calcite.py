@@ -766,9 +766,9 @@ def calc_kappa4Kaufmann(T_K, PCO2):
     """
     T_C = KtoC(T_K)
     if PCO2>0.05:
-        kappa4 = -2.375+0.025*T_C
+        kappa4 = 10.**(-2.375+0.025*T_C)
     else:
-        kappa4 = -2.375+0.025*T_C + 0.56*(-np.log10(PCO2)-1.3)
+        kappa4 = 10.**(-2.375+0.025*T_C + 0.56*(-np.log10(PCO2)-1.3))
     return kappa4
 
 
