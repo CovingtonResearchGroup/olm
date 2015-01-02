@@ -679,7 +679,7 @@ def calc_kappa1(T_K):
     """
     Calculates kappa1 in the PWP equation.
 
-    Calculates kappa1 in the PWP equation, according to Equation 6.13 of Dreybrodt (1988).
+    Calculates kappa1 in the PWP equation, according to Equation 5 in Plummer, Wigley, and Parkhurst (1978) or Equation 6.13 of Dreybrodt (1988).
 
     Parameters
     ----------
@@ -698,7 +698,7 @@ def calc_kappa2(T_K):
     """
     Calculates kappa2 in the PWP equation.
 
-    Calculates kappa2 in the PWP equation, according to Equation 6.14 of Dreybrodt (1988).
+    Calculates kappa2 in the PWP equation, according to Equation 7 in Plummer, Wigley, and Parkhurst (1978) or Equation 6.14 of Dreybrodt (1988).
 
     Parameters
     ----------
@@ -717,7 +717,7 @@ def calc_kappa3(T_K):
     """
     Calculates kappa3 in the PWP equation.
 
-    Calculates kappa3 in the PWP equation, according to Equation 6.14a and 6.14b of Dreybrodt (1988).
+    Calculates kappa3 in the PWP equation, according to Equations 8 and 9 in Plummer, Wigley, and Parkhurst (1978) or Equations 6.14a and 6.14b of Dreybrodt (1988).
 
     Parameters
     ----------
@@ -768,6 +768,7 @@ def calc_kappa4Pascal(T_K,PCO2):
     B = 3.077-0.0146*T_C
     kappa4 = 10.**(-B)*(1/PCO2)**0.611
     return kappa4
+    
 def calc_kappa4Franci(T_K, a_H, a_H2CO3s):
     """
     Calculates kappa4 in the PWP equation using approach from Franci's code.
@@ -839,7 +840,7 @@ def calc_K_c(T_K):
     """
     Calculates equilibrium constant for calcite.
 
-    Calculates equilibrium constant for calcite using equation from Table 2.2 in Dreybrodt (1988).
+    Calculates equilibrium constant for calcite using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).
 
     Parameters
     ----------
@@ -858,7 +859,7 @@ def calc_K_2(T_K):
     """
     Calculates mass action constant for dissociation of bicarbonate.
 
-    Calculates mass action constant for dissociation of bicarbonate using equation from Table 2.2 in Dreybrodt (1988).
+    Calculates mass action constant for dissociation of bicarbonate using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).
 
     Parameters
     ----------
@@ -877,7 +878,7 @@ def calc_K_1(T_K):
     """
     Calculates mass action constant for dissociation of carbonic acid.
 
-    Calculates mass action constant for dissociation of carbonic acid using equation from Table 2.2 in Dreybrodt (1988).
+    Calculates mass action constant for dissociation of carbonic acid using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).
 
     Parameters
     ----------
@@ -896,7 +897,7 @@ def calc_K_0(T_K):
     """
     Calculates mass action constant for conversion of CO2 to carbonic acid.
 
-    Calculates mass action constant for conversion of CO2 to carbonic acid using equation from Table 2.2 in Dreybrodt (1988).
+    Calculates mass action constant for conversion of CO2 to carbonic acid using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).
 
     Parameters
     ----------
@@ -916,7 +917,7 @@ def calc_K_H(T_K):
     """
     Calculates Henry's law constant for CO2.
 
-    Calculates Henry's law constant for CO2 using equation from Table 2.2 in Dreybrodt (1988).
+    Calculates Henry's law constant for CO2 using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).
 
     Parameters
     ----------
@@ -935,7 +936,7 @@ def calc_K_W(T_K):
     """
     Calculates mass action constant for dissociation water.
 
-    Calculates mass action constant for dissociation of water using equation from Table 2.2 in Dreybrodt (1988).
+    Calculates mass action constant for dissociation of water using equation from Table 2.2 in Dreybrodt (1988), originally Harned and Hamer (1933).
 
     Parameters
     ----------
