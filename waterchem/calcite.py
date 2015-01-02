@@ -727,7 +727,7 @@ def calc_kappa3(T_K):
     Returns
     -------
     kappa3 : float
-       constant kappa3 in the PWP equation (cm/s)
+       constant kappa3 in the PWP equation (mmol/cm^2/s)
     """
     if (np.size(T_K)>1):
         kappa3 = np.zeros(np.size(T_K))
@@ -744,6 +744,34 @@ def calc_kappa3(T_K):
             kappa3 = 10.**(-1.10 - 1737./T_K)
     return kappa3
 
+def calc_kappa4Kaufmann(T_K, PCO2):
+    """
+    Calculates kappa4 in the PWP equation using the relation from Kaufmann and Dreybrodt (2007).
+
+    Parameters
+    ----------
+    T_K : float
+       temperature Kelvin
+    PCO2 : float
+       partial pressure of CO2 (atm)
+
+    Returns
+    -------
+    kappa4 : float
+       constant kappa4 in the PWP equation (cm^4/mmol/s)
+
+    Notes
+    -----
+    
+    """
+    T_C = KtoC(T_K)
+    if PCO2>0.05:
+        kappa4 = -2.375+0.025*T_C
+    else:
+        kappa4 = -2.375+0.025*T_C + 0.56*(-np.log10(PCO2)-1.3)
+    return kappa4
+
+
 def calc_kappa4Pascal(T_K,PCO2):
     """
     Calculates kappa4 in the PWP equation using fit from Buhmann and Dreybrodt (1985).
@@ -753,12 +781,12 @@ def calc_kappa4Pascal(T_K,PCO2):
     T_K : float
        temperature Kelvin
     PCO2 : float
-       partial pressure of CO2
+       partial pressure of CO2 (atm)
 
     Returns
     -------
     kappa4 : float
-       constant kappa4 in the PWP equation (cm/s)
+       constant kappa4 in the PWP equation (cm^4/mmol/s)
 
     Notes
     -----
@@ -785,7 +813,7 @@ def calc_kappa4Franci(T_K, a_H, a_H2CO3s):
     Returns
     -------
     kappa4 : float
-       constant kappa4 in the PWP equation (cm/s)
+       constant kappa4 in the PWP equation (cm^4/mmol/s)
 
     Notes
     -----
