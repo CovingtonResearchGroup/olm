@@ -603,7 +603,7 @@ def pwpRateTheory(a_Ca=0., a_H2CO3s=0., a_H=0., a_HCO3=0., T_K=25.+273.15,PCO2=0
     """
     Calculates PWP rate using theoretical relation for kappa4 from PWP.
 
-    Calculates PWP rate using theoretical relation for kappa4 from PWP (as described in Dreybrodt [1988] equation 6.22b).  In this case, a_H in the equation for kappa4 is the equilibrium surface value for the given carbonic acid concentration, as specified in the theory.
+    Calculates PWP rate using theoretical relation for kappa4 from PWP (as described by equation 25 in Plummer, Wigley, and Parkhurst (1978) and in Dreybrodt [1988] equation 6.22b).  In this case, a_H in the equation for kappa4 is the equilibrium surface value for the given carbonic acid concentration, as specified in the theory.
 
     Parameters
     ----------
@@ -800,7 +800,7 @@ def calc_kappa4Franci(T_K, a_H, a_H2CO3s):
 
 def calc_kappa4Theory(T_K, PCO2, a_H2CO3s):
     """
-    Calculates kappa4 in the PWP equation using the theoretical relation for kappa4 from PWP (as described in Dreybrodt [1988] equation 6.22b).  In this case, a_H in the equation for kappa4 is the equilibrium surface value for the given carbonic acid concentration, as specified in the theory.
+    Calculates kappa4 in the PWP equation using the theoretical relation for kappa4 from Plummer, Wigley, and Parkhurst (1978) Equation 25 (as described in Dreybrodt [1988] equation 6.22b).  In this case, a_H in the equation for kappa4 is the equilibrium surface value for the given carbonic acid concentration, as specified in the theory.
 
     Parameters
     ----------
