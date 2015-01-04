@@ -6,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>waterchem.general &mdash; WaterChem 0.31 documentation</title>
+    <title>waterchem.general &mdash; olm 0.33 documentation</title>
     
-    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.31',
+        VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="WaterChem 0.31 documentation" href="../../index.html" />
+    <link rel="top" title="olm 0.33 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" /> 
   </head>
   <body>
@@ -33,7 +33,7 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../../index.html">WaterChem 0.31 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">olm 0.33 documentation</a> &raquo;</li>
           <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
     </div>  
@@ -466,7 +466,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">print</span> <span class="s">&quot;Length of constituents and concentrations lists must be equal.&quot;</span>
 </div>
-<div class="viewcode-block" id="solution.I"><a class="viewcode-back" href="../../waterchem.general.solution.html#waterchem.general.solution.I">[docs]</a>    <span class="k">def</span> <span class="nf">I</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="solution.I"><a class="viewcode-back" href="../../olm.general.solution.html#waterchem.general.solution.I">[docs]</a>    <span class="k">def</span> <span class="nf">I</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to calculate ionic strength of the solution object from full equation using known ion properties.</span>
 
@@ -483,7 +483,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">I</span>
 </div>
-<div class="viewcode-block" id="solution.approxI"><a class="viewcode-back" href="../../waterchem.general.solution.html#waterchem.general.solution.approxI">[docs]</a>    <span class="k">def</span> <span class="nf">approxI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="solution.approxI"><a class="viewcode-back" href="../../olm.general.solution.html#waterchem.general.solution.approxI">[docs]</a>    <span class="k">def</span> <span class="nf">approxI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to calculate approximate ionic strength of solution metal concentration.</span>
 
@@ -503,7 +503,7 @@
         <span class="n">I</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">metals_conc</span>
         <span class="k">return</span> <span class="n">I</span>
 </div>
-<div class="viewcode-block" id="solution.activity"><a class="viewcode-back" href="../../waterchem.general.solution.html#waterchem.general.solution.activity">[docs]</a>    <span class="k">def</span> <span class="nf">activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+<div class="viewcode-block" id="solution.activity"><a class="viewcode-back" href="../../olm.general.solution.html#waterchem.general.solution.activity">[docs]</a>    <span class="k">def</span> <span class="nf">activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the activity of a given ion in the solution in mol/L.</span>
 
@@ -520,7 +520,7 @@
             <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;activity&#39;</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">activity</span>
 </div>
-<div class="viewcode-block" id="solution.mol"><a class="viewcode-back" href="../../waterchem.general.solution.html#waterchem.general.solution.mol">[docs]</a>    <span class="k">def</span> <span class="nf">mol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+<div class="viewcode-block" id="solution.mol"><a class="viewcode-back" href="../../olm.general.solution.html#waterchem.general.solution.mol">[docs]</a>    <span class="k">def</span> <span class="nf">mol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the molar concentration of a given ion in the solution in mol/L.</span>
 
@@ -537,7 +537,7 @@
             <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">conc</span>
 </div>
-<div class="viewcode-block" id="solution.mmol"><a class="viewcode-back" href="../../waterchem.general.solution.html#waterchem.general.solution.mmol">[docs]</a>    <span class="k">def</span> <span class="nf">mmol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+<div class="viewcode-block" id="solution.mmol"><a class="viewcode-back" href="../../olm.general.solution.html#waterchem.general.solution.mmol">[docs]</a>    <span class="k">def</span> <span class="nf">mmol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the molar concentration of a given ion in the solution in mol/L.</span>
 
@@ -554,7 +554,7 @@
             <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;conc_mmol&#39;</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">conc</span>
 </div>
-<div class="viewcode-block" id="solution.mg"><a class="viewcode-back" href="../../waterchem.general.solution.html#waterchem.general.solution.mg">[docs]</a>    <span class="k">def</span> <span class="nf">mg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+<div class="viewcode-block" id="solution.mg"><a class="viewcode-back" href="../../olm.general.solution.html#waterchem.general.solution.mg">[docs]</a>    <span class="k">def</span> <span class="nf">mg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the concentration of a given ion in the solution in mg/L.</span>
 
@@ -571,7 +571,7 @@
             <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;conc_mg&#39;</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">conc</span>
 </div>
-<div class="viewcode-block" id="solution.meq"><a class="viewcode-back" href="../../waterchem.general.solution.html#waterchem.general.solution.meq">[docs]</a>    <span class="k">def</span> <span class="nf">meq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+<div class="viewcode-block" id="solution.meq"><a class="viewcode-back" href="../../olm.general.solution.html#waterchem.general.solution.meq">[docs]</a>    <span class="k">def</span> <span class="nf">meq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve meq for a given ion in the solution.</span>
 
@@ -588,7 +588,7 @@
             <span class="n">meq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;meq&#39;</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">meq</span>
      </div>
-<div class="viewcode-block" id="solution.activity_coef"><a class="viewcode-back" href="../../waterchem.general.solution.html#waterchem.general.solution.activity_coef">[docs]</a>    <span class="k">def</span> <span class="nf">activity_coef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="solution.activity_coef"><a class="viewcode-back" href="../../olm.general.solution.html#waterchem.general.solution.activity_coef">[docs]</a>    <span class="k">def</span> <span class="nf">activity_coef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate activity coefficient, gamma, for a given ion in the solution.</span>
 
@@ -628,7 +628,7 @@
             <span class="k">print</span> <span class="s">&quot;Ion not in properties list:&quot;</span> <span class="o">+</span> <span class="n">ion</span>
             <span class="k">return</span> <span class="bp">None</span>
 </div>
-<div class="viewcode-block" id="solution.charge_balance"><a class="viewcode-back" href="../../waterchem.general.solution.html#waterchem.general.solution.charge_balance">[docs]</a>    <span class="k">def</span> <span class="nf">charge_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s">&#39;%&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="solution.charge_balance"><a class="viewcode-back" href="../../olm.general.solution.html#waterchem.general.solution.charge_balance">[docs]</a>    <span class="k">def</span> <span class="nf">charge_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s">&#39;%&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the charge balance error for this solution.</span>
 
@@ -684,13 +684,13 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../../index.html">WaterChem 0.31 documentation</a> &raquo;</li>
+        <li><a href="../../index.html">olm 0.33 documentation</a> &raquo;</li>
           <li><a href="../index.html" >Module code</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+        &copy; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>waterchem Package &mdash; olm 0.33 documentation</title>
+    
+    <link rel="stylesheet" href="../_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.33',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="olm 0.33 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../index.html">olm 0.33 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="waterchem-package">
+<h1>waterchem Package<a class="headerlink" href="#waterchem-package" title="Permalink to this headline">¶</a></h1>
+<p>The waterchem package provides a chemical <tt class="docutils literal"><span class="pre">solution</span></tt> object along with a suite of functions for conducting geochemical calculations.  The package is currently predominantly oriented toward calcium carbonate geochemistry and common calculations conducted for karst waters.  The <tt class="docutils literal"><span class="pre">calcite</span></tt> module includes functions for creating solutions from a few chemical parameters (such as pCO2 and hardness), as well as functions for calculating equilibrium solutions and dissolution rates according to the PWP equation. Documentation and code development are still ongoing.</p>
+<div class="section" id="waterchem-calcite-module">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">waterchem.calcite</span></tt> Module<a class="headerlink" href="#waterchem-calcite-module" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.solutionFromCaPCO2.html#waterchem.calcite.solutionFromCaPCO2" title="waterchem.calcite.solutionFromCaPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">solutionFromCaPCO2</span></tt></a>(Ca,&nbsp;PCO2[,&nbsp;T_C,&nbsp;per_tol])</td>
+<td>Creates a solution object from a given concentration of calcium and PCO2.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.solutionFromCaPCO2Relaxed.html#waterchem.calcite.solutionFromCaPCO2Relaxed" title="waterchem.calcite.solutionFromCaPCO2Relaxed"><tt class="xref py py-obj docutils literal"><span class="pre">solutionFromCaPCO2Relaxed</span></tt></a>(Ca,&nbsp;PCO2[,&nbsp;T_C])</td>
+<td>Creates a solution object from a given concentration of calcium and PCO2.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.solutionFrompHCaRelaxed.html#waterchem.calcite.solutionFrompHCaRelaxed" title="waterchem.calcite.solutionFrompHCaRelaxed"><tt class="xref py py-obj docutils literal"><span class="pre">solutionFrompHCaRelaxed</span></tt></a>(Ca,&nbsp;pH[,&nbsp;T_C])</td>
+<td>Creates a solution object from a given concentration of calcium and pH.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.H2CO3fromPCO2.html#waterchem.calcite.H2CO3fromPCO2" title="waterchem.calcite.H2CO3fromPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">H2CO3fromPCO2</span></tt></a>(PCO2[,&nbsp;T_K,&nbsp;T_C])</td>
+<td>Calculate concentration of carbonic acid in equilibrium with a certain PCO2.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.H2CO3sfromPCO2.html#waterchem.calcite.H2CO3sfromPCO2" title="waterchem.calcite.H2CO3sfromPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">H2CO3sfromPCO2</span></tt></a>(PCO2[,&nbsp;T_K,&nbsp;T_C])</td>
+<td>Calculate concentration of carbonic acid + aqueous CO2 in equilibrium with a certain PCO2.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.PCO2FromSolution.html#waterchem.calcite.PCO2FromSolution" title="waterchem.calcite.PCO2FromSolution"><tt class="xref py py-obj docutils literal"><span class="pre">PCO2FromSolution</span></tt></a>(sol)</td>
+<td>Calculate partial pressure of CO2 from a solution object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.activityHFromPCO2.html#waterchem.calcite.activityHFromPCO2" title="waterchem.calcite.activityHFromPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">activityHFromPCO2</span></tt></a>(PCO2[,&nbsp;T_C,&nbsp;CaEq])</td>
+<td>Calculates equilibrium activity of H+ given PCO2 using relaxed charge balance.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.concCaEqFromPCO2.html#waterchem.calcite.concCaEqFromPCO2" title="waterchem.calcite.concCaEqFromPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">concCaEqFromPCO2</span></tt></a>(PCO2[,&nbsp;T_C])</td>
+<td>Calculates the equilibrium concentration of calcium using PCO2 and temp.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.concCaEqFromSolution.html#waterchem.calcite.concCaEqFromSolution" title="waterchem.calcite.concCaEqFromSolution"><tt class="xref py py-obj docutils literal"><span class="pre">concCaEqFromSolution</span></tt></a>(sol)</td>
+<td>Calculates the equilibrium concentration of calcium for a solution object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.concHFromCaPCO2Relaxed.html#waterchem.calcite.concHFromCaPCO2Relaxed" title="waterchem.calcite.concHFromCaPCO2Relaxed"><tt class="xref py py-obj docutils literal"><span class="pre">concHFromCaPCO2Relaxed</span></tt></a>(Ca,&nbsp;PCO2[,&nbsp;T_C])</td>
+<td>Calculates concentration of H+ from calcium concentration and PCO2 using relaxed charge balance.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.pwpFromSolution.html#waterchem.calcite.pwpFromSolution" title="waterchem.calcite.pwpFromSolution"><tt class="xref py py-obj docutils literal"><span class="pre">pwpFromSolution</span></tt></a>(sol[,&nbsp;PCO2,&nbsp;method])</td>
+<td>Calculates the PWP dissolution rate from a solution object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.pwpRateTheory.html#waterchem.calcite.pwpRateTheory" title="waterchem.calcite.pwpRateTheory"><tt class="xref py py-obj docutils literal"><span class="pre">pwpRateTheory</span></tt></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;...])</td>
+<td>Calculates PWP rate using theoretical relation for kappa4 from PWP.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.pwpRatePascal.html#waterchem.calcite.pwpRatePascal" title="waterchem.calcite.pwpRatePascal"><tt class="xref py py-obj docutils literal"><span class="pre">pwpRatePascal</span></tt></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;...])</td>
+<td>Calculates PWP rate using relation for kappa4 found in PASCAL code.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.pwpRateFranci.html#waterchem.calcite.pwpRateFranci" title="waterchem.calcite.pwpRateFranci"><tt class="xref py py-obj docutils literal"><span class="pre">pwpRateFranci</span></tt></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;...])</td>
+<td>Calculates PWP rate using relation for kappa4 used in Franci Gabrovsek&#8217;s code.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.pwp_to_mm_yr.html#waterchem.calcite.pwp_to_mm_yr" title="waterchem.calcite.pwp_to_mm_yr"><tt class="xref py py-obj docutils literal"><span class="pre">pwp_to_mm_yr</span></tt></a>(R[,&nbsp;rho])</td>
+<td>Converts the PWP dissolution rates from mmol/cm^2/s to mm/year.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.calc_K_H.html#waterchem.calcite.calc_K_H" title="waterchem.calcite.calc_K_H"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_H</span></tt></a>(T_K)</td>
+<td>Calculates Henry&#8217;s law constant for CO2.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.calc_K_W.html#waterchem.calcite.calc_K_W" title="waterchem.calcite.calc_K_W"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_W</span></tt></a>(T_K)</td>
+<td>Calculates mass action constant for dissociation water.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.calc_K_0.html#waterchem.calcite.calc_K_0" title="waterchem.calcite.calc_K_0"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_0</span></tt></a>(T_K)</td>
+<td>Calculates mass action constant for conversion of CO2 to carbonic acid.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.calc_K_1.html#waterchem.calcite.calc_K_1" title="waterchem.calcite.calc_K_1"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_1</span></tt></a>(T_K)</td>
+<td>Calculates mass action constant for dissociation of carbonic acid.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.calc_K_2.html#waterchem.calcite.calc_K_2" title="waterchem.calcite.calc_K_2"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_2</span></tt></a>(T_K)</td>
+<td>Calculates mass action constant for dissociation of bicarbonate.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.calc_K_c.html#waterchem.calcite.calc_K_c" title="waterchem.calcite.calc_K_c"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_c</span></tt></a>(T_K)</td>
+<td>Calculates equilibrium constant for calcite.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.calc_kappa1.html#waterchem.calcite.calc_kappa1" title="waterchem.calcite.calc_kappa1"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa1</span></tt></a>(T_K)</td>
+<td>Calculates kappa1 in the PWP equation.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.calc_kappa2.html#waterchem.calcite.calc_kappa2" title="waterchem.calcite.calc_kappa2"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa2</span></tt></a>(T_K)</td>
+<td>Calculates kappa2 in the PWP equation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.calc_kappa3.html#waterchem.calcite.calc_kappa3" title="waterchem.calcite.calc_kappa3"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa3</span></tt></a>(T_K)</td>
+<td>Calculates kappa3 in the PWP equation.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.calc_kappa4Theory.html#waterchem.calcite.calc_kappa4Theory" title="waterchem.calcite.calc_kappa4Theory"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Theory</span></tt></a>(T_K,&nbsp;PCO2,&nbsp;a_H2CO3s)</td>
+<td>Calculates kappa4 in the PWP equation using the theoretical relation for kappa4 from PWP (as described in Dreybrodt [1988] equation 6.22b).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.calc_kappa4Pascal.html#waterchem.calcite.calc_kappa4Pascal" title="waterchem.calcite.calc_kappa4Pascal"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Pascal</span></tt></a>(T_K,&nbsp;PCO2)</td>
+<td>Calculates kappa4 in the PWP equation using fit from Buhmann and Dreybrodt (1985).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.calc_kappa4Franci.html#waterchem.calcite.calc_kappa4Franci" title="waterchem.calcite.calc_kappa4Franci"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Franci</span></tt></a>(T_K,&nbsp;a_H,&nbsp;a_H2CO3s)</td>
+<td>Calculates kappa4 in the PWP equation using approach from Franci&#8217;s code.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.calc_k1.html#waterchem.calcite.calc_k1" title="waterchem.calcite.calc_k1"><tt class="xref py py-obj docutils literal"><span class="pre">calc_k1</span></tt></a>(T_K)</td>
+<td>Calculates k1+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.calc_k2.html#waterchem.calcite.calc_k2" title="waterchem.calcite.calc_k2"><tt class="xref py py-obj docutils literal"><span class="pre">calc_k2</span></tt></a>(T_K)</td>
+<td>Calculates k2+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.calcite.calc_k_neg1.html#waterchem.calcite.calc_k_neg1" title="waterchem.calcite.calc_k_neg1"><tt class="xref py py-obj docutils literal"><span class="pre">calc_k_neg1</span></tt></a>(T_K)</td>
+<td>Calculates k1- kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.calcite.calc_k_neg2.html#waterchem.calcite.calc_k_neg2" title="waterchem.calcite.calc_k_neg2"><tt class="xref py py-obj docutils literal"><span class="pre">calc_k_neg2</span></tt></a>(T_K)</td>
+<td>Calculates k2- kinetic constant from Table 1 in Kaufmann and Dreybrodt (2007).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="waterchem-general-module">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">waterchem.general</span></tt> Module<a class="headerlink" href="#waterchem-general-module" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.general.solution.html#waterchem.general.solution" title="waterchem.general.solution"><tt class="xref py py-obj docutils literal"><span class="pre">solution</span></tt></a>(constituents,&nbsp;concentrations,&nbsp;units)</td>
+<td>A solution class, that is used for calculations related to chemical solutions.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.general.condTo25.html#waterchem.general.condTo25" title="waterchem.general.condTo25"><tt class="xref py py-obj docutils literal"><span class="pre">condTo25</span></tt></a>(cond,&nbsp;temp)</td>
+<td>Converts given value of specific conductance to the value at 25 C.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.general.HardnessFromCond.html#waterchem.general.HardnessFromCond" title="waterchem.general.HardnessFromCond"><tt class="xref py py-obj docutils literal"><span class="pre">HardnessFromCond</span></tt></a>(cond[,&nbsp;T_C])</td>
+<td>Function to estimate total hardness as mg/L CaCO3 from solution specific conductance (microS/cm) using the empirical equation from Krawczyk and Ford (2006), Earth Surface Processes and Landforms.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.general.CaFromCond.html#waterchem.general.CaFromCond" title="waterchem.general.CaFromCond"><tt class="xref py py-obj docutils literal"><span class="pre">CaFromCond</span></tt></a>(cond[,&nbsp;T_C,&nbsp;mol_L])</td>
+<td>Function to estimate Ca mg/L from solution specific conductance (microS/cm) using the empirical equation from Krawczyk and Ford, (2006), Earth Surface Processes and Landforms.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.general.CtoK.html#waterchem.general.CtoK" title="waterchem.general.CtoK"><tt class="xref py py-obj docutils literal"><span class="pre">CtoK</span></tt></a>(T_C)</td>
+<td>Converts Celsius to Kelvin.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.general.KtoC.html#waterchem.general.KtoC" title="waterchem.general.KtoC"><tt class="xref py py-obj docutils literal"><span class="pre">KtoC</span></tt></a>(T_K)</td>
+<td>Converts Kelvin to Celsius.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.general.DebyeHuckel.html#waterchem.general.DebyeHuckel" title="waterchem.general.DebyeHuckel"><tt class="xref py py-obj docutils literal"><span class="pre">DebyeHuckel</span></tt></a>(I,&nbsp;z,&nbsp;r[,&nbsp;T])</td>
+<td>Calculates activity coefficient, gamma, using the Debye-Huckel equation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.general.neutralGamma.html#waterchem.general.neutralGamma" title="waterchem.general.neutralGamma"><tt class="xref py py-obj docutils literal"><span class="pre">neutralGamma</span></tt></a>(I)</td>
+<td>Calculates the activity coefficient for neutral species.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.general.gamma.html#waterchem.general.gamma" title="waterchem.general.gamma"><tt class="xref py py-obj docutils literal"><span class="pre">gamma</span></tt></a>(ion,&nbsp;I[,&nbsp;T_C])</td>
+<td>Calculates activity coefficient, gamma, for a given ion name.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.general.approxI.html#waterchem.general.approxI" title="waterchem.general.approxI"><tt class="xref py py-obj docutils literal"><span class="pre">approxI</span></tt></a>(metals_conc)</td>
+<td>Calculates approximate ionic strength from the total concentration of metals.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.general.molL_to_mgL.html#waterchem.general.molL_to_mgL" title="waterchem.general.molL_to_mgL"><tt class="xref py py-obj docutils literal"><span class="pre">molL_to_mgL</span></tt></a>(molL,&nbsp;ion)</td>
+<td>Converts concentrations from mol/L to mg/L.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.general.mgL_to_molL.html#waterchem.general.mgL_to_molL" title="waterchem.general.mgL_to_molL"><tt class="xref py py-obj docutils literal"><span class="pre">mgL_to_molL</span></tt></a>(mgL,&nbsp;ion)</td>
+<td>Converts concentrations from mg/L to mol/L.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.general.mmolL_to_meqL.html#waterchem.general.mmolL_to_meqL" title="waterchem.general.mmolL_to_meqL"><tt class="xref py py-obj docutils literal"><span class="pre">mmolL_to_meqL</span></tt></a>(mmolL,&nbsp;ion)</td>
+<td>Calculates milliequivalents per liter from mmol concentration.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="../waterchem.general.molL_to_meqL.html#waterchem.general.molL_to_meqL" title="waterchem.general.molL_to_meqL"><tt class="xref py py-obj docutils literal"><span class="pre">molL_to_meqL</span></tt></a>(molL,&nbsp;ion)</td>
+<td>Calculates milliequivalents per liter from molar concentration.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="../waterchem.general.getProperties.html#waterchem.general.getProperties" title="waterchem.general.getProperties"><tt class="xref py py-obj docutils literal"><span class="pre">getProperties</span></tt></a>()</td>
+<td>Returns the dictionary containing ion properties.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">waterchem Package</a><ul>
+<li><a class="reference internal" href="#waterchem-calcite-module"><tt class="docutils literal"><span class="pre">waterchem.calcite</span></tt> Module</a></li>
+<li><a class="reference internal" href="#waterchem-general-module"><tt class="docutils literal"><span class="pre">waterchem.general</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/backup-rst-files/olm.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../index.html">olm 0.33 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

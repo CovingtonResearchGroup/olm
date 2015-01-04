@@ -1,0 +1,313 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>olm Package &mdash; olm 0.33 documentation</title>
+    
+    <link rel="stylesheet" href="_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.33',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="olm 0.33 documentation" href="index.html" />
+    <link rel="next" title="olm.calcite.solutionFromCaPCO2" href="olm.calcite.solutionFromCaPCO2.html" />
+    <link rel="prev" title="Welcome to olm’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="olm.calcite.solutionFromCaPCO2.html" title="olm.calcite.solutionFromCaPCO2"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to olm’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="olm-package">
+<h1>olm Package<a class="headerlink" href="#olm-package" title="Permalink to this headline">¶</a></h1>
+<p>The olm package provides a chemical <tt class="docutils literal"><span class="pre">solution</span></tt> object along with a suite of functions for conducting geochemical calculations.  The package is currently predominantly oriented toward calcium carbonate geochemistry and common calculations conducted for karst waters.  The <tt class="docutils literal"><span class="pre">calcite</span></tt> module includes functions for creating solutions from a few chemical parameters (such as pCO2 and hardness), as well as functions for calculating equilibrium solutions and dissolution rates according to the PWP equation. Documentation and code development are still ongoing.</p>
+<div class="section" id="olm-calcite-module">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">olm.calcite</span></tt> Module<a class="headerlink" href="#olm-calcite-module" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.solutionFromCaPCO2.html#olm.calcite.solutionFromCaPCO2" title="olm.calcite.solutionFromCaPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">solutionFromCaPCO2</span></tt></a>(Ca,&nbsp;PCO2[,&nbsp;T_C,&nbsp;per_tol])</td>
+<td>Creates a solution object from a given concentration of calcium and PCO2.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.solutionFromCaPCO2Relaxed.html#olm.calcite.solutionFromCaPCO2Relaxed" title="olm.calcite.solutionFromCaPCO2Relaxed"><tt class="xref py py-obj docutils literal"><span class="pre">solutionFromCaPCO2Relaxed</span></tt></a>(Ca,&nbsp;PCO2[,&nbsp;T_C])</td>
+<td>Creates a solution object from a given concentration of calcium and PCO2.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.solutionFrompHCaRelaxed.html#olm.calcite.solutionFrompHCaRelaxed" title="olm.calcite.solutionFrompHCaRelaxed"><tt class="xref py py-obj docutils literal"><span class="pre">solutionFrompHCaRelaxed</span></tt></a>(Ca,&nbsp;pH[,&nbsp;T_C])</td>
+<td>Creates a solution object from a given concentration of calcium and pH.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.H2CO3fromPCO2.html#olm.calcite.H2CO3fromPCO2" title="olm.calcite.H2CO3fromPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">H2CO3fromPCO2</span></tt></a>(PCO2[,&nbsp;T_K,&nbsp;T_C])</td>
+<td>Calculate concentration of carbonic acid in equilibrium with a certain PCO2.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.H2CO3sfromPCO2.html#olm.calcite.H2CO3sfromPCO2" title="olm.calcite.H2CO3sfromPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">H2CO3sfromPCO2</span></tt></a>(PCO2[,&nbsp;T_K,&nbsp;T_C])</td>
+<td>Calculate concentration of carbonic acid + aqueous CO2 in equilibrium with a certain PCO2.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.PCO2FromSolution.html#olm.calcite.PCO2FromSolution" title="olm.calcite.PCO2FromSolution"><tt class="xref py py-obj docutils literal"><span class="pre">PCO2FromSolution</span></tt></a>(sol)</td>
+<td>Calculate partial pressure of CO2 from a solution object.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.activityHFromPCO2.html#olm.calcite.activityHFromPCO2" title="olm.calcite.activityHFromPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">activityHFromPCO2</span></tt></a>(PCO2[,&nbsp;T_C,&nbsp;CaEq])</td>
+<td>Calculates equilibrium activity of H+ given PCO2 using relaxed charge balance.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.concCaEqFromPCO2.html#olm.calcite.concCaEqFromPCO2" title="olm.calcite.concCaEqFromPCO2"><tt class="xref py py-obj docutils literal"><span class="pre">concCaEqFromPCO2</span></tt></a>(PCO2[,&nbsp;T_C])</td>
+<td>Calculates the equilibrium concentration of calcium using PCO2 and temp.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.concCaEqFromSolution.html#olm.calcite.concCaEqFromSolution" title="olm.calcite.concCaEqFromSolution"><tt class="xref py py-obj docutils literal"><span class="pre">concCaEqFromSolution</span></tt></a>(sol)</td>
+<td>Calculates the equilibrium concentration of calcium for a solution object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.concHFromCaPCO2Relaxed.html#olm.calcite.concHFromCaPCO2Relaxed" title="olm.calcite.concHFromCaPCO2Relaxed"><tt class="xref py py-obj docutils literal"><span class="pre">concHFromCaPCO2Relaxed</span></tt></a>(Ca,&nbsp;PCO2[,&nbsp;T_C])</td>
+<td>Calculates concentration of H+ from calcium concentration and PCO2 using relaxed charge balance.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.pwpFromSolution.html#olm.calcite.pwpFromSolution" title="olm.calcite.pwpFromSolution"><tt class="xref py py-obj docutils literal"><span class="pre">pwpFromSolution</span></tt></a>(sol[,&nbsp;PCO2,&nbsp;method])</td>
+<td>Calculates the PWP dissolution rate from a solution object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.pwpRateTheory.html#olm.calcite.pwpRateTheory" title="olm.calcite.pwpRateTheory"><tt class="xref py py-obj docutils literal"><span class="pre">pwpRateTheory</span></tt></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;...])</td>
+<td>Calculates PWP rate using theoretical relation for kappa4 from PWP.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.pwpRatePascal.html#olm.calcite.pwpRatePascal" title="olm.calcite.pwpRatePascal"><tt class="xref py py-obj docutils literal"><span class="pre">pwpRatePascal</span></tt></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;...])</td>
+<td>Calculates PWP rate using relation for kappa4 found in PASCAL code.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.pwpRateFranci.html#olm.calcite.pwpRateFranci" title="olm.calcite.pwpRateFranci"><tt class="xref py py-obj docutils literal"><span class="pre">pwpRateFranci</span></tt></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;...])</td>
+<td>Calculates PWP rate using relation for kappa4 used in Franci Gabrovsek&#8217;s code.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.pwp_to_mm_yr.html#olm.calcite.pwp_to_mm_yr" title="olm.calcite.pwp_to_mm_yr"><tt class="xref py py-obj docutils literal"><span class="pre">pwp_to_mm_yr</span></tt></a>(R[,&nbsp;rho])</td>
+<td>Converts the PWP dissolution rates from mmol/cm^2/s to mm/year.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_K_H.html#olm.calcite.calc_K_H" title="olm.calcite.calc_K_H"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_H</span></tt></a>(T_K)</td>
+<td>Calculates Henry&#8217;s law constant for CO2.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_K_W.html#olm.calcite.calc_K_W" title="olm.calcite.calc_K_W"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_W</span></tt></a>(T_K)</td>
+<td>Calculates mass action constant for dissociation water.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_K_0.html#olm.calcite.calc_K_0" title="olm.calcite.calc_K_0"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_0</span></tt></a>(T_K)</td>
+<td>Calculates mass action constant for conversion of CO2 to carbonic acid.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_K_1.html#olm.calcite.calc_K_1" title="olm.calcite.calc_K_1"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_1</span></tt></a>(T_K)</td>
+<td>Calculates mass action constant for dissociation of carbonic acid.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_K_2.html#olm.calcite.calc_K_2" title="olm.calcite.calc_K_2"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_2</span></tt></a>(T_K)</td>
+<td>Calculates mass action constant for dissociation of bicarbonate.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_K_c.html#olm.calcite.calc_K_c" title="olm.calcite.calc_K_c"><tt class="xref py py-obj docutils literal"><span class="pre">calc_K_c</span></tt></a>(T_K)</td>
+<td>Calculates equilibrium constant for calcite.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_kappa1.html#olm.calcite.calc_kappa1" title="olm.calcite.calc_kappa1"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa1</span></tt></a>(T_K)</td>
+<td>Calculates kappa1 in the PWP equation.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_kappa2.html#olm.calcite.calc_kappa2" title="olm.calcite.calc_kappa2"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa2</span></tt></a>(T_K)</td>
+<td>Calculates kappa2 in the PWP equation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_kappa3.html#olm.calcite.calc_kappa3" title="olm.calcite.calc_kappa3"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa3</span></tt></a>(T_K)</td>
+<td>Calculates kappa3 in the PWP equation.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_kappa4Theory.html#olm.calcite.calc_kappa4Theory" title="olm.calcite.calc_kappa4Theory"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Theory</span></tt></a>(T_K,&nbsp;PCO2,&nbsp;a_H2CO3s)</td>
+<td>Calculates kappa4 in the PWP equation using the theoretical relation for kappa4 from Plummer, Wigley, and Parkhurst (1978) Equation 25 (as described in Dreybrodt [1988] equation 6.22b).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_kappa4Pascal.html#olm.calcite.calc_kappa4Pascal" title="olm.calcite.calc_kappa4Pascal"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Pascal</span></tt></a>(T_K,&nbsp;PCO2)</td>
+<td>Calculates kappa4 in the PWP equation using fit from Buhmann and Dreybrodt (1985).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_kappa4Franci.html#olm.calcite.calc_kappa4Franci" title="olm.calcite.calc_kappa4Franci"><tt class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Franci</span></tt></a>(T_K,&nbsp;a_H,&nbsp;a_H2CO3s)</td>
+<td>Calculates kappa4 in the PWP equation using approach from Franci&#8217;s code.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_k1.html#olm.calcite.calc_k1" title="olm.calcite.calc_k1"><tt class="xref py py-obj docutils literal"><span class="pre">calc_k1</span></tt></a>(T_K)</td>
+<td>Calculates k1+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_k2.html#olm.calcite.calc_k2" title="olm.calcite.calc_k2"><tt class="xref py py-obj docutils literal"><span class="pre">calc_k2</span></tt></a>(T_K)</td>
+<td>Calculates k2+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_k_neg1.html#olm.calcite.calc_k_neg1" title="olm.calcite.calc_k_neg1"><tt class="xref py py-obj docutils literal"><span class="pre">calc_k_neg1</span></tt></a>(T_K)</td>
+<td>Calculates k1- kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_k_neg2.html#olm.calcite.calc_k_neg2" title="olm.calcite.calc_k_neg2"><tt class="xref py py-obj docutils literal"><span class="pre">calc_k_neg2</span></tt></a>(T_K)</td>
+<td>Calculates k2- kinetic constant from Table 1 in Kaufmann and Dreybrodt (2007).</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="olm-general-module">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">olm.general</span></tt> Module<a class="headerlink" href="#olm-general-module" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="olm.general.solution.html#olm.general.solution" title="olm.general.solution"><tt class="xref py py-obj docutils literal"><span class="pre">solution</span></tt></a>(constituents,&nbsp;concentrations,&nbsp;units)</td>
+<td>A solution class, that is used for calculations related to chemical solutions.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.general.condTo25.html#olm.general.condTo25" title="olm.general.condTo25"><tt class="xref py py-obj docutils literal"><span class="pre">condTo25</span></tt></a>(cond,&nbsp;temp)</td>
+<td>Converts given value of specific conductance to the value at 25 C.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.general.HardnessFromCond.html#olm.general.HardnessFromCond" title="olm.general.HardnessFromCond"><tt class="xref py py-obj docutils literal"><span class="pre">HardnessFromCond</span></tt></a>(cond[,&nbsp;T_C])</td>
+<td>Function to estimate total hardness as mg/L CaCO3 from solution specific conductance (microS/cm) using the empirical equation from Krawczyk and Ford (2006), Earth Surface Processes and Landforms.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.general.CaFromCond.html#olm.general.CaFromCond" title="olm.general.CaFromCond"><tt class="xref py py-obj docutils literal"><span class="pre">CaFromCond</span></tt></a>(cond[,&nbsp;T_C,&nbsp;mol_L])</td>
+<td>Function to estimate Ca mg/L from solution specific conductance (microS/cm) using the empirical equation from Krawczyk and Ford, (2006), Earth Surface Processes and Landforms.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.general.CtoK.html#olm.general.CtoK" title="olm.general.CtoK"><tt class="xref py py-obj docutils literal"><span class="pre">CtoK</span></tt></a>(T_C)</td>
+<td>Converts Celsius to Kelvin.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.general.KtoC.html#olm.general.KtoC" title="olm.general.KtoC"><tt class="xref py py-obj docutils literal"><span class="pre">KtoC</span></tt></a>(T_K)</td>
+<td>Converts Kelvin to Celsius.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.general.DebyeHuckel.html#olm.general.DebyeHuckel" title="olm.general.DebyeHuckel"><tt class="xref py py-obj docutils literal"><span class="pre">DebyeHuckel</span></tt></a>(I,&nbsp;z,&nbsp;r[,&nbsp;T])</td>
+<td>Calculates activity coefficient, gamma, using the Debye-Huckel equation.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.general.neutralGamma.html#olm.general.neutralGamma" title="olm.general.neutralGamma"><tt class="xref py py-obj docutils literal"><span class="pre">neutralGamma</span></tt></a>(I)</td>
+<td>Calculates the activity coefficient for neutral species.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.general.gamma.html#olm.general.gamma" title="olm.general.gamma"><tt class="xref py py-obj docutils literal"><span class="pre">gamma</span></tt></a>(ion,&nbsp;I[,&nbsp;T_C])</td>
+<td>Calculates activity coefficient, gamma, for a given ion name.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.general.approxI.html#olm.general.approxI" title="olm.general.approxI"><tt class="xref py py-obj docutils literal"><span class="pre">approxI</span></tt></a>(metals_conc)</td>
+<td>Calculates approximate ionic strength from the total concentration of metals.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.general.molL_to_mgL.html#olm.general.molL_to_mgL" title="olm.general.molL_to_mgL"><tt class="xref py py-obj docutils literal"><span class="pre">molL_to_mgL</span></tt></a>(molL,&nbsp;ion)</td>
+<td>Converts concentrations from mol/L to mg/L.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.general.mgL_to_molL.html#olm.general.mgL_to_molL" title="olm.general.mgL_to_molL"><tt class="xref py py-obj docutils literal"><span class="pre">mgL_to_molL</span></tt></a>(mgL,&nbsp;ion)</td>
+<td>Converts concentrations from mg/L to mol/L.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.general.mmolL_to_meqL.html#olm.general.mmolL_to_meqL" title="olm.general.mmolL_to_meqL"><tt class="xref py py-obj docutils literal"><span class="pre">mmolL_to_meqL</span></tt></a>(mmolL,&nbsp;ion)</td>
+<td>Calculates milliequivalents per liter from mmol concentration.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.general.molL_to_meqL.html#olm.general.molL_to_meqL" title="olm.general.molL_to_meqL"><tt class="xref py py-obj docutils literal"><span class="pre">molL_to_meqL</span></tt></a>(molL,&nbsp;ion)</td>
+<td>Calculates milliequivalents per liter from molar concentration.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.general.getProperties.html#olm.general.getProperties" title="olm.general.getProperties"><tt class="xref py py-obj docutils literal"><span class="pre">getProperties</span></tt></a>()</td>
+<td>Returns the dictionary containing ion properties.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="olm.USGS.html">olm.USGS package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="olm.USGS.html#olm-usgs-wqxtopandas-module"><tt class="docutils literal"><span class="pre">olm.USGS.WQXtoPandas</span></tt> module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.WQXtoPandas.runWQXtoPandas.html">olm.USGS.WQXtoPandas.runWQXtoPandas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.WQXtoPandas.WQXtoPandas.html">olm.USGS.WQXtoPandas.WQXtoPandas</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="olm.USGS.html#olm-usgs-phreeqcpandas-module"><tt class="docutils literal"><span class="pre">olm.USGS.PhreeqcPandas</span></tt> module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.PhreeqcPandas.processPanel.html">olm.USGS.PhreeqcPandas.processPanel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html">olm.USGS.PhreeqcPandas.readPhreeqcOutput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.PhreeqcPandas.writePhreeqcInput.html">olm.USGS.PhreeqcPandas.writePhreeqcInput</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="olm.USGS.html#olm-usgs-dataretrieval-module"><tt class="docutils literal"><span class="pre">olm.USGS.DataRetrieval</span></tt> module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.DataRetrieval.GetDailyDischarge.html">olm.USGS.DataRetrieval.GetDailyDischarge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.DataRetrieval.GetSiteData.html">olm.USGS.DataRetrieval.GetSiteData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.DataRetrieval.querySiteList.html">olm.USGS.DataRetrieval.querySiteList</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="olm.USGS.html#olm-usgs-sitelistextraction-module"><tt class="docutils literal"><span class="pre">olm.USGS.siteListExtraction</span></tt> module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.siteListExtraction.extractSitesFromText.html">olm.USGS.siteListExtraction.extractSitesFromText</a></li>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.siteListExtraction.extractSitesFromXML.html">olm.USGS.siteListExtraction.extractSitesFromXML</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">olm Package</a><ul>
+<li><a class="reference internal" href="#olm-calcite-module"><tt class="docutils literal"><span class="pre">olm.calcite</span></tt> Module</a></li>
+<li><a class="reference internal" href="#olm-general-module"><tt class="docutils literal"><span class="pre">olm.general</span></tt> Module</a></li>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to olm&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="olm.calcite.solutionFromCaPCO2.html"
+                        title="next chapter">olm.calcite.solutionFromCaPCO2</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/olm.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="olm.calcite.solutionFromCaPCO2.html" title="olm.calcite.solutionFromCaPCO2"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to olm’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

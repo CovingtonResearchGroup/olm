@@ -2,10 +2,10 @@
 from distutils.core import setup
 
 
-setup(name='waterchem',
+setup(name='olm',
     version='0.33',
     author='Matt Covington',
-    url='https://github.com/speleophysics/waterchem/',
-    packages=['waterchem', 'waterchem.USGS'],
+    url='https://github.com/speleophysics/olm/',
+    packages=['olm', 'olm.USGS'],
     )
     

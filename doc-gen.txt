@@ -1,7 +1,7 @@
 Some notes on generating documentation.
 
 To generate new documents I used 
-sphinx-apidoc -d 2 -F -o <output dir> waterchem
+sphinx-apidoc -d 2 -F -o <output dir> olm
 
 This will overwrite some existing files.  It is better to manually
 keep track of conf.py, index.rst, waterchem.rst, subpackage files

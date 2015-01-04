@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>olm.USGS.PhreeqcPandas.processPanel &mdash; olm 0.33 documentation</title>
+    
+    <link rel="stylesheet" href="_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.33',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="olm 0.33 documentation" href="index.html" />
+    <link rel="up" title="olm.USGS package" href="olm.USGS.html" />
+    <link rel="next" title="olm.USGS.PhreeqcPandas.readPhreeqcOutput" href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html" />
+    <link rel="prev" title="olm.USGS.WQXtoPandas.WQXtoPandas" href="olm.USGS.WQXtoPandas.WQXtoPandas.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html" title="olm.USGS.PhreeqcPandas.readPhreeqcOutput"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.WQXtoPandas.WQXtoPandas.html" title="olm.USGS.WQXtoPandas.WQXtoPandas"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="olm.html" >olm Package</a> &raquo;</li>
+          <li><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="olm-usgs-phreeqcpandas-processpanel">
+<h1>olm.USGS.PhreeqcPandas.processPanel<a class="headerlink" href="#olm-usgs-phreeqcpandas-processpanel" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="olm.USGS.PhreeqcPandas.processPanel">
+<tt class="descclassname">olm.USGS.PhreeqcPandas.</tt><tt class="descname">processPanel</tt><big>(</big><em>site_panel</em>, <em>site_dir</em>, <em>PHREEQC_PATH</em>, <em>DATABASE_FILE</em>, <em>phreeqcDict=None</em>, <em>force_balance=''</em><big>)</big><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#processPanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.processPanel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a WQXtoPandas site panel and runs all samples through PHREEQC, returning a dataframe of the outputs that is indexed by date. Will run automatically within WQXtoPandas if specified in the excel start file.  However, the function can also be called later by reading in a pickled site panel.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>site_panel</strong> : Pandas panel</p>
+<blockquote>
+<div><p>The Pandas panel object produced for each site by WQXtoPandas that is to be processed through PHREEQC.</p>
+</div></blockquote>
+<p><strong>site_dir</strong> : string</p>
+<blockquote>
+<div><p>The directory containing the site data and where the results should be written out.</p>
+</div></blockquote>
+<p><strong>PHREEQC_PATH</strong> : string</p>
+<blockquote>
+<div><p>The path to the PHREEQC executable.</p>
+</div></blockquote>
+<p><strong>DATABASE_FILE</strong> : string</p>
+<blockquote>
+<div><p>The database file to be used by PHREEQC.</p>
+</div></blockquote>
+<p><strong>phreeqcDict</strong> : dict</p>
+<blockquote>
+<div><p>a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</p>
+</div></blockquote>
+<p><strong>force_balance</strong> : str</p>
+<blockquote class="last">
+<div><p>PHREEQC should force charge balance on the ion indicated in this string. Use the string that represents the ion internally in PHREEQC. It is also possible to force balance on pH using force_balance=&#8217;pH&#8217;, or on alkalinity using force_balance=&#8217;Alk&#8217;</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="olm.USGS.WQXtoPandas.WQXtoPandas.html"
+                        title="previous chapter">olm.USGS.WQXtoPandas.WQXtoPandas</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html"
+                        title="next chapter">olm.USGS.PhreeqcPandas.readPhreeqcOutput</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/olm.USGS.PhreeqcPandas.processPanel.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html" title="olm.USGS.PhreeqcPandas.readPhreeqcOutput"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.WQXtoPandas.WQXtoPandas.html" title="olm.USGS.WQXtoPandas.WQXtoPandas"
+             >previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="olm.html" >olm Package</a> &raquo;</li>
+          <li><a href="olm.USGS.html" >olm.USGS package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

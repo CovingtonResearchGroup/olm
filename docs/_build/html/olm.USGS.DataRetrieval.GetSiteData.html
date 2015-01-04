@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>olm.USGS.DataRetrieval.GetSiteData &mdash; olm 0.33 documentation</title>
+    
+    <link rel="stylesheet" href="_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.33',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="olm 0.33 documentation" href="index.html" />
+    <link rel="up" title="olm.USGS package" href="olm.USGS.html" />
+    <link rel="next" title="olm.USGS.DataRetrieval.querySiteList" href="olm.USGS.DataRetrieval.querySiteList.html" />
+    <link rel="prev" title="olm.USGS.DataRetrieval.GetDailyDischarge" href="olm.USGS.DataRetrieval.GetDailyDischarge.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="olm.USGS.DataRetrieval.querySiteList.html" title="olm.USGS.DataRetrieval.querySiteList"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.DataRetrieval.GetDailyDischarge.html" title="olm.USGS.DataRetrieval.GetDailyDischarge"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="olm.html" >olm Package</a> &raquo;</li>
+          <li><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="olm-usgs-dataretrieval-getsitedata">
+<h1>olm.USGS.DataRetrieval.GetSiteData<a class="headerlink" href="#olm-usgs-dataretrieval-getsitedata" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="olm.USGS.DataRetrieval.GetSiteData">
+<tt class="descclassname">olm.USGS.DataRetrieval.</tt><tt class="descname">GetSiteData</tt><big>(</big><em>location</em><big>)</big><a class="reference internal" href="_modules/olm/USGS/DataRetrieval.html#GetSiteData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.DataRetrieval.GetSiteData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves meta data about a USGS site using the full site identifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>location</strong> : string</p>
+<blockquote>
+<div><p>Full USGS site number starting with &#8216;USGS-&#8216; or the bare integer number of a USGS site.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>siteDF</strong> : pandas.DataFrame</p>
+<blockquote class="last">
+<div><p>Returns a pandas DataFrame object that contains all of the site meta data from an expanded USGS site data query.  Data is indexed using field labels given in USGS file (see Notes).</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Pair of keys and descriptions from USGS site meta data.</p>
+<p>agency_cd       &#8211; Agency</p>
+<p>site_no         &#8211; Site identification number</p>
+<p>station_nm      &#8211; Site name</p>
+<p>site_tp_cd      &#8211; Site type</p>
+<p>lat_va          &#8211; DMS latitude</p>
+<p>long_va         &#8211; DMS longitude</p>
+<p>dec_lat_va      &#8211; Decimal latitude</p>
+<p>dec_long_va     &#8211; Decimal longitude</p>
+<p>coord_meth_cd   &#8211; Latitude-longitude method</p>
+<p>coord_acy_cd    &#8211; Latitude-longitude accuracy</p>
+<p>coord_datum_cd  &#8211; Latitude-longitude datum</p>
+<p>dec_coord_datum_cd &#8211; Decimal Latitude-longitude datum</p>
+<p>district_cd     &#8211; District code</p>
+<p>state_cd        &#8211; State code</p>
+<p>county_cd       &#8211; County code</p>
+<p>country_cd      &#8211; Country code</p>
+<p>land_net_ds     &#8211; Land net location description</p>
+<p>map_nm          &#8211; Name of location map</p>
+<p>map_scale_fc    &#8211; Scale of location map</p>
+<p>alt_va          &#8211; Altitude of Gage/land surface</p>
+<p>alt_meth_cd     &#8211; Method altitude determined</p>
+<p>alt_acy_va      &#8211; Altitude accuracy</p>
+<p>alt_datum_cd    &#8211; Altitude datum</p>
+<p>huc_cd          &#8211; Hydrologic unit code</p>
+<p>basin_cd        &#8211; Drainage basin code</p>
+<p>topo_cd         &#8211; Topographic setting code</p>
+<p>instruments_cd  &#8211; Flags for instruments at site</p>
+<p>construction_dt &#8211; Date of first construction</p>
+<p>inventory_dt    &#8211; Date site established or inventoried</p>
+<p>drain_area_va   &#8211; Drainage area</p>
+<p>contrib_drain_area_va &#8211; Contributing drainage area</p>
+<p>tz_cd           &#8211; Time Zone abbreviation</p>
+<p>local_time_fg   &#8211; Site honors Daylight Savings Time</p>
+<p>reliability_cd  &#8211; Data reliability code</p>
+<p>gw_file_cd      &#8211; Data-other GW files</p>
+<p>nat_aqfr_cd     &#8211; National aquifer code</p>
+<p>aqfr_cd         &#8211; Local aquifer code</p>
+<p>aqfr_type_cd    &#8211; Local aquifer type code</p>
+<p>well_depth_va   &#8211; Well depth</p>
+<p>hole_depth_va   &#8211; Hole depth</p>
+<p>depth_src_cd    &#8211; Source of depth data</p>
+<p>project_no      &#8211; Project number</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="olm.USGS.DataRetrieval.GetDailyDischarge.html"
+                        title="previous chapter">olm.USGS.DataRetrieval.GetDailyDischarge</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="olm.USGS.DataRetrieval.querySiteList.html"
+                        title="next chapter">olm.USGS.DataRetrieval.querySiteList</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/olm.USGS.DataRetrieval.GetSiteData.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="olm.USGS.DataRetrieval.querySiteList.html" title="olm.USGS.DataRetrieval.querySiteList"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.DataRetrieval.GetDailyDischarge.html" title="olm.USGS.DataRetrieval.GetDailyDischarge"
+             >previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="olm.html" >olm Package</a> &raquo;</li>
+          <li><a href="olm.USGS.html" >olm.USGS package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
