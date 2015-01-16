@@ -13,13 +13,13 @@ However, you will first want to make sure you have the following dependencies in
 
 Dependencies
 ------------
--NumPy
--SciPy
--matplotlib
--pandas
--lxml
--xlrd
--requests
+ * NumPy
+ * SciPy
+ * matplotlib
+ * pandas
+ * lxml
+ * xlrd
+ * requests
 
 To compile the documentation, you will also need 'numpydoc'.
 
