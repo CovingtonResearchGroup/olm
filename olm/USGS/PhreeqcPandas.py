@@ -8,8 +8,8 @@ from numpy import isnan,size
 from pandas import DataFrame
 import cPickle as pickle
 import os, subprocess, xlrd, sys
-from waterchem.USGS.loadWaterQualityData import loadSiteListData
-from waterchem.general import molL_to_mgL
+from olm.USGS.loadWaterQualityData import loadSiteListData
+from olm.general import molL_to_mgL
 
 default_phreeqc_to_WQX_translation = {
     'Temperature, water':'temp',
