@@ -8,9 +8,9 @@ import sys,xlrd,os,subprocess,string,requests
 import cPickle as pickle
 from lxml import etree
 from pandas import DataFrame, Panel, to_datetime, Series, concat
-from waterchem.USGS.PhreeqcPandas import processPanel
+from olm.USGS.PhreeqcPandas import processPanel
 
-#import functions from waterchem package
+#import functions from olm package
 from siteListExtraction import extractSitesFromXML
 from siteListExtraction import extractSitesFromText
 from DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
