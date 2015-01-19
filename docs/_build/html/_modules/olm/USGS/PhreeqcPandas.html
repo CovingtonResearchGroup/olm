@@ -47,15 +47,15 @@
 <span class="c">#! /usr/bin/env python </span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Collection of functions to interface between WaterChem and PHREEQC.</span>
+<span class="sd">Collection of functions to interface between Olm and PHREEQC.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">isnan</span><span class="p">,</span><span class="n">size</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
 <span class="kn">import</span> <span class="nn">cPickle</span> <span class="kn">as</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">xlrd</span><span class="o">,</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">waterchem.USGS.loadWaterQualityData</span> <span class="kn">import</span> <span class="n">loadSiteListData</span>
-<span class="kn">from</span> <span class="nn">waterchem.general</span> <span class="kn">import</span> <span class="n">molL_to_mgL</span>
+<span class="kn">from</span> <span class="nn">olm.USGS.loadWaterQualityData</span> <span class="kn">import</span> <span class="n">loadSiteListData</span>
+<span class="kn">from</span> <span class="nn">olm.general</span> <span class="kn">import</span> <span class="n">molL_to_mgL</span>
 
 <span class="n">default_phreeqc_to_WQX_translation</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s">&#39;Temperature, water&#39;</span><span class="p">:</span><span class="s">&#39;temp&#39;</span><span class="p">,</span>
@@ -461,7 +461,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
