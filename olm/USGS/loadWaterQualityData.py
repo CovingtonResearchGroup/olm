@@ -133,8 +133,8 @@ def siteListFromRegEx(regEx,
     sitePath = glob(listText)
     siteList = []
     for site in sitePath:
-        siteSplit = site.split('/')
-        siteList.append(siteSplit[-1])
+        head,tail = os.path.split(site)
+        siteList.append(tail)
     return siteList
 
 def checkSitesDir(processedSitesDir):
