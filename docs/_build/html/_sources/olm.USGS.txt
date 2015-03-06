@@ -42,9 +42,21 @@ Most functionality can be controlled from within the Excel file.  A template is 
    :toctree:
 
    GetDailyDischarge
+   GetDailyDischargeRecord
    GetSiteData
    querySiteList
 
+:mod:`olm.USGS.loadWaterQualityData` module
+-----------------------------------------------
+.. currentmodule:: olm.USGS.loadWaterQualityData
+
+.. autosummary::
+   :toctree:
+
+   loadSiteListData
+   loadSiteData
+   loadSitePhreeqcData
+   
 :mod:`olm.USGS.siteListExtraction` module
 -----------------------------------------------
 

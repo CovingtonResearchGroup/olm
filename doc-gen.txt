@@ -22,9 +22,9 @@ numpydoc_show_class_members = True.  Now I've set this to false).
 List of doc files to maintain manually:
 conf.py
 index.rst (this may work without manual editing if I set max depth to 2 when sphinx-apidoc is run?)
-waterchem.rst
-waterchem.USGS.rst
-waterchem.general.solution.rst
+olm.rst
+olm.USGS.rst
+olm.general.solution.rst
 
 
 

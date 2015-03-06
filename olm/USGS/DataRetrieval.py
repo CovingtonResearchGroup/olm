@@ -159,6 +159,7 @@ def GetDailyDischarge(location, date):
         Full USGS site number starting with 'USGS-' or a string that just contains the bare integer number of a USGS site.
     date : string
         String containing the date for which discharge will be retrieved.  Should be given as YYYY-MM-DD.
+
     Returns
     -------
     data : dict {'discharge':float, 'quality':string, 'name':string}
@@ -218,6 +219,7 @@ def GetDailyDischargeRecord(location, start_date, end_date=None):
         String containing the beginning date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.
     end_date : str (optional)
         String containing the ending date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.  If not provided then data will be retrieved up to the current date.
+ 
     Returns
     -------
     data : pandas dataframe 
@@ -227,7 +229,7 @@ def GetDailyDischargeRecord(location, start_date, end_date=None):
     -----
     Currently hard-wired to retrieve USGS pcode 00060, daily discharge in cfs.
 
-    """
+   """
     #construct url for discharge query
     BASE_URL = 'http://waterservices.usgs.gov/nwis/dv?format=waterml,1.1'
     #query discharge and read into xml parser
