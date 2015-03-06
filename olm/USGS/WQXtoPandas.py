@@ -457,7 +457,11 @@ def runWQXtoPandas(startfilename):
             #   We will use a list of sites from a NWIS XML file and query these 
             #   sites for water quality data
             #First extract site list from XML file
-            siteList = extractSitesFromXML(settingsDict['Input file'])
+            try:
+                siteList = extractSitesFromXML(settingsDict['Input file'])
+            except IOError:
+                print "Problem extracting sites from XML file "+settingsDict['Input file']+" check to see if file name is correct and file is in right location."
+                return -1
             charList = []
             #collect list of characteristics to query
             for key in charDict.iterkeys():
