@@ -482,7 +482,11 @@ def runWQXtoPandas(startfilename):
             #   We will use a list of sites from a text file and query these 
             #   sites for water quality data
             #First extract site list from text file
-            siteList = extractSitesFromText(settingsDict['Input file'])
+            try:
+                siteList = extractSitesFromText(settingsDict['Input file'])
+            except IOError:
+                print "Problem extracting sites from text file "+settingsDict['Input file']+" check to see if file name is correct and file is in right location."
+                return -1
             if (siteList != -1):
                 charList = []
                 #collect list of characteristics to query
