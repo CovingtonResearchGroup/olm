@@ -1,6 +1,6 @@
-## Functions to load water quality data that has been processed and
-## pickled by WQXtoPHREEQC
-
+"""
+Functions to load water quality data that has been processed and pickled by WQXtoPHREEQC
+"""
 import os
 import cPickle as pickle
 
@@ -18,6 +18,35 @@ def loadSiteListData(siteListText = None,
                      processedSitesDir = DEFAULT_DIR,
                      loadPhreeqc = False
                      ):
+    """
+    Retrieves site data for multiple sites within a processed sites directory.
+
+    Parameters
+    ----------
+    siteListText : string (optional)
+        a list of sites separated by semi-colons
+
+    siteFile : string (optional)
+        a filename of a text file with a list of sites
+
+    regEx : string (optional)
+        regular expression used to search for site directories within the processed sites directory (default = 'USGS-')
+
+    processedSitesDir : string (optional)
+        directory that contains all of the processed site directories. It is important to change this if the default is not correct. (default='./Processed-Sites')
+    loadPhreeqc : boolean
+        If set to true, PHREEQC outputs will also be loaded for each site. (default=False)
+
+    Returns
+    -------
+    sitesDict : dict
+        A dictionary of site data panels keyed by site name.
+
+    or if loadPhreeqc is set to true
+    (sitesDict, sitesPheeqcDict) : tuple
+       A tuple containing both the sitesDict and a dict of PHREEQC data for each site.
+
+    """
     siteList = -1
     #If the needed data is provided to find the site list then use it
     if not(siteListText == None):
@@ -80,6 +109,23 @@ def loadSiteListData(siteListText = None,
 
 
 def loadSiteData(site, processedSitesDir = DEFAULT_DIR):
+    """
+    Retrieves site data for an individual site from a directory of processed sites.
+
+    Parameters
+    ----------
+    site : string
+        name of site to retrieve, with or without USGS- tag at beginning.
+
+    processedSitesDir : string (optional)
+        directory that contains the processed site directory associated with the desired site. It is important to change this if the default is not correct. (default='./Processed-Sites')
+
+    Returns
+    -------
+    sitePanel : pandas.core.panel.Panel
+        A pandas panel object with data from the requested site.
+
+    """
     #Add USGS tag if needed
     if not(site.startswith('USGS-')):
         site = 'USGS-'+site
@@ -92,6 +138,23 @@ def loadSiteData(site, processedSitesDir = DEFAULT_DIR):
     return sitePanel
 
 def loadSitePhreeqcData(site, processedSitesDir = DEFAULT_DIR):
+    """
+    Retrieves site PHREEQC data for an individual site from a directory of processed sites.
+
+    Parameters
+    ----------
+    site : string
+        name of site to retrieve, with or without USGS- tag at beginning.
+
+    processedSitesDir : string (optional)
+        directory that contains the processed site directory associated with the desired site. It is important to change this if the default is not correct. (default='./Processed-Sites')
+
+    Returns
+    -------
+    sitedf : pandas.core.frame.DataFrame
+        A pandas dataframe object with PHREEQC data from the requested site.
+
+    """
     #Add USGS tag if needed
     if not(site.startswith('USGS-')):
         site = 'USGS-'+site
