@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>olm.USGS.loadWaterQualityData.loadSiteListData &mdash; olm 0.33 documentation</title>
+    
+    <link rel="stylesheet" href="_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.33',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="olm 0.33 documentation" href="index.html" />
+    <link rel="up" title="olm.USGS package" href="olm.USGS.html" />
+    <link rel="next" title="olm.USGS.loadWaterQualityData.loadSiteData" href="olm.USGS.loadWaterQualityData.loadSiteData.html" />
+    <link rel="prev" title="olm.USGS.DataRetrieval.querySiteList" href="olm.USGS.DataRetrieval.querySiteList.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="olm.USGS.loadWaterQualityData.loadSiteData.html" title="olm.USGS.loadWaterQualityData.loadSiteData"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.DataRetrieval.querySiteList.html" title="olm.USGS.DataRetrieval.querySiteList"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="olm.html" >olm Package</a> &raquo;</li>
+          <li><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="olm-usgs-loadwaterqualitydata-loadsitelistdata">
+<h1>olm.USGS.loadWaterQualityData.loadSiteListData<a class="headerlink" href="#olm-usgs-loadwaterqualitydata-loadsitelistdata" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="olm.USGS.loadWaterQualityData.loadSiteListData">
+<tt class="descclassname">olm.USGS.loadWaterQualityData.</tt><tt class="descname">loadSiteListData</tt><big>(</big><em>siteListText=None</em>, <em>siteFile=None</em>, <em>regEx='USGS-*'</em>, <em>processedSitesDir='./Processed-Sites'</em>, <em>loadPhreeqc=False</em><big>)</big><a class="reference internal" href="_modules/olm/USGS/loadWaterQualityData.html#loadSiteListData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.loadWaterQualityData.loadSiteListData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves site data for multiple sites within a processed sites directory.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>siteListText</strong> : string (optional)</p>
+<blockquote>
+<div><p>a list of sites separated by semi-colons</p>
+</div></blockquote>
+<p><strong>siteFile</strong> : string (optional)</p>
+<blockquote>
+<div><p>a filename of a text file with a list of sites</p>
+</div></blockquote>
+<p><strong>regEx</strong> : string (optional)</p>
+<blockquote>
+<div><p>regular expression used to search for site directories within the processed sites directory (default = &#8216;USGS-&#8216;)</p>
+</div></blockquote>
+<p><strong>processedSitesDir</strong> : string (optional)</p>
+<blockquote>
+<div><p>directory that contains all of the processed site directories. It is important to change this if the default is not correct. (default=&#8217;./Processed-Sites&#8217;)</p>
+</div></blockquote>
+<p><strong>loadPhreeqc</strong> : boolean</p>
+<blockquote>
+<div><p>If set to true, PHREEQC outputs will also be loaded for each site. (default=False)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sitesDict</strong> : dict</p>
+<blockquote>
+<div><p>A dictionary of site data panels keyed by site name.</p>
+</div></blockquote>
+<p>or if loadPhreeqc is set to true</p>
+<p><strong>(sitesDict, sitesPheeqcDict)</strong> : tuple</p>
+<blockquote class="last">
+<div><p>A tuple containing both the sitesDict and a dict of PHREEQC data for each site.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="olm.USGS.DataRetrieval.querySiteList.html"
+                        title="previous chapter">olm.USGS.DataRetrieval.querySiteList</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="olm.USGS.loadWaterQualityData.loadSiteData.html"
+                        title="next chapter">olm.USGS.loadWaterQualityData.loadSiteData</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/olm.USGS.loadWaterQualityData.loadSiteListData.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="olm.USGS.loadWaterQualityData.loadSiteData.html" title="olm.USGS.loadWaterQualityData.loadSiteData"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.DataRetrieval.querySiteList.html" title="olm.USGS.DataRetrieval.querySiteList"
+             >previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="olm.html" >olm Package</a> &raquo;</li>
+          <li><a href="olm.USGS.html" >olm.USGS package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
