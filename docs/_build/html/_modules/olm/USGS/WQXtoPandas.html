@@ -503,7 +503,11 @@
             <span class="c">#   We will use a list of sites from a NWIS XML file and query these </span>
             <span class="c">#   sites for water quality data</span>
             <span class="c">#First extract site list from XML file</span>
-            <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromXML</span><span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input file&#39;</span><span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromXML</span><span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input file&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;Problem extracting sites from XML file &quot;</span><span class="o">+</span><span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input file&#39;</span><span class="p">]</span><span class="o">+</span><span class="s">&quot; check to see if file name is correct and file is in right location.&quot;</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
             <span class="n">charList</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="c">#collect list of characteristics to query</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">charDict</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">():</span>
@@ -528,7 +532,11 @@
             <span class="c">#   We will use a list of sites from a text file and query these </span>
             <span class="c">#   sites for water quality data</span>
             <span class="c">#First extract site list from text file</span>
-            <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromText</span><span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input file&#39;</span><span class="p">])</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromText</span><span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input file&#39;</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;Problem extracting sites from text file &quot;</span><span class="o">+</span><span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input file&#39;</span><span class="p">]</span><span class="o">+</span><span class="s">&quot; check to see if file name is correct and file is in right location.&quot;</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">siteList</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
                 <span class="n">charList</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="c">#collect list of characteristics to query</span>

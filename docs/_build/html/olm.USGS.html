@@ -107,11 +107,34 @@
 <tr class="row-odd"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetDailyDischarge.html#olm.USGS.DataRetrieval.GetDailyDischarge" title="olm.USGS.DataRetrieval.GetDailyDischarge"><tt class="xref py py-obj docutils literal"><span class="pre">GetDailyDischarge</span></tt></a>(location,&nbsp;date)</td>
 <td>Retrieve daily average discharge value from USGS database for given date and USGS site.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetSiteData.html#olm.USGS.DataRetrieval.GetSiteData" title="olm.USGS.DataRetrieval.GetSiteData"><tt class="xref py py-obj docutils literal"><span class="pre">GetSiteData</span></tt></a>(location)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetDailyDischargeRecord.html#olm.USGS.DataRetrieval.GetDailyDischargeRecord" title="olm.USGS.DataRetrieval.GetDailyDischargeRecord"><tt class="xref py py-obj docutils literal"><span class="pre">GetDailyDischargeRecord</span></tt></a>(location,&nbsp;start_date)</td>
+<td>Retrieve daily average discharge values from USGS database for given date range and USGS site.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetSiteData.html#olm.USGS.DataRetrieval.GetSiteData" title="olm.USGS.DataRetrieval.GetSiteData"><tt class="xref py py-obj docutils literal"><span class="pre">GetSiteData</span></tt></a>(location)</td>
 <td>Retrieves meta data about a USGS site using the full site identifier.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.DataRetrieval.querySiteList.html#olm.USGS.DataRetrieval.querySiteList" title="olm.USGS.DataRetrieval.querySiteList"><tt class="xref py py-obj docutils literal"><span class="pre">querySiteList</span></tt></a>(siteList,&nbsp;charList)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.USGS.DataRetrieval.querySiteList.html#olm.USGS.DataRetrieval.querySiteList" title="olm.USGS.DataRetrieval.querySiteList"><tt class="xref py py-obj docutils literal"><span class="pre">querySiteList</span></tt></a>(siteList,&nbsp;charList)</td>
 <td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="olm-usgs-loadwaterqualitydata-module">
+<h2><tt class="xref py py-mod docutils literal"><span class="pre">olm.USGS.loadWaterQualityData</span></tt> module<a class="headerlink" href="#olm-usgs-loadwaterqualitydata-module" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.loadWaterQualityData.loadSiteListData.html#olm.USGS.loadWaterQualityData.loadSiteListData" title="olm.USGS.loadWaterQualityData.loadSiteListData"><tt class="xref py py-obj docutils literal"><span class="pre">loadSiteListData</span></tt></a>([siteListText,&nbsp;siteFile,&nbsp;...])</td>
+<td>Retrieves site data for multiple sites within a processed sites directory.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.USGS.loadWaterQualityData.loadSiteData.html#olm.USGS.loadWaterQualityData.loadSiteData" title="olm.USGS.loadWaterQualityData.loadSiteData"><tt class="xref py py-obj docutils literal"><span class="pre">loadSiteData</span></tt></a>(site[,&nbsp;processedSitesDir])</td>
+<td>Retrieves site data for an individual site from a directory of processed sites.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.loadWaterQualityData.loadSitePhreeqcData.html#olm.USGS.loadWaterQualityData.loadSitePhreeqcData" title="olm.USGS.loadWaterQualityData.loadSitePhreeqcData"><tt class="xref py py-obj docutils literal"><span class="pre">loadSitePhreeqcData</span></tt></a>(site[,&nbsp;processedSitesDir])</td>
+<td>Retrieves site PHREEQC data for an individual site from a directory of processed sites.</td>
 </tr>
 </tbody>
 </table>
@@ -147,6 +170,7 @@
 <li><a class="reference internal" href="#olm-usgs-wqxtopandas-module"><tt class="docutils literal"><span class="pre">olm.USGS.WQXtoPandas</span></tt> module</a></li>
 <li><a class="reference internal" href="#olm-usgs-phreeqcpandas-module"><tt class="docutils literal"><span class="pre">olm.USGS.PhreeqcPandas</span></tt> module</a></li>
 <li><a class="reference internal" href="#olm-usgs-dataretrieval-module"><tt class="docutils literal"><span class="pre">olm.USGS.DataRetrieval</span></tt> module</a></li>
+<li><a class="reference internal" href="#olm-usgs-loadwaterqualitydata-module"><tt class="docutils literal"><span class="pre">olm.USGS.loadWaterQualityData</span></tt> module</a></li>
 <li><a class="reference internal" href="#olm-usgs-sitelistextraction-module"><tt class="docutils literal"><span class="pre">olm.USGS.siteListExtraction</span></tt> module</a></li>
 </ul>
 </li>

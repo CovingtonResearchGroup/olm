@@ -252,7 +252,7 @@
     <span class="k">return</span> <span class="n">data</span>
 
 </div>
-<span class="k">def</span> <span class="nf">GetDailyDischargeRecord</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GetDailyDischargeRecord"><a class="viewcode-back" href="../../../olm.USGS.DataRetrieval.GetDailyDischargeRecord.html#olm.USGS.DataRetrieval.GetDailyDischargeRecord">[docs]</a><span class="k">def</span> <span class="nf">GetDailyDischargeRecord</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve daily average discharge values from USGS database for given date range and USGS site.</span>
 
@@ -317,7 +317,7 @@
     <span class="c">#4/24/14 ended coding here.  need to write into dataframe</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;discharge&#39;</span><span class="p">:</span><span class="n">q</span><span class="p">,</span> <span class="s">&#39;quality&#39;</span><span class="p">:</span><span class="n">quality_code</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date_list</span><span class="p">))</span>
     <span class="c">#return discharge and quality code data frame</span>
-    <span class="k">return</span> <span class="n">data</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 </pre></div>
 
           </div>
