@@ -5,6 +5,8 @@ This script takes an input file in USGS/EPA WQX xml format and creates a Pandas 
 """
 
 import sys,xlrd,os,subprocess,string,requests
+from glob import glob
+from math import ceil
 import cPickle as pickle
 from lxml import etree
 from pandas import DataFrame, Panel, to_datetime, Series, concat
@@ -447,18 +449,44 @@ def runWQXtoPandas(startfilename, autosplitnum=5):
         bracket_charge_balance = settingsDict['Force balance on Ca and Alk'] == 'Yes'
         if (settingsDict['Input method'] == '1'):
             #We already have an XML file to process that contains water quality data
-            WQXtoPandas(
-                settingsDict['Input file'], 
-                charDict, 
-                outputPath = settingsDict['Path to output directory'], 
-                outputDirName = settingsDict['Name of output directory'], 
-                fromFile = True, 
-                RUN_PHREEQC = RUN_PHREEQC,
-                bracket_charge_balance=bracket_charge_balance,
-                PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
-                DATABASE_FILE = DATABASE_FILE, 
-                LOG_FILE = LOG_FILE,
-                START_FILE = startfilename)
+            #Check whether a wildcard was used and more than one xml file is available
+            xml_file_string = os.path.join(
+                settingsDict['Path to output directory'],
+                settingsDict['Name of output directory'],
+                settingsDict['Input file'])
+            xml_list = glob(xml_file_string)
+            if xml_list==[]:
+                print "Empty xml file list. Check path for xml file."
+                print "xml file string =", xml_file_string
+                return -1
+            n_xml = len(xml_list)
+            if n_xml>1:
+                for xml_file in xml_list:
+                    WQXtoPandas(
+                        xml_file,
+                        charDict, 
+                        outputPath = settingsDict['Path to output directory'], 
+                        outputDirName = settingsDict['Name of output directory'], 
+                        fromFile = True, 
+                        RUN_PHREEQC = RUN_PHREEQC,
+                        bracket_charge_balance=bracket_charge_balance,
+                        PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
+                        DATABASE_FILE = DATABASE_FILE, 
+                        LOG_FILE = LOG_FILE,
+                        START_FILE = startfilename)
+            else:
+                WQXtoPandas(
+                    settingsDict['Input file'], 
+                    charDict, 
+                    outputPath = settingsDict['Path to output directory'], 
+                    outputDirName = settingsDict['Name of output directory'], 
+                    fromFile = True, 
+                    RUN_PHREEQC = RUN_PHREEQC,
+                    bracket_charge_balance=bracket_charge_balance,
+                    PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
+                    DATABASE_FILE = DATABASE_FILE, 
+                    LOG_FILE = LOG_FILE,
+                    START_FILE = startfilename)
         elif (settingsDict['Input method'] == '2'):
             #   We will use a list of sites from a NWIS XML file and query these 
             #   sites for water quality data
@@ -474,7 +502,8 @@ def runWQXtoPandas(startfilename, autosplitnum=5):
                 charList.append(str(key))
             if len(siteList)>autosplitnum:
                 #We have too long of a list and should split into multiple queries
-                for i in range((len(siteList)/autosplitnum)+1):
+                n_groups = int(ceil(len(siteList)/float(autosplitnum)))
+                for i in range(n_groups):#this doesn't work for even division cases
                     shortList = siteList[i*autosplitnum:i*autosplitnum+autosplitnum]
                     queryText = querySiteList(shortList, charList)
                     if (queryText != None):
@@ -523,7 +552,8 @@ def runWQXtoPandas(startfilename, autosplitnum=5):
                     charList.append(str(key))
                 if len(siteList)>autosplitnum:
                     #We have too long of a list and should split into multiple queries
-                    for i in range((len(siteList)/autosplitnum)+1):
+                    n_groups = int(ceil(len(siteList)/float(autosplitnum)))
+                    for i in range(n_groups):
                         shortList = siteList[i*autosplitnum:i*autosplitnum+autosplitnum]
                         queryText = querySiteList(shortList, charList)
                         if (queryText != None): 
