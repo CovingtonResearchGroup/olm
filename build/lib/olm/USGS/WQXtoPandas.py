@@ -16,7 +16,7 @@ from siteListExtraction import extractSitesFromText
 from DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
 from dataSlice import extractValues
 
-def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites', RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/', DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log', START_FILE = None, bracket_charge_balance=False):
+def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites', RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/', DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log', START_FILE = None, splittag='',bracket_charge_balance=False):
     """
     Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are stored in directories for each site.
     
@@ -80,7 +80,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
             wqxtree = etree.ElementTree(file=xmlLocation)
         else:            
             #check whether we already have a matching xml file
-            xmlSaveFile = LOG_FILE + '.xml'
+            xmlSaveFile = LOG_FILE + '.xml' + splittag
             if ( os.path.isfile(xmlSaveFile) ):
                 goodAnswer = False
                 while not(goodAnswer):
@@ -340,9 +340,9 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                     except IOError:
                         print('Problem writing out PHREEQC Alk data file.')                
         #Create log file
-        print('Writing log file: '+LOG_FILE)
+        print('Writing log file: '+LOG_FILE+splittag)
         try: 
-            log_file = open(LOG_FILE, 'w')
+            log_file = open(LOG_FILE+splittag, 'w')
             print >>log_file, 'Start file = ' + START_FILE
             print >>log_file, 'Number of Samples Processed = '+ str(len(samples_processed))
             print >>log_file, 'Number of Samples Not Processed = ' + str(len(samples_not_processed))
@@ -387,7 +387,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
     return 0
 
 
-def runWQXtoPandas(startfilename):
+def runWQXtoPandas(startfilename, autosplitnum=5):
     """
     Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from the USGS NWIS database.
     
@@ -396,6 +396,9 @@ def runWQXtoPandas(startfilename):
     startfilename : string
         A string containing the name of the excel file to be used for input parameters to WQXtoPandas
 
+    autosplitnum : int (optional)
+        The number of sites at which a NWIS query is split into multiple queries. (default=?)
+
     Returns
     -------
     None
@@ -403,12 +406,15 @@ def runWQXtoPandas(startfilename):
     Notes
     -----
 
-    Can be run from within a python shell or script, or as a standalone script from the command line where the start file name is provided as the first command line argument (e.g. WQXtoPandas <start file name>).
+    Can be run from within a python shell or script, or as a standalone script from the command line where the start file name is provided as the first command line argument (e.g. WQXtoPandas <start file name> <autosplitnum>).
     """
     #PHREEQC input file path
     PHREEQC_INPUT_PATH = './'
     num_samples = 0
     num_processed = 0
+    if not(type(autosplitnum)==int):
+        print "autosplitnum must be an integer."
+        return -1
     print('Processing: '+ startfilename)
     try:
         #open start file
@@ -466,22 +472,41 @@ def runWQXtoPandas(startfilename):
             #collect list of characteristics to query
             for key in charDict.iterkeys():
                 charList.append(str(key))
-            #get html for query
-            queryText = querySiteList(siteList, charList)
-#            print "Query text: " + queryText
-            if (queryText != None): 
-                WQXtoPandas(
-                    queryText,
-                    charDict,
-                    outputPath = settingsDict['Path to output directory'], 
-                    outputDirName = settingsDict['Name of output directory'], 
-                    fromFile = False, 
-                    RUN_PHREEQC = RUN_PHREEQC,
-                    bracket_charge_balance=bracket_charge_balance,
-                    PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
-                    DATABASE_FILE = DATABASE_FILE, 
-                    LOG_FILE = LOG_FILE,
-                    START_FILE = startfilename)          
+            if len(siteList)>autosplitnum:
+                #We have too long of a list and should split into multiple queries
+                for i in range((len(siteList)/autosplitnum)+1):
+                    shortList = siteList[i*autosplitnum:i*autosplitnum+autosplitnum]
+                    queryText = querySiteList(shortList, charList)
+                    if (queryText != None): 
+                        WQXtoPandas(
+                            queryText,
+                            charDict,
+                            outputPath = settingsDict['Path to output directory'], 
+                            outputDirName = settingsDict['Name of output directory'], 
+                            fromFile = False, 
+                            RUN_PHREEQC = RUN_PHREEQC,
+                            bracket_charge_balance=bracket_charge_balance,
+                            PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
+                            DATABASE_FILE = DATABASE_FILE, 
+                            splittag = '.'+str(i),
+                            LOG_FILE = LOG_FILE,
+                            START_FILE = startfilename)     
+            else:        
+                #get html for query
+                queryText = querySiteList(siteList, charList)
+                if (queryText != None): 
+                    WQXtoPandas(
+                        queryText,
+                        charDict,
+                        outputPath = settingsDict['Path to output directory'], 
+                        outputDirName = settingsDict['Name of output directory'], 
+                        fromFile = False, 
+                        RUN_PHREEQC = RUN_PHREEQC,
+                        bracket_charge_balance=bracket_charge_balance,
+                        PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
+                        DATABASE_FILE = DATABASE_FILE, 
+                        LOG_FILE = LOG_FILE,
+                        START_FILE = startfilename)          
         elif (settingsDict['Input method'] == '3'):
             #   We will use a list of sites from a text file and query these 
             #   sites for water quality data
@@ -496,22 +521,41 @@ def runWQXtoPandas(startfilename):
                 #collect list of characteristics to query
                 for key in charDict.iterkeys():
                     charList.append(str(key))
-                #get html for query
-                queryText = querySiteList(siteList, charList)
-#                print "Query text: " + queryText
-                if (queryText != None):
-                    WQXtoPandas(
-                        queryText,
-                        charDict,
-                        outputPath = settingsDict['Path to output directory'], 
-                        outputDirName = settingsDict['Name of output directory'], 
-                        fromFile = False, 
-                        RUN_PHREEQC = RUN_PHREEQC,
-                        bracket_charge_balance=bracket_charge_balance,
-                        PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
-                        DATABASE_FILE = DATABASE_FILE, 
-                        LOG_FILE = LOG_FILE,
-                        START_FILE = startfilename)
+                if len(siteList)>autosplitnum:
+                    #We have too long of a list and should split into multiple queries
+                    for i in range((len(siteList)/autosplitnum)+1):
+                        shortList = siteList[i*autosplitnum:i*autosplitnum+autosplitnum]
+                        queryText = querySiteList(shortList, charList)
+                        if (queryText != None): 
+                                     WQXtoPandas(
+                                         queryText,
+                                         charDict,
+                                         outputPath = settingsDict['Path to output directory'], 
+                                         outputDirName = settingsDict['Name of output directory'], 
+                                         fromFile = False, 
+                                         RUN_PHREEQC = RUN_PHREEQC,
+                                         bracket_charge_balance=bracket_charge_balance,
+                                         PHREEQC_PATH = settingsDict['Path to PHREEQC'],
+                                         splittag = '.'+str(i), 
+                                         DATABASE_FILE = DATABASE_FILE, 
+                                         LOG_FILE = LOG_FILE,
+                                         START_FILE = startfilename)
+                else:
+                    #get html for query
+                    queryText = querySiteList(siteList, charList)
+                    if (queryText != None):
+                        WQXtoPandas(
+                            queryText,
+                            charDict,
+                            outputPath = settingsDict['Path to output directory'], 
+                            outputDirName = settingsDict['Name of output directory'], 
+                            fromFile = False, 
+                            RUN_PHREEQC = RUN_PHREEQC,
+                            bracket_charge_balance=bracket_charge_balance,
+                            PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
+                            DATABASE_FILE = DATABASE_FILE, 
+                            LOG_FILE = LOG_FILE,
+                            START_FILE = startfilename)
             else:
                 print("Problem obtaining site list.")
         else:
@@ -525,4 +569,8 @@ def runWQXtoPandas(startfilename):
 if __name__=="__main__":
     #pull in name of start file
     startfilename = sys.argv[1]
-    runWQXtoPandas(startfilename)
+    if len(sys.argv>2):
+        autosplitnum = sys.argv[2]
+        runWQXtoPandas(startfilename, autosplitnum=autosplitnum)
+    else:
+        runWQXtoPandas(startfilename)
