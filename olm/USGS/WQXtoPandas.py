@@ -389,7 +389,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
     return 0
 
 
-def runWQXtoPandas(startfilename, autosplitnum=5):
+def runWQXtoPandas(startfilename, autosplitnum=20):
     """
     Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from the USGS NWIS database.
     
