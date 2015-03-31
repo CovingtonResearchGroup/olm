@@ -599,7 +599,7 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
 if __name__=="__main__":
     #pull in name of start file
     startfilename = sys.argv[1]
-    if len(sys.argv>2):
+    if len(sys.argv)>2:
         autosplitnum = sys.argv[2]
         runWQXtoPandas(startfilename, autosplitnum=autosplitnum)
     else:
