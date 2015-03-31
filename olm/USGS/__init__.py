@@ -1,1 +1,1 @@
-__all__=['DataRetrieval','dataSlice','loadWaterQualityData','siteListExtraction','WQXtoPandas']
+__all__=['DataRetrieval','loadWaterQualityData','siteListExtraction','WQXtoPandas']
