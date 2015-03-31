@@ -16,7 +16,9 @@ def loadSiteListData(siteListText = None,
                      siteFile = None, 
                      regEx = 'USGS-*', 
                      processedSitesDir = DEFAULT_DIR,
-                     loadPhreeqc = False
+                     loadData = True,
+                     loadPhreeqc = False,
+                     loadMetaData = False
                      ):
     siteList = -1
     #If the needed data is provided to find the site list then use it
@@ -66,17 +68,38 @@ def loadSiteListData(siteListText = None,
         
         sitesDict = {}
         sitesPhreeqcDict = {}
+        sitesMetaDataDict = {}
         for site in siteList:            
             sitePanel = loadSiteData(site, processedSitesDir = processedSitesDir)
             sitesDict[site] = sitePanel
             if loadPhreeqc:
                 sitedf = loadSitePhreeqcData(site, processedSitesDir = processedSitesDir)
                 sitesPhreeqcDict[site] = sitedf
-        if loadPhreeqc:
-            return (sitesDict, sitesPhreeqcDict)
+            if loadMetaData:
+                siteMetaData = loadSiteMetaData(site, processedSitesDir = processedSitesDir)
+                sitesMetaDataDict[site] = siteMetaData
+        if loadPhreeqc or loadMetaData:
+            return_list = [sitesDict]
+            if loadPhreeqc:
+                return_list.append(sitesPhreeqcDict)
+            if loadMetaData:
+                return_list.append(sitesMetaDataDict)
+            return tuple(return_list)
         else:
             return sitesDict
 
+def loadSiteMetaData(site, processedSitesDir = DEFAULT_DIR):
+    #Add USGS tag if needed
+    if not(site.startswith('USGS-')):
+        site = 'USGS-'+site
+    try:
+        metaDataFile = os.path.join(processedSitesDir, site, site+'-Site-Description.pkl')
+        siteMetaData = pickle.load(open(metaDataFile, 'rb'))
+    except IOError:
+        print ("Problem reading pickle file: " + panelFile )
+        return None
+    return siteMetaData
+    
 
 
 def loadSiteData(site, processedSitesDir = DEFAULT_DIR):
