@@ -3,7 +3,7 @@ Executable to re-process a site directory in PHREEQC
 """
 
 from loadWaterQualityData import loadSiteListData
-import xlrd, os
+import xlrd, os, sys
 
 def runPHREEQC(startfilename):
     print("Processing site water chemisty data in PHREEQC...")
