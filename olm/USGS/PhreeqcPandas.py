@@ -349,7 +349,7 @@ def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx=
                 print('Problem writing out PHREEQC Alk data file.')                
 
 
-def runPHREEQC(startfilename):
+def runPHREEQC(startfilename, process_regular=True):
      """
      Process all samples within a site directory using information from the start file.
 
@@ -386,10 +386,14 @@ def runPHREEQC(startfilename):
      PHREEQC_PATH = settingsDict['Path to PHREEQC']
      bracket_charge_balance = settingsDict['Force balance on Ca and Alk'] == 'Yes'
    
-     processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=bracket_charge_balance)
+     processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=bracket_charge_balance, process_regular=process_regular)
 
 
 if __name__=="__main__":
     #get site directory  and charge bracketing from command line argument
     startfilename = sys.argv[1]
-    runPHREEQC(startfilename)
+    process_regular = True
+    if len(sys.argv)>2:
+        if sys.argv[2]=='False':
+            process_regular=False
+    runPHREEQC(startfilename, process_regular=process_regular)
