@@ -167,8 +167,13 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
         #run phreeqc on the input file just created
         phreeqcOutputFile = phreeqc_file_name[:-4]+'out'
         retcode = subprocess.call([os.path.join(PHREEQC_PATH,'phreeqc'), phreeqc_file_name, phreeqcOutputFile, DATABASE_FILE])
-        simulationDict = readPhreeqcOutput(phreeqcOutputFile)
-        if force_balance=='Alk':
+        print "PHREEQC return code = ",retcode
+        if retcode == 0:
+            simulationDict = readPhreeqcOutput(phreeqcOutputFile)
+        else: 
+            #This catches cases where PHREEQC fails (e.g. doesn't converge)
+            simulationDict = None
+        if force_balance=='Alk' and simulationDict!=None:
             #Force charge balance on Alkalinity            
             alk_converged=False
             number_of_iterations = 0
@@ -186,7 +191,6 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
                         # convergence doesn't happen or we should quit trying.
                         # Perhaps negative alkalinity??
                         alk = 0.0
-
                     print "alk=", alk
                     New_alk_molL = alk + balance_eq#attempt to stabilize this using a factor of 0.9. Otherwise it seems to overshoot. this didn't work. 
                     if New_alk_molL < 0:#PHREEQC won't take negative alkalinity inputs
@@ -197,11 +201,16 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
                     sample_row['Alkalinity'] = New_alk_mgL
                     writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=phreeqcDict, datetext=datetext)
                     retcode = subprocess.call([os.path.join(PHREEQC_PATH,'phreeqc'), phreeqc_file_name, phreeqcOutputFile, DATABASE_FILE])
-                    simulationDict = readPhreeqcOutput(phreeqcOutputFile)
-                    number_of_iterations = number_of_iterations + 1
-                    if abs(float(simulationDict['Percent error']))<5.0:
-                        alk_converged=True
-                        num_converged = num_converged + 1
+                    print "PHREEQC return code = ",retcode
+                    if retcode == 0:
+                        simulationDict = readPhreeqcOutput(phreeqcOutputFile)
+                        number_of_iterations = number_of_iterations + 1
+                        if abs(float(simulationDict['Percent error']))<5.0:
+                            alk_converged=True
+                            num_converged = num_converged + 1
+                    else:
+                        #This catches cases where PHREEQC returns an error (e.g. doesn't converge)
+                        simulationDict = None
                     if number_of_iterations>max_iterations:
                         simulationDict=None #This will cause this case to be thrown out below
                 else:
