@@ -32,4 +32,6 @@ and up to date versions of the code are available at:
 
 http://www.github.com/speleophysics/olm
 
+This package is a work in progress and undergoes frequent updates. If you find that something is not working as expected, a potential bug, or have suggestions for features that would be useful to you, feel free to submit such comments as issues on Github. Alternatively, you can also find my contact information on my webpage:
 
+http://www.speleophysics.com
