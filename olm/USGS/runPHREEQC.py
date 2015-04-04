@@ -7,7 +7,7 @@ from olm.USGS.PhreeqcPandas import processPanel
 import xlrd, os, sys
 import cPickle as pickle
 
-def runPHREEQC(startfilename):
+def runPHREEQC(startfilename, charge_balance_only=False):
     print("Processing site water chemisty data in PHREEQC...")
     startfile = xlrd.open_workbook(startfilename)
     sheet = startfile.sheet_by_index(0)
@@ -39,15 +39,16 @@ def runPHREEQC(startfilename):
                             settingsDict['Name of output directory'])
     #Load data for sites
     sitesDict = loadSiteListData(processedSitesDir=sitesdir)
-    for location, pnl in sitesDict.iteritems():               
-        print "Processing site panel from ", location
-        phreeqc_df = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE)               
-        phreeqc_site_file = os.path.join(sitesdir,location,location+'-PHREEQC.pkl')
-        try:
-            pickle.dump(phreeqc_df, open(phreeqc_site_file, 'wb'))
-            phreeqc_df.to_csv(phreeqc_site_file[:-3]+'csv')
-        except IOError:
-            print('Problem writing out PHREEQC data file.')
+    if not charge_balance_only:
+        for location, pnl in sitesDict.iteritems():               
+            print "Processing site panel from ", location
+            phreeqc_df = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE)               
+            phreeqc_site_file = os.path.join(sitesdir,location,location+'-PHREEQC.pkl')
+            try:
+                pickle.dump(phreeqc_df, open(phreeqc_site_file, 'wb'))
+                phreeqc_df.to_csv(phreeqc_site_file[:-3]+'csv')
+            except IOError:
+                print('Problem writing out PHREEQC data file.')
     if bracket_charge_balance:
         for location, pnl in sitesDict.iteritems():               
             #Force balance on Calcium
