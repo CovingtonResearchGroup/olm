@@ -286,7 +286,7 @@ def writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=default_phreeqc
         print ("Problem opening sample PHREEQC input file.")
         return -1
 
-def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=False):
+def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=False, process_regular=True):
     """
     Processes all data from site directories in PHREEQC.
 
@@ -309,34 +309,39 @@ def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx=
 
     bracket_charge_balance : bool
        If set to True, then charge balance will be bracketed by forcing balance on Ca and Alkalinity alternately. Default = False.
+    process_regular : bool
+       If set to True, then PHREEQC will be run without any charge balance forcing. This can be set to False if the calculations without forced balance are already done and you only want to do the charge balance runs. Default = True.
 
     Returns
     -------
     None
     """
     sitesDict = loadSiteListData(regEx=regEx, processedSitesDir = sitesDir)
-    for site, site_panel in sitesDict.iteritems():
-        print("Processing "+site+" in PHREEQC")
-        sitedf = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH=PHREEQC_PATH, DATABASE_FILE=DATABASE_FILE, phreeqcDict=phreeqcDict)
-        phreeqc_site_file = os.path.join(sitesDir,site,site+'-PHREEQC.pkl')
-        try:
-            pickle.dump(sitedf, open(phreeqc_site_file, 'wb'))
-            sitedf.to_csv(phreeqc_site_file[:-3]+'csv')
-        except IOError:
-            print('Problem writing out PHREEQC data file.')
+    if process_regular:
+        #Run PHREEQC on sites without forced charge balance
+        for site, site_panel in sitesDict.iteritems():
+            print("Processing "+site+" in PHREEQC")
+            sitedf = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH=PHREEQC_PATH, DATABASE_FILE=DATABASE_FILE, phreeqcDict=phreeqcDict)
+            phreeqc_site_file = os.path.join(sitesDir,site,site+'-PHREEQC.pkl')
+            try:
+                pickle.dump(sitedf, open(phreeqc_site_file, 'wb'))
+                sitedf.to_csv(phreeqc_site_file[:-3]+'csv')
+            except IOError:
+                print('Problem writing out PHREEQC data file.')
     if bracket_charge_balance:
-        for location, pnl in sitesDict.iteritems():               
+        #Run PHREEQC using bracketed charge balance for sites
+        for site, site_panel in sitesDict.iteritems():               
             #Force balance on Calcium
-            phreeqc_df_ca = processPanel(pnl, os.path.join(sitesDir,location), PHREEQC_PATH, DATABASE_FILE, force_balance='Ca')               
-            phreeqc_site_file_ca = os.path.join(sitesDir,location,location+'-PHREEQC-Ca.pkl')
+            phreeqc_df_ca = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH, DATABASE_FILE, force_balance='Ca')               
+            phreeqc_site_file_ca = os.path.join(sitesDir,site,site+'-PHREEQC-Ca.pkl')
             try:
                 pickle.dump(phreeqc_df_ca, open(phreeqc_site_file_ca, 'wb'))
                 phreeqc_df_ca.to_csv(phreeqc_site_file_ca[:-3]+'csv')
             except IOError:
                 print('Problem writing out PHREEQC Ca data file.')               
             #Force balance on Alkalinity
-            phreeqc_df_alk = processPanel(pnl, os.path.join(sitesDir,location), PHREEQC_PATH, DATABASE_FILE, force_balance='Alk')               
-            phreeqc_site_file_alk = os.path.join(sitesDir,location,location+'-PHREEQC-Alk.pkl')
+            phreeqc_df_alk = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH, DATABASE_FILE, force_balance='Alk')               
+            phreeqc_site_file_alk = os.path.join(sitesDir,site,site+'-PHREEQC-Alk.pkl')
             try:
                 pickle.dump(phreeqc_df_alk, open(phreeqc_site_file_alk, 'wb'))
                 phreeqc_df_alk.to_csv(phreeqc_site_file_alk[:-3]+'csv')
