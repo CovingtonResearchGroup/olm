@@ -784,7 +784,7 @@ def calc_kappa3(T_K):
     kappa3 : float
        constant kappa3 in the PWP equation (mmol/cm^2/s)
     """
-    if (np.size(T_K)>1):
+    if (np.size(T_K)>1) or (type(T_K)==pandas.core.series.Series):
         kappa3 = np.zeros(np.size(T_K))
         for i, this_temp in enumerate(T_K):
             if (this_temp < 273.15+25):
