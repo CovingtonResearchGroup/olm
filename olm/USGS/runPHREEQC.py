@@ -2,10 +2,15 @@
 Executable to re-process a site directory in PHREEQC
 """
 
+<<<<<<< HEAD
 from olm.USGS.loadWaterQualityData import loadSiteListData
 from olm.USGS.PhreeqcPandas import processPanel
 import xlrd, os, sys
 import cPickle as pickle
+=======
+from loadWaterQualityData import loadSiteListData
+import xlrd, os, sys
+>>>>>>> 724ac5d10f231e0f29b301453b03763ae495e97b
 
 def runPHREEQC(startfilename):
     print("Processing site water chemisty data in PHREEQC...")

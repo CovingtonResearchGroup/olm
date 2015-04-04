@@ -19,6 +19,7 @@ Dependencies
  * pandas
  * lxml
  * xlrd
+ * xlwt
  * requests
 
 To compile the documentation, you will also need 'numpydoc'.

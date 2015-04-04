@@ -572,12 +572,12 @@ def pwpFromSolution(sol, PCO2=None, method='theory'):
             return -1 
     is_series = (type(sol)==pandas.core.series.Series) or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
-        sol_arr = np.empty(np.size(sol),dtype=object)
+        rate_arr = np.empty(np.size(sol))
         for i, this_sol in enumerate(sol):            
-            sol_arr[i] = calc_rate(this_sol,PCO2[i])
+            rate_arr[i] = calc_rate(this_sol,PCO2[i])
         if is_series:
-            sol_arr = pandas.Series(sol_arr, index=sol.index)
-        return sol_arr
+            rate_arr = pandas.Series(rate_arr, index=sol.index)
+        return rate_arr
     else:
         return calc_rate(sol,PCO2)
         
