@@ -100,22 +100,14 @@ def loadSiteListData(siteListText = None,
         sitesMetaDataDict = {}
         for site in siteList:            
             sitePanel = loadSiteData(site, processedSitesDir = processedSitesDir)
-<<<<<<< HEAD
             if sitePanel is not None: #If site data does not read in correctly, loadSiteData returns None
                 sitesDict[site] = sitePanel
                 if loadPhreeqc:
                     sitedf = loadSitePhreeqcData(site, processedSitesDir = processedSitesDir)
                     sitesPhreeqcDict[site] = sitedf
-        if loadPhreeqc:
-            return (sitesDict, sitesPhreeqcDict)
-=======
-            sitesDict[site] = sitePanel
-            if loadPhreeqc:
-                sitedf = loadSitePhreeqcData(site, processedSitesDir = processedSitesDir)
-                sitesPhreeqcDict[site] = sitedf
-            if loadMetaData:
-                siteMetaData = loadSiteMetaData(site, processedSitesDir = processedSitesDir)
-                sitesMetaDataDict[site] = siteMetaData
+                if loadMetaData:
+                    siteMetaData = loadSiteMetaData(site, processedSitesDir = processedSitesDir)
+                    sitesMetaDataDict[site] = siteMetaData
         if loadPhreeqc or loadMetaData:
             return_list = [sitesDict]
             if loadPhreeqc:
@@ -123,7 +115,6 @@ def loadSiteListData(siteListText = None,
             if loadMetaData:
                 return_list.append(sitesMetaDataDict)
             return tuple(return_list)
->>>>>>> 724ac5d10f231e0f29b301453b03763ae495e97b
         else:
             return sitesDict
 
