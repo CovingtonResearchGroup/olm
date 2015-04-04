@@ -28,13 +28,13 @@ def get_good_indicies(seriesList):
 
 def calc_site_pwp(sitedf, sitephreeqc, returnPCO2=False):
     have_data = False
-    if ('Stream flow, mean. daily' in sitedf.data.columns) and ( 'Temperature, water' in sitedf.data.columns) and ('CO2_Molality' in sitephreeqc.columns) and ('Ca+2_Activity'  in sitephreeqc.columns) and ('CO2_Activity'  in sitephreeqc.columns) and ('H+_Activity'  in sitephreeqc.columns) and ('HCO3-_Activity'  in sitephreeqc.columns):
+    if ('Stream flow, mean. daily' in sitedf.columns) and ( 'Temperature, water' in sitedf.columns) and ('CO2_Molality' in sitephreeqc.columns) and ('Ca+2_Activity'  in sitephreeqc.columns) and ('CO2_Activity'  in sitephreeqc.columns) and ('H+_Activity'  in sitephreeqc.columns) and ('HCO3-_Activity'  in sitephreeqc.columns):
        have_data = True
     if have_data:
         #create dataframe subset
         subdf = DataFrame({
-                'Q':sitedf.data['Stream flow, mean. daily'],
-                'T_C':sitedf.data['Temperature, water'],
+                'Q':sitedf['Stream flow, mean. daily'],
+                'T_C':sitedf['Temperature, water'],
                 'CO2':sitephreeqc.CO2_Molality,
                 'a_Ca':sitephreeqc['Ca+2_Activity'],
                 'a_H2CO3s':sitephreeqc['CO2_Activity'],
