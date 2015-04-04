@@ -572,12 +572,12 @@ def pwpFromSolution(sol, PCO2=None, method='theory'):
             return -1 
     is_series = (type(sol)==pandas.core.series.Series) or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
-        sol_arr = np.empty(np.size(sol),dtype=object)
+        rate_arr = np.empty(np.size(sol))
         for i, this_sol in enumerate(sol):            
-            sol_arr[i] = calc_rate(this_sol,PCO2[i])
+            rate_arr[i] = calc_rate(this_sol,PCO2[i])
         if is_series:
-            sol_arr = pandas.Series(sol_arr, index=sol.index)
-        return sol_arr
+            rate_arr = pandas.Series(rate_arr, index=sol.index)
+        return rate_arr
     else:
         return calc_rate(sol,PCO2)
         
@@ -784,7 +784,7 @@ def calc_kappa3(T_K):
     kappa3 : float
        constant kappa3 in the PWP equation (mmol/cm^2/s)
     """
-    if (np.size(T_K)>1):
+    if (np.size(T_K)>1) or (type(T_K)==pandas.core.series.Series):
         kappa3 = np.zeros(np.size(T_K))
         for i, this_temp in enumerate(T_K):
             if (this_temp < 273.15+25):

@@ -27,28 +27,46 @@ def get_good_indicies(seriesList):
     return ~test.isnull()
 
 def calc_site_pwp(sitedf, sitephreeqc, returnPCO2=False):
-    #create dataframe subset
-    subdf = DataFrame({
-            'Q':sitedf.data['Stream flow, mean. daily'],
-            'T_C':sitedf.data['Temperature, water'],
-            'CO2':sitephreeqc.CO2_Molality,
-            'a_Ca':sitephreeqc['Ca+2_Activity'],
-            'a_H2CO3s':sitephreeqc['CO2_Activity'],
-            'a_H':sitephreeqc['H+_Activity'],
-            'a_HCO3':sitephreeqc['HCO3-_Activity']
-            })
-    #Clear out NaN values
-    subdf = subdf.dropna()
-    #Calculate PCO2
-    T_K = CtoK(subdf.T_C)
-    K_H = calc_K_H(T_K)
-    PCO2 = subdf.CO2/K_H    
-    pwp_rates = pwpRateTheory(a_Ca=subdf.a_Ca, a_H2CO3s=subdf.a_H2CO3s, a_H=subdf.a_H, a_HCO3=subdf.a_HCO3, T_K=T_K, PCO2=PCO2)
-    if returnPCO2:
-        return [pwp_rates, PCO2]
+    have_data = False
+    if ('Stream flow, mean. daily' in sitedf.columns) and ( 'Temperature, water' in sitedf.columns) and ('CO2_Molality' in sitephreeqc.columns) and ('Ca+2_Activity'  in sitephreeqc.columns) and ('CO2_Activity'  in sitephreeqc.columns) and ('H+_Activity'  in sitephreeqc.columns) and ('HCO3-_Activity'  in sitephreeqc.columns):
+       have_data = True
+    if have_data:
+        #create dataframe subset
+        subdf = DataFrame({
+                'Q':sitedf['Stream flow, mean. daily'],
+                'T_C':sitedf['Temperature, water'],
+                'CO2':sitephreeqc.CO2_Molality,
+                'a_Ca':sitephreeqc['Ca+2_Activity'],
+                'a_H2CO3s':sitephreeqc['CO2_Activity'],
+                'a_H':sitephreeqc['H+_Activity'],
+                'a_HCO3':sitephreeqc['HCO3-_Activity']
+                })
+        #Clear out NaN values
+        subdf = subdf.dropna()
+        if subdf.size>0:
+            #Average any duplicate indicies
+            g = subdf.groupby(level=0)#group by duplicate indicies
+            subdf = g.mean()#average duplicate indicies
+            #Calculate PCO2
+            T_K = CtoK(subdf.T_C)
+            K_H = calc_K_H(T_K)
+            PCO2 = subdf.CO2/K_H    
+            pwp_rates = pwpRateTheory(a_Ca=subdf.a_Ca, a_H2CO3s=subdf.a_H2CO3s, a_H=subdf.a_H, a_HCO3=subdf.a_HCO3, T_K=T_K, PCO2=PCO2)
+            if returnPCO2:
+                return [pwp_rates, PCO2]
+            else:
+                return pwp_rates
+        else:
+            if returnPCO2:
+                return [None,None]
+            else: 
+                return None
+    #Data were missing
     else:
-        return pwp_rates
-
+        if returnPCO2:
+            return [None,None]
+        else: 
+            return None
 def pwp_Q_fit(Q, k, a, beta):
     F = k*(1. - a*Q**(-beta))
     return F

@@ -3,7 +3,7 @@ Functions to load water quality data that has been processed and pickled by WQXt
 """
 import os
 import cPickle as pickle
-
+from pandas.io.pickle import read_pickle
 from siteListExtraction import *
 from glob import glob
 
@@ -103,13 +103,14 @@ def loadSiteListData(siteListText = None,
         sitesMetaDataDict = {}
         for site in siteList:            
             sitePanel = loadSiteData(site, processedSitesDir = processedSitesDir)
-            sitesDict[site] = sitePanel
-            if loadPhreeqc:
-                sitedf = loadSitePhreeqcData(site, processedSitesDir = processedSitesDir)
-                sitesPhreeqcDict[site] = sitedf
-            if loadMetaData:
-                siteMetaData = loadSiteMetaData(site, processedSitesDir = processedSitesDir)
-                sitesMetaDataDict[site] = siteMetaData
+            if sitePanel is not None: #If site data does not read in correctly, loadSiteData returns None
+                sitesDict[site] = sitePanel
+                if loadPhreeqc:
+                    sitedf = loadSitePhreeqcData(site, processedSitesDir = processedSitesDir)
+                    sitesPhreeqcDict[site] = sitedf
+                if loadMetaData:
+                    siteMetaData = loadSiteMetaData(site, processedSitesDir = processedSitesDir)
+                    sitesMetaDataDict[site] = siteMetaData
         if loadPhreeqc or loadMetaData:
             return_list = [sitesDict]
             if loadPhreeqc:
@@ -157,7 +158,8 @@ def loadSiteData(site, processedSitesDir = DEFAULT_DIR):
         site = 'USGS-'+site
     try:
         panelFile = os.path.join(processedSitesDir, site, site+'-Panel.pkl')
-        sitePanel = pickle.load(open(panelFile, 'rb'))
+#        sitePanel = pickle.load(open(panelFile, 'rb'))
+        sitePanel = read_pickle(panelFile)
     except IOError:
         print ("Problem reading pickle file: " + panelFile )
         return None
@@ -186,7 +188,7 @@ def loadSitePhreeqcData(site, processedSitesDir = DEFAULT_DIR):
         site = 'USGS-'+site
     try:
         phreeqcFile = os.path.join(processedSitesDir, site, site+'-PHREEQC.pkl')
-        sitedf = pickle.load(open(phreeqcFile, 'rb'))
+        sitedf = read_pickle(phreeqcFile)
     except IOError:
         print ("Problem reading pickle file: " + phreeqcFile )
         return None

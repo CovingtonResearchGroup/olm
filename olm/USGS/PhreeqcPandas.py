@@ -167,8 +167,13 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
         #run phreeqc on the input file just created
         phreeqcOutputFile = phreeqc_file_name[:-4]+'out'
         retcode = subprocess.call([os.path.join(PHREEQC_PATH,'phreeqc'), phreeqc_file_name, phreeqcOutputFile, DATABASE_FILE])
-        simulationDict = readPhreeqcOutput(phreeqcOutputFile)
-        if force_balance=='Alk':
+        print "PHREEQC return code = ",retcode
+        if retcode == 0:
+            simulationDict = readPhreeqcOutput(phreeqcOutputFile)
+        else: 
+            #This catches cases where PHREEQC fails (e.g. doesn't converge)
+            simulationDict = None
+        if force_balance=='Alk' and simulationDict!=None:
             #Force charge balance on Alkalinity            
             alk_converged=False
             number_of_iterations = 0
@@ -186,7 +191,6 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
                         # convergence doesn't happen or we should quit trying.
                         # Perhaps negative alkalinity??
                         alk = 0.0
-
                     print "alk=", alk
                     New_alk_molL = alk + balance_eq#attempt to stabilize this using a factor of 0.9. Otherwise it seems to overshoot. this didn't work. 
                     if New_alk_molL < 0:#PHREEQC won't take negative alkalinity inputs
@@ -197,11 +201,16 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
                     sample_row['Alkalinity'] = New_alk_mgL
                     writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=phreeqcDict, datetext=datetext)
                     retcode = subprocess.call([os.path.join(PHREEQC_PATH,'phreeqc'), phreeqc_file_name, phreeqcOutputFile, DATABASE_FILE])
-                    simulationDict = readPhreeqcOutput(phreeqcOutputFile)
-                    number_of_iterations = number_of_iterations + 1
-                    if abs(float(simulationDict['Percent error']))<5.0:
-                        alk_converged=True
-                        num_converged = num_converged + 1
+                    print "PHREEQC return code = ",retcode
+                    if retcode == 0:
+                        simulationDict = readPhreeqcOutput(phreeqcOutputFile)
+                        number_of_iterations = number_of_iterations + 1
+                        if abs(float(simulationDict['Percent error']))<5.0:
+                            alk_converged=True
+                            num_converged = num_converged + 1
+                    else:
+                        #This catches cases where PHREEQC returns an error (e.g. doesn't converge)
+                        simulationDict = None
                     if number_of_iterations>max_iterations:
                         simulationDict=None #This will cause this case to be thrown out below
                 else:
@@ -277,7 +286,7 @@ def writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=default_phreeqc
         print ("Problem opening sample PHREEQC input file.")
         return -1
 
-def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=False):
+def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=False, process_regular=True):
     """
     Processes all data from site directories in PHREEQC.
 
@@ -300,34 +309,39 @@ def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx=
 
     bracket_charge_balance : bool
        If set to True, then charge balance will be bracketed by forcing balance on Ca and Alkalinity alternately. Default = False.
+    process_regular : bool
+       If set to True, then PHREEQC will be run without any charge balance forcing. This can be set to False if the calculations without forced balance are already done and you only want to do the charge balance runs. Default = True.
 
     Returns
     -------
     None
     """
     sitesDict = loadSiteListData(regEx=regEx, processedSitesDir = sitesDir)
-    for site, site_panel in sitesDict.iteritems():
-        print("Processing "+site+" in PHREEQC")
-        sitedf = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH=PHREEQC_PATH, DATABASE_FILE=DATABASE_FILE, phreeqcDict=phreeqcDict)
-        phreeqc_site_file = os.path.join(sitesDir,site,site+'-PHREEQC.pkl')
-        try:
-            pickle.dump(sitedf, open(phreeqc_site_file, 'wb'))
-            sitedf.to_csv(phreeqc_site_file[:-3]+'csv')
-        except IOError:
-            print('Problem writing out PHREEQC data file.')
+    if process_regular:
+        #Run PHREEQC on sites without forced charge balance
+        for site, site_panel in sitesDict.iteritems():
+            print("Processing "+site+" in PHREEQC")
+            sitedf = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH=PHREEQC_PATH, DATABASE_FILE=DATABASE_FILE, phreeqcDict=phreeqcDict)
+            phreeqc_site_file = os.path.join(sitesDir,site,site+'-PHREEQC.pkl')
+            try:
+                pickle.dump(sitedf, open(phreeqc_site_file, 'wb'))
+                sitedf.to_csv(phreeqc_site_file[:-3]+'csv')
+            except IOError:
+                print('Problem writing out PHREEQC data file.')
     if bracket_charge_balance:
-        for location, pnl in sitesDict.iteritems():               
+        #Run PHREEQC using bracketed charge balance for sites
+        for site, site_panel in sitesDict.iteritems():               
             #Force balance on Calcium
-            phreeqc_df_ca = processPanel(pnl, os.path.join(sitesDir,location), PHREEQC_PATH, DATABASE_FILE, force_balance='Ca')               
-            phreeqc_site_file_ca = os.path.join(sitesDir,location,location+'-PHREEQC-Ca.pkl')
+            phreeqc_df_ca = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH, DATABASE_FILE, force_balance='Ca')               
+            phreeqc_site_file_ca = os.path.join(sitesDir,site,site+'-PHREEQC-Ca.pkl')
             try:
                 pickle.dump(phreeqc_df_ca, open(phreeqc_site_file_ca, 'wb'))
                 phreeqc_df_ca.to_csv(phreeqc_site_file_ca[:-3]+'csv')
             except IOError:
                 print('Problem writing out PHREEQC Ca data file.')               
             #Force balance on Alkalinity
-            phreeqc_df_alk = processPanel(pnl, os.path.join(sitesDir,location), PHREEQC_PATH, DATABASE_FILE, force_balance='Alk')               
-            phreeqc_site_file_alk = os.path.join(sitesDir,location,location+'-PHREEQC-Alk.pkl')
+            phreeqc_df_alk = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH, DATABASE_FILE, force_balance='Alk')               
+            phreeqc_site_file_alk = os.path.join(sitesDir,site,site+'-PHREEQC-Alk.pkl')
             try:
                 pickle.dump(phreeqc_df_alk, open(phreeqc_site_file_alk, 'wb'))
                 phreeqc_df_alk.to_csv(phreeqc_site_file_alk[:-3]+'csv')
@@ -335,7 +349,7 @@ def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx=
                 print('Problem writing out PHREEQC Alk data file.')                
 
 
-def runPHREEQC(startfilename):
+def runPHREEQC(startfilename, process_regular=True):
      """
      Process all samples within a site directory using information from the start file.
 
@@ -372,10 +386,14 @@ def runPHREEQC(startfilename):
      PHREEQC_PATH = settingsDict['Path to PHREEQC']
      bracket_charge_balance = settingsDict['Force balance on Ca and Alk'] == 'Yes'
    
-     processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=bracket_charge_balance)
+     processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=bracket_charge_balance, process_regular=process_regular)
 
 
 if __name__=="__main__":
     #get site directory  and charge bracketing from command line argument
     startfilename = sys.argv[1]
-    runPHREEQC(startfilename)
+    process_regular = True
+    if len(sys.argv)>2:
+        if sys.argv[2]=='False':
+            process_regular=False
+    runPHREEQC(startfilename, process_regular=process_regular)
