@@ -6,13 +6,17 @@
 Welcome to olm's documentation!
 ===============================
 
-Contents:
-
+Documentation by module
+-----------------------
 .. toctree::
    :maxdepth: 2
 
    olm
 
+	      
+Tutorials
+---------
+* :ref:`USGS-example`
 
 Indices and tables
 ==================
