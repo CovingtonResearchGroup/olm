@@ -16,7 +16,6 @@ def loadSiteListData(siteListText = None,
                      siteFile = None, 
                      regEx = 'USGS-*', 
                      processedSitesDir = DEFAULT_DIR,
-                     loadData = True,
                      loadPhreeqc = False,
                      loadMetaData = False
                      ):
@@ -36,17 +35,21 @@ def loadSiteListData(siteListText = None,
 
     processedSitesDir : string (optional)
         directory that contains all of the processed site directories. It is important to change this if the default is not correct. (default='./Processed-Sites')
+        
     loadPhreeqc : boolean
         If set to true, PHREEQC outputs will also be loaded for each site. (default=False)
+        
+    loadMetaData : boolean
+        If set to true, the site metadata will be loaded for each site. (default=False)
 
     Returns
     -------
     sitesDict : dict
         A dictionary of site data panels keyed by site name.
 
-    or if loadPhreeqc is set to true
-    (sitesDict, sitesPheeqcDict) : tuple
-       A tuple containing both the sitesDict and a dict of PHREEQC data for each site.
+    or if loadPhreeqc or loadMetaData are set to true
+    (sitesDict, sitesPheeqcDict, sitesMetaDataDict) : tuple
+       A tuple containing the sitesDict and dicts of the PHREEQC data and/or metadata for each site. Order is as shown.
 
     """
     siteList = -1
