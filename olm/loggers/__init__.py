@@ -1,4 +1,4 @@
 #__all__ = ["CTDToolkit", "pHToolkit"]
-from CTDToolkit import *
-from pHToolkit import *
+#from SchlumbergerCTDToolkit import *
+#from WTWpHToolkit import *
 from loggerScripts import *
