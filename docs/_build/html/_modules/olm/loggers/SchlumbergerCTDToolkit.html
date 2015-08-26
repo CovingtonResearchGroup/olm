@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>olm.loggers.SchlumbergerCTDToolkit &mdash; olm 0.33 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.33',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="olm 0.33 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for olm.loggers.SchlumbergerCTDToolkit</h1><div class="highlight"><pre>
+<span class="c">#Tools for reading and analysis of data from Schlumberger CTD Divers</span>
+
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">read_csv</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">concat</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+
+<span class="c">#read in the CSV file from a CTD diver and return a pandas DataFrame</span>
+<div class="viewcode-block" id="readCTD"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.SchlumbergerCTDToolkit.readCTD">[docs]</a><span class="k">def</span> <span class="nf">readCTD</span><span class="p">(</span><span class="n">csvfile</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">csvfile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;MON&#39;</span><span class="p">):</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="s">&#39;\s\s\s\s*&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="s">&#39;,&#39;</span>
+<span class="c">#    header = 0</span>
+    <span class="n">skiprows</span> <span class="o">=</span> <span class="mi">66</span> <span class="c">#this is somewhat weak, number of lines could change over time??</span>
+    <span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Pressure&#39;</span><span class="p">,</span> <span class="s">&#39;Temperature&#39;</span><span class="p">,</span> <span class="s">&#39;Conductivity&#39;</span><span class="p">]</span>
+    <span class="n">parse_dates</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">skip_footer</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="n">parse_dates</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="n">skip_footer</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+<span class="c">#read in the CSV file from a CTD diver and return a pandas DataFrame</span></div>
+<div class="viewcode-block" id="readBaro"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.SchlumbergerCTDToolkit.readBaro">[docs]</a><span class="k">def</span> <span class="nf">readBaro</span><span class="p">(</span><span class="n">csvfile</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">csvfile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;MON&#39;</span><span class="p">):</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="s">&#39;\s\s\s\s*&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="s">&#39;,&#39;</span>
+<span class="c">#    header = 0</span>
+    <span class="n">skiprows</span> <span class="o">=</span> <span class="mi">54</span> <span class="c">#this is somewhat weak, number of lines could change over time??</span>
+    <span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Pressure&#39;</span><span class="p">,</span> <span class="s">&#39;Temperature&#39;</span><span class="p">]</span>
+    <span class="n">parse_dates</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">skip_footer</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="n">parse_dates</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="n">skip_footer</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+
+<span class="c"># concatCTD accepts a list of CTD DataFrames and concatenate them</span>
+<span class="c">#</span>
+<span class="c"># Arguments:</span>
+<span class="c"># dflist = a list of dataframes</span>
+<span class="c">#</span>
+<span class="c"># zero_shift = if set to True, the pressure values will be adjusted at the time</span>
+<span class="c">#              of each join, assuming that flow depth before and after the join</span>
+<span class="c">#              was equal.  If set to False, no adjustment will be made in      </span>
+<span class="c">#              pressure values</span>
+<span class="c">#</span>
+<span class="c"># n_to_average = number of data points to average before and after join in order</span>
+<span class="c">#                to determine data offset value for pressure</span>
+<span class="c">#</span>
+<span class="c"># offset_list = list of offsets to be applied manually to pressure data</span>
+</div>
+<div class="viewcode-block" id="concatCTD"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.SchlumbergerCTDToolkit.concatCTD">[docs]</a><span class="k">def</span> <span class="nf">concatCTD</span><span class="p">(</span><span class="n">dflist</span><span class="p">,</span> <span class="n">zero_shift</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">n_to_average</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">offset_list</span><span class="o">=</span><span class="p">[],</span> <span class="n">offset_dates</span> <span class="o">=</span> <span class="p">[]):</span>
+    <span class="n">concatenated</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="n">zero_shift</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="c">#concatenate with no shifting</span>
+        <span class="c">#note: might want to add some capability to handle overlapping data</span>
+        <span class="n">concatenated</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="n">dflist</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c">#offset each data file by the value in offset list</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">offset_list</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dflist</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s">&quot;Number of elements in offset_list must be one less than number of data files to concatenate&quot;</span>
+                <span class="k">return</span> <span class="bp">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dflist</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="c">#skip first data frame</span>
+                        <span class="n">df</span><span class="p">[</span><span class="s">&#39;Pressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">&#39;Pressure&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">offset_list</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dflist</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="c">#skip first data frame</span>
+                    <span class="c">#in tail/head we throw out last/first data point</span>
+                    <span class="c">#get average value from tail of previous data</span>
+                    <span class="n">tail_values</span> <span class="o">=</span> <span class="n">dflist</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s">&#39;Pressure&#39;</span><span class="p">][</span><span class="o">-</span><span class="n">n_to_average</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">tail_average</span> <span class="o">=</span> <span class="n">tail_values</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                    <span class="c">#get average value from head of following data</span>
+                    <span class="n">head_values</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">&#39;Pressure&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">:</span><span class="n">n_to_average</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">head_average</span> <span class="o">=</span> <span class="n">head_values</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                    <span class="n">delta</span> <span class="o">=</span> <span class="n">tail_average</span> <span class="o">-</span> <span class="n">head_average</span>
+                    <span class="n">offset_dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">offset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
+                    <span class="n">df</span><span class="p">[</span><span class="s">&#39;Pressure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">&#39;Pressure&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">delta</span>
+        <span class="n">concatenated</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="n">dflist</span><span class="p">)</span>
+    <span class="n">offsets</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">offset_list</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">offset_dates</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">concatenated</span><span class="p">,</span> <span class="n">offsets</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
