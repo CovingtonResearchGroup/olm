@@ -125,6 +125,23 @@ def GetSiteData(location):#, writedir='.'): #Changed so that we don't write out 
     return siteDF
 
 def querySiteList(siteList, charList):
+    """
+    Construct html query for NWIS given a list of sites and characteristics.
+
+    Parameters
+    ----------
+    siteList : list
+        A list of USGS site number strings starting with 'USGS-' or just containing the bare integer number of a USGS site.
+    charList : list
+        A list of USGS characteristic names to be retrieved in this query.
+
+    Returns
+    -------
+    queryText : string
+        Returns a string that contains the html query for this list of sites and characteristics.
+
+
+    """
     BASE_URL = 'http://qwwebservices.usgs.gov/Result/search?'
     queryText = BASE_URL + 'siteid='
     #add sites to query
