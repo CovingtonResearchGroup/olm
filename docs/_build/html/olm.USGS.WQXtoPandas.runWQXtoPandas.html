@@ -56,7 +56,7 @@
 <h1>olm.USGS.WQXtoPandas.runWQXtoPandas<a class="headerlink" href="#olm-usgs-wqxtopandas-runwqxtopandas" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.USGS.WQXtoPandas.runWQXtoPandas">
-<tt class="descclassname">olm.USGS.WQXtoPandas.</tt><tt class="descname">runWQXtoPandas</tt><big>(</big><em>startfilename</em><big>)</big><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#runWQXtoPandas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.runWQXtoPandas" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">olm.USGS.WQXtoPandas.</tt><tt class="descname">runWQXtoPandas</tt><big>(</big><em>startfilename</em>, <em>autosplitnum=20</em><big>)</big><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#runWQXtoPandas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.runWQXtoPandas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from the USGS NWIS database.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -66,6 +66,10 @@
 <blockquote>
 <div><p>A string containing the name of the excel file to be used for input parameters to WQXtoPandas</p>
 </div></blockquote>
+<p><strong>autosplitnum</strong> : int (optional)</p>
+<blockquote>
+<div><p>The number of sites at which a NWIS query is split into multiple queries. (default=?)</p>
+</div></blockquote>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None</p>
@@ -74,7 +78,7 @@
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>Can be run from within a python shell or script, or as a standalone script from the command line where the start file name is provided as the first command line argument (e.g. WQXtoPandas &lt;start file name&gt;).</p>
+<p>Can be run from within a python shell or script, or as a standalone script from the command line where the start file name is provided as the first command line argument (e.g. WQXtoPandas &lt;start file name&gt; &lt;autosplitnum&gt;).</p>
 </dd></dl>
 
 </div>

@@ -33,6 +33,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
@@ -62,7 +65,9 @@
                      <span class="n">siteFile</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
                      <span class="n">regEx</span> <span class="o">=</span> <span class="s">&#39;USGS-*&#39;</span><span class="p">,</span> 
                      <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">,</span>
-                     <span class="n">loadPhreeqc</span> <span class="o">=</span> <span class="bp">False</span>
+                     <span class="n">loadData</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
+                     <span class="n">loadPhreeqc</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+                     <span class="n">loadMetaData</span> <span class="o">=</span> <span class="bp">False</span>
                      <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves site data for multiple sites within a processed sites directory.</span>
@@ -141,19 +146,40 @@
         
         <span class="n">sitesDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">sitesPhreeqcDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">sitesMetaDataDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteList</span><span class="p">:</span>            
             <span class="n">sitePanel</span> <span class="o">=</span> <span class="n">loadSiteData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
             <span class="n">sitesDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">sitePanel</span>
             <span class="k">if</span> <span class="n">loadPhreeqc</span><span class="p">:</span>
                 <span class="n">sitedf</span> <span class="o">=</span> <span class="n">loadSitePhreeqcData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
                 <span class="n">sitesPhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">sitedf</span>
-        <span class="k">if</span> <span class="n">loadPhreeqc</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="n">sitesDict</span><span class="p">,</span> <span class="n">sitesPhreeqcDict</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">loadMetaData</span><span class="p">:</span>
+                <span class="n">siteMetaData</span> <span class="o">=</span> <span class="n">loadSiteMetaData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
+                <span class="n">sitesMetaDataDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">siteMetaData</span>
+        <span class="k">if</span> <span class="n">loadPhreeqc</span> <span class="ow">or</span> <span class="n">loadMetaData</span><span class="p">:</span>
+            <span class="n">return_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">sitesDict</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">loadPhreeqc</span><span class="p">:</span>
+                <span class="n">return_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sitesPhreeqcDict</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">loadMetaData</span><span class="p">:</span>
+                <span class="n">return_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sitesMetaDataDict</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">return_list</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">sitesDict</span>
-
-
 </div>
+<span class="k">def</span> <span class="nf">loadSiteMetaData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">):</span>
+    <span class="c">#Add USGS tag if needed</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;USGS-&#39;</span><span class="p">)):</span>
+        <span class="n">site</span> <span class="o">=</span> <span class="s">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">metaDataFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s">&#39;-Site-Description.pkl&#39;</span><span class="p">)</span>
+        <span class="n">siteMetaData</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">metaDataFile</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="k">print</span> <span class="p">(</span><span class="s">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">return</span> <span class="n">siteMetaData</span>
+    
+
+
 <div class="viewcode-block" id="loadSiteData"><a class="viewcode-back" href="../../../olm.USGS.loadWaterQualityData.loadSiteData.html#olm.USGS.loadWaterQualityData.loadSiteData">[docs]</a><span class="k">def</span> <span class="nf">loadSiteData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves site data for an individual site from a directory of processed sites.</span>
@@ -281,6 +307,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>

@@ -33,6 +33,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
@@ -51,6 +54,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">xlrd</span><span class="o">,</span><span class="nn">os</span><span class="o">,</span><span class="nn">subprocess</span><span class="o">,</span><span class="nn">string</span><span class="o">,</span><span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
 <span class="kn">import</span> <span class="nn">cPickle</span> <span class="kn">as</span> <span class="nn">pickle</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Panel</span><span class="p">,</span> <span class="n">to_datetime</span><span class="p">,</span> <span class="n">Series</span><span class="p">,</span> <span class="n">concat</span>
@@ -62,7 +67,7 @@
 <span class="kn">from</span> <span class="nn">DataRetrieval</span> <span class="kn">import</span> <span class="n">querySiteList</span><span class="p">,</span> <span class="n">GetDailyDischarge</span><span class="p">,</span> <span class="n">GetSiteData</span>
 <span class="kn">from</span> <span class="nn">dataSlice</span> <span class="kn">import</span> <span class="n">extractValues</span>
 
-<div class="viewcode-block" id="WQXtoPandas"><a class="viewcode-back" href="../../../olm.USGS.WQXtoPandas.WQXtoPandas.html#olm.USGS.WQXtoPandas.WQXtoPandas">[docs]</a><span class="k">def</span> <span class="nf">WQXtoPandas</span><span class="p">(</span><span class="n">xmlLocation</span><span class="p">,</span> <span class="n">charDict</span><span class="p">,</span> <span class="n">outputPath</span><span class="o">=</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="n">fromFile</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">outputDirName</span><span class="o">=</span><span class="s">&#39;Processed-Sites&#39;</span><span class="p">,</span> <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="s">&#39;/home/mcoving/phreeqc-2.18.0/bin/&#39;</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="s">&#39;/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat&#39;</span><span class="p">,</span> <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="s">&#39;Result.log&#39;</span><span class="p">,</span> <span class="n">START_FILE</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="WQXtoPandas"><a class="viewcode-back" href="../../../olm.USGS.WQXtoPandas.WQXtoPandas.html#olm.USGS.WQXtoPandas.WQXtoPandas">[docs]</a><span class="k">def</span> <span class="nf">WQXtoPandas</span><span class="p">(</span><span class="n">xmlLocation</span><span class="p">,</span> <span class="n">charDict</span><span class="p">,</span> <span class="n">outputPath</span><span class="o">=</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="n">fromFile</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">outputDirName</span><span class="o">=</span><span class="s">&#39;Processed-Sites&#39;</span><span class="p">,</span> <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="s">&#39;/home/mcoving/phreeqc-2.18.0/bin/&#39;</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="s">&#39;/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat&#39;</span><span class="p">,</span> <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="s">&#39;Result.log&#39;</span><span class="p">,</span> <span class="n">START_FILE</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">splittag</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span><span class="n">bracket_charge_balance</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are stored in directories for each site.</span>
 <span class="sd">    </span>
@@ -126,7 +131,7 @@
             <span class="n">wqxtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="nb">file</span><span class="o">=</span><span class="n">xmlLocation</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>            
             <span class="c">#check whether we already have a matching xml file</span>
-            <span class="n">xmlSaveFile</span> <span class="o">=</span> <span class="n">LOG_FILE</span> <span class="o">+</span> <span class="s">&#39;.xml&#39;</span>
+            <span class="n">xmlSaveFile</span> <span class="o">=</span> <span class="n">LOG_FILE</span> <span class="o">+</span> <span class="n">splittag</span> <span class="o">+</span> <span class="s">&#39;.xml&#39;</span>
             <span class="k">if</span> <span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">xmlSaveFile</span><span class="p">)</span> <span class="p">):</span>
                 <span class="n">goodAnswer</span> <span class="o">=</span> <span class="bp">False</span>
                 <span class="k">while</span> <span class="ow">not</span><span class="p">(</span><span class="n">goodAnswer</span><span class="p">):</span>
@@ -386,9 +391,9 @@
                     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
                         <span class="k">print</span><span class="p">(</span><span class="s">&#39;Problem writing out PHREEQC Alk data file.&#39;</span><span class="p">)</span>                
         <span class="c">#Create log file</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Writing log file: &#39;</span><span class="o">+</span><span class="n">LOG_FILE</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;Writing log file: &#39;</span><span class="o">+</span><span class="n">LOG_FILE</span><span class="o">+</span><span class="n">splittag</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span> 
-            <span class="n">log_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">LOG_FILE</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
+            <span class="n">log_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">LOG_FILE</span><span class="o">+</span><span class="n">splittag</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="n">log_file</span><span class="p">,</span> <span class="s">&#39;Start file = &#39;</span> <span class="o">+</span> <span class="n">START_FILE</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="n">log_file</span><span class="p">,</span> <span class="s">&#39;Number of Samples Processed = &#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_processed</span><span class="p">))</span>
             <span class="k">print</span> <span class="o">&gt;&gt;</span><span class="n">log_file</span><span class="p">,</span> <span class="s">&#39;Number of Samples Not Processed = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_not_processed</span><span class="p">))</span>
@@ -433,7 +438,7 @@
     <span class="k">return</span> <span class="mi">0</span>
 
 </div>
-<div class="viewcode-block" id="runWQXtoPandas"><a class="viewcode-back" href="../../../olm.USGS.WQXtoPandas.runWQXtoPandas.html#olm.USGS.WQXtoPandas.runWQXtoPandas">[docs]</a><span class="k">def</span> <span class="nf">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">):</span>
+<div class="viewcode-block" id="runWQXtoPandas"><a class="viewcode-back" href="../../../olm.USGS.WQXtoPandas.runWQXtoPandas.html#olm.USGS.WQXtoPandas.runWQXtoPandas">[docs]</a><span class="k">def</span> <span class="nf">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">autosplitnum</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from the USGS NWIS database.</span>
 <span class="sd">    </span>
@@ -442,6 +447,9 @@
 <span class="sd">    startfilename : string</span>
 <span class="sd">        A string containing the name of the excel file to be used for input parameters to WQXtoPandas</span>
 
+<span class="sd">    autosplitnum : int (optional)</span>
+<span class="sd">        The number of sites at which a NWIS query is split into multiple queries. (default=?)</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
@@ -449,12 +457,15 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 
-<span class="sd">    Can be run from within a python shell or script, or as a standalone script from the command line where the start file name is provided as the first command line argument (e.g. WQXtoPandas &lt;start file name&gt;).</span>
+<span class="sd">    Can be run from within a python shell or script, or as a standalone script from the command line where the start file name is provided as the first command line argument (e.g. WQXtoPandas &lt;start file name&gt; &lt;autosplitnum&gt;).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c">#PHREEQC input file path</span>
     <span class="n">PHREEQC_INPUT_PATH</span> <span class="o">=</span> <span class="s">&#39;./&#39;</span>
     <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">num_processed</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">autosplitnum</span><span class="p">)</span><span class="o">==</span><span class="nb">int</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;autosplitnum must be an integer.&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
     <span class="k">print</span><span class="p">(</span><span class="s">&#39;Processing: &#39;</span><span class="o">+</span> <span class="n">startfilename</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="c">#open start file</span>
@@ -487,18 +498,44 @@
         <span class="n">bracket_charge_balance</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Force balance on Ca and Alk&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;Yes&#39;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input method&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;1&#39;</span><span class="p">):</span>
             <span class="c">#We already have an XML file to process that contains water quality data</span>
-            <span class="n">WQXtoPandas</span><span class="p">(</span>
-                <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input file&#39;</span><span class="p">],</span> 
-                <span class="n">charDict</span><span class="p">,</span> 
-                <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span> 
-                <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span> 
-                <span class="n">fromFile</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> 
-                <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
-                <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
-                <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to PHREEQC&#39;</span><span class="p">],</span> 
-                <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> 
-                <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
-                <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
+            <span class="c">#Check whether a wildcard was used and more than one xml file is available</span>
+            <span class="n">xml_file_string</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span>
+                <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span>
+                <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input file&#39;</span><span class="p">])</span>
+            <span class="n">xml_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">xml_file_string</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">xml_list</span><span class="o">==</span><span class="p">[]:</span>
+                <span class="k">print</span> <span class="s">&quot;Empty xml file list. Check path for xml file.&quot;</span>
+                <span class="k">print</span> <span class="s">&quot;xml file string =&quot;</span><span class="p">,</span> <span class="n">xml_file_string</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">n_xml</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xml_list</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">n_xml</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">xml_file</span> <span class="ow">in</span> <span class="n">xml_list</span><span class="p">:</span>
+                    <span class="n">WQXtoPandas</span><span class="p">(</span>
+                        <span class="n">xml_file</span><span class="p">,</span>
+                        <span class="n">charDict</span><span class="p">,</span> 
+                        <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span> 
+                        <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span> 
+                        <span class="n">fromFile</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> 
+                        <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                        <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
+                        <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to PHREEQC&#39;</span><span class="p">],</span> 
+                        <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> 
+                        <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
+                        <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">WQXtoPandas</span><span class="p">(</span>
+                    <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input file&#39;</span><span class="p">],</span> 
+                    <span class="n">charDict</span><span class="p">,</span> 
+                    <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span> 
+                    <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span> 
+                    <span class="n">fromFile</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> 
+                    <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                    <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
+                    <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to PHREEQC&#39;</span><span class="p">],</span> 
+                    <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> 
+                    <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
+                    <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input method&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;2&#39;</span><span class="p">):</span>
             <span class="c">#   We will use a list of sites from a NWIS XML file and query these </span>
             <span class="c">#   sites for water quality data</span>
@@ -512,22 +549,42 @@
             <span class="c">#collect list of characteristics to query</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">charDict</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">():</span>
                 <span class="n">charList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-            <span class="c">#get html for query</span>
-            <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">siteList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
-<span class="c">#            print &quot;Query text: &quot; + queryText</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span> 
-                <span class="n">WQXtoPandas</span><span class="p">(</span>
-                    <span class="n">queryText</span><span class="p">,</span>
-                    <span class="n">charDict</span><span class="p">,</span>
-                    <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span> 
-                    <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span> 
-                    <span class="n">fromFile</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> 
-                    <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
-                    <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
-                    <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to PHREEQC&#39;</span><span class="p">],</span> 
-                    <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> 
-                    <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
-                    <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>          
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span><span class="o">&gt;</span><span class="n">autosplitnum</span><span class="p">:</span>
+                <span class="c">#We have too long of a list and should split into multiple queries</span>
+                <span class="n">n_groups</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">autosplitnum</span><span class="p">)))</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">):</span><span class="c">#this doesn&#39;t work for even division cases</span>
+                    <span class="n">shortList</span> <span class="o">=</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">autosplitnum</span><span class="p">:</span><span class="n">i</span><span class="o">*</span><span class="n">autosplitnum</span><span class="o">+</span><span class="n">autosplitnum</span><span class="p">]</span>
+                    <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">shortList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                        <span class="n">WQXtoPandas</span><span class="p">(</span>
+                            <span class="n">queryText</span><span class="p">,</span>
+                            <span class="n">charDict</span><span class="p">,</span>
+                            <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span> 
+                            <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span> 
+                            <span class="n">fromFile</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> 
+                            <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                            <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
+                            <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to PHREEQC&#39;</span><span class="p">],</span> 
+                            <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> 
+                            <span class="n">splittag</span> <span class="o">=</span> <span class="s">&#39;.&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                            <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
+                            <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>     
+            <span class="k">else</span><span class="p">:</span>        
+                <span class="c">#get html for query</span>
+                <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">siteList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span> 
+                    <span class="n">WQXtoPandas</span><span class="p">(</span>
+                        <span class="n">queryText</span><span class="p">,</span>
+                        <span class="n">charDict</span><span class="p">,</span>
+                        <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span> 
+                        <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span> 
+                        <span class="n">fromFile</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> 
+                        <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                        <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
+                        <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to PHREEQC&#39;</span><span class="p">],</span> 
+                        <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> 
+                        <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
+                        <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>          
         <span class="k">elif</span> <span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Input method&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;3&#39;</span><span class="p">):</span>
             <span class="c">#   We will use a list of sites from a text file and query these </span>
             <span class="c">#   sites for water quality data</span>
@@ -542,22 +599,42 @@
                 <span class="c">#collect list of characteristics to query</span>
                 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">charDict</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">():</span>
                     <span class="n">charList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-                <span class="c">#get html for query</span>
-                <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">siteList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
-<span class="c">#                print &quot;Query text: &quot; + queryText</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
-                    <span class="n">WQXtoPandas</span><span class="p">(</span>
-                        <span class="n">queryText</span><span class="p">,</span>
-                        <span class="n">charDict</span><span class="p">,</span>
-                        <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span> 
-                        <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span> 
-                        <span class="n">fromFile</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> 
-                        <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
-                        <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
-                        <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to PHREEQC&#39;</span><span class="p">],</span> 
-                        <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> 
-                        <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
-                        <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span><span class="o">&gt;</span><span class="n">autosplitnum</span><span class="p">:</span>
+                    <span class="c">#We have too long of a list and should split into multiple queries</span>
+                    <span class="n">n_groups</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">autosplitnum</span><span class="p">)))</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">):</span>
+                        <span class="n">shortList</span> <span class="o">=</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">autosplitnum</span><span class="p">:</span><span class="n">i</span><span class="o">*</span><span class="n">autosplitnum</span><span class="o">+</span><span class="n">autosplitnum</span><span class="p">]</span>
+                        <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">shortList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span> 
+                                     <span class="n">WQXtoPandas</span><span class="p">(</span>
+                                         <span class="n">queryText</span><span class="p">,</span>
+                                         <span class="n">charDict</span><span class="p">,</span>
+                                         <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span> 
+                                         <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span> 
+                                         <span class="n">fromFile</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> 
+                                         <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                                         <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
+                                         <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to PHREEQC&#39;</span><span class="p">],</span>
+                                         <span class="n">splittag</span> <span class="o">=</span> <span class="s">&#39;.&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> 
+                                         <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> 
+                                         <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
+                                         <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c">#get html for query</span>
+                    <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">siteList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">):</span>
+                        <span class="n">WQXtoPandas</span><span class="p">(</span>
+                            <span class="n">queryText</span><span class="p">,</span>
+                            <span class="n">charDict</span><span class="p">,</span>
+                            <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to output directory&#39;</span><span class="p">],</span> 
+                            <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Name of output directory&#39;</span><span class="p">],</span> 
+                            <span class="n">fromFile</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> 
+                            <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                            <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
+                            <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s">&#39;Path to PHREEQC&#39;</span><span class="p">],</span> 
+                            <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> 
+                            <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
+                            <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">print</span><span class="p">(</span><span class="s">&quot;Problem obtaining site list.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -571,7 +648,11 @@
 <span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="c">#pull in name of start file</span>
     <span class="n">startfilename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">autosplitnum</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">autosplitnum</span><span class="o">=</span><span class="n">autosplitnum</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">)</span>
 </pre></div>
 
           </div>
@@ -602,6 +683,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>
