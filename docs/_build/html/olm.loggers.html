@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>olm.loggers package &mdash; olm 0.33 documentation</title>
+    
+    <link rel="stylesheet" href="_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.33',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="olm 0.33 documentation" href="index.html" />
+    <link rel="up" title="olm Package" href="olm.html" />
+    <link rel="next" title="olm.calcite.solutionFromCaPCO2" href="olm.calcite.solutionFromCaPCO2.html" />
+    <link rel="prev" title="olm.USGS.siteListExtraction.extractSitesFromXML" href="olm.USGS.siteListExtraction.extractSitesFromXML.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="olm.calcite.solutionFromCaPCO2.html" title="olm.calcite.solutionFromCaPCO2"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.siteListExtraction.extractSitesFromXML.html" title="olm.USGS.siteListExtraction.extractSitesFromXML"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="olm.html" accesskey="U">olm Package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="olm-loggers-package">
+<h1>olm.loggers package<a class="headerlink" href="#olm-loggers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-olm.loggers.CampbellToolkit">
+<span id="olm-loggers-campbelltoolkit-module"></span><h2>olm.loggers.CampbellToolkit module<a class="headerlink" href="#module-olm.loggers.CampbellToolkit" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="olm.loggers.CampbellToolkit.read_dat">
+<tt class="descclassname">olm.loggers.CampbellToolkit.</tt><tt class="descname">read_dat</tt><big>(</big><em>dat_file</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/CampbellToolkit.html#read_dat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.CampbellToolkit.read_dat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-olm.loggers.HoboToolkit">
+<span id="olm-loggers-hobotoolkit-module"></span><h2>olm.loggers.HoboToolkit module<a class="headerlink" href="#module-olm.loggers.HoboToolkit" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="olm.loggers.HoboToolkit.read_hobo_csv">
+<tt class="descclassname">olm.loggers.HoboToolkit.</tt><tt class="descname">read_hobo_csv</tt><big>(</big><em>csv_file</em>, <em>all_columns=False</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/HoboToolkit.html#read_hobo_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.HoboToolkit.read_hobo_csv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-olm.loggers.SchlumbergerCTDToolkit">
+<span id="olm-loggers-schlumbergerctdtoolkit-module"></span><h2>olm.loggers.SchlumbergerCTDToolkit module<a class="headerlink" href="#module-olm.loggers.SchlumbergerCTDToolkit" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="olm.loggers.SchlumbergerCTDToolkit.concatCTD">
+<tt class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</tt><tt class="descname">concatCTD</tt><big>(</big><em>dflist</em>, <em>zero_shift=True</em>, <em>n_to_average=5</em>, <em>offset_list=[]</em>, <em>offset_dates=[]</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#concatCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.concatCTD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="olm.loggers.SchlumbergerCTDToolkit.readBaro">
+<tt class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</tt><tt class="descname">readBaro</tt><big>(</big><em>csvfile</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readBaro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readBaro" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="olm.loggers.SchlumbergerCTDToolkit.readCTD">
+<tt class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</tt><tt class="descname">readCTD</tt><big>(</big><em>csvfile</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readCTD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-olm.loggers.WTWpHToolkit">
+<span id="olm-loggers-wtwphtoolkit-module"></span><h2>olm.loggers.WTWpHToolkit module<a class="headerlink" href="#module-olm.loggers.WTWpHToolkit" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="olm.loggers.WTWpHToolkit.concatpH">
+<tt class="descclassname">olm.loggers.WTWpHToolkit.</tt><tt class="descname">concatpH</tt><big>(</big><em>dflist</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#concatpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.concatpH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="olm.loggers.WTWpHToolkit.euroParser">
+<tt class="descclassname">olm.loggers.WTWpHToolkit.</tt><tt class="descname">euroParser</tt><big>(</big><em>datestring</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#euroParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.euroParser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="olm.loggers.WTWpHToolkit.readpH">
+<tt class="descclassname">olm.loggers.WTWpHToolkit.</tt><tt class="descname">readpH</tt><big>(</big><em>csvfile</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#readpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.readpH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-olm.loggers.loggerScripts">
+<span id="olm-loggers-loggerscripts-module"></span><h2>olm.loggers.loggerScripts module<a class="headerlink" href="#module-olm.loggers.loggerScripts" title="Permalink to this headline">¶</a></h2>
+<p>Contains functions that are useful in general for manipulation of data logger data</p>
+<dl class="function">
+<dt id="olm.loggers.loggerScripts.joinAndResampleLoggers">
+<tt class="descclassname">olm.loggers.loggerScripts.</tt><tt class="descname">joinAndResampleLoggers</tt><big>(</big><em>loggerlist</em>, <em>interval</em>, <em>suffixes=[]</em>, <em>how='inner'</em>, <em>interpolate=False</em>, <em>limit=None</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinAndResampleLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinAndResampleLoggers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Joins and resamples data from DataFrame objects provided in a list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>loggerlist</strong> : list</p>
+<blockquote>
+<div><p>List of logger pandas.core.dataframe.DataFrame objects to be joined.</p>
+</div></blockquote>
+<p><strong>interval</strong> : string</p>
+<blockquote>
+<div><p>Pandas offset string (<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases">http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases</a>) on which the DataFrames should be resampled (e.g. &#8216;H&#8217;=hour, &#8216;T&#8217;=minute, &#8216;D&#8217;=day).</p>
+</div></blockquote>
+<p><strong>suffixes</strong> : list</p>
+<blockquote>
+<div><p>A list of strings (same length as loggerlist) that contains suffixes to be applied to each logger. This is useful if multiple loggers have the same column names.</p>
+</div></blockquote>
+<p><strong>how</strong> : string</p>
+<blockquote>
+<div><p>Method for joining loggers (default = &#8216;inner&#8217;).</p>
+</div></blockquote>
+<p><strong>interpolate</strong> : boolean</p>
+<blockquote>
+<div><p>Whether data should be interpolated to fill gaps in rows (default=False).</p>
+</div></blockquote>
+<p><strong>limit</strong> : int</p>
+<blockquote>
+<div><p>Maximum number of consecutive NaNs to fill if data are interpolated.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>joined</strong> : pandas.core.dataframe.DataFrame</p>
+<blockquote class="last">
+<div><p>DataFrame Object that contains joined DataFrames.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="olm.loggers.loggerScripts.joinLoggers">
+<tt class="descclassname">olm.loggers.loggerScripts.</tt><tt class="descname">joinLoggers</tt><big>(</big><em>loggerlist</em>, <em>how='inner'</em>, <em>interpolate=False</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinLoggers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Joins the data from a list of logger DataFrame objects together.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>loggerlist</strong> : list</p>
+<blockquote>
+<div><p>A list of logger DataFrame objects to be joined.</p>
+</div></blockquote>
+<p><strong>how</strong> : string, optional</p>
+<blockquote>
+<div><p>How the two DataFrames are to be joined. Default is inner.</p>
+</div></blockquote>
+<p><strong>interpolate</strong> : boolean, optional</p>
+<blockquote>
+<div><p>Determines whether empty rows are to be filled with data via interpolation. Uses Pandas Dataframe.interpolate(). Default = False</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>joined</strong> : pandas.DataFrame</p>
+<blockquote class="last">
+<div><p>DataFrame of joined loggers.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="olm.loggers.loggerScripts.linear_correction">
+<tt class="descclassname">olm.loggers.loggerScripts.</tt><tt class="descname">linear_correction</tt><big>(</big><em>rawSeries</em>, <em>correctionSeries</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#linear_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.linear_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses a Pandas Series of spot measured values to linearly correct time series data from a logger.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>rawSeries</strong> : pandas.core.series.Series</p>
+<blockquote>
+<div><p>A Pandas Series that contains the time series data to be corrected.</p>
+</div></blockquote>
+<p><strong>correctionSeries</strong> : pandas.core.series.Series</p>
+<blockquote>
+<div><p>A Pandas Series that contains spot measurement data that are to be used to correct rawSeries.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>rawSeries</strong> : pandas.core.series.Series</p>
+<blockquote class="last">
+<div><p>A corrected version of the rawSeries time series data.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="olm.loggers.loggerScripts.manualCompare">
+<tt class="descclassname">olm.loggers.loggerScripts.</tt><tt class="descname">manualCompare</tt><big>(</big><em>logger</em>, <em>manual</em>, <em>value_name=''</em>, <em>ltag='_log'</em>, <em>mtag='_man'</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#manualCompare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.manualCompare" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>logger</strong> : pandas.core.series.Series</p>
+<blockquote>
+<div><p>A Pandas TimeSeries containing a single column and time stamps as indices.</p>
+</div></blockquote>
+<p><strong>manual</strong> : pandas.core.series.Series</p>
+<blockquote>
+<div><p>A Pandas TimeSeries containing a single variable from the manual data set</p>
+</div></blockquote>
+<p><strong>value_name</strong> : string</p>
+<blockquote>
+<div><p>A string to use as the base for the collumn labels in the output DataFrame.</p>
+</div></blockquote>
+<p><strong>ltag</strong> : string</p>
+<blockquote>
+<div><p>A suffix to be added to the logger column name, or used as the logger column name if value_name is not set.</p>
+</div></blockquote>
+<p><strong>mtag</strong> : string</p>
+<blockquote>
+<div><p>A suffix to be added to the manual measurement column name, or used as the manual measurement column name if value_name is not set.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>joined</strong> : pandas.core.dataframe.DataFrame</p>
+<blockquote class="last">
+<div><p>A DataFrame object containing values of manual measurements and corresponding values from the logger time series using the aligned index that is resampled to the hour.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-olm.loggers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-olm.loggers" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">olm.loggers package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-olm.loggers.CampbellToolkit">olm.loggers.CampbellToolkit module</a></li>
+<li><a class="reference internal" href="#module-olm.loggers.HoboToolkit">olm.loggers.HoboToolkit module</a></li>
+<li><a class="reference internal" href="#module-olm.loggers.SchlumbergerCTDToolkit">olm.loggers.SchlumbergerCTDToolkit module</a></li>
+<li><a class="reference internal" href="#module-olm.loggers.WTWpHToolkit">olm.loggers.WTWpHToolkit module</a></li>
+<li><a class="reference internal" href="#module-olm.loggers.loggerScripts">olm.loggers.loggerScripts module</a></li>
+<li><a class="reference internal" href="#module-olm.loggers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="olm.USGS.siteListExtraction.extractSitesFromXML.html"
+                        title="previous chapter">olm.USGS.siteListExtraction.extractSitesFromXML</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="olm.calcite.solutionFromCaPCO2.html"
+                        title="next chapter">olm.calcite.solutionFromCaPCO2</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/olm.loggers.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="olm.calcite.solutionFromCaPCO2.html" title="olm.calcite.solutionFromCaPCO2"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.siteListExtraction.extractSitesFromXML.html" title="olm.USGS.siteListExtraction.extractSitesFromXML"
+             >previous</a> |</li>
+        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="olm.html" >olm Package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

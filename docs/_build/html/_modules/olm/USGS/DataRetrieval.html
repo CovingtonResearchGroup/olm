@@ -33,6 +33,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
           <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
       </ul>
@@ -205,6 +208,7 @@
 <span class="sd">        Full USGS site number starting with &#39;USGS-&#39; or a string that just contains the bare integer number of a USGS site.</span>
 <span class="sd">    date : string</span>
 <span class="sd">        String containing the date for which discharge will be retrieved.  Should be given as YYYY-MM-DD.</span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    data : dict {&#39;discharge&#39;:float, &#39;quality&#39;:string, &#39;name&#39;:string}</span>
@@ -264,6 +268,7 @@
 <span class="sd">        String containing the beginning date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.</span>
 <span class="sd">    end_date : str (optional)</span>
 <span class="sd">        String containing the ending date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.  If not provided then data will be retrieved up to the current date.</span>
+<span class="sd"> </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    data : pandas dataframe </span>
@@ -273,7 +278,7 @@
 <span class="sd">    -----</span>
 <span class="sd">    Currently hard-wired to retrieve USGS pcode 00060, daily discharge in cfs.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">   &quot;&quot;&quot;</span>
     <span class="c">#construct url for discharge query</span>
     <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s">&#39;http://waterservices.usgs.gov/nwis/dv?format=waterml,1.1&#39;</span>
     <span class="c">#query discharge and read into xml parser</span>
@@ -348,6 +353,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../../genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
           <li><a href="../../index.html" >Module code</a> &raquo;</li> 
       </ul>

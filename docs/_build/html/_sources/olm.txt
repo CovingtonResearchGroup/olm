@@ -74,4 +74,4 @@ Subpackages
 .. toctree::
    
    olm.USGS
-
+   olm.loggers

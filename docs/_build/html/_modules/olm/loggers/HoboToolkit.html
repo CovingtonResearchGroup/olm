@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>olm.loggers.HoboToolkit &mdash; olm 0.33 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.33',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="olm 0.33 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <h1>Source code for olm.loggers.HoboToolkit</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">read_csv</span><span class="p">,</span><span class="n">DataFrame</span>
+
+<div class="viewcode-block" id="read_hobo_csv"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.HoboToolkit.read_hobo_csv">[docs]</a><span class="k">def</span> <span class="nf">read_hobo_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">all_columns</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">index_col</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">parse_dates</span><span class="o">=</span><span class="bp">True</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="n">parse_dates</span><span class="p">)</span>
+    <span class="c">#Convert column names into something nicer</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">rename_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">cond_count</span> <span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="c">#By default, use old name</span>
+        <span class="n">new_name</span><span class="o">=</span><span class="n">label</span>
+        <span class="k">if</span> <span class="n">all_columns</span><span class="o">==</span><span class="bp">False</span><span class="p">:</span>
+            <span class="n">wantcol</span><span class="o">=</span><span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">wantcol</span><span class="o">=</span><span class="bp">True</span>
+        <span class="k">if</span> <span class="n">label</span><span class="o">==</span><span class="s">&#39;#&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">all_columns</span><span class="p">:</span>
+                <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;Num&#39;</span>
+        <span class="k">if</span> <span class="s">&#39;RH&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;RH&#39;</span>
+            <span class="n">wantcol</span><span class="o">=</span><span class="bp">True</span>
+        <span class="k">if</span> <span class="s">&#39;DewPt&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;DewPt&#39;</span>
+            <span class="n">wantcol</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="s">&#39;Abs Pres&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;Pressure&#39;</span>
+            <span class="n">wantcol</span><span class="o">=</span><span class="bp">True</span>
+        <span class="k">if</span> <span class="s">&#39;Temp&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;Temp&#39;</span>
+            <span class="n">wantcol</span><span class="o">=</span><span class="bp">True</span>
+        <span class="k">if</span> <span class="s">&#39;Detached&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">all_columns</span><span class="p">:</span>
+                <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;Detached&#39;</span>
+        <span class="k">if</span> <span class="s">&#39;Attached&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">all_columns</span><span class="p">:</span>
+                <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;Attached&#39;</span>
+        <span class="k">if</span> <span class="s">&#39;Stopped&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">all_columns</span><span class="p">:</span>
+                <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;Stopped&#39;</span>
+        <span class="k">if</span> <span class="s">&#39;Connected&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">all_columns</span><span class="p">:</span>
+                <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;Connected&#39;</span>
+        <span class="k">if</span> <span class="s">&#39;End Of File&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">all_columns</span><span class="p">:</span>
+                <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;EOF&#39;</span>
+        <span class="k">if</span> <span class="s">&#39;Low Range&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;CondLow&#39;</span>
+            <span class="n">cond_count</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">wantcol</span><span class="o">=</span><span class="bp">True</span>
+        <span class="k">if</span> <span class="s">&#39;High Range&#39;</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="n">new_name</span> <span class="o">=</span> <span class="s">&#39;CondHigh&#39;</span>
+            <span class="n">cond_count</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">wantcol</span><span class="o">=</span><span class="bp">True</span>
+        <span class="k">if</span> <span class="n">wantcol</span><span class="o">==</span><span class="bp">True</span><span class="p">:</span>
+            <span class="n">rename_dict</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">=</span><span class="n">new_name</span>
+    <span class="c">#If there is only one conductivity column, we&#39;ll label it as &#39;Cond&#39;</span>
+    <span class="k">if</span> <span class="n">cond_count</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">old_names</span> <span class="o">=</span> <span class="n">rename_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">old_name</span><span class="p">,</span><span class="n">new_name</span> <span class="ow">in</span> <span class="n">rename_dict</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s">&#39;Cond&#39;</span> <span class="ow">in</span> <span class="n">new_name</span><span class="p">:</span>
+                <span class="n">cond_key</span> <span class="o">=</span> <span class="n">old_name</span>
+        <span class="n">rename_dict</span><span class="p">[</span><span class="n">cond_key</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;Cond&#39;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">rename_dict</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">all_columns</span><span class="p">):</span>
+        <span class="c">#Trim out unwanted columns</span>
+        <span class="n">s_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">rename_dict</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+            <span class="n">s_dict</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">s_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
+          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

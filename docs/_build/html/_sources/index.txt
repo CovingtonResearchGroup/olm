@@ -1,5 +1,5 @@
 .. olm documentation master file, created by
-   sphinx-quickstart on Sun Jan 04 10:19:19 2015.
+   sphinx-quickstart on Wed Aug 26 17:15:04 2015.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 

@@ -6,6 +6,6 @@ setup(name='olm',
     version='0.33',
     author='Matt Covington',
     url='https://github.com/speleophysics/olm/',
-    packages=['olm', 'olm.USGS'],
+    packages=['olm', 'olm.USGS', 'olm.loggers'],
     )
     
