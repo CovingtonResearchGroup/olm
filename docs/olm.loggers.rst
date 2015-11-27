@@ -1,8 +1,22 @@
-olm.loggers package
-===================
+olm.loggers package 
+=================== 
+
+The loggers package is a collection of functions for reading in data from common data logger files into "pandas" data objects, as well as a variety of functions that are useful for merging and resampling time series data obtained from data loggers. The general functionality is contained in the ''loggerScripts'' submodule. The toolkit submodules contain functions for reading in data files from different specific brands of data loggers.
+
 
 Submodules
 ----------
+
+olm.loggers.loggerScripts module
+--------------------------------
+
+General functions for merging and resampling time series data.
+
+.. automodule:: olm.loggers.loggerScripts
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 olm.loggers.CampbellToolkit module
 ----------------------------------
@@ -35,15 +49,6 @@ olm.loggers.WTWpHToolkit module
     :members:
     :undoc-members:
     :show-inheritance:
-
-olm.loggers.loggerScripts module
---------------------------------
-
-.. automodule:: olm.loggers.loggerScripts
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

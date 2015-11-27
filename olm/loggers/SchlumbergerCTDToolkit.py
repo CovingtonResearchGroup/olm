@@ -4,8 +4,25 @@ from pandas import read_csv
 from pandas import concat
 from pandas import DataFrame
 
+"""
+Functions to read Schlumberger diver logger files.
+"""
+
 #read in the CSV file from a CTD diver and return a pandas DataFrame
 def readCTD(csvfile):
+    """
+    Reads data from a CSV or MON file exported from a Schlumberger CTD Diver.
+
+    Parameters
+    ----------
+    csv_file : string
+        A string containing the file name of the CSV or MON file to be read.
+       
+    Returns
+    -------
+    df : pandas.DataFrame
+        DataFrame containing data from HOBO csv file.
+    """
     if csvfile.endswith('MON'):
         sep = '\s\s\s\s*'
     else:
@@ -21,6 +38,19 @@ def readCTD(csvfile):
 
 #read in the CSV file from a CTD diver and return a pandas DataFrame
 def readBaro(csvfile):
+    """
+    Reads data from a CSV or MON file from a Schlumberger Baro Diver.
+
+    Parameters
+    ----------
+    csv_file : string
+        A string containing the file name of the CSV or MON file to be read.
+       
+    Returns
+    -------
+    df : pandas.DataFrame
+        DataFrame containing data from HOBO csv file.
+    """
     if csvfile.endswith('MON'):
         sep = '\s\s\s\s*'
     else:
@@ -35,22 +65,39 @@ def readBaro(csvfile):
     return df
 
 
-# concatCTD accepts a list of CTD DataFrames and concatenate them
+# 
 #
 # Arguments:
 # dflist = a list of dataframes
 #
-# zero_shift = if set to True, the pressure values will be adjusted at the time
-#              of each join, assuming that flow depth before and after the join
-#              was equal.  If set to False, no adjustment will be made in      
-#              pressure values
+# zero_shift = 
 #
-# n_to_average = number of data points to average before and after join in order
-#                to determine data offset value for pressure
-#
-# offset_list = list of offsets to be applied manually to pressure data
+# #
+# 
 
 def concatCTD(dflist, zero_shift = True, n_to_average = 5, offset_list=[], offset_dates = []):
+    """
+    Accepts a list of CTD DataFrames and concatenates them.
+
+    Parameters
+    ----------
+    dflist : list
+        List of pandas.DataFrames to concatenate.
+    zero_shift : boolean
+        If set to True, the pressure values will be adjusted at the time of each join, assuming that flow depth before and after the join was equal.  If set to False, no adjustment will be made in pressure values. This is useful when downloading the logger may have resulted in a slightly different position in the water column. (Default = True)
+    n_to_average : int
+        Number of data points to average before and after join in order to determine data offset value for pressure
+    offset_list : list
+        List of offsets to be applied manually to pressure data.
+    offset_dates : list
+        List of datetime strings corresponding to manual offsets.
+
+    Returns
+    -------
+    (concatenated : pandas.DataFrame, offset_list : pandas.DataFrame)
+        A tuple is returned with the first item being a DataFrame object containing the concatenated data and the second item in the tuple being a DataFrame object containing offsets with datetimes of the offsets as an index.
+        
+    """
     concatenated = None
     if zero_shift == False:
         #concatenate with no shifting

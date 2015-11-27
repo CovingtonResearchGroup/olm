@@ -1,6 +1,23 @@
 from pandas import read_csv,DataFrame
 
+
+
 def read_hobo_csv(csv_file, all_columns=False):
+    """
+    Reads data from a csv file exported from HOBOware.
+
+    Parameters
+    ----------
+    csv_file : string
+        A string containing the file name of the csv file to be read.
+    all_columns : boolean (optional)
+        Determines whether to read in all columns or just ones that we search for and relabel (RH, DewPt, Abs Pres, Temp, Attached, Stopped, Connected, EOF, Cond High Range, Cond Low Range). Default = False
+       
+    Returns
+    -------
+    df : pandas.DataFrame
+        DataFrame containing data from HOBO csv file.
+    """
     skiprows=1
     index_col=1
     parse_dates=True
