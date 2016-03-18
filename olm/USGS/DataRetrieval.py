@@ -182,7 +182,11 @@ def GetDailyDischarge(location, date):
     #construct html address for query
     query_html = BASE_URL + '&sites=' + site_number + '&startDT='+date+'&endDT='+date
     #read in xml file through html query
-    qtree = etree.parse(query_html)
+    try:
+        qtree = etree.parse(query_html)
+    except IOError:
+        print "Problem retrieving discharge value (IOError)."
+        return -1
     #parse xml file to pull out discharge and quality code
     root = qtree.getroot()
     #get namespace map
