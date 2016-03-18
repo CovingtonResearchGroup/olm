@@ -253,7 +253,16 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 
             if (processThisSample):
                 #Pull daily discharge data from USGS website
-                dischargeDict = GetDailyDischarge(location, datetext) #currently hard-wired to pcode 00060 (daily discharge, cfs)
+                good_discharge_value = False
+                num_Q_tries = 0
+                #Try 5 times to retrieve discharge value
+                while (not good_discharge_value) and num_Q_tries<=5:
+                    dischargeDict = GetDailyDischarge(location, datetext) #currently hard-wired to pcode 00060 (daily discharge, cfs)
+                    if dischargeDict != -1:
+                        good_discharge_value = True
+                    else:
+                        num_Q_tries += 1
+                        dischargeDict = None
                 if (dischargeDict != None):
                     sampleDict['Stream flow, mean. daily'] = dischargeDict['discharge'] 
                     sampleMetaDict['Stream flow, mean. daily'] = {'units':'cfs', 'pcode':'00060', 'quality':dischargeDict['quality'], 'count':1, 'samplefraction':None}
