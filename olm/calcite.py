@@ -7,6 +7,7 @@ import pandas
 from general import *
 from scipy.optimize import brentq#, fminbound
 from scipy.optimize import fsolve
+from scipy.interpolate import LinearNDInterpolator, interp1d
 
 #Define some useful constants
 R = 8.3145 #J / (mol * K)
@@ -1121,4 +1122,105 @@ def calc_k_neg2(T_K):
     k_neg2 = 10.**(14.09 - 5308./T_K)
     return k_neg2
 
+
+
+#################
+### Palmer Dissolution
+#################
+def createPalmerInterpolationFunctions(impure=True):
+    #Construct linear interpolation functions for Table from Palmer (1991)
+    T_arr = np.array([5.,15.,25.])
+    logPCO2_arr = np.log10(np.array([1.0,0.3,0.03,0.003]))
+    T_grid, CO2_grid = np.meshgrid(T_arr,logPCO2_arr)
+    if impure:
+        k1_grid = np.array([[0.07,0.09,0.12],
+                            [0.03,0.035,0.04],
+                            [0.009,0.015,0.02],
+                            [0.006,0.01,0.015]])
+    else:
+        k1_grid = np.array([[0.11,0.14,0.18],
+                            [0.044,0.055,0.065],
+                            [0.014,0.018,0.028],
+                            [0.01,0.015,0.02]])
+    C_Cs_T_grid = np.array([[0.8,0.85,0.9],
+                            [0.65,0.7,0.8],
+                            [0.6,0.7,0.8],
+                            [0.6,0.7,0.8]])
+    n_arr = np.array([1.5,1.6,1.7,2.2])
+    
+    palmer_k1 = LinearNDInterpolator((T_grid.ravel(), CO2_grid.ravel()), k1_grid.ravel())
+    palmer_C_Cs_T = LinearNDInterpolator((T_grid.ravel(), CO2_grid.ravel()), C_Cs_T_grid.ravel())
+    palmer_n = interp1d(logPCO2_arr, n_arr)
+    return (palmer_k1, palmer_C_Cs_T, palmer_n)
+
+#Dissolution rate function from Palmer (1991)
+def palmerRate(T_C, PCO2, Sat_Ratio, rho=2.6, impure=True, interp_funcs=np.array([])):
+    if np.size(interp_funcs)!=3:
+        interp_funcs = createPalmerInterpolationFunctions(impure)
+    #look whether we are saturated
+    if Sat_Ratio>1:
+        return 0.
+    #Test whether we are outside of interpolation rate
+    logPCO2 = np.log10(PCO2)
+    logPCO2_min = np.log10(0.003)
+    logPCO2_max = np.log10(1.0)
+    T_min = 5.
+    T_max = 25.
+    if logPCO2<logPCO2_min:
+        print "Warning! Low PCO2 outside of interpolation range is set to minimum from table."
+        logPCO2=logPCO2_min
+    if logPCO2>logPCO2_max:
+        print "Warning! High PCO2 outside of interpolation range is set to maximum from table."
+        logPCO2=logPCO2_max
+    if T_C<T_min:
+        print "Warning! Low temp outside of interpolation range is set to minimum from table."
+        T_C=T_min
+    if T_C>T_max:
+        print "Warning! High temp outside of interpolation range is set to maximum from table."
+        T_C = T_max
+    palmer_k1, palmer_C_Cs_T, palmer_n = interp_funcs
+    k1 = palmer_k1(T_C, logPCO2)
+    C_Cs_T = palmer_C_Cs_T(T_C, logPCO2)
+    n1 = palmer_n(logPCO2)
+    if Sat_Ratio>C_Cs_T:
+        #in non-linear kinetics regime, n=4
+        n2=4.
+        k2 = k1*(1.-C_Cs_T)**(n1-n2)
+        k=k2
+        n=n2
+    else:
+        n = n1
+        k = k1
+        #Calculate rate in mm/yr
+    return 10.*31.56*k*(1.-Sat_Ratio)**n/rho
+
+def palmerFromSolution(sol, PCO2=np.array([]), impure=True, rho=2.6):
+    interp_funcs = createPalmerInterpolationFunctions(impure=impure)
+    #Process solution
+    def calc_rate(sol, PCO2, rho):
+        T = sol.T_C
+        Ca_eq = concCaEqFromSolution(sol)
+        Ca = sol.ions['Ca']['conc_mol']
+        Sat_Ratio = Ca/Ca_eq
+        return palmerRate(T, PCO2, Sat_Ratio, rho, impure=impure, interp_funcs=interp_funcs)
+    
+    #Loop through series or array if we have one
+    is_series = (type(sol)==pandas.core.series.Series) or (type(sol)==pandas.core.series.TimeSeries)
+    if (type(sol)==np.ndarray) or is_series:
+        rate_arr = np.empty(np.size(sol))
+        for i, this_sol in enumerate(sol):
+            if np.size(PCO2)==0:
+                this_PCO2 = PCO2FromSolution(this_sol)
+            elif np.size(PCO2)==1:
+                this_PCO2 = PCO2
+            elif np.size(PCO2)>1:
+                this_PCO2=PCO2[i]
+            rate_arr[i] = calc_rate(this_sol, this_PCO2, rho)
+        if is_series:
+            rate_arr = pandas.Series(rate_arr, index=sol.index)
+        return rate_arr
+    else:
+        if np.size(PCO2)==0:
+            PCO2 = PCO2FromSolution(sol)
+        return calc_rate(sol, PCO2, rho)
 
