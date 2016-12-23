@@ -1128,6 +1128,20 @@ def calc_k_neg2(T_K):
 ### Palmer Dissolution
 #################
 def createPalmerInterpolationFunctions(impure=True):
+    """
+    Creates interpolation functions for kinetic rate constants using linear interpolation from Table from Palmer (1991). PCO2 is interpolated linearly in log space, since it spans several orders of magnitude. Primarily intended for internal use by palmerRate() and palmerFromSolution().
+
+    Parameters
+    ----------
+    impure : boolean
+       Whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)
+
+    Returns
+    -------
+    (palmer_k1, palmer_C_Cs_T, palmer_n) : tuple
+       Interpolation functions for k1, C_Cs_T, and n.
+       
+    """
     #Construct linear interpolation functions for Table from Palmer (1991)
     T_arr = np.array([5.,15.,25.])
     logPCO2_arr = np.log10(np.array([1.0,0.3,0.03,0.003]))
@@ -1155,6 +1169,30 @@ def createPalmerInterpolationFunctions(impure=True):
 
 #Dissolution rate function from Palmer (1991)
 def palmerRate(T_C, PCO2, Sat_Ratio, rho=2.6, impure=True, interp_funcs=np.array([])):
+    """
+    Calculates the calcite/limestone dissolution rate given temperature, PCO2, and a calcium saturation ratio using relationship from Palmer (1991).
+
+    Parameters
+    ----------
+    T_C : float
+       Temperature in degrees Celcius.
+    PCO2 : float
+       The partial pressure of CO2. 
+    Sat_Ratio : float
+       The ratio of calcium concentration to the calcium concentration at equilibrium ([Ca]/[Ca]_eq).
+    rho : float
+       Density of rock in g/cm^3. (default=2.6)
+    impure : boolean
+       Whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)
+    interp_funcs : tuple
+       Primarily for internal use by palmerFromSolution(). Contains interpolation functions for kinetic rate constants. Automatically calculated if not passed.
+    Returns
+    -------
+    R : float
+       calcite dissolution rate according to the Palmer (1991) equation (mm/yr)
+       
+    """
+
     if np.size(interp_funcs)!=3:
         interp_funcs = createPalmerInterpolationFunctions(impure)
     #look whether we are saturated
@@ -1194,7 +1232,27 @@ def palmerRate(T_C, PCO2, Sat_Ratio, rho=2.6, impure=True, interp_funcs=np.array
         #Calculate rate in mm/yr
     return 10.*31.56*k*(1.-Sat_Ratio)**n/rho
 
-def palmerFromSolution(sol, PCO2=np.array([]), impure=True, rho=2.6):
+def palmerFromSolution(sol, PCO2=np.array([]), rho=2.6, impure=True):
+    """
+    Calculates the calcite/limestone dissolution rate from a solution object using relationship from Palmer (1991).
+
+    Parameters
+    ----------
+    sol : solution object, numpy.ndarray, or pandas Series
+       An olm solution object for which the calcite dissolution rate will be calculated.
+    PCO2 : float, numpy.ndarray, or pandas Series
+       The partial pressure of CO2 for the solution(s).  If not given, it will be calculated from the solution object using PCO2FromSolution().
+    rho : float
+       Density of rock in g/cm^3. (default=2.6)
+    impure : boolean
+       Whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)
+
+    Returns
+    -------
+    R : float, numpy.ndarray, or pandas Series
+       calcite dissolution rate according to the Palmer (1991) equation (mm/yr)
+       
+    """
     interp_funcs = createPalmerInterpolationFunctions(impure=impure)
     #Process solution
     def calc_rate(sol, PCO2, rho):
