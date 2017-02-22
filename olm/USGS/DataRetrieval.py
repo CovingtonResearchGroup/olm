@@ -4,7 +4,9 @@ Contains functions used to download data from USGS databases.
 """
 
 from lxml import etree
-import urllib
+import lxml.html
+import urllib, requests #could eventually rework to use only requests
+from StringIO import StringIO
 from pandas import read_csv, DataFrame, to_datetime
 #import requests
 #import os
@@ -115,7 +117,9 @@ def GetSiteData(location):#, writedir='.'): #Changed so that we don't write out 
     """
     if (location[:5] == 'USGS-'):
         sitenum = location[5:]
-    BASEURL = 'http://waterservices.usgs.gov/nwis/site/?site='
+    else:
+        sitenum = location
+    BASEURL = 'https://waterservices.usgs.gov/nwis/site/?site='
     queryURL = BASEURL + sitenum + '&siteOutput=expanded'
     #Need to skip header, which is hopefully uniform across USGS queries
     skiprows = range(0,59)
@@ -125,7 +129,7 @@ def GetSiteData(location):#, writedir='.'): #Changed so that we don't write out 
     return siteDF
 
 def querySiteList(siteList, charList):
-    BASE_URL = 'http://waterqualitydata.us/Result/search?'
+    BASE_URL = 'https://waterqualitydata.us/Result/search?'
     queryText = BASE_URL + 'siteid='
     #add sites to query
     for site in siteList: 
@@ -171,7 +175,7 @@ def GetDailyDischarge(location, date):
 
     """
     #construct url for discharge query
-    BASE_URL = 'http://waterservices.usgs.gov/nwis/dv?format=waterml,1.1'
+    BASE_URL = 'https://waterservices.usgs.gov/nwis/dv?format=waterml,1.1'
     #query discharge and read into xml parser
     #pull site number out of location text
     #Check to see if location contains 'USGS-' or is just the bare number
@@ -182,7 +186,12 @@ def GetDailyDischarge(location, date):
     #construct html address for query
     query_html = BASE_URL + '&sites=' + site_number + '&startDT='+date+'&endDT='+date
     #read in xml file through html query
-    qtree = etree.parse(query_html)
+    try:
+        r = requests.get(query_html)
+        qtree = etree.parse(StringIO(r.content))
+    except IOError:
+        print "Problem retrieving discharge value (IOError)."
+        return -1
     #parse xml file to pull out discharge and quality code
     root = qtree.getroot()
     #get namespace map
@@ -231,7 +240,7 @@ def GetDailyDischargeRecord(location, start_date, end_date=None):
 
    """
     #construct url for discharge query
-    BASE_URL = 'http://waterservices.usgs.gov/nwis/dv?format=waterml,1.1'
+    BASE_URL = 'https://waterservices.usgs.gov/nwis/dv?format=waterml,1.1'
     #query discharge and read into xml parser
     #pull site number out of location text
     #Check to see if location contains 'USGS-' or is just the bare number
@@ -245,7 +254,12 @@ def GetDailyDischargeRecord(location, start_date, end_date=None):
     else:
         query_html = BASE_URL + '&sites=' + site_number + '&startDT='+start_date+'&endDT='+end_date
     #read in xml file through html query
-    qtree = etree.parse(query_html)
+    try:
+        r = requests.get(query_html)
+        qtree = etree.parse(StringIO(r.content))
+    except IOError:
+        print "Problem retrieving discharge value (IOError)."
+        return -1
     #parse xml file to pull out discharge and quality code
     root = qtree.getroot()
     #get namespace map
