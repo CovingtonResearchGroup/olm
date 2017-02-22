@@ -5,8 +5,8 @@ Contains functions used to download data from USGS databases.
 
 from lxml import etree
 import lxml.html
-from urllib2 import urlopen
-import urllib
+import urllib, requests #could eventually rework to use only requests
+from StringIO import StringIO
 from pandas import read_csv, DataFrame, to_datetime
 #import requests
 #import os
@@ -117,6 +117,8 @@ def GetSiteData(location):#, writedir='.'): #Changed so that we don't write out 
     """
     if (location[:5] == 'USGS-'):
         sitenum = location[5:]
+    else:
+        sitenum = location
     BASEURL = 'https://waterservices.usgs.gov/nwis/site/?site='
     queryURL = BASEURL + sitenum + '&siteOutput=expanded'
     #Need to skip header, which is hopefully uniform across USGS queries
@@ -185,7 +187,8 @@ def GetDailyDischarge(location, date):
     query_html = BASE_URL + '&sites=' + site_number + '&startDT='+date+'&endDT='+date
     #read in xml file through html query
     try:
-        qtree = etree.parse(query_html)
+        r = requests.get(query_html)
+        qtree = etree.parse(StringIO(r.content))
     except IOError:
         print "Problem retrieving discharge value (IOError)."
         return -1
@@ -251,7 +254,12 @@ def GetDailyDischargeRecord(location, start_date, end_date=None):
     else:
         query_html = BASE_URL + '&sites=' + site_number + '&startDT='+start_date+'&endDT='+end_date
     #read in xml file through html query
-    qtree = etree.parse(query_html)
+    try:
+        r = requests.get(query_html)
+        qtree = etree.parse(StringIO(r.content))
+    except IOError:
+        print "Problem retrieving discharge value (IOError)."
+        return -1
     #parse xml file to pull out discharge and quality code
     root = qtree.getroot()
     #get namespace map
