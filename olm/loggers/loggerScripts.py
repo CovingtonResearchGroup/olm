@@ -100,8 +100,8 @@ def joinAndResampleLoggers(loggerlist, interval, suffixes=[], how='inner', inter
             joined=joined.join(logger, how=how)#, rsuffix='_'+suffixes[i])
     if interpolate:
         for col in joined.columns:
-            print joined
-            print col
+#            print joined
+#            print col
             filled_col = joined[col].interpolate(limit=limit)
             joined[col] = filled_col
     return joined
