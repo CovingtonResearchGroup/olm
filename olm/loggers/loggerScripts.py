@@ -2,7 +2,7 @@
 Contains functions that are useful in general for manipulation of data logger data
 """
 
-from pandas import datetools, DataFrame, Series, notnull
+from pandas import datetools, DataFrame, Series, notnull, Timestamp
 from matplotlib.dates import date2num
 
 #accepts a list of logger DateFrame objects as first argument
@@ -174,3 +174,35 @@ def manualCompare(logger, manual, value_name='', ltag='_log', mtag='_man'):
     logger = logger[wantidx]
     joined = DataFrame({value_name+ltag:logger, value_name+rtag:manual})
     return joined
+
+
+def shiftLogger(logger, shift_to, align_at_start = True):
+    """
+    Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.
+
+    Parameters
+    ----------
+    logger : pandas.core.series.Series or pandas.core.dataframe.Dataframe
+        A Pandas TimeSeries or DataFrame containing time stamps as indices.
+    shift_to : string 
+        A string that contains the date and time that the logger series should be shifted to. By default this is the correct starting time (first time stamp) of the series.
+    align_at_start : boolean
+        If True, shift_to is assumed to represent the correct starting date for the series. If False, shift_to is assumed to represent the correct final date of the series. (default=True)
+
+    Returns
+    -------
+    logger : pandas.core.series.Series or pandas.core.dataframe.DataFrame
+        A Series or DataFrame object that contains the correct shifted time stamps.
+    """
+    bad_times = logger.index
+    #align at starting time stamp
+    if align_at_start:
+        start_time = Timestamp(shift_to)
+        dt = start_time - bad_times[0]
+    #align at ending time stamp
+    else:
+        end_time = Timestamp(shift_to)
+        dt = end_time - bad_times[-1]
+    #shift index of original logger time series
+    logger.index = logger.index + dt
+    return logger
