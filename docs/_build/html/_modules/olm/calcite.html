@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>olm.calcite &mdash; olm 0.33 documentation</title>
+    <title>olm.calcite &#8212; olm 0.33 documentation</title>
     
     <link rel="stylesheet" href="../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -17,17 +17,18 @@
         VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="olm 0.33 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,30 +37,31 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for olm.calcite</h1><div class="highlight"><pre>
-<span class="c">#####################################################################</span>
-<span class="c">## Functions related to water chemistry and dissolution of Calcite ##</span>
-<span class="c">#####################################################################</span>
+<span></span><span class="c1">#####################################################################</span>
+<span class="c1">## Functions related to water chemistry and dissolution of Calcite ##</span>
+<span class="c1">#####################################################################</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">from</span> <span class="nn">general</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">brentq</span><span class="c">#, fminbound</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">fsolve</span>
+<span class="kn">from</span> <span class="nn">general</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">brentq</span><span class="c1">#, fminbound</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">fsolve</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">LinearNDInterpolator</span><span class="p">,</span> <span class="n">interp1d</span>
 
-<span class="c">#Define some useful constants</span>
-<span class="n">R</span> <span class="o">=</span> <span class="mf">8.3145</span> <span class="c">#J / (mol * K)</span>
-<span class="c">#H2OmolPerL = 55.5</span>
+<span class="c1">#Define some useful constants</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mf">8.3145</span> <span class="c1">#J / (mol * K)</span>
+<span class="c1">#H2OmolPerL = 55.5</span>
 
 <div class="viewcode-block" id="PCO2FromSolution"><a class="viewcode-back" href="../../olm.calcite.PCO2FromSolution.html#olm.calcite.PCO2FromSolution">[docs]</a><span class="k">def</span> <span class="nf">PCO2FromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -80,21 +82,21 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">calc_PCO2</span><span class="p">(</span><span class="n">this_sol</span><span class="p">):</span>
-        <span class="n">Ca_conc</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span>    
-        <span class="n">gamma_H</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">activity_coef</span><span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">)</span>
-        <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">activity_coef</span><span class="p">(</span><span class="s">&#39;HCO3&#39;</span><span class="p">)</span>
-        <span class="n">gamma_Ca</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">activity_coef</span><span class="p">(</span><span class="s">&#39;Ca&#39;</span><span class="p">)</span>
+        <span class="n">Ca_conc</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span>    
+        <span class="n">gamma_H</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">activity_coef</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>
+        <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">activity_coef</span><span class="p">(</span><span class="s1">&#39;HCO3&#39;</span><span class="p">)</span>
+        <span class="n">gamma_Ca</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">activity_coef</span><span class="p">(</span><span class="s1">&#39;Ca&#39;</span><span class="p">)</span>
         <span class="n">pH</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">pH</span>
         <span class="n">H_conc</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">pH</span><span class="p">)</span><span class="o">/</span><span class="n">gamma_H</span>
-        <span class="c">#calculate mass action constans </span>
+        <span class="c1">#calculate mass action constans </span>
         <span class="n">T_K</span> <span class="o">=</span> <span class="n">this_sol</span><span class="o">.</span><span class="n">T_K</span>    
         <span class="n">K_c</span> <span class="o">=</span> <span class="n">calc_K_c</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
         <span class="n">K_2</span> <span class="o">=</span> <span class="n">calc_K_2</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
         <span class="n">K_1</span> <span class="o">=</span> <span class="n">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
         <span class="n">K_0</span> <span class="o">=</span> <span class="n">calc_K_0</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
         <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
-        <span class="c">#pCO2 derived from equation 2.30 in Dreybrodt 1988 and assuming an</span>
-        <span class="c">#open system, where f approaches infty.  See notebook for details.</span>
+        <span class="c1">#pCO2 derived from equation 2.30 in Dreybrodt 1988 and assuming an</span>
+        <span class="c1">#open system, where f approaches infty.  See notebook for details.</span>
         <span class="n">pCO2</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_H</span> <span class="o">*</span> <span class="n">gamma_HCO3</span> <span class="o">/</span> <span class="p">(</span><span class="n">K_1</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="n">K_0</span><span class="p">))</span> <span class="p">)</span> <span class="o">*</span> \
                <span class="p">(</span><span class="n">H_conc</span><span class="o">**</span><span class="mf">2.</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">H_conc</span><span class="o">*</span><span class="n">Ca_conc</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pCO2</span>
@@ -107,8 +109,8 @@
             <span class="n">pCO2</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pCO2</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">pCO2</span> <span class="o">=</span> <span class="n">calc_PCO2</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pCO2</span>
-</div>
+    <span class="k">return</span> <span class="n">pCO2</span></div>
+
 <div class="viewcode-block" id="concCaEqFromSolution"><a class="viewcode-back" href="../../olm.calcite.concCaEqFromSolution.html#olm.calcite.concCaEqFromSolution">[docs]</a><span class="k">def</span> <span class="nf">concCaEqFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the equilibrium concentration of calcium for a solution object.</span>
@@ -137,9 +139,9 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">T_C</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">T_C</span>
     <span class="n">CaEq</span> <span class="o">=</span> <span class="n">concCaEqFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">CaEq</span>
+    <span class="k">return</span> <span class="n">CaEq</span></div>
 
-<span class="c">#Calculate the equilibrium concentration of Ca using PCO2 and T_C</span></div>
+<span class="c1">#Calculate the equilibrium concentration of Ca using PCO2 and T_C</span>
 <div class="viewcode-block" id="concCaEqFromPCO2"><a class="viewcode-back" href="../../olm.calcite.concCaEqFromPCO2.html#olm.calcite.concCaEqFromPCO2">[docs]</a><span class="k">def</span> <span class="nf">concCaEqFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the equilibrium concentration of calcium using PCO2 and temp.</span>
@@ -169,14 +171,14 @@
             <span class="k">return</span> <span class="mf">10.</span>
         <span class="n">I</span> <span class="o">=</span> <span class="n">approxI</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span>
         <span class="n">properties</span> <span class="o">=</span> <span class="n">getProperties</span><span class="p">()</span>
-        <span class="n">z_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span>
-        <span class="n">r_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">]</span>
+        <span class="n">z_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span>
+        <span class="n">r_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">]</span>
         <span class="n">gamma_Ca</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">z_Ca</span><span class="p">,</span><span class="n">r_Ca</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T_C_func</span><span class="p">)</span>
-        <span class="n">z_HCO3</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;HCO3&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span>
-        <span class="n">r_HCO3</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;HCO3&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">]</span>
+        <span class="n">z_HCO3</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;HCO3&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span>
+        <span class="n">r_HCO3</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;HCO3&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">]</span>
         <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">z_HCO3</span><span class="p">,</span><span class="n">r_HCO3</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T_C_func</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Ca</span> <span class="o">-</span> <span class="p">(</span><span class="n">PCO2_func</span><span class="o">*</span><span class="n">K_1</span><span class="o">*</span><span class="n">K_c</span><span class="o">*</span><span class="n">K_H</span><span class="o">/</span><span class="p">(</span><span class="mf">4.</span><span class="o">*</span><span class="n">K_2</span><span class="o">*</span><span class="n">gamma_Ca</span><span class="o">*</span><span class="n">gamma_HCO3</span><span class="o">**</span><span class="mf">2.</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mf">3.</span><span class="p">)</span>
-    <span class="c">#If there is only one value for T_C, but multiple PCO2 values, make an array of equal values</span>
+    <span class="c1">#If there is only one value for T_C, but multiple PCO2 values, make an array of equal values</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">T_C</span> <span class="o">=</span> <span class="n">T_C</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">PCO2</span><span class="p">))</span>
     <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
@@ -184,13 +186,13 @@
     <span class="n">K_2</span> <span class="o">=</span> <span class="n">calc_K_2</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_1</span> <span class="o">=</span> <span class="n">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="c">#make a guess assuming activities are = 1</span>
+    <span class="c1">#make a guess assuming activities are = 1</span>
     <span class="n">guess_Ca</span> <span class="o">=</span> <span class="p">(</span><span class="n">PCO2</span><span class="o">*</span><span class="n">K_1</span><span class="o">*</span><span class="n">K_c</span><span class="o">*</span><span class="n">K_H</span><span class="o">/</span><span class="p">(</span><span class="mf">4.</span><span class="o">*</span><span class="n">K_2</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mf">3.</span><span class="p">)</span>
     <span class="n">maxCa</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">*</span><span class="n">guess_Ca</span>
     <span class="n">minCa</span> <span class="o">=</span> <span class="n">guess_Ca</span>
     <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
-        <span class="c">#We have a numpy array or pandas Series. Loop through solutions.</span>
+        <span class="c1">#We have a numpy array or pandas Series. Loop through solutions.</span>
         <span class="n">CaEq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">PCO2</span><span class="p">))</span>       
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">single_PCO2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">PCO2</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
@@ -198,18 +200,18 @@
             <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
                 <span class="n">CaEq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
         <span class="k">if</span> <span class="n">is_series</span><span class="p">:</span>
-            <span class="c">#Create a pandas series object from the CaEq array</span>
+            <span class="c1">#Create a pandas series object from the CaEq array</span>
             <span class="n">CaEq</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">CaEq</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">PCO2</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span> <span class="c">#We only have a single value</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1">#We only have a single value</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">CaEq</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">Ca_minimize</span><span class="p">,</span> <span class="n">guess_Ca</span><span class="p">,</span> <span class="mf">10.</span><span class="o">*</span><span class="n">guess_Ca</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">T_C</span><span class="p">,</span><span class="n">K_c</span><span class="p">,</span><span class="n">K_2</span><span class="p">,</span><span class="n">K_1</span><span class="p">,</span><span class="n">K_H</span><span class="p">,</span><span class="n">PCO2</span><span class="p">))</span>
         <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">:</span>
             <span class="n">CaEq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="k">return</span> <span class="n">CaEq</span>
+    <span class="k">return</span> <span class="n">CaEq</span></div>
 
-<span class="c">#Calculates equilibrium activity of H+ given PCO2</span>
-<span class="c">#  - uses relaxed charge balance assumption</span></div>
-<div class="viewcode-block" id="activityHFromPCO2"><a class="viewcode-back" href="../../olm.calcite.activityHFromPCO2.html#olm.calcite.activityHFromPCO2">[docs]</a><span class="k">def</span> <span class="nf">activityHFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">CaEq</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<span class="c1">#Calculates equilibrium activity of H+ given PCO2</span>
+<span class="c1">#  - uses relaxed charge balance assumption</span>
+<div class="viewcode-block" id="activityHFromPCO2"><a class="viewcode-back" href="../../olm.calcite.activityHFromPCO2.html#olm.calcite.activityHFromPCO2">[docs]</a><span class="k">def</span> <span class="nf">activityHFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">CaEq</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates equilibrium activity of H+ given PCO2 using relaxed charge balance.</span>
 
@@ -233,15 +235,15 @@
 <span class="sd">    -----</span>
 <span class="sd">    Assumes a H20-CO2-CaCO3 system.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">CaEq</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">CaEq</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">CaEq</span> <span class="o">=</span> <span class="n">concCaEqFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
     <span class="n">I</span> <span class="o">=</span> <span class="n">approxI</span><span class="p">(</span><span class="n">CaEq</span><span class="p">)</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="n">getProperties</span><span class="p">()</span>
-    <span class="n">z_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span>
-    <span class="n">r_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">]</span>
+    <span class="n">z_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span>
+    <span class="n">r_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">]</span>
     <span class="n">gamma_Ca</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">z_Ca</span><span class="p">,</span><span class="n">r_Ca</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
-    <span class="n">z_HCO3</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;HCO3&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span>
-    <span class="n">r_HCO3</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;HCO3&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">]</span>
+    <span class="n">z_HCO3</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;HCO3&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span>
+    <span class="n">r_HCO3</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;HCO3&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">]</span>
     <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">z_HCO3</span><span class="p">,</span><span class="n">r_HCO3</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
     <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
     <span class="n">K_c</span> <span class="o">=</span> <span class="n">calc_K_c</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
@@ -249,9 +251,9 @@
     <span class="n">K_1</span> <span class="o">=</span> <span class="n">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">a_Heq</span> <span class="o">=</span> <span class="p">(</span> <span class="p">((</span><span class="n">K_1</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="n">PCO2</span><span class="p">)</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">*</span><span class="n">K_2</span><span class="o">*</span><span class="n">gamma_Ca</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">K_c</span><span class="o">*</span><span class="n">gamma_HCO3</span><span class="p">)</span> <span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mf">3.</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">a_Heq</span>
+    <span class="k">return</span> <span class="n">a_Heq</span></div>
 
-<span class="c">#Calculate H+ concentration from Ca and PCO2 assuming relaxed charge balance</span></div>
+<span class="c1">#Calculate H+ concentration from Ca and PCO2 assuming relaxed charge balance</span>
 <div class="viewcode-block" id="concHFromCaPCO2Relaxed"><a class="viewcode-back" href="../../olm.calcite.concHFromCaPCO2Relaxed.html#olm.calcite.concHFromCaPCO2Relaxed">[docs]</a><span class="k">def</span> <span class="nf">concHFromCaPCO2Relaxed</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates concentration of H+ from calcium concentration and PCO2 using relaxed charge balance.  Uses equation 2.30a from Dreybrodt (1988).</span>
@@ -274,20 +276,20 @@
 <span class="sd">    -----</span>
 <span class="sd">    Assumes a H20-CO2-CaCO3 system.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#from eqn 2.30a in Dreybrodt 1988</span>
+    <span class="c1">#from eqn 2.30a in Dreybrodt 1988</span>
     <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
     <span class="n">I</span> <span class="o">=</span> <span class="mf">3.</span><span class="o">*</span><span class="n">Ca</span>
-    <span class="n">gamma_H</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
-    <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s">&#39;HCO3&#39;</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
+    <span class="n">gamma_H</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
+    <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s1">&#39;HCO3&#39;</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
     <span class="n">K_1</span> <span class="o">=</span> <span class="n">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_0</span> <span class="o">=</span> <span class="n">calc_K_0</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">HCO3_sqaured</span> <span class="o">=</span> <span class="n">K_1</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="n">PCO2</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="n">K_0</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">gamma_HCO3</span><span class="p">)</span>
     <span class="n">concH</span> <span class="o">=</span> <span class="o">-</span><span class="n">Ca</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Ca</span><span class="o">**</span><span class="mf">2.</span> <span class="o">+</span> <span class="n">HCO3_sqaured</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">concH</span>
+    <span class="k">return</span> <span class="n">concH</span></div>
 
-<span class="c">#Calculate H+ concentration given Ca and PCO2, makes no relaxed charge</span>
-<span class="c">#balance assumption</span></div>
+<span class="c1">#Calculate H+ concentration given Ca and PCO2, makes no relaxed charge</span>
+<span class="c1">#balance assumption</span>
 <div class="viewcode-block" id="solutionFromCaPCO2"><a class="viewcode-back" href="../../olm.calcite.solutionFromCaPCO2.html#olm.calcite.solutionFromCaPCO2">[docs]</a><span class="k">def</span> <span class="nf">solutionFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">per_tol</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a solution object from a given concentration of calcium and PCO2.</span>
@@ -322,36 +324,36 @@
         <span class="n">K_1</span> <span class="o">=</span> <span class="n">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
         <span class="n">K_2</span> <span class="o">=</span> <span class="n">calc_K_2</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
         <span class="n">K_6</span> <span class="o">=</span> <span class="n">K_1</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="n">K_0</span><span class="p">)</span>
-        <span class="n">found</span><span class="o">=</span><span class="bp">False</span>
+        <span class="n">found</span><span class="o">=</span><span class="kc">False</span>
         <span class="k">while</span> <span class="ow">not</span><span class="p">(</span><span class="n">found</span><span class="p">):</span>
-            <span class="c">#estimate activity coefficients</span>
-            <span class="n">gamma_H</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="n">I_guess</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">)</span>
-            <span class="n">gamma_OH</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s">&#39;OH&#39;</span><span class="p">,</span> <span class="n">I_guess</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">)</span>
-            <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s">&#39;HCO3&#39;</span><span class="p">,</span> <span class="n">I_guess</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">)</span>
-            <span class="n">gamma_CO3</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s">&#39;CO3&#39;</span><span class="p">,</span> <span class="n">I_guess</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">)</span>        
+            <span class="c1">#estimate activity coefficients</span>
+            <span class="n">gamma_H</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">I_guess</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">)</span>
+            <span class="n">gamma_OH</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s1">&#39;OH&#39;</span><span class="p">,</span> <span class="n">I_guess</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">)</span>
+            <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s1">&#39;HCO3&#39;</span><span class="p">,</span> <span class="n">I_guess</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">)</span>
+            <span class="n">gamma_CO3</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s1">&#39;CO3&#39;</span><span class="p">,</span> <span class="n">I_guess</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">)</span>        
             <span class="n">H_new</span><span class="o">=</span> <span class="n">fsolve</span><span class="p">(</span><span class="k">lambda</span> <span class="n">H</span><span class="p">:</span> <span class="mf">2.</span><span class="o">*</span><span class="n">Ca_in</span> <span class="o">+</span> <span class="n">H</span> <span class="o">-</span> <span class="n">K_W</span><span class="o">/</span><span class="p">(</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">gamma_OH</span><span class="o">*</span><span class="n">H</span><span class="p">)</span>\
                           <span class="o">-</span> <span class="n">K_6</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="n">PCO2_in</span><span class="o">/</span><span class="p">(</span><span class="n">gamma_HCO3</span><span class="o">*</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">H</span><span class="p">)</span><span class="o">*</span>\
                           <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="mf">2.</span><span class="o">*</span><span class="n">K_2</span><span class="o">*</span><span class="n">gamma_HCO3</span><span class="o">/</span><span class="p">(</span><span class="n">gamma_CO3</span><span class="o">*</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">H</span><span class="p">)),</span>\
                           <span class="n">H_guess</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="c">#calculate ion concentrations from guess H+ concentration</span>
+            <span class="c1">#calculate ion concentrations from guess H+ concentration</span>
             <span class="n">OH</span> <span class="o">=</span> <span class="n">K_W</span><span class="o">/</span><span class="p">(</span><span class="n">gamma_OH</span><span class="o">*</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">H_new</span><span class="p">)</span>
             <span class="n">CO3</span> <span class="o">=</span> <span class="n">K_2</span><span class="o">*</span><span class="n">K_6</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="n">PCO2_in</span><span class="o">/</span><span class="p">((</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">H_new</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">gamma_CO3</span>
             <span class="n">HCO3</span> <span class="o">=</span> <span class="n">K_6</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="n">PCO2_in</span><span class="o">/</span><span class="p">(</span><span class="n">gamma_HCO3</span><span class="o">*</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">H_new</span><span class="p">)</span>
             <span class="n">I_new</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">H_new</span> <span class="o">+</span> <span class="n">OH</span> <span class="o">+</span> <span class="n">HCO3</span> <span class="o">+</span> <span class="mf">4.</span><span class="o">*</span><span class="n">CO3</span> <span class="o">+</span> <span class="mf">4.</span><span class="o">*</span><span class="n">Ca_in</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">H_new</span> <span class="o">-</span> <span class="n">H_guess</span><span class="p">)</span><span class="o">/</span><span class="n">H_guess</span> <span class="o">&lt;</span> <span class="n">per_tol</span><span class="p">):</span>
-                <span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
+                <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">H_guess</span> <span class="o">=</span> <span class="n">H_new</span>
                 <span class="n">I_guess</span> <span class="o">=</span> <span class="n">I_new</span>
-            <span class="c">#calculate non-charge ions</span>
+            <span class="c1">#calculate non-charge ions</span>
         <span class="n">CO2</span> <span class="o">=</span> <span class="n">K_H</span><span class="o">*</span><span class="n">PCO2_in</span>
         <span class="n">H2CO3</span> <span class="o">=</span> <span class="p">(</span><span class="n">K_H</span><span class="o">/</span><span class="n">K_0</span><span class="p">)</span><span class="o">*</span><span class="n">PCO2_in</span>
         <span class="n">H2CO3s</span> <span class="o">=</span> <span class="n">H2CO3</span> <span class="o">+</span> <span class="n">CO2</span>
         <span class="n">pH</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">H_new</span><span class="o">*</span><span class="n">gamma_H</span><span class="p">)</span>
-        <span class="c">#creation solution with these species</span>
-        <span class="n">sol</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;OH&#39;</span><span class="p">,</span> <span class="s">&#39;CO3&#39;</span><span class="p">,</span> <span class="s">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s">&#39;Ca&#39;</span><span class="p">,</span> <span class="s">&#39;CO2&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3s&#39;</span><span class="p">],</span>
+        <span class="c1">#creation solution with these species</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;OH&#39;</span><span class="p">,</span> <span class="s1">&#39;CO3&#39;</span><span class="p">,</span> <span class="s1">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s1">&#39;Ca&#39;</span><span class="p">,</span> <span class="s1">&#39;CO2&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3s&#39;</span><span class="p">],</span>
                        <span class="p">[</span><span class="n">H_new</span><span class="p">,</span> <span class="n">OH</span><span class="p">,</span> <span class="n">CO3</span><span class="p">,</span> <span class="n">HCO3</span><span class="p">,</span> <span class="n">Ca_in</span><span class="p">,</span> <span class="n">CO2</span><span class="p">,</span> <span class="n">H2CO3</span><span class="p">,</span> <span class="n">H2CO3s</span><span class="p">],</span>
-                       <span class="s">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">,</span> <span class="n">pH</span> <span class="o">=</span> <span class="n">pH</span><span class="p">)</span>
+                       <span class="s2">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">,</span> <span class="n">pH</span> <span class="o">=</span> <span class="n">pH</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">sol</span>
     <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
@@ -366,15 +368,15 @@
             <span class="n">sol_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">sol_arr</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="n">Ca</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">sol_arr</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">calc_sol</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span><span class="n">PCO2</span><span class="p">,</span><span class="n">T_C</span><span class="p">,</span><span class="n">per_tol</span><span class="o">=</span><span class="n">per_tol</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">calc_sol</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span><span class="n">PCO2</span><span class="p">,</span><span class="n">T_C</span><span class="p">,</span><span class="n">per_tol</span><span class="o">=</span><span class="n">per_tol</span><span class="p">)</span></div>
 
         
-<span class="c"># Function to calculate H+ concentration from Calcium concentration and pC02 </span>
-<span class="c"># using approximation in equation 2.30a (with an additional assumption that </span>
-<span class="c"># chi -&gt; infty, as for an open system) from Dreybrodt 1988. which assumes</span>
-<span class="c"># pH &lt; 8 such that carbonate and OH- species can be neglected</span>
-<span class="c">#   Ca = Calcium concentration mol/L</span>
-<span class="c">#   PCO2 = partial pressure of CO2</span></div>
+<span class="c1"># Function to calculate H+ concentration from Calcium concentration and pC02 </span>
+<span class="c1"># using approximation in equation 2.30a (with an additional assumption that </span>
+<span class="c1"># chi -&gt; infty, as for an open system) from Dreybrodt 1988. which assumes</span>
+<span class="c1"># pH &lt; 8 such that carbonate and OH- species can be neglected</span>
+<span class="c1">#   Ca = Calcium concentration mol/L</span>
+<span class="c1">#   PCO2 = partial pressure of CO2</span>
 <div class="viewcode-block" id="solutionFromCaPCO2Relaxed"><a class="viewcode-back" href="../../olm.calcite.solutionFromCaPCO2Relaxed.html#olm.calcite.solutionFromCaPCO2Relaxed">[docs]</a><span class="k">def</span> <span class="nf">solutionFromCaPCO2Relaxed</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a solution object from a given concentration of calcium and PCO2.</span>
@@ -404,16 +406,16 @@
     <span class="n">properties</span> <span class="o">=</span> <span class="n">getProperties</span><span class="p">()</span>
     <span class="n">I</span> <span class="o">=</span> <span class="n">approxI</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span>
     <span class="n">gamma_H</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> 
-                          <span class="n">properties</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">],</span>
-                          <span class="n">properties</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">],</span>
+                          <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">],</span>
+                          <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">],</span>
                           <span class="n">T</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">)</span>
     <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> 
-                          <span class="n">properties</span><span class="p">[</span><span class="s">&#39;HCO3&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">],</span>
-                          <span class="n">properties</span><span class="p">[</span><span class="s">&#39;HCO3&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">],</span>
+                          <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;HCO3&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">],</span>
+                          <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;HCO3&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">],</span>
                           <span class="n">T</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">)</span>
     <span class="n">gamma_CO3</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span>
-                            <span class="n">properties</span><span class="p">[</span><span class="s">&#39;CO3&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">],</span>
-                            <span class="n">properties</span><span class="p">[</span><span class="s">&#39;CO3&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">],</span>
+                            <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;CO3&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">],</span>
+                            <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;CO3&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">],</span>
                             <span class="n">T</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">)</span>
     <span class="n">K_0</span> <span class="o">=</span> <span class="n">calc_K_0</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_1</span> <span class="o">=</span> <span class="n">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
@@ -421,23 +423,23 @@
     <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_6</span> <span class="o">=</span> <span class="n">K_1</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="n">K_0</span><span class="p">)</span>
     <span class="n">v_over_w</span> <span class="o">=</span> <span class="n">K_1</span><span class="o">*</span><span class="n">H2CO3s</span><span class="o">/</span><span class="p">(</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">gamma_HCO3</span><span class="p">)</span>
-    <span class="c">#equation 2.30a with chi--&gt;infty</span>
+    <span class="c1">#equation 2.30a with chi--&gt;infty</span>
     <span class="n">H</span> <span class="o">=</span> <span class="o">-</span><span class="n">Ca</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">4.</span><span class="o">*</span><span class="p">(</span><span class="n">Ca</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">+</span> <span class="mf">4.</span><span class="o">*</span><span class="n">v_over_w</span><span class="p">)</span>
-    <span class="c">#from equation 2.24 with OH and CO3 neglected</span>
+    <span class="c1">#from equation 2.24 with OH and CO3 neglected</span>
     <span class="n">HCO3</span> <span class="o">=</span> <span class="mf">2.</span><span class="o">*</span><span class="n">Ca</span> <span class="o">+</span> <span class="n">H</span>
     <span class="n">CO3</span> <span class="o">=</span> <span class="n">K_2</span><span class="o">*</span><span class="n">K_6</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="n">PCO2</span><span class="o">/</span><span class="p">((</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">H</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">gamma_CO3</span>
-    <span class="c">#calculate amount fraction of H (neglecting other ions)</span>
+    <span class="c1">#calculate amount fraction of H (neglecting other ions)</span>
     <span class="n">H_activity</span> <span class="o">=</span> <span class="n">gamma_H</span><span class="o">*</span><span class="n">H</span>
     <span class="n">pH</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">H_activity</span><span class="p">)</span>
-    <span class="n">sol</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;Ca&#39;</span><span class="p">,</span> <span class="s">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3s&#39;</span><span class="p">,</span> <span class="s">&#39;CO3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="n">Ca</span><span class="p">,</span> <span class="n">HCO3</span><span class="p">,</span> <span class="n">H2CO3</span><span class="p">,</span> <span class="n">H2CO3s</span><span class="p">,</span> <span class="n">CO3</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">T_units</span><span class="o">=</span><span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="n">pH</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">sol</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;Ca&#39;</span><span class="p">,</span> <span class="s1">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3s&#39;</span><span class="p">,</span> <span class="s1">&#39;CO3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="n">Ca</span><span class="p">,</span> <span class="n">HCO3</span><span class="p">,</span> <span class="n">H2CO3</span><span class="p">,</span> <span class="n">H2CO3s</span><span class="p">,</span> <span class="n">CO3</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">T_units</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="n">pH</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sol</span></div>
 
-<span class="c"># Function to calculate solution from Calcium concentration and pH</span>
-<span class="c"># using approximation in equation 2.30a (with an additional assumption that </span>
-<span class="c"># chi -&gt; infty, as for an open system) from Dreybrodt 1988. which assumes</span>
-<span class="c"># pH &lt; 8 such that carbonate and OH- species can be neglected</span>
-<span class="c">#   Ca = Calcium concentration mol/L</span>
-<span class="c">#   pH = partial pressure of CO2</span></div>
+<span class="c1"># Function to calculate solution from Calcium concentration and pH</span>
+<span class="c1"># using approximation in equation 2.30a (with an additional assumption that </span>
+<span class="c1"># chi -&gt; infty, as for an open system) from Dreybrodt 1988. which assumes</span>
+<span class="c1"># pH &lt; 8 such that carbonate and OH- species can be neglected</span>
+<span class="c1">#   Ca = Calcium concentration mol/L</span>
+<span class="c1">#   pH = partial pressure of CO2</span>
 <div class="viewcode-block" id="solutionFrompHCaRelaxed"><a class="viewcode-back" href="../../olm.calcite.solutionFrompHCaRelaxed.html#olm.calcite.solutionFrompHCaRelaxed">[docs]</a><span class="k">def</span> <span class="nf">solutionFrompHCaRelaxed</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">pH</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a solution object from a given concentration of calcium and pH.</span>
@@ -465,58 +467,58 @@
     <span class="n">properties</span> <span class="o">=</span> <span class="n">getProperties</span><span class="p">()</span>
     <span class="n">I</span> <span class="o">=</span> <span class="n">approxI</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span>
     <span class="n">gamma_H</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> 
-                          <span class="n">properties</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">],</span>
-                          <span class="n">properties</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">],</span>
+                          <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">],</span>
+                          <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;H&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">],</span>
                           <span class="n">T</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">)</span>
     <span class="n">gamma_HCO3</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> 
-                          <span class="n">properties</span><span class="p">[</span><span class="s">&#39;HCO3&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">],</span>
-                          <span class="n">properties</span><span class="p">[</span><span class="s">&#39;HCO3&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">],</span>
+                          <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;HCO3&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">],</span>
+                          <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;HCO3&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">],</span>
                           <span class="n">T</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">)</span>
     <span class="n">gamma_CO3</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span>
-                            <span class="n">properties</span><span class="p">[</span><span class="s">&#39;CO3&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">],</span>
-                            <span class="n">properties</span><span class="p">[</span><span class="s">&#39;CO3&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">],</span>
+                            <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;CO3&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">],</span>
+                            <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;CO3&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">],</span>
                             <span class="n">T</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">)</span>
     
     <span class="n">gamma_Ca</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> 
-                           <span class="n">properties</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">],</span>
-                           <span class="n">properties</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">],</span>
+                           <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">],</span>
+                           <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">],</span>
                            <span class="n">T</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">)</span>
     <span class="n">H</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">pH</span><span class="p">)</span><span class="o">/</span><span class="n">gamma_H</span>
-    <span class="c">#calculate mass action constans </span>
+    <span class="c1">#calculate mass action constans </span>
     <span class="n">K_c</span> <span class="o">=</span> <span class="n">calc_K_c</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_2</span> <span class="o">=</span> <span class="n">calc_K_2</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_1</span> <span class="o">=</span> <span class="n">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_0</span> <span class="o">=</span> <span class="n">calc_K_0</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_6</span> <span class="o">=</span> <span class="n">K_1</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="n">K_0</span><span class="p">)</span>
-    <span class="c">#pCO2 derived from equation 2.30 in Dreybrodt 1988 and assuming an</span>
-    <span class="c">#open system, where f approaches infty.  See notebook for details.</span>
+    <span class="c1">#pCO2 derived from equation 2.30 in Dreybrodt 1988 and assuming an</span>
+    <span class="c1">#open system, where f approaches infty.  See notebook for details.</span>
     <span class="n">pCO2</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_H</span> <span class="o">*</span> <span class="n">gamma_HCO3</span> <span class="o">/</span> <span class="p">(</span><span class="n">K_1</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="n">K_0</span><span class="p">))</span> <span class="p">)</span> <span class="o">*</span> \
         <span class="p">(</span><span class="n">H</span><span class="o">**</span><span class="mf">2.</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">H</span><span class="o">*</span><span class="n">Ca</span><span class="p">)</span>
     <span class="n">H2CO3</span> <span class="o">=</span> <span class="n">H2CO3fromPCO2</span><span class="p">(</span><span class="n">pCO2</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">H2CO3s</span> <span class="o">=</span> <span class="n">H2CO3sfromPCO2</span><span class="p">(</span><span class="n">pCO2</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">CO3</span> <span class="o">=</span> <span class="n">K_2</span><span class="o">*</span><span class="n">K_6</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="n">pCO2</span><span class="o">/</span><span class="p">((</span><span class="n">gamma_H</span><span class="o">*</span><span class="n">H</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">gamma_CO3</span>
     <span class="n">K_1</span> <span class="o">=</span> <span class="n">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="c">#equation 2.30a with chi--&gt;infty</span>
+    <span class="c1">#equation 2.30a with chi--&gt;infty</span>
     <span class="n">HCO3</span> <span class="o">=</span> <span class="mf">2.</span><span class="o">*</span><span class="n">Ca</span> <span class="o">+</span> <span class="n">H</span>
     <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
         <span class="n">sol_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">)):</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">sol_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;Ca&#39;</span><span class="p">,</span> <span class="s">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3s&#39;</span><span class="p">,</span> <span class="s">&#39;CO3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Ca</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">HCO3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">H2CO3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">H2CO3s</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">CO3</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">units</span><span class="o">=</span><span class="s">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">T_units</span><span class="o">=</span><span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="n">pH</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">sol_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;Ca&#39;</span><span class="p">,</span> <span class="s1">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3s&#39;</span><span class="p">,</span> <span class="s1">&#39;CO3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Ca</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">HCO3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">H2CO3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">H2CO3s</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">CO3</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">T_units</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="n">pH</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">sol_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;Ca&#39;</span><span class="p">,</span> <span class="s">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3s&#39;</span><span class="p">,</span> <span class="s">&#39;CO3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Ca</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">HCO3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">H2CO3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">H2CO3s</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">CO3</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">units</span><span class="o">=</span><span class="s">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_units</span><span class="o">=</span><span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="n">pH</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">sol_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;Ca&#39;</span><span class="p">,</span> <span class="s1">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3s&#39;</span><span class="p">,</span> <span class="s1">&#39;CO3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Ca</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">HCO3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">H2CO3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">H2CO3s</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">CO3</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_units</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="n">pH</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">is_series</span><span class="p">:</span>
             <span class="n">sol_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">sol_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">Ca</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">sol_arr</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">sol</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s">&#39;H&#39;</span><span class="p">,</span> <span class="s">&#39;Ca&#39;</span><span class="p">,</span> <span class="s">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s">&#39;H2CO3s&#39;</span><span class="p">,</span> <span class="s">&#39;CO3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="n">Ca</span><span class="p">,</span> <span class="n">HCO3</span><span class="p">,</span> <span class="n">H2CO3</span><span class="p">,</span> <span class="n">H2CO3s</span><span class="p">,</span> <span class="n">CO3</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">T_units</span><span class="o">=</span><span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="n">pH</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">sol</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">solution</span><span class="p">([</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;Ca&#39;</span><span class="p">,</span> <span class="s1">&#39;HCO3&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3&#39;</span><span class="p">,</span> <span class="s1">&#39;H2CO3s&#39;</span><span class="p">,</span> <span class="s1">&#39;CO3&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">H</span><span class="p">,</span> <span class="n">Ca</span><span class="p">,</span> <span class="n">HCO3</span><span class="p">,</span> <span class="n">H2CO3</span><span class="p">,</span> <span class="n">H2CO3s</span><span class="p">,</span> <span class="n">CO3</span><span class="p">],</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">T_units</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="n">pH</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">sol</span></div>
 
 
-<span class="c">#Calculate concentration of Carbonic acid in equilibrium with a certain pCO2</span></div>
-<div class="viewcode-block" id="H2CO3fromPCO2"><a class="viewcode-back" href="../../olm.calcite.H2CO3fromPCO2.html#olm.calcite.H2CO3fromPCO2">[docs]</a><span class="k">def</span> <span class="nf">H2CO3fromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_K</span> <span class="o">=</span> <span class="mf">273.15</span> <span class="o">+</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<span class="c1">#Calculate concentration of Carbonic acid in equilibrium with a certain pCO2</span>
+<div class="viewcode-block" id="H2CO3fromPCO2"><a class="viewcode-back" href="../../olm.calcite.H2CO3fromPCO2.html#olm.calcite.H2CO3fromPCO2">[docs]</a><span class="k">def</span> <span class="nf">H2CO3fromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_K</span> <span class="o">=</span> <span class="mf">273.15</span> <span class="o">+</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate concentration of carbonic acid in equilibrium with a certain PCO2.</span>
 <span class="sd">    </span>
@@ -533,15 +535,15 @@
 <span class="sd">    H2CO3 : float</span>
 <span class="sd">       concentration of carbonic acid in mol/L</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">T_C</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">T_C</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
     <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_0</span> <span class="o">=</span> <span class="n">calc_K_0</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>    
     <span class="n">H2CO3</span> <span class="o">=</span> <span class="n">K_H</span><span class="o">*</span><span class="n">PCO2</span><span class="o">/</span><span class="n">K_0</span>
-    <span class="k">return</span> <span class="n">H2CO3</span>
+    <span class="k">return</span> <span class="n">H2CO3</span></div>
 
-<span class="c">#Calculate concentration of Carbonic acid in equilibrium with a certain pCO2</span></div>
-<div class="viewcode-block" id="H2CO3sfromPCO2"><a class="viewcode-back" href="../../olm.calcite.H2CO3sfromPCO2.html#olm.calcite.H2CO3sfromPCO2">[docs]</a><span class="k">def</span> <span class="nf">H2CO3sfromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_K</span> <span class="o">=</span> <span class="mf">273.15</span> <span class="o">+</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+<span class="c1">#Calculate concentration of Carbonic acid in equilibrium with a certain pCO2</span>
+<div class="viewcode-block" id="H2CO3sfromPCO2"><a class="viewcode-back" href="../../olm.calcite.H2CO3sfromPCO2.html#olm.calcite.H2CO3sfromPCO2">[docs]</a><span class="k">def</span> <span class="nf">H2CO3sfromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_K</span> <span class="o">=</span> <span class="mf">273.15</span> <span class="o">+</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate concentration of carbonic acid + aqueous CO2 in equilibrium with a certain PCO2. [H2CO3s] = [H2CO3] + [CO2]</span>
 <span class="sd">    </span>
@@ -558,14 +560,14 @@
 <span class="sd">    H2CO3s : float</span>
 <span class="sd">       concentration of carbonic acid + aqueous CO2 in mol/L</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">T_C</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">T_C</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
     <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_0</span> <span class="o">=</span> <span class="n">calc_K_0</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>    
     <span class="n">H2CO3s</span> <span class="o">=</span> <span class="n">K_H</span><span class="o">*</span><span class="n">PCO2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="n">K_0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">H2CO3s</span>
-</div>
-<div class="viewcode-block" id="pwpFromSolution"><a class="viewcode-back" href="../../olm.calcite.pwpFromSolution.html#olm.calcite.pwpFromSolution">[docs]</a><span class="k">def</span> <span class="nf">pwpFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;theory&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">H2CO3s</span></div>
+
+<div class="viewcode-block" id="pwpFromSolution"><a class="viewcode-back" href="../../olm.calcite.pwpFromSolution.html#olm.calcite.pwpFromSolution">[docs]</a><span class="k">def</span> <span class="nf">pwpFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;theory&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the PWP dissolution rate from a solution object.</span>
 
@@ -584,54 +586,54 @@
 <span class="sd">       calcite dissolution rate according to the PWP equation (mmol/cm^2/s)</span>
 <span class="sd">       </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">PCO2</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">PCO2</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
         <span class="n">PCO2</span> <span class="o">=</span> <span class="n">PCO2FromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">calc_rate</span><span class="p">(</span><span class="n">sol_in</span><span class="p">,</span><span class="n">PCO2_in</span><span class="p">):</span>    
-        <span class="c">#Check whether all necessary ions are present</span>
-        <span class="k">if</span> <span class="p">(</span><span class="s">&#39;Ca&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s">&#39;H&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s">&#39;HCO3&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
-            <span class="c">#Check whether H2CO3s is present, and calculate if necessary</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="s">&#39;H2CO3s&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">:</span>
+        <span class="c1">#Check whether all necessary ions are present</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Ca&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;H&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;HCO3&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
+            <span class="c1">#Check whether H2CO3s is present, and calculate if necessary</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;H2CO3s&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">:</span>
                 <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">sol_in</span><span class="o">.</span><span class="n">T_K</span><span class="p">)</span>
                 <span class="n">CO2</span> <span class="o">=</span> <span class="n">K_H</span><span class="o">*</span><span class="n">PCO2_in</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="s">&#39;H2CO3&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;H2CO3&#39;</span> <span class="ow">in</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">ions</span><span class="p">:</span>
                     <span class="n">K_0</span> <span class="o">=</span> <span class="n">calc_K_0</span><span class="p">(</span><span class="n">sol_in</span><span class="o">.</span><span class="n">T_K</span><span class="p">)</span>
                     <span class="n">a_H2CO3s</span> <span class="o">=</span> <span class="n">CO2</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="n">K_0</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">a_H2CO3s</span> <span class="o">=</span> <span class="n">CO2</span> <span class="o">+</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s">&#39;H2CO3&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span> <span class="c">#If we have it already, just read it</span>
-                <span class="n">a_H2CO3s</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s">&#39;H2CO3s&#39;</span><span class="p">)</span>
-            <span class="c">#Pull out other ion concentrations</span>
-            <span class="n">a_Ca</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s">&#39;Ca&#39;</span><span class="p">)</span>
-            <span class="n">a_H</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s">&#39;H&#39;</span><span class="p">)</span>
-            <span class="n">a_HCO3</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s">&#39;HCO3&#39;</span><span class="p">)</span>
+                    <span class="n">a_H2CO3s</span> <span class="o">=</span> <span class="n">CO2</span> <span class="o">+</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s1">&#39;H2CO3&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1">#If we have it already, just read it</span>
+                <span class="n">a_H2CO3s</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s1">&#39;H2CO3s&#39;</span><span class="p">)</span>
+            <span class="c1">#Pull out other ion concentrations</span>
+            <span class="n">a_Ca</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s1">&#39;Ca&#39;</span><span class="p">)</span>
+            <span class="n">a_H</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">)</span>
+            <span class="n">a_HCO3</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">activity</span><span class="p">(</span><span class="s1">&#39;HCO3&#39;</span><span class="p">)</span>
             <span class="n">T_K</span> <span class="o">=</span> <span class="n">sol_in</span><span class="o">.</span><span class="n">T_K</span>
-            <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s">&#39;theory&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;theory&#39;</span><span class="p">:</span>
                 <span class="n">R</span> <span class="o">=</span> <span class="n">pwpRateTheory</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="n">a_Ca</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="n">a_H2CO3s</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="n">a_H</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="n">a_HCO3</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="n">T_K</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2_in</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s">&#39;pascal&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;pascal&#39;</span><span class="p">:</span>
                 <span class="n">R</span> <span class="o">=</span> <span class="n">pwpRatePascal</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="n">a_Ca</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="n">a_H2CO3s</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="n">a_H</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="n">a_HCO3</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="n">T_K</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2_in</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s">&#39;franci&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;franci&#39;</span><span class="p">:</span>
                 <span class="n">R</span> <span class="o">=</span> <span class="n">pwpRateFranci</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="n">a_Ca</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="n">a_H2CO3s</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="n">a_H</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="n">a_HCO3</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="n">T_K</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2_in</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span> <span class="s">&quot;method must be set to &#39;theory&#39;, &#39;pascal&#39;, or &#39;franci&#39;&quot;</span>
+                <span class="nb">print</span> <span class="s2">&quot;method must be set to &#39;theory&#39;, &#39;pascal&#39;, or &#39;franci&#39;&quot;</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
             <span class="k">return</span> <span class="n">R</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s">&quot;Not all necessary ions are present in the solution object.&quot;</span>
+            <span class="nb">print</span> <span class="s2">&quot;Not all necessary ions are present in the solution object.&quot;</span>
             <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> 
     <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
-        <span class="n">sol_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">sol</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+        <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">sol</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">this_sol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>            
-            <span class="n">sol_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_rate</span><span class="p">(</span><span class="n">this_sol</span><span class="p">,</span><span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">rate_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_rate</span><span class="p">(</span><span class="n">this_sol</span><span class="p">,</span><span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">is_series</span><span class="p">:</span>
-            <span class="n">sol_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">sol_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">sol_arr</span>
+            <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">rate_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rate_arr</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">calc_rate</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span><span class="n">PCO2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">calc_rate</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span><span class="n">PCO2</span><span class="p">)</span></div>
         
-<span class="c">#Calculate dissolution rate from PWP equation using an input concentrations</span>
-<span class="c"># kappa4 is calculated using relation from Dreybrodt&#39;s PASCAL code. </span></div>
+<span class="c1">#Calculate dissolution rate from PWP equation using an input concentrations</span>
+<span class="c1"># kappa4 is calculated using relation from Dreybrodt&#39;s PASCAL code. </span>
 <div class="viewcode-block" id="pwpRatePascal"><a class="viewcode-back" href="../../olm.calcite.pwpRatePascal.html#olm.calcite.pwpRatePascal">[docs]</a><span class="k">def</span> <span class="nf">pwpRatePascal</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="mf">25.</span><span class="o">+</span><span class="mf">273.15</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates PWP rate using relation for kappa4 found in PASCAL code.</span>
@@ -664,11 +666,11 @@
     <span class="n">kappa3</span> <span class="o">=</span> <span class="n">calc_kappa3</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">kappa4</span> <span class="o">=</span> <span class="n">calc_kappa4Pascal</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span><span class="n">PCO2</span><span class="p">)</span>
     <span class="n">R</span> <span class="o">=</span> <span class="n">kappa1</span><span class="o">*</span><span class="n">a_H</span> <span class="o">+</span> <span class="n">kappa2</span><span class="o">*</span><span class="n">a_H2CO3s</span> <span class="o">+</span> <span class="n">kappa3</span> <span class="o">-</span> <span class="n">kappa4</span><span class="o">*</span><span class="n">a_Ca</span><span class="o">*</span><span class="n">a_HCO3</span>
-    <span class="k">return</span> <span class="n">R</span>
+    <span class="k">return</span> <span class="n">R</span></div>
 
-<span class="c">#Calculate dissolution rate from PWP equation using an input</span>
-<span class="c"># concentrations kappa4 is calculated using theoretical relation with</span>
-<span class="c"># a_H equal to current value, as done in Franci&#39;s code</span></div>
+<span class="c1">#Calculate dissolution rate from PWP equation using an input</span>
+<span class="c1"># concentrations kappa4 is calculated using theoretical relation with</span>
+<span class="c1"># a_H equal to current value, as done in Franci&#39;s code</span>
 <div class="viewcode-block" id="pwpRateFranci"><a class="viewcode-back" href="../../olm.calcite.pwpRateFranci.html#olm.calcite.pwpRateFranci">[docs]</a><span class="k">def</span> <span class="nf">pwpRateFranci</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="mf">25.</span><span class="o">+</span><span class="mf">273.15</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates PWP rate using relation for kappa4 used in Franci Gabrovsek&#39;s code.</span>
@@ -700,8 +702,8 @@
     <span class="n">kappa3</span> <span class="o">=</span> <span class="n">calc_kappa3</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">kappa4</span> <span class="o">=</span> <span class="n">calc_kappa4Franci</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span> <span class="n">a_H</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="p">)</span>
     <span class="n">R</span> <span class="o">=</span> <span class="n">kappa1</span><span class="o">*</span><span class="n">a_H</span> <span class="o">+</span> <span class="n">kappa2</span><span class="o">*</span><span class="n">a_H2CO3s</span> <span class="o">+</span> <span class="n">kappa3</span> <span class="o">-</span> <span class="n">kappa4</span><span class="o">*</span><span class="n">a_Ca</span><span class="o">*</span><span class="n">a_HCO3</span>
-    <span class="k">return</span> <span class="n">R</span>
-</div>
+    <span class="k">return</span> <span class="n">R</span></div>
+
 <div class="viewcode-block" id="pwpRateTheory"><a class="viewcode-back" href="../../olm.calcite.pwpRateTheory.html#olm.calcite.pwpRateTheory">[docs]</a><span class="k">def</span> <span class="nf">pwpRateTheory</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="mf">25.</span><span class="o">+</span><span class="mf">273.15</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates PWP rate using theoretical relation for kappa4 from PWP.</span>
@@ -734,19 +736,19 @@
     <span class="n">kappa3</span> <span class="o">=</span> <span class="n">calc_kappa3</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a_Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a_Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a_Ca</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
-        <span class="c">#We have a numpy array or pandas Series. Loop through and calculate rates individually    </span>
+        <span class="c1">#We have a numpy array or pandas Series. Loop through and calculate rates individually    </span>
         <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">a_Ca</span><span class="p">))</span>       
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">single_R</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">R</span><span class="p">):</span>
             <span class="n">kappa4</span> <span class="o">=</span> <span class="n">calc_kappa4Theory</span><span class="p">(</span><span class="n">T_K</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a_H2CO3s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">kappa1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">a_H</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">kappa2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">a_H2CO3s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">kappa3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">kappa4</span><span class="o">*</span><span class="n">a_Ca</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">a_HCO3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">is_series</span><span class="p">:</span>
-            <span class="c">#Create a pandas series object from the R array</span>
+            <span class="c1">#Create a pandas series object from the R array</span>
             <span class="n">R</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">a_Ca</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">kappa4</span> <span class="o">=</span> <span class="n">calc_kappa4Theory</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="p">)</span>
         <span class="n">R</span> <span class="o">=</span> <span class="n">kappa1</span><span class="o">*</span><span class="n">a_H</span> <span class="o">+</span> <span class="n">kappa2</span><span class="o">*</span><span class="n">a_H2CO3s</span> <span class="o">+</span> <span class="n">kappa3</span> <span class="o">-</span> <span class="n">kappa4</span><span class="o">*</span><span class="n">a_Ca</span><span class="o">*</span><span class="n">a_HCO3</span>
-    <span class="k">return</span> <span class="n">R</span>
-</div>
+    <span class="k">return</span> <span class="n">R</span></div>
+
 <div class="viewcode-block" id="pwp_to_mm_yr"><a class="viewcode-back" href="../../olm.calcite.pwp_to_mm_yr.html#olm.calcite.pwp_to_mm_yr">[docs]</a><span class="k">def</span> <span class="nf">pwp_to_mm_yr</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts the PWP dissolution rates from mmol/cm^2/s to mm/year.</span>
@@ -763,22 +765,22 @@
 <span class="sd">    E : float</span>
 <span class="sd">       Erosion rate in mm/year</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#First convert from mmol to mol.</span>
+    <span class="c1">#First convert from mmol to mol.</span>
     <span class="n">R_mol</span> <span class="o">=</span> <span class="n">R</span><span class="o">*</span><span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="n">getProperties</span><span class="p">()</span>
-    <span class="n">CaCO3_weight</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;weight&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;CO3&#39;</span><span class="p">][</span><span class="s">&#39;weight&#39;</span><span class="p">]</span>
-    <span class="c">#Convert to grams</span>
+    <span class="n">CaCO3_weight</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;CO3&#39;</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+    <span class="c1">#Convert to grams</span>
     <span class="n">R_g</span> <span class="o">=</span> <span class="n">R_mol</span><span class="o">*</span><span class="n">CaCO3_weight</span>
-    <span class="c">#R in cm/s</span>
+    <span class="c1">#R in cm/s</span>
     <span class="n">R_cm_s</span> <span class="o">=</span> <span class="n">R_g</span><span class="o">/</span><span class="n">rho</span>
-    <span class="c">#Convert to mm</span>
+    <span class="c1">#Convert to mm</span>
     <span class="n">R_mm_s</span> <span class="o">=</span> <span class="n">R_cm_s</span><span class="o">*</span><span class="mf">10.</span>
-    <span class="c">#Convert from seconds to years</span>
+    <span class="c1">#Convert from seconds to years</span>
     <span class="n">E</span> <span class="o">=</span> <span class="n">R_mm_s</span><span class="o">*</span><span class="mf">365.</span><span class="o">*</span><span class="mf">24.</span><span class="o">*</span><span class="mf">60.</span><span class="o">*</span><span class="mf">60.</span>
-    <span class="k">return</span> <span class="n">E</span>
+    <span class="k">return</span> <span class="n">E</span></div>
 
-<span class="c">#Functions to calculate rate constants in PWP Equation from Equations</span>
-<span class="c"># 6.13, 6.14, and 6.22b in Dreybrodt 1988</span></div>
+<span class="c1">#Functions to calculate rate constants in PWP Equation from Equations</span>
+<span class="c1"># 6.13, 6.14, and 6.22b in Dreybrodt 1988</span>
 <div class="viewcode-block" id="calc_kappa1"><a class="viewcode-back" href="../../olm.calcite.calc_kappa1.html#olm.calcite.calc_kappa1">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa1</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa1 in the PWP equation.</span>
@@ -796,8 +798,8 @@
 <span class="sd">       constant kappa1 in the PWP equation (cm/s)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">kappa1</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="mf">0.198</span> <span class="o">-</span> <span class="mf">444.</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">kappa1</span>
-</div>
+    <span class="k">return</span> <span class="n">kappa1</span></div>
+
 <div class="viewcode-block" id="calc_kappa2"><a class="viewcode-back" href="../../olm.calcite.calc_kappa2.html#olm.calcite.calc_kappa2">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa2</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa2 in the PWP equation.</span>
@@ -833,7 +835,7 @@
 <span class="sd">    kappa3 : float</span>
 <span class="sd">       constant kappa3 in the PWP equation (mmol/cm^2/s)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
         <span class="n">kappa3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_K</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">this_temp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">this_temp</span> <span class="o">&lt;</span> <span class="mf">273.15</span><span class="o">+</span><span class="mi">25</span><span class="p">):</span>
@@ -846,9 +848,9 @@
             <span class="n">kappa3</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">5.86</span> <span class="o">-</span> <span class="mf">317.</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">kappa3</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">1.10</span> <span class="o">-</span> <span class="mf">1737.</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">kappa3</span>
-</div>
-<span class="k">def</span> <span class="nf">calc_kappa4Kaufmann</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">kappa3</span></div>
+
+<div class="viewcode-block" id="calc_kappa4Kaufmann"><a class="viewcode-back" href="../../olm.html#olm.calcite.calc_kappa4Kaufmann">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa4Kaufmann</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa4 in the PWP equation using the relation from Kaufmann and Dreybrodt (2007).</span>
 
@@ -873,7 +875,7 @@
         <span class="n">kappa4</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">2.375</span><span class="o">+</span><span class="mf">0.025</span><span class="o">*</span><span class="n">T_C</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">kappa4</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">2.375</span><span class="o">+</span><span class="mf">0.025</span><span class="o">*</span><span class="n">T_C</span> <span class="o">+</span> <span class="mf">0.56</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">-</span><span class="mf">1.3</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">kappa4</span>
+    <span class="k">return</span> <span class="n">kappa4</span></div>
 
 
 <div class="viewcode-block" id="calc_kappa4Pascal"><a class="viewcode-back" href="../../olm.calcite.calc_kappa4Pascal.html#olm.calcite.calc_kappa4Pascal">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa4Pascal</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span><span class="n">PCO2</span><span class="p">):</span>
@@ -899,8 +901,8 @@
     <span class="n">T_C</span> <span class="o">=</span> <span class="n">KtoC</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">B</span> <span class="o">=</span> <span class="mf">3.077</span><span class="o">-</span><span class="mf">0.0146</span><span class="o">*</span><span class="n">T_C</span>
     <span class="n">kappa4</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">B</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">PCO2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.611</span>
-    <span class="k">return</span> <span class="n">kappa4</span>
-    </div>
+    <span class="k">return</span> <span class="n">kappa4</span></div>
+    
 <div class="viewcode-block" id="calc_kappa4Franci"><a class="viewcode-back" href="../../olm.calcite.calc_kappa4Franci.html#olm.calcite.calc_kappa4Franci">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa4Franci</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span> <span class="n">a_H</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa4 in the PWP equation using approach from Franci&#39;s code.</span>
@@ -929,8 +931,8 @@
     <span class="n">kappa2</span> <span class="o">=</span> <span class="n">calc_kappa2</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">kappa3</span> <span class="o">=</span> <span class="n">calc_kappa3</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">kappa4</span> <span class="o">=</span> <span class="p">(</span><span class="n">K_2</span><span class="o">/</span><span class="n">K_c</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">kappa1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="n">a_H</span><span class="o">*</span><span class="p">(</span><span class="n">kappa2</span><span class="o">*</span><span class="n">a_H2CO3s</span> <span class="o">+</span> <span class="n">kappa3</span><span class="p">)</span> <span class="p">)</span> 
-    <span class="k">return</span> <span class="n">kappa4</span>
-</div>
+    <span class="k">return</span> <span class="n">kappa4</span></div>
+
 <div class="viewcode-block" id="calc_kappa4Theory"><a class="viewcode-back" href="../../olm.calcite.calc_kappa4Theory.html#olm.calcite.calc_kappa4Theory">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa4Theory</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa4 in the PWP equation using the theoretical relation for kappa4 from Plummer, Wigley, and Parkhurst (1978) Equation 25 (as described in Dreybrodt [1988] equation 6.22b).  In this case, a_H in the equation for kappa4 is the equilibrium surface value for the given carbonic acid concentration, as specified in the theory.</span>
@@ -960,14 +962,14 @@
     <span class="n">kappa1</span> <span class="o">=</span> <span class="n">calc_kappa1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">kappa2</span> <span class="o">=</span> <span class="n">calc_kappa2</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">kappa3</span> <span class="o">=</span> <span class="n">calc_kappa3</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="c">#calculate equilbrium activity of H at surface</span>
+    <span class="c1">#calculate equilbrium activity of H at surface</span>
     <span class="n">a_Heq</span> <span class="o">=</span> <span class="n">activityHFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
     <span class="n">kappa4</span> <span class="o">=</span> <span class="p">(</span><span class="n">K_2</span><span class="o">/</span><span class="n">K_c</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">kappa1</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="n">a_Heq</span><span class="o">*</span><span class="p">(</span><span class="n">kappa2</span><span class="o">*</span><span class="n">a_H2CO3s</span> <span class="o">+</span> <span class="n">kappa3</span><span class="p">)</span> <span class="p">)</span> 
-    <span class="k">return</span> <span class="n">kappa4</span>
+    <span class="k">return</span> <span class="n">kappa4</span></div>
 
 
-<span class="c">#Functions for calculating mass action constants given temperature (K)</span>
-<span class="c"># from Dreybrodt, 1988</span></div>
+<span class="c1">#Functions for calculating mass action constants given temperature (K)</span>
+<span class="c1"># from Dreybrodt, 1988</span>
 <div class="viewcode-block" id="calc_K_c"><a class="viewcode-back" href="../../olm.calcite.calc_K_c.html#olm.calcite.calc_K_c">[docs]</a><span class="k">def</span> <span class="nf">calc_K_c</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates equilibrium constant for calcite.</span>
@@ -985,8 +987,8 @@
 <span class="sd">       equilibrium constant for calcite</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">K_c</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">171.9065</span> <span class="o">-</span> <span class="mf">0.077993</span><span class="o">*</span><span class="n">T_K</span> <span class="o">+</span> <span class="mf">2839.319</span><span class="o">/</span><span class="n">T_K</span> <span class="o">+</span> <span class="mf">71.595</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">T_K</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">K_c</span>
-</div>
+    <span class="k">return</span> <span class="n">K_c</span></div>
+
 <div class="viewcode-block" id="calc_K_2"><a class="viewcode-back" href="../../olm.calcite.calc_K_2.html#olm.calcite.calc_K_2">[docs]</a><span class="k">def</span> <span class="nf">calc_K_2</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates mass action constant for dissociation of bicarbonate.</span>
@@ -1004,8 +1006,8 @@
 <span class="sd">       mass action constant for dissociation of bicarbonate</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">K_2</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">107.8871</span> <span class="o">-</span> <span class="mf">0.03252849</span><span class="o">*</span><span class="n">T_K</span> <span class="o">+</span> <span class="mf">5151.79</span><span class="o">/</span><span class="n">T_K</span> <span class="o">+</span> <span class="mf">38.92561</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span> <span class="o">-</span> <span class="mf">563713.9</span><span class="o">/</span><span class="n">T_K</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">K_2</span>
-</div>
+    <span class="k">return</span> <span class="n">K_2</span></div>
+
 <div class="viewcode-block" id="calc_K_1"><a class="viewcode-back" href="../../olm.calcite.calc_K_1.html#olm.calcite.calc_K_1">[docs]</a><span class="k">def</span> <span class="nf">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates mass action constant for dissociation of carbonic acid.</span>
@@ -1023,8 +1025,8 @@
 <span class="sd">       mass action constant for dissociation of carbonic acid</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">K_1</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">356.3094</span> <span class="o">-</span> <span class="mf">0.06091964</span><span class="o">*</span><span class="n">T_K</span> <span class="o">+</span> <span class="mf">21834.37</span><span class="o">/</span><span class="n">T_K</span> <span class="o">+</span> <span class="mf">126.8339</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1684915.0</span><span class="o">/</span><span class="n">T_K</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">K_1</span>
-</div>
+    <span class="k">return</span> <span class="n">K_1</span></div>
+
 <div class="viewcode-block" id="calc_K_0"><a class="viewcode-back" href="../../olm.calcite.calc_K_0.html#olm.calcite.calc_K_0">[docs]</a><span class="k">def</span> <span class="nf">calc_K_0</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates mass action constant for conversion of CO2 to carbonic acid.</span>
@@ -1043,8 +1045,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">K_1</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">356.3094</span> <span class="o">-</span> <span class="mf">0.06091964</span><span class="o">*</span><span class="n">T_K</span> <span class="o">+</span> <span class="mf">21834.37</span><span class="o">/</span><span class="n">T_K</span> <span class="o">+</span> <span class="mf">126.8339</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span> <span class="o">-</span> <span class="mf">1684915.0</span><span class="o">/</span><span class="n">T_K</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">K_0</span> <span class="o">=</span> <span class="mf">1.7</span><span class="o">*</span><span class="mf">0.0001</span><span class="o">/</span><span class="n">K_1</span>
-    <span class="k">return</span> <span class="n">K_0</span>
-</div>
+    <span class="k">return</span> <span class="n">K_0</span></div>
+
 <div class="viewcode-block" id="calc_K_H"><a class="viewcode-back" href="../../olm.calcite.calc_K_H.html#olm.calcite.calc_K_H">[docs]</a><span class="k">def</span> <span class="nf">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates Henry&#39;s law constant for CO2.</span>
@@ -1062,8 +1064,8 @@
 <span class="sd">       Henry&#39;s law constant for CO2.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">K_H</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="mf">108.3865</span> <span class="o">+</span> <span class="mf">0.01985076</span><span class="o">*</span><span class="n">T_K</span> <span class="o">-</span> <span class="mf">6919.53</span><span class="o">/</span><span class="n">T_K</span> <span class="o">-</span> <span class="mf">40.45154</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span> <span class="o">+</span> <span class="mf">669365.</span><span class="o">/</span><span class="n">T_K</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">K_H</span>
-</div>
+    <span class="k">return</span> <span class="n">K_H</span></div>
+
 <div class="viewcode-block" id="calc_K_W"><a class="viewcode-back" href="../../olm.calcite.calc_K_W.html#olm.calcite.calc_K_W">[docs]</a><span class="k">def</span> <span class="nf">calc_K_W</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates mass action constant for dissociation water.</span>
@@ -1082,8 +1084,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">K_W</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="mf">22.801</span> <span class="o">-</span> <span class="mf">4787.3</span><span class="o">/</span><span class="n">T_K</span> <span class="o">-</span> <span class="mf">0.010365</span><span class="o">*</span><span class="n">T_K</span> <span class="o">-</span> <span class="mf">7.1321</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">T_K</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">K_W</span>
-</div>
+    <span class="k">return</span> <span class="n">K_W</span></div>
+
 <div class="viewcode-block" id="calc_k1"><a class="viewcode-back" href="../../olm.calcite.calc_k1.html#olm.calcite.calc_k1">[docs]</a><span class="k">def</span> <span class="nf">calc_k1</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates k1+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007). </span>
@@ -1103,9 +1105,9 @@
 <span class="sd">    Related to the rate of CO2 conversion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">k1</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="mf">329.850</span> <span class="o">-</span> <span class="mf">110.54</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span> <span class="o">-</span> <span class="mf">17265.4</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
-<span class="c">#    k1 = (10.**-3) * np.exp(34.69 - 9252./T_K)</span>
-    <span class="k">return</span> <span class="n">k1</span>
-</div>
+<span class="c1">#    k1 = (10.**-3) * np.exp(34.69 - 9252./T_K)</span>
+    <span class="k">return</span> <span class="n">k1</span></div>
+
 <div class="viewcode-block" id="calc_k2"><a class="viewcode-back" href="../../olm.calcite.calc_k2.html#olm.calcite.calc_k2">[docs]</a><span class="k">def</span> <span class="nf">calc_k2</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates k2+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</span>
@@ -1124,10 +1126,10 @@
 <span class="sd">    -----</span>
 <span class="sd">    Related to the rate of CO2 conversion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<span class="c">#    k2 = 10.**(14.072 - 3025./T_K)</span>
+<span class="c1">#    k2 = 10.**(14.072 - 3025./T_K)</span>
     <span class="n">k2</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="mf">13.635</span> <span class="o">-</span> <span class="mf">2895.</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">k2</span>
-</div>
+    <span class="k">return</span> <span class="n">k2</span></div>
+
 <div class="viewcode-block" id="calc_k_neg1"><a class="viewcode-back" href="../../olm.calcite.calc_k_neg1.html#olm.calcite.calc_k_neg1">[docs]</a><span class="k">def</span> <span class="nf">calc_k_neg1</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates k1- kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</span>
@@ -1147,8 +1149,8 @@
 <span class="sd">    Related to the rate of CO2 conversion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">k_neg1</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="mf">13.558</span> <span class="o">-</span> <span class="mf">3617.1</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">k_neg1</span>
-</div>
+    <span class="k">return</span> <span class="n">k_neg1</span></div>
+
 <div class="viewcode-block" id="calc_k_neg2"><a class="viewcode-back" href="../../olm.calcite.calc_k_neg2.html#olm.calcite.calc_k_neg2">[docs]</a><span class="k">def</span> <span class="nf">calc_k_neg2</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates k2- kinetic constant from Table 1 in Kaufmann and Dreybrodt (2007).</span>
@@ -1168,32 +1170,190 @@
 <span class="sd">    Related to the rate of CO2 conversion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">k_neg2</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="mf">14.09</span> <span class="o">-</span> <span class="mf">5308.</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">k_neg2</span>
-</pre></div></div>
+    <span class="k">return</span> <span class="n">k_neg2</span></div>
+
+
+
+<span class="c1">#################</span>
+<span class="c1">### Palmer Dissolution</span>
+<span class="c1">#################</span>
+<div class="viewcode-block" id="createPalmerInterpolationFunctions"><a class="viewcode-back" href="../../olm.calcite.createPalmerInterpolationFunctions.html#olm.calcite.createPalmerInterpolationFunctions">[docs]</a><span class="k">def</span> <span class="nf">createPalmerInterpolationFunctions</span><span class="p">(</span><span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates interpolation functions for kinetic rate constants using linear interpolation from Table from Palmer (1991). PCO2 is interpolated linearly in log space, since it spans several orders of magnitude. Primarily intended for internal use by palmerRate() and palmerFromSolution().</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    impure : boolean</span>
+<span class="sd">       Whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (palmer_k1, palmer_C_Cs_T, palmer_n) : tuple</span>
+<span class="sd">       Interpolation functions for k1, C_Cs_T, and n.</span>
+<span class="sd">       </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#Construct linear interpolation functions for Table from Palmer (1991)</span>
+    <span class="n">T_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">5.</span><span class="p">,</span><span class="mf">15.</span><span class="p">,</span><span class="mf">25.</span><span class="p">])</span>
+    <span class="n">logPCO2_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.03</span><span class="p">,</span><span class="mf">0.003</span><span class="p">]))</span>
+    <span class="n">T_grid</span><span class="p">,</span> <span class="n">CO2_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">T_arr</span><span class="p">,</span><span class="n">logPCO2_arr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">impure</span><span class="p">:</span>
+        <span class="n">k1_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.07</span><span class="p">,</span><span class="mf">0.09</span><span class="p">,</span><span class="mf">0.12</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">0.03</span><span class="p">,</span><span class="mf">0.035</span><span class="p">,</span><span class="mf">0.04</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">0.009</span><span class="p">,</span><span class="mf">0.015</span><span class="p">,</span><span class="mf">0.02</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">0.006</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.015</span><span class="p">]])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">k1_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.11</span><span class="p">,</span><span class="mf">0.14</span><span class="p">,</span><span class="mf">0.18</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">0.044</span><span class="p">,</span><span class="mf">0.055</span><span class="p">,</span><span class="mf">0.065</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">0.014</span><span class="p">,</span><span class="mf">0.018</span><span class="p">,</span><span class="mf">0.028</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.015</span><span class="p">,</span><span class="mf">0.02</span><span class="p">]])</span>
+    <span class="n">C_Cs_T_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.85</span><span class="p">,</span><span class="mf">0.9</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">0.65</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.8</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.8</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.8</span><span class="p">]])</span>
+    <span class="n">n_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span><span class="mf">1.6</span><span class="p">,</span><span class="mf">1.7</span><span class="p">,</span><span class="mf">2.2</span><span class="p">])</span>
+    
+    <span class="n">palmer_k1</span> <span class="o">=</span> <span class="n">LinearNDInterpolator</span><span class="p">((</span><span class="n">T_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">CO2_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">()),</span> <span class="n">k1_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+    <span class="n">palmer_C_Cs_T</span> <span class="o">=</span> <span class="n">LinearNDInterpolator</span><span class="p">((</span><span class="n">T_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">CO2_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">()),</span> <span class="n">C_Cs_T_grid</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+    <span class="n">palmer_n</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">logPCO2_arr</span><span class="p">,</span> <span class="n">n_arr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">palmer_k1</span><span class="p">,</span> <span class="n">palmer_C_Cs_T</span><span class="p">,</span> <span class="n">palmer_n</span><span class="p">)</span></div>
+
+<span class="c1">#Dissolution rate function from Palmer (1991)</span>
+<div class="viewcode-block" id="palmerRate"><a class="viewcode-back" href="../../olm.calcite.palmerRate.html#olm.calcite.palmerRate">[docs]</a><span class="k">def</span> <span class="nf">palmerRate</span><span class="p">(</span><span class="n">T_C</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">Sat_Ratio</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">interp_funcs</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the calcite/limestone dissolution rate given temperature, PCO2, and a calcium saturation ratio using relationship from Palmer (1991).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    T_C : float</span>
+<span class="sd">       Temperature in degrees Celcius.</span>
+<span class="sd">    PCO2 : float</span>
+<span class="sd">       The partial pressure of CO2. </span>
+<span class="sd">    Sat_Ratio : float</span>
+<span class="sd">       The ratio of calcium concentration to the calcium concentration at equilibrium ([Ca]/[Ca]_eq).</span>
+<span class="sd">    rho : float</span>
+<span class="sd">       Density of rock in g/cm^3. (default=2.6)</span>
+<span class="sd">    impure : boolean</span>
+<span class="sd">       Whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)</span>
+<span class="sd">    interp_funcs : tuple</span>
+<span class="sd">       Primarily for internal use by palmerFromSolution(). Contains interpolation functions for kinetic rate constants. Automatically calculated if not passed.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    R : float</span>
+<span class="sd">       calcite dissolution rate according to the Palmer (1991) equation (mm/yr)</span>
+<span class="sd">       </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">interp_funcs</span><span class="p">)</span><span class="o">!=</span><span class="mi">3</span><span class="p">:</span>
+        <span class="n">interp_funcs</span> <span class="o">=</span> <span class="n">createPalmerInterpolationFunctions</span><span class="p">(</span><span class="n">impure</span><span class="p">)</span>
+    <span class="c1">#look whether we are saturated</span>
+    <span class="k">if</span> <span class="n">Sat_Ratio</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.</span>
+    <span class="c1">#Test whether we are outside of interpolation rate</span>
+    <span class="n">logPCO2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span>
+    <span class="n">logPCO2_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">0.003</span><span class="p">)</span>
+    <span class="n">logPCO2_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">T_min</span> <span class="o">=</span> <span class="mf">5.</span>
+    <span class="n">T_max</span> <span class="o">=</span> <span class="mf">25.</span>
+    <span class="k">if</span> <span class="n">logPCO2</span><span class="o">&lt;</span><span class="n">logPCO2_min</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;Warning! Low PCO2 outside of interpolation range is set to minimum from table.&quot;</span>
+        <span class="n">logPCO2</span><span class="o">=</span><span class="n">logPCO2_min</span>
+    <span class="k">if</span> <span class="n">logPCO2</span><span class="o">&gt;</span><span class="n">logPCO2_max</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;Warning! High PCO2 outside of interpolation range is set to maximum from table.&quot;</span>
+        <span class="n">logPCO2</span><span class="o">=</span><span class="n">logPCO2_max</span>
+    <span class="k">if</span> <span class="n">T_C</span><span class="o">&lt;</span><span class="n">T_min</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;Warning! Low temp outside of interpolation range is set to minimum from table.&quot;</span>
+        <span class="n">T_C</span><span class="o">=</span><span class="n">T_min</span>
+    <span class="k">if</span> <span class="n">T_C</span><span class="o">&gt;</span><span class="n">T_max</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;Warning! High temp outside of interpolation range is set to maximum from table.&quot;</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">T_max</span>
+    <span class="n">palmer_k1</span><span class="p">,</span> <span class="n">palmer_C_Cs_T</span><span class="p">,</span> <span class="n">palmer_n</span> <span class="o">=</span> <span class="n">interp_funcs</span>
+    <span class="n">k1</span> <span class="o">=</span> <span class="n">palmer_k1</span><span class="p">(</span><span class="n">T_C</span><span class="p">,</span> <span class="n">logPCO2</span><span class="p">)</span>
+    <span class="n">C_Cs_T</span> <span class="o">=</span> <span class="n">palmer_C_Cs_T</span><span class="p">(</span><span class="n">T_C</span><span class="p">,</span> <span class="n">logPCO2</span><span class="p">)</span>
+    <span class="n">n1</span> <span class="o">=</span> <span class="n">palmer_n</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">Sat_Ratio</span><span class="o">&gt;</span><span class="n">C_Cs_T</span><span class="p">:</span>
+        <span class="c1">#in non-linear kinetics regime, n=4</span>
+        <span class="n">n2</span><span class="o">=</span><span class="mf">4.</span>
+        <span class="n">k2</span> <span class="o">=</span> <span class="n">k1</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">C_Cs_T</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">n1</span><span class="o">-</span><span class="n">n2</span><span class="p">)</span>
+        <span class="n">k</span><span class="o">=</span><span class="n">k2</span>
+        <span class="n">n</span><span class="o">=</span><span class="n">n2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n1</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k1</span>
+        <span class="c1">#Calculate rate in mm/yr</span>
+    <span class="k">return</span> <span class="mf">10.</span><span class="o">*</span><span class="mf">31.56</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">Sat_Ratio</span><span class="p">)</span><span class="o">**</span><span class="n">n</span><span class="o">/</span><span class="n">rho</span></div>
+
+<div class="viewcode-block" id="palmerFromSolution"><a class="viewcode-back" href="../../olm.calcite.palmerFromSolution.html#olm.calcite.palmerFromSolution">[docs]</a><span class="k">def</span> <span class="nf">palmerFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the calcite/limestone dissolution rate from a solution object using relationship from Palmer (1991).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sol : solution object, numpy.ndarray, or pandas Series</span>
+<span class="sd">       An olm solution object for which the calcite dissolution rate will be calculated.</span>
+<span class="sd">    PCO2 : float, numpy.ndarray, or pandas Series</span>
+<span class="sd">       The partial pressure of CO2 for the solution(s).  If not given, it will be calculated from the solution object using PCO2FromSolution().</span>
+<span class="sd">    rho : float</span>
+<span class="sd">       Density of rock in g/cm^3. (default=2.6)</span>
+<span class="sd">    impure : boolean</span>
+<span class="sd">       Whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    R : float, numpy.ndarray, or pandas Series</span>
+<span class="sd">       calcite dissolution rate according to the Palmer (1991) equation (mm/yr)</span>
+<span class="sd">       </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">interp_funcs</span> <span class="o">=</span> <span class="n">createPalmerInterpolationFunctions</span><span class="p">(</span><span class="n">impure</span><span class="o">=</span><span class="n">impure</span><span class="p">)</span>
+    <span class="c1">#Process solution</span>
+    <span class="k">def</span> <span class="nf">calc_rate</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">rho</span><span class="p">):</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">T_C</span>
+        <span class="n">Ca_eq</span> <span class="o">=</span> <span class="n">concCaEqFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span>
+        <span class="n">Sat_Ratio</span> <span class="o">=</span> <span class="n">Ca</span><span class="o">/</span><span class="n">Ca_eq</span>
+        <span class="k">return</span> <span class="n">palmerRate</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">Sat_Ratio</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="n">impure</span><span class="p">,</span> <span class="n">interp_funcs</span><span class="o">=</span><span class="n">interp_funcs</span><span class="p">)</span>
+    
+    <span class="c1">#Loop through series or array if we have one</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
+        <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">sol</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">this_sol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">this_PCO2</span> <span class="o">=</span> <span class="n">PCO2FromSolution</span><span class="p">(</span><span class="n">this_sol</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">this_PCO2</span> <span class="o">=</span> <span class="n">PCO2</span>
+            <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">this_PCO2</span><span class="o">=</span><span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">rate_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_rate</span><span class="p">(</span><span class="n">this_sol</span><span class="p">,</span> <span class="n">this_PCO2</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_series</span><span class="p">:</span>
+            <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">rate_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">sol</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rate_arr</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">PCO2</span> <span class="o">=</span> <span class="n">PCO2FromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">calc_rate</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span></div>
+
+</pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -1202,13 +1362,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>
 </html>

@@ -1,0 +1,889 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>olm.USGS.plots &#8212; olm 0.33 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.33',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for olm.USGS.plots</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="k">import</span> <span class="n">loglog</span><span class="p">,</span><span class="n">xlabel</span><span class="p">,</span><span class="n">ylabel</span><span class="p">,</span><span class="n">hist</span><span class="p">,</span><span class="n">figure</span><span class="p">,</span><span class="n">savefig</span><span class="p">,</span><span class="n">semilogx</span><span class="p">,</span> <span class="n">semilogy</span><span class="p">,</span><span class="n">plot</span><span class="p">,</span> <span class="n">errorbar</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="n">tight_layout</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">log10</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">zeros</span><span class="p">,</span> <span class="n">isnan</span><span class="p">,</span> <span class="n">logical_and</span><span class="p">,</span> <span class="n">nan</span><span class="p">,</span> <span class="n">linspace</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">linregress</span><span class="p">,</span> <span class="n">spearmanr</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">read_excel</span><span class="p">,</span> <span class="n">read_csv</span><span class="p">,</span> <span class="n">DataFrame</span>
+
+<span class="kn">from</span> <span class="nn">olm.USGS.loadWaterQualityData</span> <span class="k">import</span> <span class="n">loadSiteListData</span>
+<span class="kn">from</span> <span class="nn">olm.general</span> <span class="k">import</span> <span class="n">CtoK</span>
+<span class="kn">from</span> <span class="nn">olm.calcite</span> <span class="k">import</span> <span class="n">calc_K_H</span><span class="p">,</span><span class="n">concCaEqFromPCO2</span><span class="p">,</span> <span class="n">pwpRateTheory</span><span class="p">,</span> <span class="n">pwpRatePascal</span><span class="p">,</span> <span class="n">pwp_to_mm_yr</span><span class="p">,</span> <span class="n">pwpRateFranci</span><span class="p">,</span> <span class="n">solutionFromCaPCO2</span><span class="p">,</span> <span class="n">pwpFromSolution</span>
+
+<span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+<span class="n">class_colors</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="s1">&#39;green&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">:</span><span class="s1">&#39;cyan&#39;</span><span class="p">}</span>
+
+<div class="viewcode-block" id="check_plots_dir"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.check_plots_dir">[docs]</a><span class="k">def</span> <span class="nf">check_plots_dir</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">):</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">os</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Problem creating plot directory: &quot;</span> <span class="o">+</span> <span class="n">plotsDir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_good_indicies"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.get_good_indicies">[docs]</a><span class="k">def</span> <span class="nf">get_good_indicies</span><span class="p">(</span><span class="n">seriesList</span><span class="p">):</span>
+    <span class="n">test</span><span class="o">=</span><span class="mf">0.</span>
+    <span class="k">for</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">seriesList</span><span class="p">:</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="n">test</span><span class="o">+</span><span class="n">series</span><span class="c1">#Addition will create Nans if any of the series contains a NaN</span>
+    <span class="k">return</span> <span class="o">~</span><span class="n">test</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="calc_site_pwp"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.calc_site_pwp">[docs]</a><span class="k">def</span> <span class="nf">calc_site_pwp</span><span class="p">(</span><span class="n">sitedf</span><span class="p">,</span> <span class="n">sitephreeqc</span><span class="p">,</span> <span class="n">returnPCO2</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">have_data</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span> <span class="ow">in</span> <span class="n">sitedf</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span> <span class="s1">&#39;Temperature, water&#39;</span> <span class="ow">in</span> <span class="n">sitedf</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;CO2_Molality&#39;</span> <span class="ow">in</span> <span class="n">sitephreeqc</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;Ca+2_Activity&#39;</span>  <span class="ow">in</span> <span class="n">sitephreeqc</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;CO2_Activity&#39;</span>  <span class="ow">in</span> <span class="n">sitephreeqc</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;H+_Activity&#39;</span>  <span class="ow">in</span> <span class="n">sitephreeqc</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;HCO3-_Activity&#39;</span>  <span class="ow">in</span> <span class="n">sitephreeqc</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+       <span class="n">have_data</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">have_data</span><span class="p">:</span>
+        <span class="c1">#create dataframe subset</span>
+        <span class="n">subdf</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span>
+                <span class="s1">&#39;Q&#39;</span><span class="p">:</span><span class="n">sitedf</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;T_C&#39;</span><span class="p">:</span><span class="n">sitedf</span><span class="p">[</span><span class="s1">&#39;Temperature, water&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;CO2&#39;</span><span class="p">:</span><span class="n">sitephreeqc</span><span class="o">.</span><span class="n">CO2_Molality</span><span class="p">,</span>
+                <span class="s1">&#39;a_Ca&#39;</span><span class="p">:</span><span class="n">sitephreeqc</span><span class="p">[</span><span class="s1">&#39;Ca+2_Activity&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;a_H2CO3s&#39;</span><span class="p">:</span><span class="n">sitephreeqc</span><span class="p">[</span><span class="s1">&#39;CO2_Activity&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;a_H&#39;</span><span class="p">:</span><span class="n">sitephreeqc</span><span class="p">[</span><span class="s1">&#39;H+_Activity&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;a_HCO3&#39;</span><span class="p">:</span><span class="n">sitephreeqc</span><span class="p">[</span><span class="s1">&#39;HCO3-_Activity&#39;</span><span class="p">]</span>
+                <span class="p">})</span>
+        <span class="c1">#Clear out NaN values</span>
+        <span class="n">subdf</span> <span class="o">=</span> <span class="n">subdf</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">subdf</span><span class="o">.</span><span class="n">size</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#Average any duplicate indicies</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="n">subdf</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="c1">#group by duplicate indicies</span>
+            <span class="n">subdf</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="c1">#average duplicate indicies</span>
+            <span class="c1">#Calculate PCO2</span>
+            <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">subdf</span><span class="o">.</span><span class="n">T_C</span><span class="p">)</span>
+            <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
+            <span class="n">PCO2</span> <span class="o">=</span> <span class="n">subdf</span><span class="o">.</span><span class="n">CO2</span><span class="o">/</span><span class="n">K_H</span>    
+            <span class="n">pwp_rates</span> <span class="o">=</span> <span class="n">pwpRateTheory</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="n">subdf</span><span class="o">.</span><span class="n">a_Ca</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="n">subdf</span><span class="o">.</span><span class="n">a_H2CO3s</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="n">subdf</span><span class="o">.</span><span class="n">a_H</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="n">subdf</span><span class="o">.</span><span class="n">a_HCO3</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="n">T_K</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">returnPCO2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="n">pwp_rates</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">pwp_rates</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">returnPCO2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="k">return</span> <span class="kc">None</span>
+    <span class="c1">#Data were missing</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">returnPCO2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="pwp_Q_fit"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.pwp_Q_fit">[docs]</a><span class="k">def</span> <span class="nf">pwp_Q_fit</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span> <span class="o">-</span> <span class="n">a</span><span class="o">*</span><span class="n">Q</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">beta</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">F</span></div>
+
+<div class="viewcode-block" id="make_pwp_vs_Q_plots"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.make_pwp_vs_Q_plots">[docs]</a><span class="k">def</span> <span class="nf">make_pwp_vs_Q_plots</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">siteList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">siteFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">makeHistograms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">classFile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">plotloglog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">sitePanelDict</span><span class="p">,</span> <span class="n">sitePhreeqcDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">loadPhreeqc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">class_xls</span> <span class="o">=</span> <span class="n">read_excel</span><span class="p">(</span><span class="n">classFile</span><span class="p">,</span> <span class="s1">&#39;Sheet1&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="s1">&#39;recharge&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">])</span>
+    <span class="n">site_class</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rs</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spp</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spr</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">slopes</span><span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="c1">#Check for plots directory and make it if one doesn&#39;t exist</span>
+    <span class="n">check_plots_dir</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePanelDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="c1">#read in classification for this site</span>
+            <span class="n">this_class</span> <span class="o">=</span> <span class="n">class_xls</span><span class="p">[</span><span class="s1">&#39;recharge&#39;</span><span class="p">][</span><span class="n">site</span><span class="p">]</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">this_class</span><span class="p">]</span>
+            <span class="n">site_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_class</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making plot for: &quot;</span><span class="o">+</span><span class="n">site</span><span class="p">)</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span>
+        <span class="n">pwp_rates</span> <span class="o">=</span> <span class="n">calc_site_pwp</span><span class="p">(</span><span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">],</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">])</span>
+        <span class="n">pwp_rates</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">pwp_rates</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Q&#39;</span><span class="p">:</span><span class="n">Q</span><span class="p">,</span> <span class="s1">&#39;pwp&#39;</span><span class="p">:</span><span class="n">pwp_rates</span><span class="p">})</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="n">Qposids</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="o">&gt;</span><span class="mi">0</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">Qposids</span><span class="p">]</span>
+        <span class="c1">#Calculate fitting function parameters</span>
+        <span class="n">fit_converged</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">size</span><span class="o">&gt;</span><span class="mi">5</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">opt_params</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">pwp_Q_fit</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Q&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;pwp&#39;</span><span class="p">],</span> <span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">])</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">opt_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">opt_params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">beta</span> <span class="o">=</span> <span class="n">opt_params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">RuntimeError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">fit_converged</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="nb">print</span> <span class="n">e</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fit_converged</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#Make Discharge vs. Saturation Ratio Plot</span>
+        <span class="n">figure</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">plotloglog</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bracket_charge_balance</span><span class="p">:</span>
+                <span class="n">loglog</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">loglog</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bracket_charge_balance</span><span class="p">:</span>
+                <span class="n">semilogx</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">semilogx</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="c1">#plot fitting function</span>
+        <span class="k">if</span> <span class="n">fit_converged</span><span class="p">:</span>
+            <span class="n">Q_fit</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">1000</span><span class="p">)</span>
+            <span class="n">pwp_fit</span> <span class="o">=</span> <span class="n">pwp_Q_fit</span><span class="p">(</span><span class="n">Q_fit</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+            <span class="n">plot</span><span class="p">(</span><span class="n">Q_fit</span><span class="p">,</span> <span class="n">pwp_fit</span><span class="p">,</span> <span class="s1">&#39;-k&#39;</span><span class="p">)</span>
+        <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Discharge (cfs)&#39;</span><span class="p">)</span>
+        <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PWP Dissolution Rate (mm/yr)&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bracket_charge_balance</span><span class="p">:</span>
+            <span class="c1">#Load charge bracket data</span>
+            <span class="n">df_alk</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC-Alk.csv&#39;</span><span class="p">),</span> <span class="n">parse_dates</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">df_ca</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC-Ca.csv&#39;</span><span class="p">),</span> <span class="n">parse_dates</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">pwp_alk</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">calc_site_pwp</span><span class="p">(</span><span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">],</span> <span class="n">df_alk</span><span class="p">))</span>
+            <span class="n">pwp_ca</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">calc_site_pwp</span><span class="p">(</span><span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">],</span> <span class="n">df_ca</span><span class="p">))</span>
+            <span class="n">delta_alk</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span> <span class="o">-</span> <span class="n">pwp_alk</span>
+            <span class="n">delta_ca</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span> <span class="o">-</span> <span class="n">pwp_ca</span>
+            <span class="n">delta_upper</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">delta_ca</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">delta_lower</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">delta_ca</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">delta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">delta_ca</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">delta</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">delta_upper</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta_ca</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">delta_lower</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta_alk</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">delta</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">delta_lower</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta_ca</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">delta_upper</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta_alk</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;pwp_upper&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta_upper</span><span class="p">[</span><span class="n">Qposids</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;pwp_lower&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta_lower</span><span class="p">[</span><span class="n">Qposids</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alkalinity_balance_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_alk</span><span class="p">[</span><span class="s1">&#39;Percent error&#39;</span><span class="p">]</span>
+            <span class="n">not_converged</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alkalinity_balance_error&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">5.0</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">[</span><span class="n">not_converged</span><span class="p">]</span><span class="o">=</span><span class="n">nan</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#USGS database has some negative values? -999999</span>
+            <span class="n">errorbar</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">pwp_upper</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp_lower</span><span class="p">],</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+
+        <span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Q_vs_PWP.pdf&#39;</span><span class="p">))</span>
+        <span class="c1">#Calculate correlation coefficient and regression</span>
+        <span class="n">slope</span><span class="p">,</span><span class="n">intercept</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">log10</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">)</span>        
+        <span class="n">rs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">isnan</span><span class="p">(</span><span class="n">r</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">df</span>
+        <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="p">[</span><span class="n">this_spr</span><span class="p">,</span> <span class="n">this_spp</span><span class="p">]</span> <span class="o">=</span> <span class="n">spearmanr</span><span class="p">(</span><span class="n">log10</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Q</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">)</span>
+        <span class="n">spr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_spr</span><span class="p">)</span>
+        <span class="n">spp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_spp</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">makeHistograms</span><span class="p">:</span>
+            <span class="n">figure</span><span class="p">()</span>
+            <span class="n">hist</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+            <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;PWP Rate mm/yr&#39;</span><span class="p">)</span>
+            <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+            <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PWPHist.pdf&#39;</span><span class="p">))</span>
+
+    <span class="c1">#Make histogram of pearson r values    </span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="n">arr_rs</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+    <span class="n">arr_ps</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+    <span class="n">arr_spr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">spr</span><span class="p">)</span>
+    <span class="n">arr_spp</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">spp</span><span class="p">)</span>
+    <span class="n">arr_site_class</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">site_class</span><span class="p">)</span>
+    <span class="n">goodids</span> <span class="o">=</span> <span class="n">logical_and</span><span class="p">(</span><span class="o">~</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr_rs</span><span class="p">),</span> <span class="o">~</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr_ps</span><span class="p">))</span>
+    <span class="n">arr_rs</span> <span class="o">=</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">goodids</span><span class="p">]</span>
+    <span class="n">arr_ps</span> <span class="o">=</span> <span class="n">arr_ps</span><span class="p">[</span><span class="n">goodids</span><span class="p">]</span>
+    <span class="n">arr_site_class</span> <span class="o">=</span> <span class="n">arr_site_class</span><span class="p">[</span><span class="n">goodids</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">arr1_rs_sig</span> <span class="o">=</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">logical_and</span><span class="p">(</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="n">arr_ps</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">)]</span>
+        <span class="nb">print</span> <span class="s2">&quot;Class 1: number of sig ps = &quot;</span><span class="p">,</span><span class="n">arr1_rs_sig</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>  <span class="s2">&quot;number insig = &quot;</span><span class="p">,</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">arr1_rs_sig</span><span class="o">.</span><span class="n">size</span>       
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr1_rs_sig</span><span class="p">,</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">arr2_rs_sig</span> <span class="o">=</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">logical_and</span><span class="p">(</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">,</span> <span class="n">arr_ps</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">)]</span>
+        <span class="nb">print</span> <span class="s2">&quot;Class 2: number of sig ps = &quot;</span><span class="p">,</span><span class="n">arr2_rs_sig</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>  <span class="s2">&quot;number insig = &quot;</span><span class="p">,</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">arr2_rs_sig</span><span class="o">.</span><span class="n">size</span>       
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr2_rs_sig</span><span class="p">,</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">arr3_rs_sig</span> <span class="o">=</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">logical_and</span><span class="p">(</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">,</span> <span class="n">arr_ps</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">)]</span>
+        <span class="nb">print</span> <span class="s2">&quot;Class 3: number of sig ps = &quot;</span><span class="p">,</span><span class="n">arr3_rs_sig</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>  <span class="s2">&quot;number insig = &quot;</span><span class="p">,</span> <span class="n">arr_rs</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">arr3_rs_sig</span><span class="o">.</span><span class="n">size</span>       
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr3_rs_sig</span><span class="p">,</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pearson R&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="s1">&#39;PearsonR_Q_PWP.pdf&#39;</span><span class="p">))</span>
+    <span class="c1">#Make histogram of pearson p values</span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">arr_ps</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr_ps</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">],</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr_ps</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr_ps</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">],</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr_ps</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr_ps</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">],</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pearson p&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span> <span class="s1">&#39;PearsonP_Q_PWP.pdf&#39;</span><span class="p">))</span>
+
+    <span class="c1">#Make histogram of spearman r values</span>
+    <span class="n">arr_spr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">spr</span><span class="p">)</span>
+    <span class="n">arr_spp</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">spp</span><span class="p">)</span>
+    <span class="n">arr_site_class</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">site_class</span><span class="p">)</span>
+    <span class="n">goodids</span> <span class="o">=</span> <span class="n">logical_and</span><span class="p">(</span><span class="o">~</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr_spr</span><span class="p">),</span> <span class="o">~</span><span class="n">isnan</span><span class="p">(</span><span class="n">arr_spp</span><span class="p">))</span>
+    <span class="n">arr_spr</span> <span class="o">=</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">goodids</span><span class="p">]</span>
+    <span class="n">arr_spp</span> <span class="o">=</span> <span class="n">arr_spp</span><span class="p">[</span><span class="n">goodids</span><span class="p">]</span>
+    <span class="n">arr_site_class</span> <span class="o">=</span> <span class="n">arr_site_class</span><span class="p">[</span><span class="n">goodids</span><span class="p">]</span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">arr1_spr_sig</span> <span class="o">=</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">logical_and</span><span class="p">(</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">,</span> <span class="n">arr_spp</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">)]</span>
+        <span class="nb">print</span> <span class="s2">&quot;Class 1: number of sig ps = &quot;</span><span class="p">,</span><span class="n">arr1_spr_sig</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>  <span class="s2">&quot;number insig = &quot;</span><span class="p">,</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">arr1_spr_sig</span><span class="o">.</span><span class="n">size</span>       
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr1_spr_sig</span><span class="p">,</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">arr2_spr_sig</span> <span class="o">=</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">logical_and</span><span class="p">(</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">,</span> <span class="n">arr_spp</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">)]</span>
+        <span class="nb">print</span> <span class="s2">&quot;Class 2: number of sig ps = &quot;</span><span class="p">,</span><span class="n">arr2_spr_sig</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>  <span class="s2">&quot;number insig = &quot;</span><span class="p">,</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">arr2_spr_sig</span><span class="o">.</span><span class="n">size</span>       
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr2_spr_sig</span><span class="p">,</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">arr3_spr_sig</span> <span class="o">=</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">logical_and</span><span class="p">(</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">,</span> <span class="n">arr_spp</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">)]</span>
+        <span class="nb">print</span> <span class="s2">&quot;Class 3: number of sig ps = &quot;</span><span class="p">,</span><span class="n">arr3_spr_sig</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>  <span class="s2">&quot;number insig = &quot;</span><span class="p">,</span> <span class="n">arr_spr</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">arr3_spr_sig</span><span class="o">.</span><span class="n">size</span>       
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr3_spr_sig</span><span class="p">,</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Spearman R&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span> <span class="s1">&#39;SpearmanR_Q_PWP.pdf&#39;</span><span class="p">))</span>
+    <span class="c1">#Make histogram of spearman p values</span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">arr_spp</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr_spp</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">],</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr_spp</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr_spp</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">],</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">arr_spp</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">hist</span><span class="p">(</span><span class="n">arr_spp</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">],</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Spearman p&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span> <span class="s1">&#39;SpearmanP_Q_PWP.pdf&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="make_pwp_vs_saturation_ratio_plots"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.make_pwp_vs_saturation_ratio_plots">[docs]</a><span class="k">def</span> <span class="nf">make_pwp_vs_saturation_ratio_plots</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">siteList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">siteFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="n">classFile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">plotloglog</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">sitePanelDict</span><span class="p">,</span> <span class="n">sitePhreeqcDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">loadPhreeqc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">class_xls</span> <span class="o">=</span> <span class="n">read_excel</span><span class="p">(</span><span class="n">classFile</span><span class="p">,</span> <span class="s1">&#39;Sheet1&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="s1">&#39;recharge&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">])</span>
+    <span class="n">site_class</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rs</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spp</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spr</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">slopes</span><span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="c1">#Check for plots directory and make it if one doesn&#39;t exist</span>
+    <span class="n">check_plots_dir</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePanelDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="c1">#read in classification for this site</span>
+            <span class="n">this_class</span> <span class="o">=</span> <span class="n">class_xls</span><span class="p">[</span><span class="s1">&#39;recharge&#39;</span><span class="p">][</span><span class="n">site</span><span class="p">]</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">this_class</span><span class="p">]</span>
+            <span class="n">site_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_class</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making plot for: &quot;</span><span class="o">+</span><span class="n">site</span><span class="p">)</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span>
+        <span class="n">pwp_rates</span> <span class="o">=</span> <span class="n">calc_site_pwp</span><span class="p">(</span><span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">],</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">])</span>
+        <span class="n">pwp_rates</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">pwp_rates</span><span class="p">)</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Temperature, water&#39;</span><span class="p">]</span>
+        <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
+        <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">CO2_Molality</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="o">/</span><span class="n">K_H</span>
+        <span class="n">CaEq</span> <span class="o">=</span> <span class="n">concCaEqFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
+        <span class="n">sat_ratio</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">Ca</span><span class="o">/</span><span class="n">CaEq</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Q&#39;</span><span class="p">:</span><span class="n">Q</span><span class="p">,</span> <span class="s1">&#39;pwp&#39;</span><span class="p">:</span><span class="n">pwp_rates</span><span class="p">,</span> <span class="s1">&#39;sat_ratio&#39;</span><span class="p">:</span><span class="n">sat_ratio</span><span class="p">})</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="c1">#Make PWP vs. Saturation Ratio Plot</span>
+        <span class="n">figure</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">plotloglog</span><span class="p">:</span>
+            <span class="n">loglog</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">sat_ratio</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">semilogx</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">sat_ratio</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;PWP Dissolution Rate (mm/yr)&#39;</span><span class="p">)</span>
+        <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Saturation ratio&#39;</span><span class="p">)</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Sat_ratio_vs_PWP.pdf&#39;</span><span class="p">))</span>
+        <span class="c1">#Calculate correlation coefficient and regression</span>
+        <span class="n">slope</span><span class="p">,</span><span class="n">intercept</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">sat_ratio</span><span class="p">)</span>        
+        <span class="n">rs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="p">[</span><span class="n">this_spr</span><span class="p">,</span> <span class="n">this_spp</span><span class="p">]</span> <span class="o">=</span> <span class="n">spearmanr</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">sat_ratio</span><span class="p">)</span>
+        <span class="n">spr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_spr</span><span class="p">)</span>
+        <span class="n">spp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_spp</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
+
+    <span class="c1">#Make histogram of pearson r values    </span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="n">arr_rs</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">rs</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="s2">&quot;size arr_rs=&quot;</span><span class="p">,</span> <span class="n">arr_rs</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">arr_ps</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+    <span class="n">arr_spr</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">spr</span><span class="p">)</span>
+    <span class="n">arr_spp</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">spp</span><span class="p">)</span>
+    <span class="n">arr_site_class</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">site_class</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_rs</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_rs</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_rs</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pearson R&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="s1">&#39;PearsonR_PWP_SatRatio.pdf&#39;</span><span class="p">))</span>
+    <span class="c1">#Make histogram of pearson p values</span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_ps</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_ps</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_ps</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pearson p&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span> <span class="s1">&#39;PearsonP_PWP_SatRatio.pdf&#39;</span><span class="p">))</span>
+    <span class="c1">#Make histogram of spearman r values</span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_spr</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_spr</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_spr</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Spearman R&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span> <span class="s1">&#39;SpearmanR_PWP_SatRatio.pdf&#39;</span><span class="p">))</span>
+    <span class="c1">#Make histogram of spearman p values</span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_spp</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_spp</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">2</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">arr_spp</span><span class="p">[</span><span class="n">arr_site_class</span><span class="o">==</span><span class="mi">3</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Spearman p&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span> <span class="s1">&#39;SpearmanP_PWP_SatRatio.pdf&#39;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="make_pwp_vs_T_plots"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.make_pwp_vs_T_plots">[docs]</a><span class="k">def</span> <span class="nf">make_pwp_vs_T_plots</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">siteList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">siteFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">makeHistograms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">classFile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="n">sitePanelDict</span><span class="p">,</span> <span class="n">sitePhreeqcDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">loadPhreeqc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">class_xls</span> <span class="o">=</span> <span class="n">read_excel</span><span class="p">(</span><span class="n">classFile</span><span class="p">,</span> <span class="s1">&#39;Sheet1&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="s1">&#39;recharge&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">])</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePanelDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="c1">#read in classification for this site</span>
+            <span class="n">this_class</span> <span class="o">=</span> <span class="n">class_xls</span><span class="p">[</span><span class="s1">&#39;recharge&#39;</span><span class="p">][</span><span class="n">site</span><span class="p">]</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">this_class</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making plot for: &quot;</span><span class="o">+</span><span class="n">site</span><span class="p">)</span>
+        <span class="c1">#Read out data into shorter variable names</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Temperature, water&#39;</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">CO2_Molality</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="s1">&#39;Ca&#39;</span><span class="p">]</span>
+        <span class="n">a_Ca</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="s1">&#39;Ca+2_Activity&#39;</span><span class="p">]</span>
+        <span class="n">a_H2CO3s</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="s1">&#39;CO2_Activity&#39;</span><span class="p">]</span>
+        <span class="n">a_HCO3</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="s1">&#39;HCO3-_Activity&#39;</span><span class="p">]</span>
+        <span class="n">a_H</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="s1">&#39;H+_Activity&#39;</span><span class="p">]</span>
+        <span class="c1">#Filter out nan values</span>
+        <span class="c1">#good_values = ~(Q+T_C+CO2+Ca).isnull()#Addition will create Nans if any of the series contains a NaN</span>
+        <span class="n">good_values</span> <span class="o">=</span> <span class="n">get_good_indicies</span><span class="p">([</span><span class="n">Q</span><span class="p">,</span><span class="n">T_C</span><span class="p">,</span><span class="n">CO2</span><span class="p">,</span><span class="n">Ca</span><span class="p">,</span><span class="n">a_Ca</span><span class="p">,</span><span class="n">a_H2CO3s</span><span class="p">,</span><span class="n">a_H</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="p">])</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">Ca</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">a_Ca</span> <span class="o">=</span> <span class="n">a_Ca</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">a_H</span> <span class="o">=</span> <span class="n">a_H</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">a_H2CO3s</span> <span class="o">=</span> <span class="n">a_H2CO3s</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">a_HCO3</span> <span class="o">=</span> <span class="n">a_HCO3</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="c1">#Calculate PCO2</span>
+        <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
+        <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="o">/</span><span class="n">K_H</span>
+        <span class="c1">#Calculate PWP rates</span>
+        <span class="n">pwp_rates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Q</span><span class="p">):</span>
+<span class="c1">#            sol = solutionFromCaPCO2(Ca[i], PCO2[i], T_C = T_C[i])</span>
+<span class="c1">#            this_pwp = pwpFromSolution(sol)</span>
+            <span class="n">this_pwp</span> <span class="o">=</span>  <span class="n">pwpRateTheory</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="n">a_Ca</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="n">a_H2CO3s</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a_H</span><span class="o">=</span><span class="n">a_H</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="n">a_HCO3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_K</span><span class="o">=</span><span class="n">T_K</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">this_rate_mm_yr</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">this_pwp</span><span class="p">)</span>
+            <span class="n">pwp_rates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_rate_mm_yr</span><span class="p">)</span>
+        <span class="c1">#Check for plots directory and make it if one doesn&#39;t exist</span>
+        <span class="n">check_plots_dir</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">)</span>
+        <span class="c1">#Make Discharge vs. Saturation Ratio Plot</span>
+        <span class="n">figure</span><span class="p">()</span>
+        <span class="n">plot</span><span class="p">(</span><span class="n">T_C</span><span class="p">,</span> <span class="n">pwp_rates</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Temperature ($^\circ C$)&#39;</span><span class="p">)</span>
+        <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PWP Dissolution Rate (mm/yr)&#39;</span><span class="p">)</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-T_vs_PWP.pdf&#39;</span><span class="p">))</span>
+        <span class="c1">#Calculate correlation coefficient and regression</span>
+        <span class="n">slope</span><span class="p">,</span><span class="n">intercept</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">T_C</span><span class="p">,</span> <span class="n">pwp_rates</span><span class="p">)</span>
+        <span class="n">rs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">makeHistograms</span><span class="p">:</span>
+            <span class="n">figure</span><span class="p">()</span>
+            <span class="n">hist</span><span class="p">(</span><span class="n">pwp_rates</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+            <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;PWP Rate mm/yr&#39;</span><span class="p">)</span>
+            <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+            <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PWPHist.pdf&#39;</span><span class="p">))</span>
+
+    <span class="c1">#Make histogram of pearson r values    </span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">rs</span><span class="p">,</span><span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pearson R&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="s1">&#39;PearsonR_T_PWP.pdf&#39;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="make_saturation_index_vs_Q_plots"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.make_saturation_index_vs_Q_plots">[docs]</a><span class="k">def</span> <span class="nf">make_saturation_index_vs_Q_plots</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">siteList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">siteFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">makeHistograms</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">sitePanelDict</span><span class="p">,</span> <span class="n">sitePhreeqcDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">loadPhreeqc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePanelDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making plot for: &quot;</span><span class="o">+</span><span class="n">site</span><span class="p">)</span>
+        <span class="c1">#Read out data into shorter variable names</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span>
+        <span class="n">SI</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">SI_Calcite</span>
+        <span class="c1">#Filter out nan values</span>
+        <span class="n">good_values</span> <span class="o">=</span> <span class="n">get_good_indicies</span><span class="p">([</span><span class="n">Q</span><span class="p">,</span><span class="n">SI</span><span class="p">])</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">SI</span> <span class="o">=</span> <span class="n">SI</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">check_plots_dir</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">)</span>
+        <span class="c1">#Make Discharge vs. Saturation Index Plot</span>
+        <span class="n">figure</span><span class="p">()</span>
+        <span class="n">semilogx</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">SI</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Discharge (cfs)&#39;</span><span class="p">)</span>
+        <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;$SI_</span><span class="si">{calcite}</span><span class="s1">$&#39;</span><span class="p">)</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Q_vs_SI.pdf&#39;</span><span class="p">))</span>
+        <span class="c1">#Calculate correlation coefficient and regression</span>
+        <span class="n">slope</span><span class="p">,</span><span class="n">intercept</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">log10</span><span class="p">(</span><span class="n">Q</span><span class="p">),</span> <span class="n">SI</span><span class="p">)</span>
+        <span class="n">rs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">makeHistograms</span><span class="p">:</span>
+            <span class="n">figure</span><span class="p">()</span>
+            <span class="n">hist</span><span class="p">(</span><span class="n">SI</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$SI_</span><span class="si">{calcite}</span><span class="s1">$&#39;</span><span class="p">)</span>
+            <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+            <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-SIHist.pdf&#39;</span><span class="p">))</span>        
+
+    <span class="c1">#Make histogram of pearson r values    </span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">rs</span><span class="p">,</span><span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pearson R&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="s1">&#39;PearsonR_Q_SIRatio.pdf&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="make_saturation_ratio_vs_Q_plots"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.make_saturation_ratio_vs_Q_plots">[docs]</a><span class="k">def</span> <span class="nf">make_saturation_ratio_vs_Q_plots</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">siteList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">siteFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">makeHistograms</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">sitePanelDict</span><span class="p">,</span> <span class="n">sitePhreeqcDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">loadPhreeqc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePanelDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making plot for: &quot;</span><span class="o">+</span><span class="n">site</span><span class="p">)</span>
+        <span class="c1">#Read out data into shorter variable names</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Temperature, water&#39;</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">CO2_Molality</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="s1">&#39;Ca&#39;</span><span class="p">]</span>
+        <span class="c1">#Filter out nan values</span>
+        <span class="c1">#good_values = ~(Q+T_C+CO2+Ca).isnull()#Addition will create Nans if any of the series contains a NaN</span>
+        <span class="n">good_values</span> <span class="o">=</span> <span class="n">get_good_indicies</span><span class="p">([</span><span class="n">Q</span><span class="p">,</span><span class="n">T_C</span><span class="p">,</span><span class="n">CO2</span><span class="p">,</span><span class="n">Ca</span><span class="p">])</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">Ca</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="c1">#Calculate PCO2</span>
+        <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
+        <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="o">/</span><span class="n">K_H</span>
+        <span class="c1">#Calculate Equilibrium Ca concentration</span>
+        <span class="n">CaEq</span> <span class="o">=</span> <span class="n">concCaEqFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
+        <span class="c1">#Check for plots directory and make it if one doesn&#39;t exist</span>
+        <span class="n">check_plots_dir</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">)</span>
+        <span class="c1">#Make Discharge vs. Saturation Ratio Plot</span>
+        <span class="n">figure</span><span class="p">()</span>
+        <span class="n">loglog</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">Ca</span><span class="o">/</span><span class="n">CaEq</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Discharge (cfs)&#39;</span><span class="p">)</span>
+        <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Saturation Ratio $[Ca]/[Ca]_</span><span class="si">{eq}</span><span class="s1">$&#39;</span><span class="p">)</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Q_vs_SatRatio.pdf&#39;</span><span class="p">))</span>
+        <span class="c1">#Calculate correlation coefficient and regression</span>
+        <span class="n">slope</span><span class="p">,</span><span class="n">intercept</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">stderr</span> <span class="o">=</span> <span class="n">linregress</span><span class="p">(</span><span class="n">log10</span><span class="p">(</span><span class="n">Q</span><span class="p">),</span> <span class="n">Ca</span><span class="o">/</span><span class="n">CaEq</span><span class="p">)</span>
+        <span class="n">rs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">ps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">slope</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">makeHistograms</span><span class="p">:</span>
+            <span class="n">figure</span><span class="p">()</span>
+            <span class="n">hist</span><span class="p">(</span><span class="n">Ca</span><span class="o">/</span><span class="n">CaEq</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Saturation Ratio $[Ca]/[Ca]_</span><span class="si">{eq}</span><span class="s1">$&#39;</span><span class="p">)</span>
+            <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+            <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-SatRatioHist.pdf&#39;</span><span class="p">))</span>
+
+    <span class="c1">#Make histogram of pearson r values    </span>
+    <span class="n">figure</span><span class="p">()</span>
+    <span class="n">hist</span><span class="p">(</span><span class="n">rs</span><span class="p">,</span><span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Pearson R&#39;</span><span class="p">)</span>
+    <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency&#39;</span><span class="p">)</span>
+    <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="s1">&#39;PearsonR_Q_SatRatio.pdf&#39;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="make_pwp_vs_PCO2_plots"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.make_pwp_vs_PCO2_plots">[docs]</a><span class="k">def</span> <span class="nf">make_pwp_vs_PCO2_plots</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">siteList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">siteFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">makeHistograms</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">classFile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">plotloglog</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">nbins</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">sitePanelDict</span><span class="p">,</span> <span class="n">sitePhreeqcDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">loadPhreeqc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">class_xls</span> <span class="o">=</span> <span class="n">read_excel</span><span class="p">(</span><span class="n">classFile</span><span class="p">,</span> <span class="s1">&#39;Sheet1&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="s1">&#39;recharge&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">])</span>
+    <span class="n">site_class</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rs</span> <span class="o">=</span><span class="p">[]</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spp</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">spr</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">slopes</span><span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="c1">#Check for plots directory and make it if one doesn&#39;t exist</span>
+    <span class="n">check_plots_dir</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePanelDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="c1">#read in classification for this site</span>
+            <span class="n">this_class</span> <span class="o">=</span> <span class="n">class_xls</span><span class="p">[</span><span class="s1">&#39;recharge&#39;</span><span class="p">][</span><span class="n">site</span><span class="p">]</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">this_class</span><span class="p">]</span>
+            <span class="n">site_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_class</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making plot for: &quot;</span><span class="o">+</span><span class="n">site</span><span class="p">)</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span>
+        <span class="n">pwp_rates</span><span class="p">,</span><span class="n">PCO2</span> <span class="o">=</span> <span class="n">calc_site_pwp</span><span class="p">(</span><span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">],</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">],</span> <span class="n">returnPCO2</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">pwp_rates</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">pwp_rates</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;PCO2&#39;</span><span class="p">:</span><span class="n">PCO2</span><span class="p">,</span> <span class="s1">&#39;pwp&#39;</span><span class="p">:</span><span class="n">pwp_rates</span><span class="p">})</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="c1">#Make PWP vs. PCO2 Plot</span>
+        <span class="n">figure</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">plotloglog</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bracket_charge_balance</span><span class="p">:</span>
+                <span class="n">loglog</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">loglog</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bracket_charge_balance</span><span class="p">:</span>
+                <span class="n">semilogx</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">semilogx</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;PCO2 (atm)&#39;</span><span class="p">)</span>
+        <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PWP Dissolution Rate (mm/yr)&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bracket_charge_balance</span><span class="p">:</span>
+            <span class="c1">#Load charge bracket data</span>
+            <span class="n">df_alk</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC-Alk.csv&#39;</span><span class="p">),</span> <span class="n">parse_dates</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">df_ca</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC-Ca.csv&#39;</span><span class="p">),</span> <span class="n">parse_dates</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">pwp_alk</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">calc_site_pwp</span><span class="p">(</span><span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">],</span> <span class="n">df_alk</span><span class="p">))</span>
+            <span class="n">pwp_ca</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">calc_site_pwp</span><span class="p">(</span><span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">],</span> <span class="n">df_ca</span><span class="p">))</span>
+            <span class="n">delta_alk</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span> <span class="o">-</span> <span class="n">pwp_alk</span>
+            <span class="n">delta_ca</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span> <span class="o">-</span> <span class="n">pwp_ca</span>
+            <span class="n">delta_upper</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">delta_ca</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">delta_lower</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">(</span><span class="n">delta_ca</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">delta</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">delta_ca</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">delta</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">delta_upper</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta_ca</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">delta_lower</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta_alk</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="n">delta</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="n">delta_lower</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta_ca</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="n">delta_upper</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">delta_alk</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;pwp_upper&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta_upper</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;pwp_lower&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">delta_lower</span>
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alkalinity_balance_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_alk</span><span class="p">[</span><span class="s1">&#39;Percent error&#39;</span><span class="p">]</span>
+            <span class="n">not_converged</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Alkalinity_balance_error&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mf">5.0</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">[</span><span class="n">not_converged</span><span class="p">]</span><span class="o">=</span><span class="n">nan</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+            <span class="n">errorbar</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">pwp_upper</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">pwp_lower</span><span class="p">],</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+
+        <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PCO2_vs_PWP.pdf&#39;</span><span class="p">))</span></div>
+        <span class="c1">#Calculate correlation coefficient and regression</span>
+<span class="c1">#        slope,intercept,r,p,stderr = linregress(log10(df.Q), df.pwp)        </span>
+<span class="c1">#        rs.append(r)</span>
+<span class="c1">#        if isnan(r):</span>
+<span class="c1">#            return df</span>
+<span class="c1">#        ps.append(p)</span>
+<span class="c1">#        [this_spr, this_spp] = spearmanr(log10(df.Q), df.pwp)</span>
+<span class="c1">#        spr.append(this_spr)</span>
+<span class="c1">#        spp.append(this_spp)</span>
+<span class="c1">#        slopes.append(slope)</span>
+<span class="c1">#        if makeHistograms:</span>
+<span class="c1">#            figure()</span>
+<span class="c1">#            hist(df.pwp, normed=True, color=this_color)</span>
+<span class="c1">#            xlabel(&#39;PWP Rate mm/yr&#39;)</span>
+<span class="c1">#            ylabel(&#39;Frequency&#39;)</span>
+<span class="c1">#            savefig(os.path.join(plotsDir,site+&#39;-PWPHist.pdf&#39;))</span>
+
+    <span class="c1">#Make histogram of pearson r values    </span>
+<span class="c1">#    figure()</span>
+<span class="c1">#    arr_rs = array(rs)</span>
+<span class="c1">#    arr_ps = array(ps)</span>
+<span class="c1">#    arr_spr = array(spr)</span>
+<span class="c1">#    arr_spp = array(spp)</span>
+<span class="c1">#    arr_site_class = array(site_class)</span>
+<span class="c1">#    goodids = logical_and(~isnan(arr_rs), ~isnan(arr_ps))</span>
+<span class="c1">#    arr_rs = arr_rs[goodids]</span>
+<span class="c1">#    arr_ps = arr_ps[goodids]</span>
+<span class="c1">#    arr_site_class = arr_site_class[goodids]</span>
+<span class="c1">#    if arr_rs[arr_site_class==1].shape[0]&gt;1:</span>
+<span class="c1">#        arr1_rs_sig = arr_rs[logical_and(arr_site_class==1, arr_ps&lt;0.05)]</span>
+<span class="c1">#        print &quot;Class 1: number of sig ps = &quot;,arr1_rs_sig.size,  &quot;number insig = &quot;, arr_rs[arr_site_class==1].size - arr1_rs_sig.size       </span>
+<span class="c1">#        hist(arr1_rs_sig, nbins, color=class_colors[1], alpha=0.5)</span>
+<span class="c1">#    if arr_rs[arr_site_class==2].shape[0]&gt;1:</span>
+<span class="c1">#        arr2_rs_sig = arr_rs[logical_and(arr_site_class==2, arr_ps&lt;0.05)]</span>
+<span class="c1">#        print &quot;Class 2: number of sig ps = &quot;,arr2_rs_sig.size,  &quot;number insig = &quot;, arr_rs[arr_site_class==2].size - arr2_rs_sig.size       </span>
+<span class="c1">#        hist(arr2_rs_sig, nbins, color=class_colors[2], alpha=0.5)</span>
+<span class="c1">#    if arr_rs[arr_site_class==3].shape[0]&gt;1:</span>
+<span class="c1">#        arr3_rs_sig = arr_rs[logical_and(arr_site_class==3, arr_ps&lt;0.05)]</span>
+<span class="c1">#        print &quot;Class 3: number of sig ps = &quot;,arr3_rs_sig.size,  &quot;number insig = &quot;, arr_rs[arr_site_class==3].size - arr3_rs_sig.size       </span>
+<span class="c1">#        hist(arr3_rs_sig, nbins, color=class_colors[3], alpha=0.5)</span>
+<span class="c1">#    xlabel(&#39;Pearson R&#39;)</span>
+<span class="c1">#    ylabel(&#39;Frequency&#39;)</span>
+<span class="c1">#    savefig(os.path.join(plotsDir,&#39;PearsonR_Q_PWP.pdf&#39;))</span>
+<span class="c1">#    #Make histogram of pearson p values</span>
+<span class="c1">#    figure()</span>
+<span class="c1">#    if arr_ps[arr_site_class==1].shape[0]&gt;1:</span>
+<span class="c1">#        hist(arr_ps[arr_site_class==1], nbins, color=class_colors[1], alpha=0.5)</span>
+<span class="c1">#    if arr_ps[arr_site_class==2].shape[0]&gt;1:</span>
+<span class="c1">#        hist(arr_ps[arr_site_class==2], nbins, color=class_colors[2], alpha=0.5)</span>
+<span class="c1">#    if arr_ps[arr_site_class==3].shape[0]&gt;1:</span>
+<span class="c1">#        hist(arr_ps[arr_site_class==3], nbins, color=class_colors[3], alpha=0.5)</span>
+<span class="c1">#    xlabel(&#39;Pearson p&#39;)</span>
+<span class="c1">#    ylabel(&#39;Frequency&#39;)</span>
+<span class="c1">#    savefig(os.path.join(plotsDir, &#39;PearsonP_Q_PWP.pdf&#39;))</span>
+
+<span class="c1">#    #Make histogram of spearman r values</span>
+<span class="c1">#    arr_spr = array(spr)</span>
+<span class="c1">#    arr_spp = array(spp)</span>
+<span class="c1">#    arr_site_class = array(site_class)</span>
+<span class="c1">#    goodids = logical_and(~isnan(arr_spr), ~isnan(arr_spp))</span>
+<span class="c1">#    arr_spr = arr_spr[goodids]</span>
+<span class="c1">#    arr_spp = arr_spp[goodids]</span>
+<span class="c1">#    arr_site_class = arr_site_class[goodids]</span>
+<span class="c1">#    figure()</span>
+<span class="c1">#    if arr_spr[arr_site_class==1].shape[0]&gt;1:</span>
+<span class="c1">#        arr1_spr_sig = arr_spr[logical_and(arr_site_class==1, arr_spp&lt;0.05)]</span>
+<span class="c1">#        print &quot;Class 1: number of sig ps = &quot;,arr1_spr_sig.size,  &quot;number insig = &quot;, arr_spr[arr_site_class==1].size - arr1_spr_sig.size       </span>
+<span class="c1">#        hist(arr1_spr_sig, nbins, color=class_colors[1], alpha=0.5)</span>
+<span class="c1">#    if arr_spr[arr_site_class==2].shape[0]&gt;1:</span>
+<span class="c1">#        arr2_spr_sig = arr_spr[logical_and(arr_site_class==2, arr_spp&lt;0.05)]</span>
+<span class="c1">#        print &quot;Class 2: number of sig ps = &quot;,arr2_spr_sig.size,  &quot;number insig = &quot;, arr_spr[arr_site_class==2].size - arr2_spr_sig.size       </span>
+<span class="c1">#        hist(arr2_spr_sig, nbins, color=class_colors[2], alpha=0.5)</span>
+<span class="c1">#    if arr_spr[arr_site_class==3].shape[0]&gt;1:</span>
+<span class="c1">#        arr3_spr_sig = arr_spr[logical_and(arr_site_class==3, arr_spp&lt;0.05)]</span>
+<span class="c1">#        print &quot;Class 3: number of sig ps = &quot;,arr3_spr_sig.size,  &quot;number insig = &quot;, arr_spr[arr_site_class==3].size - arr3_spr_sig.size       </span>
+<span class="c1">#        hist(arr3_spr_sig, nbins, color=class_colors[3], alpha=0.5)</span>
+<span class="c1">#    xlabel(&#39;Spearman R&#39;)</span>
+<span class="c1">#    ylabel(&#39;Frequency&#39;)</span>
+<span class="c1">#    savefig(os.path.join(plotsDir, &#39;SpearmanR_Q_PWP.pdf&#39;))</span>
+<span class="c1">#    #Make histogram of spearman p values</span>
+<span class="c1">#    figure()</span>
+<span class="c1">#    if arr_spp[arr_site_class==1].shape[0]&gt;1:</span>
+<span class="c1">#        hist(arr_spp[arr_site_class==1], nbins, color=class_colors[1], alpha=0.5)</span>
+<span class="c1">#    if arr_spp[arr_site_class==2].shape[0]&gt;1:</span>
+<span class="c1">#        hist(arr_spp[arr_site_class==2], nbins, color=class_colors[2], alpha=0.5)</span>
+<span class="c1">#    if arr_spp[arr_site_class==3].shape[0]&gt;1:</span>
+<span class="c1">#        hist(arr_spp[arr_site_class==3], nbins, color=class_colors[3], alpha=0.5)</span>
+<span class="c1">#    xlabel(&#39;Spearman p&#39;)</span>
+<span class="c1">#    ylabel(&#39;Frequency&#39;)</span>
+<span class="c1">#    savefig(os.path.join(plotsDir, &#39;SpearmanP_Q_PWP.pdf&#39;))</span>
+
+
+<div class="viewcode-block" id="make_PCO2_vs_Q_plots"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.make_PCO2_vs_Q_plots">[docs]</a><span class="k">def</span> <span class="nf">make_PCO2_vs_Q_plots</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">siteList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">siteFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classFile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">makeHistograms</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">sitePanelDict</span><span class="p">,</span> <span class="n">sitePhreeqcDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">loadPhreeqc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">class_xls</span> <span class="o">=</span> <span class="n">read_excel</span><span class="p">(</span><span class="n">classFile</span><span class="p">,</span> <span class="s1">&#39;Sheet1&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="s1">&#39;recharge&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">])</span>
+    <span class="n">rs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">site_class</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePanelDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="c1">#read in classification for this site</span>
+            <span class="n">this_class</span> <span class="o">=</span> <span class="n">class_xls</span><span class="p">[</span><span class="s1">&#39;recharge&#39;</span><span class="p">][</span><span class="n">site</span><span class="p">]</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">this_class</span><span class="p">]</span>
+            <span class="n">site_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_class</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making plot for: &quot;</span><span class="o">+</span><span class="n">site</span><span class="p">)</span>
+        <span class="c1">#Read out data into shorter variable names</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Temperature, water&#39;</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">CO2_Molality</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">][</span><span class="s1">&#39;Ca&#39;</span><span class="p">]</span>
+        <span class="c1">#Filter out nan values</span>
+        <span class="c1">#good_values = ~(Q+T_C+CO2+Ca).isnull()#Addition will create Nans if any of the series contains a NaN</span>
+        <span class="n">good_values</span> <span class="o">=</span> <span class="n">get_good_indicies</span><span class="p">([</span><span class="n">Q</span><span class="p">,</span><span class="n">T_C</span><span class="p">,</span><span class="n">CO2</span><span class="p">,</span><span class="n">Ca</span><span class="p">])</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">Q</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">Ca</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="c1">#Calculate PCO2</span>
+        <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
+        <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="o">/</span><span class="n">K_H</span>
+        <span class="n">figure</span><span class="p">()</span>
+        <span class="n">loglog</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Discharge (cfs)&#39;</span><span class="p">)</span>
+        <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PCO2 (atm)&#39;</span><span class="p">)</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PCO2_vs_Q.pdf&#39;</span><span class="p">))</span></div>
+        <span class="c1">#Calculate correlation coefficient and regression</span>
+<span class="c1">#        slope,intercept,r,p,stderr = linregress(log10(Q), Ca/CaEq)</span>
+<span class="c1">#        rs.append(r)</span>
+<span class="c1">#        ps.append(p)</span>
+<span class="c1">#        slopes.append(slope)</span>
+<span class="c1">#        if makeHistograms:</span>
+<span class="c1">#            figure()</span>
+<span class="c1">#            hist(Ca/CaEq, normed=True)</span>
+<span class="c1">#            xlabel(&#39;Saturation Ratio $[Ca]/[Ca]_{eq}$&#39;)</span>
+<span class="c1">#            ylabel(&#39;Frequency&#39;)</span>
+<span class="c1">#            savefig(os.path.join(plotsDir,site+&#39;-SatRatioHist.pdf&#39;))</span>
+
+<span class="c1">#    #Make histogram of pearson r values    </span>
+<span class="c1">#    figure()</span>
+<span class="c1">#    hist(rs,normed=True)</span>
+<span class="c1">#    xlabel(&#39;Pearson R&#39;)</span>
+<span class="c1">#    ylabel(&#39;Frequency&#39;)</span>
+<span class="c1">#    savefig(os.path.join(plotsDir,&#39;PearsonR_Q_SatRatio.pdf&#39;))</span>
+
+
+<div class="viewcode-block" id="make_PCO2_vs_T_plots"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.make_PCO2_vs_T_plots">[docs]</a><span class="k">def</span> <span class="nf">make_PCO2_vs_T_plots</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">siteList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">siteFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classFile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">makeHistograms</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">sitePanelDict</span><span class="p">,</span> <span class="n">sitePhreeqcDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">loadPhreeqc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">class_xls</span> <span class="o">=</span> <span class="n">read_excel</span><span class="p">(</span><span class="n">classFile</span><span class="p">,</span> <span class="s1">&#39;Sheet1&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="s1">&#39;recharge&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">])</span>
+    <span class="n">site_class</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePanelDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="c1">#read in classification for this site</span>
+            <span class="n">this_class</span> <span class="o">=</span> <span class="n">class_xls</span><span class="p">[</span><span class="s1">&#39;recharge&#39;</span><span class="p">][</span><span class="n">site</span><span class="p">]</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">this_class</span><span class="p">]</span>
+            <span class="n">site_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_class</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making plot for: &quot;</span><span class="o">+</span><span class="n">site</span><span class="p">)</span>
+        <span class="c1">#Read out data into shorter variable names</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Temperature, water&#39;</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">CO2_Molality</span>
+        <span class="n">good_values</span> <span class="o">=</span> <span class="n">get_good_indicies</span><span class="p">([</span><span class="n">T_C</span><span class="p">,</span><span class="n">CO2</span><span class="p">])</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="c1">#Calculate PCO2</span>
+        <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
+        <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="o">/</span><span class="n">K_H</span>
+        <span class="n">figure</span><span class="p">()</span>
+        <span class="n">loglog</span><span class="p">(</span><span class="n">T_C</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Temperature (C)&#39;</span><span class="p">)</span>
+        <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PCO2 (atm)&#39;</span><span class="p">)</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PCO2_vs_T.pdf&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="make_PCO2_vs_Month_plots"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.plots.make_PCO2_vs_Month_plots">[docs]</a><span class="k">def</span> <span class="nf">make_PCO2_vs_Month_plots</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">siteList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">siteFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classFile</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="n">sitePanelDict</span><span class="p">,</span> <span class="n">sitePhreeqcDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">loadPhreeqc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">class_xls</span> <span class="o">=</span> <span class="n">read_excel</span><span class="p">(</span><span class="n">classFile</span><span class="p">,</span> <span class="s1">&#39;Sheet1&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;site&#39;</span><span class="p">,</span> <span class="s1">&#39;recharge&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">])</span>
+    <span class="n">site_class</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plotsDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="s1">&#39;plots/&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePanelDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">classFile</span> <span class="o">!=</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="c1">#read in classification for this site</span>
+            <span class="n">this_class</span> <span class="o">=</span> <span class="n">class_xls</span><span class="p">[</span><span class="s1">&#39;recharge&#39;</span><span class="p">][</span><span class="n">site</span><span class="p">]</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">this_class</span><span class="p">]</span>
+            <span class="n">site_class</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">this_class</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">this_color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Making plot for: &quot;</span><span class="o">+</span><span class="n">site</span><span class="p">)</span>
+        <span class="c1">#Read out data into shorter variable names</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">sitePanelDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Temperature, water&#39;</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">sitePhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span><span class="o">.</span><span class="n">CO2_Molality</span>
+        <span class="n">good_values</span> <span class="o">=</span> <span class="n">get_good_indicies</span><span class="p">([</span><span class="n">T_C</span><span class="p">,</span><span class="n">CO2</span><span class="p">])</span>
+        <span class="n">T_C</span> <span class="o">=</span> <span class="n">T_C</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="n">CO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="p">[</span><span class="n">good_values</span><span class="p">]</span>
+        <span class="c1">#Calculate PCO2</span>
+        <span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span>
+        <span class="n">K_H</span> <span class="o">=</span> <span class="n">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="n">CO2</span><span class="o">/</span><span class="n">K_H</span>
+        <span class="n">sample_month</span> <span class="o">=</span> <span class="n">PCO2</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">month</span>
+        <span class="n">figure</span><span class="p">()</span>
+        <span class="c1">#semilogy(sample_month, PCO2, &#39;o&#39;, color=this_color)</span>
+        <span class="n">plot</span><span class="p">(</span><span class="n">sample_month</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">this_color</span><span class="p">)</span>
+        <span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Month&#39;</span><span class="p">)</span>
+        <span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;PCO2 (atm)&#39;</span><span class="p">)</span>
+        <span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">plotsDir</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PCO2_vs_Month.pdf&#39;</span><span class="p">))</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>olm.loggers.WTWpHToolkit &mdash; olm 0.33 documentation</title>
+    <title>olm.loggers.WTWpHToolkit &#8212; olm 0.33 documentation</title>
     
     <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -17,17 +17,18 @@
         VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="olm 0.33 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,75 +37,93 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for olm.loggers.WTWpHToolkit</h1><div class="highlight"><pre>
-<span class="c">#Functions to handle reading and manipulating data from the WTW-pH data loggers</span>
+<span></span><span class="c1">#Functions to handle reading and manipulating data from the WTW-pH data loggers</span>
 
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">read_csv</span>
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">concat</span>
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
-<span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">read_csv</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">concat</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="k">import</span> <span class="n">parse</span>
 
 <div class="viewcode-block" id="readpH"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.WTWpHToolkit.readpH">[docs]</a><span class="k">def</span> <span class="nf">readpH</span><span class="p">(</span><span class="n">csvfile</span><span class="p">):</span>
-    <span class="n">sep</span> <span class="o">=</span> <span class="s">&#39;;&#39;</span>
-    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;SensorName&#39;</span><span class="p">,</span> <span class="s">&#39;SerNo&#39;</span><span class="p">,</span> <span class="s">&#39;DateTime&#39;</span><span class="p">,</span> <span class="s">&#39;pH&#39;</span><span class="p">,</span> <span class="s">&#39;Status-ph&#39;</span><span class="p">,</span> <span class="s">&#39;Temperature&#39;</span><span class="p">,</span> <span class="s">&#39;Status-temp&#39;</span><span class="p">,</span> <span class="s">&#39;MeasID&#39;</span><span class="p">,</span> <span class="s">&#39;CalStatus&#39;</span><span class="p">,</span> <span class="s">&#39;CalProtID&#39;</span><span class="p">,</span> <span class="s">&#39;blank&#39;</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads data from a CSV file produced by WTW-pH data loggers.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    csvfile : string</span>
+<span class="sd">        Name of the CSV file to be read.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    df : pandas.DataFrame</span>
+<span class="sd">        DataFrame object containing pH data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SensorName&#39;</span><span class="p">,</span> <span class="s1">&#39;SerNo&#39;</span><span class="p">,</span> <span class="s1">&#39;DateTime&#39;</span><span class="p">,</span> <span class="s1">&#39;pH&#39;</span><span class="p">,</span> <span class="s1">&#39;Status-ph&#39;</span><span class="p">,</span> <span class="s1">&#39;Temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;Status-temp&#39;</span><span class="p">,</span> <span class="s1">&#39;MeasID&#39;</span><span class="p">,</span> <span class="s1">&#39;CalStatus&#39;</span><span class="p">,</span> <span class="s1">&#39;CalProtID&#39;</span><span class="p">,</span> <span class="s1">&#39;blank&#39;</span><span class="p">]</span>
     <span class="n">index_col</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">skiprows</span> <span class="o">=</span> <span class="mi">5</span>
-    <span class="n">parse_dates</span> <span class="o">=</span> <span class="bp">True</span>
-    <span class="c">#function to convert commas to decimal points and strings to floats in data</span>
-    <span class="n">decimal_conversion</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="s">&quot;.&quot;</span><span class="p">))</span>
-    <span class="n">converters</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;pH&#39;</span><span class="p">:</span><span class="n">decimal_conversion</span><span class="p">,</span> <span class="s">&#39;Temperature&#39;</span><span class="p">:</span><span class="n">decimal_conversion</span><span class="p">}</span>
+    <span class="n">parse_dates</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1">#function to convert commas to decimal points and strings to floats in data</span>
+    <span class="n">decimal_conversion</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span><span class="s2">&quot;.&quot;</span><span class="p">))</span>
+    <span class="n">converters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pH&#39;</span><span class="p">:</span><span class="n">decimal_conversion</span><span class="p">,</span> <span class="s1">&#39;Temperature&#39;</span><span class="p">:</span><span class="n">decimal_conversion</span><span class="p">}</span>
     <span class="n">temp_df</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">,</span> <span class="n">date_parser</span><span class="o">=</span><span class="n">euroParser</span><span class="p">,</span> <span class="n">converters</span><span class="o">=</span><span class="n">converters</span><span class="p">)</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">temp_df</span><span class="p">[[</span><span class="s">&#39;Temperature&#39;</span><span class="p">,</span> <span class="s">&#39;pH&#39;</span><span class="p">]]</span>
-    <span class="k">return</span> <span class="n">df</span>
-</div>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">temp_df</span><span class="p">[[</span><span class="s1">&#39;Temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;pH&#39;</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
 <div class="viewcode-block" id="euroParser"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.WTWpHToolkit.euroParser">[docs]</a><span class="k">def</span> <span class="nf">euroParser</span><span class="p">(</span><span class="n">datestring</span><span class="p">):</span>
-    <span class="n">splitdate</span> <span class="o">=</span> <span class="n">datestring</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Date parser for European style dates separated by &#39;.&#39; characters.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    datestring : string</span>
+<span class="sd">        String containing Euro style date</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    dateTime : datetime object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">splitdate</span> <span class="o">=</span> <span class="n">datestring</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">splitdate</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">newdatestring</span> <span class="o">=</span> <span class="n">splitdate</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span><span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="n">splitdate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span><span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="n">splitdate</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">newdatestring</span> <span class="o">=</span> <span class="n">splitdate</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span><span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">splitdate</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span><span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="n">splitdate</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">newdatestring</span> <span class="o">=</span> <span class="n">datestring</span>
     <span class="n">dateTime</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">newdatestring</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">dateTime</span>
-</div>
-<div class="viewcode-block" id="concatpH"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.WTWpHToolkit.concatpH">[docs]</a><span class="k">def</span> <span class="nf">concatpH</span><span class="p">(</span><span class="n">dflist</span><span class="p">):</span>
-    <span class="c">#for now we will just do a simple concat, perhaps add support for merging misaligned dates later</span>
-    <span class="n">concatenated</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span><span class="n">dflist</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">concatenated</span></div>
+    <span class="k">return</span> <span class="n">dateTime</span></div>
+
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -113,13 +132,13 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>
 </html>
