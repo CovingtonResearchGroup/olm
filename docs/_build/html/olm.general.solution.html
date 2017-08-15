@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>olm.general.solution &mdash; olm 0.33 documentation</title>
+    <title>olm.general.solution &#8212; olm 0.33 documentation</title>
     
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,45 +17,49 @@
         VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="olm 0.33 documentation" href="index.html" />
-    <link rel="up" title="olm Package" href="olm.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.general.condTo25" href="olm.general.condTo25.html" />
     <link rel="prev" title="olm.calcite.calc_k_neg2" href="olm.calcite.calc_k_neg2.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="olm.general.condTo25.html" title="olm.general.condTo25"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="olm.calcite.calc_k_neg2.html" title="olm.calcite.calc_k_neg2"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="olm.html" accesskey="U">olm Package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" accesskey="U">olm Package</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="olm-general-solution">
 <h1>olm.general.solution<a class="headerlink" href="#olm-general-solution" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="olm.general.solution">
-<em class="property">class </em><tt class="descclassname">olm.general.</tt><tt class="descname">solution</tt><big>(</big><em>constituents</em>, <em>concentrations</em>, <em>units</em>, <em>T=25.0</em>, <em>T_units='C'</em>, <em>cond=None</em>, <em>pH=None</em><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">olm.general.</code><code class="descname">solution</code><span class="sig-paren">(</span><em>constituents</em>, <em>concentrations</em>, <em>units</em>, <em>T=25.0</em>, <em>T_units='C'</em>, <em>cond=None</em>, <em>pH=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution" title="Permalink to this definition">¶</a></dt>
 <dd><p>A solution class, that is used for calculations related to chemical solutions.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -113,7 +117,7 @@
 </table>
 <dl class="method">
 <dt id="olm.general.solution.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>constituents</em>, <em>concentrations</em>, <em>units</em>, <em>T=25.0</em>, <em>T_units='C'</em>, <em>cond=None</em>, <em>pH=None</em><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>constituents</em>, <em>concentrations</em>, <em>units</em>, <em>T=25.0</em>, <em>T_units='C'</em>, <em>cond=None</em>, <em>pH=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -123,41 +127,41 @@
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.I" title="olm.general.solution.I"><tt class="xref py py-obj docutils literal"><span class="pre">I</span></tt></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.I" title="olm.general.solution.I"><code class="xref py py-obj docutils literal"><span class="pre">I</span></code></a>()</td>
 <td>Function to calculate ionic strength of the solution object from full equation using known ion properties.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.__init__" title="olm.general.solution.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a>(constituents,&nbsp;concentrations,&nbsp;units)</td>
+<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.__init__" title="olm.general.solution.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(constituents,&nbsp;concentrations,&nbsp;units)</td>
 <td></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.activity" title="olm.general.solution.activity"><tt class="xref py py-obj docutils literal"><span class="pre">activity</span></tt></a>(ion)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.activity" title="olm.general.solution.activity"><code class="xref py py-obj docutils literal"><span class="pre">activity</span></code></a>(ion)</td>
 <td>Retrieve the activity of a given ion in the solution in mol/L.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.activity_coef" title="olm.general.solution.activity_coef"><tt class="xref py py-obj docutils literal"><span class="pre">activity_coef</span></tt></a>(ion[,&nbsp;I])</td>
+<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.activity_coef" title="olm.general.solution.activity_coef"><code class="xref py py-obj docutils literal"><span class="pre">activity_coef</span></code></a>(ion[,&nbsp;I])</td>
 <td>Calculate activity coefficient, gamma, for a given ion in the solution.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.approxI" title="olm.general.solution.approxI"><tt class="xref py py-obj docutils literal"><span class="pre">approxI</span></tt></a>()</td>
+<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.approxI" title="olm.general.solution.approxI"><code class="xref py py-obj docutils literal"><span class="pre">approxI</span></code></a>()</td>
 <td>Function to calculate approximate ionic strength of solution metal concentration.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.charge_balance" title="olm.general.solution.charge_balance"><tt class="xref py py-obj docutils literal"><span class="pre">charge_balance</span></tt></a>([units])</td>
+<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.charge_balance" title="olm.general.solution.charge_balance"><code class="xref py py-obj docutils literal"><span class="pre">charge_balance</span></code></a>([units])</td>
 <td>Calculate the charge balance error for this solution.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.meq" title="olm.general.solution.meq"><tt class="xref py py-obj docutils literal"><span class="pre">meq</span></tt></a>(ion)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.meq" title="olm.general.solution.meq"><code class="xref py py-obj docutils literal"><span class="pre">meq</span></code></a>(ion)</td>
 <td>Retrieve meq for a given ion in the solution.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.mg" title="olm.general.solution.mg"><tt class="xref py py-obj docutils literal"><span class="pre">mg</span></tt></a>(ion)</td>
+<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.mg" title="olm.general.solution.mg"><code class="xref py py-obj docutils literal"><span class="pre">mg</span></code></a>(ion)</td>
 <td>Retrieve the concentration of a given ion in the solution in mg/L.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.mmol" title="olm.general.solution.mmol"><tt class="xref py py-obj docutils literal"><span class="pre">mmol</span></tt></a>(ion)</td>
+<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.mmol" title="olm.general.solution.mmol"><code class="xref py py-obj docutils literal"><span class="pre">mmol</span></code></a>(ion)</td>
 <td>Retrieve the molar concentration of a given ion in the solution in mol/L.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.mol" title="olm.general.solution.mol"><tt class="xref py py-obj docutils literal"><span class="pre">mol</span></tt></a>(ion)</td>
+<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.mol" title="olm.general.solution.mol"><code class="xref py py-obj docutils literal"><span class="pre">mol</span></code></a>(ion)</td>
 <td>Retrieve the molar concentration of a given ion in the solution in mol/L.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="olm.general.solution.I">
-<tt class="descname">I</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.I"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.I" title="Permalink to this definition">¶</a></dt>
+<code class="descname">I</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.I"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.I" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to calculate ionic strength of the solution object from full equation using known ion properties.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -175,7 +179,7 @@
 
 <dl class="method">
 <dt id="olm.general.solution.activity">
-<tt class="descname">activity</tt><big>(</big><em>ion</em><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.activity" title="Permalink to this definition">¶</a></dt>
+<code class="descname">activity</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.activity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the activity of a given ion in the solution in mol/L.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -199,7 +203,7 @@
 
 <dl class="method">
 <dt id="olm.general.solution.activity_coef">
-<tt class="descname">activity_coef</tt><big>(</big><em>ion</em>, <em>I=None</em><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.activity_coef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.activity_coef" title="Permalink to this definition">¶</a></dt>
+<code class="descname">activity_coef</code><span class="sig-paren">(</span><em>ion</em>, <em>I=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.activity_coef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.activity_coef" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate activity coefficient, gamma, for a given ion in the solution.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -227,7 +231,7 @@
 
 <dl class="method">
 <dt id="olm.general.solution.approxI">
-<tt class="descname">approxI</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.approxI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.approxI" title="Permalink to this definition">¶</a></dt>
+<code class="descname">approxI</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.approxI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.approxI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to calculate approximate ionic strength of solution metal concentration.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -245,7 +249,7 @@
 
 <dl class="method">
 <dt id="olm.general.solution.charge_balance">
-<tt class="descname">charge_balance</tt><big>(</big><em>units='%'</em><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.charge_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.charge_balance" title="Permalink to this definition">¶</a></dt>
+<code class="descname">charge_balance</code><span class="sig-paren">(</span><em>units='%'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.charge_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.charge_balance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the charge balance error for this solution.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -269,7 +273,7 @@
 
 <dl class="method">
 <dt id="olm.general.solution.meq">
-<tt class="descname">meq</tt><big>(</big><em>ion</em><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.meq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.meq" title="Permalink to this definition">¶</a></dt>
+<code class="descname">meq</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.meq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.meq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve meq for a given ion in the solution.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -293,7 +297,7 @@
 
 <dl class="method">
 <dt id="olm.general.solution.mg">
-<tt class="descname">mg</tt><big>(</big><em>ion</em><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.mg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mg" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mg</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.mg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the concentration of a given ion in the solution in mg/L.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -317,7 +321,7 @@
 
 <dl class="method">
 <dt id="olm.general.solution.mmol">
-<tt class="descname">mmol</tt><big>(</big><em>ion</em><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.mmol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mmol" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mmol</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.mmol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mmol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the molar concentration of a given ion in the solution in mol/L.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -341,7 +345,7 @@
 
 <dl class="method">
 <dt id="olm.general.solution.mol">
-<tt class="descname">mol</tt><big>(</big><em>ion</em><big>)</big><a class="reference internal" href="_modules/olm/general.html#solution.mol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mol" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mol</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.mol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the molar concentration of a given ion in the solution in mol/L.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -371,7 +375,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="olm.calcite.calc_k_neg2.html"
@@ -379,47 +383,49 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="olm.general.condTo25.html"
                         title="next chapter">olm.general.condTo25</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/olm.general.solution.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/olm.general.solution.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="olm.general.condTo25.html" title="olm.general.condTo25"
              >next</a> |</li>
         <li class="right" >
           <a href="olm.calcite.calc_k_neg2.html" title="olm.calcite.calc_k_neg2"
              >previous</a> |</li>
-        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="olm.html" >olm Package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>
 </html>

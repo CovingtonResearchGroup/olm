@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>olm.USGS.DataRetrieval &mdash; olm 0.33 documentation</title>
+    <title>olm.USGS.DataRetrieval &#8212; olm 0.33 documentation</title>
     
     <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -17,17 +17,18 @@
         VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="olm 0.33 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,29 +37,31 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for olm.USGS.DataRetrieval</h1><div class="highlight"><pre>
-<span class="c">#Function to download USGS Daily Average Discharge values given date and the location text</span>
+<span></span><span class="c1">#Function to download USGS Daily Average Discharge values given date and the location text</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Contains functions used to download data from USGS databases.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
-<span class="kn">import</span> <span class="nn">urllib</span>
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">read_csv</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">to_datetime</span>
-<span class="c">#import requests</span>
-<span class="c">#import os</span>
+<span class="kn">from</span> <span class="nn">lxml</span> <span class="k">import</span> <span class="n">etree</span>
+<span class="kn">import</span> <span class="nn">lxml.html</span>
+<span class="kn">import</span> <span class="nn">urllib</span><span class="o">,</span> <span class="nn">requests</span> <span class="c1">#could eventually rework to use only requests</span>
+<span class="kn">from</span> <span class="nn">StringIO</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">read_csv</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">to_datetime</span>
+<span class="c1">#import requests</span>
+<span class="c1">#import os</span>
 
-<div class="viewcode-block" id="GetSiteData"><a class="viewcode-back" href="../../../olm.USGS.DataRetrieval.GetSiteData.html#olm.USGS.DataRetrieval.GetSiteData">[docs]</a><span class="k">def</span> <span class="nf">GetSiteData</span><span class="p">(</span><span class="n">location</span><span class="p">):</span><span class="c">#, writedir=&#39;.&#39;): #Changed so that we don&#39;t write out data into text file, only keep dataframe</span>
+<div class="viewcode-block" id="GetSiteData"><a class="viewcode-back" href="../../../olm.USGS.DataRetrieval.GetSiteData.html#olm.USGS.DataRetrieval.GetSiteData">[docs]</a><span class="k">def</span> <span class="nf">GetSiteData</span><span class="p">(</span><span class="n">location</span><span class="p">):</span><span class="c1">#, writedir=&#39;.&#39;): #Changed so that we don&#39;t write out data into text file, only keep dataframe</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves meta data about a USGS site using the full site identifier.</span>
 
@@ -162,42 +165,44 @@
 <span class="sd">    project_no      -- Project number</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">location</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;USGS-&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">location</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;USGS-&#39;</span><span class="p">):</span>
         <span class="n">sitenum</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
-    <span class="n">BASEURL</span> <span class="o">=</span> <span class="s">&#39;http://waterservices.usgs.gov/nwis/site/?site=&#39;</span>
-    <span class="n">queryURL</span> <span class="o">=</span> <span class="n">BASEURL</span> <span class="o">+</span> <span class="n">sitenum</span> <span class="o">+</span> <span class="s">&#39;&amp;siteOutput=expanded&#39;</span>
-    <span class="c">#Need to skip header, which is hopefully uniform across USGS queries</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sitenum</span> <span class="o">=</span> <span class="n">location</span>
+    <span class="n">BASEURL</span> <span class="o">=</span> <span class="s1">&#39;https://waterservices.usgs.gov/nwis/site/?site=&#39;</span>
+    <span class="n">queryURL</span> <span class="o">=</span> <span class="n">BASEURL</span> <span class="o">+</span> <span class="n">sitenum</span> <span class="o">+</span> <span class="s1">&#39;&amp;siteOutput=expanded&#39;</span>
+    <span class="c1">#Need to skip header, which is hopefully uniform across USGS queries</span>
     <span class="n">skiprows</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">59</span><span class="p">)</span>
     <span class="n">skiprows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
-    <span class="n">siteDF</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">queryURL</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">)</span>
-    <span class="n">siteDF</span> <span class="o">=</span> <span class="n">siteDF</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c">#change axis so that we only have key-data pairs</span>
-    <span class="k">return</span> <span class="n">siteDF</span>
-</div>
+    <span class="n">siteDF</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">queryURL</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">)</span>
+    <span class="n">siteDF</span> <span class="o">=</span> <span class="n">siteDF</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#change axis so that we only have key-data pairs</span>
+    <span class="k">return</span> <span class="n">siteDF</span></div>
+
 <div class="viewcode-block" id="querySiteList"><a class="viewcode-back" href="../../../olm.USGS.DataRetrieval.querySiteList.html#olm.USGS.DataRetrieval.querySiteList">[docs]</a><span class="k">def</span> <span class="nf">querySiteList</span><span class="p">(</span><span class="n">siteList</span><span class="p">,</span> <span class="n">charList</span><span class="p">):</span>
-    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s">&#39;http://qwwebservices.usgs.gov/Result/search?&#39;</span>
-    <span class="n">queryText</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s">&#39;siteid=&#39;</span>
-    <span class="c">#add sites to query</span>
+    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://waterqualitydata.us/Result/search?&#39;</span>
+    <span class="n">queryText</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s1">&#39;siteid=&#39;</span>
+    <span class="c1">#add sites to query</span>
     <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteList</span><span class="p">:</span> 
-        <span class="c">#check for USGS prefixes (are there others?  EPA?)</span>
-        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;USGS-&#39;</span><span class="p">)):</span>
-            <span class="n">site</span> <span class="o">=</span> <span class="s">&#39;USGS-&#39;</span> <span class="o">+</span> <span class="n">site</span>
-        <span class="c">#add this site to list with trailing semi-colon</span>
-        <span class="n">queryText</span> <span class="o">+=</span> <span class="n">site</span> <span class="o">+</span> <span class="s">&#39;;&#39;</span>
-    <span class="c">#remove final semi-colon</span>
+        <span class="c1">#check for USGS prefixes (are there others?  EPA?)</span>
+        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
+            <span class="n">site</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span> <span class="o">+</span> <span class="n">site</span>
+        <span class="c1">#add this site to list with trailing semi-colon</span>
+        <span class="n">queryText</span> <span class="o">+=</span> <span class="n">site</span> <span class="o">+</span> <span class="s1">&#39;;&#39;</span>
+    <span class="c1">#remove final semi-colon</span>
     <span class="n">queryText</span> <span class="o">=</span> <span class="n">queryText</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c">#add characteristics to query</span>
-    <span class="n">queryText</span> <span class="o">+=</span> <span class="s">&#39;&amp;characteristicName=&#39;</span>
+    <span class="c1">#add characteristics to query</span>
+    <span class="n">queryText</span> <span class="o">+=</span> <span class="s1">&#39;&amp;characteristicName=&#39;</span>
     <span class="k">for</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="n">charList</span><span class="p">:</span>
-        <span class="n">queryText</span> <span class="o">+=</span> <span class="n">characteristic</span> <span class="o">+</span> <span class="s">&#39;;&#39;</span>
-    <span class="c">#remove trailing semi-colon</span>
+        <span class="n">queryText</span> <span class="o">+=</span> <span class="n">characteristic</span> <span class="o">+</span> <span class="s1">&#39;;&#39;</span>
+    <span class="c1">#remove trailing semi-colon</span>
     <span class="n">queryText</span> <span class="o">=</span> <span class="n">queryText</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="c">#add mime type</span>
-    <span class="n">queryText</span> <span class="o">+=</span> <span class="s">&#39;&amp;mimeType=xml&#39;</span>
-    <span class="c">#convert query string to url special characters</span>
-    <span class="n">queryText</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">queryText</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="s">&quot;/&amp;=:?&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">queryText</span>
+    <span class="c1">#add mime type</span>
+    <span class="n">queryText</span> <span class="o">+=</span> <span class="s1">&#39;&amp;mimeType=xml&#39;</span>
+    <span class="c1">#convert query string to url special characters</span>
+    <span class="n">queryText</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">queryText</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="s2">&quot;/&amp;=:?&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">queryText</span></div>
     
- </div>
+ 
 <div class="viewcode-block" id="GetDailyDischarge"><a class="viewcode-back" href="../../../olm.USGS.DataRetrieval.GetDailyDischarge.html#olm.USGS.DataRetrieval.GetDailyDischarge">[docs]</a><span class="k">def</span> <span class="nf">GetDailyDischarge</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve daily average discharge value from USGS database for given date and USGS site.</span>
@@ -219,44 +224,49 @@
 <span class="sd">    Currently hard-wired to retrieve USGS pcode 00060, daily discharge in cfs.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#construct url for discharge query</span>
-    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s">&#39;http://waterservices.usgs.gov/nwis/dv?format=waterml,1.1&#39;</span>
-    <span class="c">#query discharge and read into xml parser</span>
-    <span class="c">#pull site number out of location text</span>
-    <span class="c">#Check to see if location contains &#39;USGS-&#39; or is just the bare number</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">location</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;USGS-&#39;</span><span class="p">):</span>
+    <span class="c1">#construct url for discharge query</span>
+    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://waterservices.usgs.gov/nwis/dv?format=waterml,1.1&#39;</span>
+    <span class="c1">#query discharge and read into xml parser</span>
+    <span class="c1">#pull site number out of location text</span>
+    <span class="c1">#Check to see if location contains &#39;USGS-&#39; or is just the bare number</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">location</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;USGS-&#39;</span><span class="p">):</span>
         <span class="n">site_number</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">site_number</span> <span class="o">=</span> <span class="n">location</span>
-    <span class="c">#construct html address for query</span>
-    <span class="n">query_html</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s">&#39;&amp;sites=&#39;</span> <span class="o">+</span> <span class="n">site_number</span> <span class="o">+</span> <span class="s">&#39;&amp;startDT=&#39;</span><span class="o">+</span><span class="n">date</span><span class="o">+</span><span class="s">&#39;&amp;endDT=&#39;</span><span class="o">+</span><span class="n">date</span>
-    <span class="c">#read in xml file through html query</span>
-    <span class="n">qtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">query_html</span><span class="p">)</span>
-    <span class="c">#parse xml file to pull out discharge and quality code</span>
+    <span class="c1">#construct html address for query</span>
+    <span class="n">query_html</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s1">&#39;&amp;sites=&#39;</span> <span class="o">+</span> <span class="n">site_number</span> <span class="o">+</span> <span class="s1">&#39;&amp;startDT=&#39;</span><span class="o">+</span><span class="n">date</span><span class="o">+</span><span class="s1">&#39;&amp;endDT=&#39;</span><span class="o">+</span><span class="n">date</span>
+    <span class="c1">#read in xml file through html query</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query_html</span><span class="p">)</span>
+        <span class="n">qtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;Problem retrieving discharge value (IOError).&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="c1">#parse xml file to pull out discharge and quality code</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">qtree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
-    <span class="c">#get namespace map</span>
+    <span class="c1">#get namespace map</span>
     <span class="n">NSMAP</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">nsmap</span>
-    <span class="n">NS1</span> <span class="o">=</span> <span class="s">&quot;{</span><span class="si">%s</span><span class="s">}&quot;</span> <span class="o">%</span> <span class="n">NSMAP</span><span class="p">[</span><span class="s">&#39;ns1&#39;</span><span class="p">]</span>
-    <span class="n">tsString</span> <span class="o">=</span> <span class="s">&quot;timeSeries[@name=&#39;USGS:&quot;</span><span class="o">+</span><span class="n">site_number</span><span class="o">+</span><span class="s">&quot;:00060:00003&#39;]&quot;</span>
+    <span class="n">NS1</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">%s</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">NSMAP</span><span class="p">[</span><span class="s1">&#39;ns1&#39;</span><span class="p">]</span>
+    <span class="n">tsString</span> <span class="o">=</span> <span class="s2">&quot;timeSeries[@name=&#39;USGS:&quot;</span><span class="o">+</span><span class="n">site_number</span><span class="o">+</span><span class="s2">&quot;:00060:00003&#39;]&quot;</span>
     <span class="n">ts</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="n">tsString</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">ts</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
-        <span class="c">#there is no time series data for this site and date</span>
-        <span class="k">return</span> <span class="bp">None</span>
-    <span class="n">sourceInfo</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s">&quot;sourceInfo&quot;</span><span class="p">)</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">sourceInfo</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s">&quot;siteName&quot;</span><span class="p">)</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s">&quot;values&quot;</span><span class="p">)</span>
-    <span class="n">value</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s">&quot;value&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
-        <span class="c">#there is no discharge data for this site and date</span>
-        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ts</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#there is no time series data for this site and date</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">sourceInfo</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s2">&quot;sourceInfo&quot;</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">sourceInfo</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s2">&quot;siteName&quot;</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s2">&quot;values&quot;</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#there is no discharge data for this site and date</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">text</span>
-    <span class="n">quality_code</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;qualifiers&quot;</span><span class="p">)</span>
-    <span class="c">#return discharge and quality code</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;discharge&#39;</span><span class="p">:</span><span class="n">q</span><span class="p">,</span> <span class="s">&#39;quality&#39;</span><span class="p">:</span><span class="n">quality_code</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="n">name</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">data</span>
+    <span class="n">quality_code</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;qualifiers&quot;</span><span class="p">)</span>
+    <span class="c1">#return discharge and quality code</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;discharge&#39;</span><span class="p">:</span><span class="n">q</span><span class="p">,</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span><span class="n">quality_code</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="n">name</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">data</span></div>
 
-</div>
-<div class="viewcode-block" id="GetDailyDischargeRecord"><a class="viewcode-back" href="../../../olm.USGS.DataRetrieval.GetDailyDischargeRecord.html#olm.USGS.DataRetrieval.GetDailyDischargeRecord">[docs]</a><span class="k">def</span> <span class="nf">GetDailyDischargeRecord</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GetDailyDischargeRecord"><a class="viewcode-back" href="../../../olm.USGS.DataRetrieval.GetDailyDischargeRecord.html#olm.USGS.DataRetrieval.GetDailyDischargeRecord">[docs]</a><span class="k">def</span> <span class="nf">GetDailyDischargeRecord</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve daily average discharge values from USGS database for given date range and USGS site.</span>
 
@@ -279,75 +289,77 @@
 <span class="sd">    Currently hard-wired to retrieve USGS pcode 00060, daily discharge in cfs.</span>
 
 <span class="sd">   &quot;&quot;&quot;</span>
-    <span class="c">#construct url for discharge query</span>
-    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s">&#39;http://waterservices.usgs.gov/nwis/dv?format=waterml,1.1&#39;</span>
-    <span class="c">#query discharge and read into xml parser</span>
-    <span class="c">#pull site number out of location text</span>
-    <span class="c">#Check to see if location contains &#39;USGS-&#39; or is just the bare number</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">location</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;USGS-&#39;</span><span class="p">):</span>
+    <span class="c1">#construct url for discharge query</span>
+    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://waterservices.usgs.gov/nwis/dv?format=waterml,1.1&#39;</span>
+    <span class="c1">#query discharge and read into xml parser</span>
+    <span class="c1">#pull site number out of location text</span>
+    <span class="c1">#Check to see if location contains &#39;USGS-&#39; or is just the bare number</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">location</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;USGS-&#39;</span><span class="p">):</span>
         <span class="n">site_number</span> <span class="o">=</span> <span class="n">location</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">site_number</span> <span class="o">=</span> <span class="n">location</span>
-    <span class="c">#construct html address for query</span>
-    <span class="k">if</span> <span class="n">end_date</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
-        <span class="n">query_html</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s">&#39;&amp;sites=&#39;</span> <span class="o">+</span> <span class="n">site_number</span> <span class="o">+</span> <span class="s">&#39;&amp;startDT=&#39;</span><span class="o">+</span><span class="n">start_date</span>
+    <span class="c1">#construct html address for query</span>
+    <span class="k">if</span> <span class="n">end_date</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+        <span class="n">query_html</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s1">&#39;&amp;sites=&#39;</span> <span class="o">+</span> <span class="n">site_number</span> <span class="o">+</span> <span class="s1">&#39;&amp;startDT=&#39;</span><span class="o">+</span><span class="n">start_date</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">query_html</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s">&#39;&amp;sites=&#39;</span> <span class="o">+</span> <span class="n">site_number</span> <span class="o">+</span> <span class="s">&#39;&amp;startDT=&#39;</span><span class="o">+</span><span class="n">start_date</span><span class="o">+</span><span class="s">&#39;&amp;endDT=&#39;</span><span class="o">+</span><span class="n">end_date</span>
-    <span class="c">#read in xml file through html query</span>
-    <span class="n">qtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">query_html</span><span class="p">)</span>
-    <span class="c">#parse xml file to pull out discharge and quality code</span>
+        <span class="n">query_html</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s1">&#39;&amp;sites=&#39;</span> <span class="o">+</span> <span class="n">site_number</span> <span class="o">+</span> <span class="s1">&#39;&amp;startDT=&#39;</span><span class="o">+</span><span class="n">start_date</span><span class="o">+</span><span class="s1">&#39;&amp;endDT=&#39;</span><span class="o">+</span><span class="n">end_date</span>
+    <span class="c1">#read in xml file through html query</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query_html</span><span class="p">)</span>
+        <span class="n">qtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s2">&quot;Problem retrieving discharge value (IOError).&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="c1">#parse xml file to pull out discharge and quality code</span>
     <span class="n">root</span> <span class="o">=</span> <span class="n">qtree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
-    <span class="c">#get namespace map</span>
+    <span class="c1">#get namespace map</span>
     <span class="n">NSMAP</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">nsmap</span>
-    <span class="n">NS1</span> <span class="o">=</span> <span class="s">&quot;{</span><span class="si">%s</span><span class="s">}&quot;</span> <span class="o">%</span> <span class="n">NSMAP</span><span class="p">[</span><span class="s">&#39;ns1&#39;</span><span class="p">]</span>
-    <span class="n">tsString</span> <span class="o">=</span> <span class="s">&quot;timeSeries[@name=&#39;USGS:&quot;</span><span class="o">+</span><span class="n">site_number</span><span class="o">+</span><span class="s">&quot;:00060:00003&#39;]&quot;</span>
+    <span class="n">NS1</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">%s</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">NSMAP</span><span class="p">[</span><span class="s1">&#39;ns1&#39;</span><span class="p">]</span>
+    <span class="n">tsString</span> <span class="o">=</span> <span class="s2">&quot;timeSeries[@name=&#39;USGS:&quot;</span><span class="o">+</span><span class="n">site_number</span><span class="o">+</span><span class="s2">&quot;:00060:00003&#39;]&quot;</span>
     <span class="n">ts</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="n">tsString</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">ts</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
-        <span class="c">#there is no time series data for this site and date</span>
-        <span class="k">return</span> <span class="bp">None</span>
-    <span class="n">sourceInfo</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s">&quot;sourceInfo&quot;</span><span class="p">)</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">sourceInfo</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s">&quot;siteName&quot;</span><span class="p">)</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s">&quot;values&quot;</span><span class="p">)</span>
-    <span class="n">value_list</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s">&quot;value&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">values</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
-        <span class="c">#there is no discharge data for this site and date</span>
-        <span class="k">return</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ts</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#there is no time series data for this site and date</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">sourceInfo</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s2">&quot;sourceInfo&quot;</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">sourceInfo</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s2">&quot;siteName&quot;</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">ts</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s2">&quot;values&quot;</span><span class="p">)</span>
+    <span class="n">value_list</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">NS1</span><span class="o">+</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">values</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#there is no discharge data for this site and date</span>
+        <span class="k">return</span> <span class="kc">None</span>
     <span class="n">q</span><span class="o">=</span><span class="p">[]</span>
     <span class="n">quality_code</span><span class="o">=</span><span class="p">[]</span>
     <span class="n">date_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">value_list</span><span class="p">:</span>
         <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
-        <span class="n">quality_code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;qualifiers&quot;</span><span class="p">))</span>
-        <span class="n">date_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;dateTime&quot;</span><span class="p">)[:</span><span class="mi">10</span><span class="p">])</span>
-    <span class="c">#4/24/14 ended coding here.  need to write into dataframe</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;discharge&#39;</span><span class="p">:</span><span class="n">q</span><span class="p">,</span> <span class="s">&#39;quality&#39;</span><span class="p">:</span><span class="n">quality_code</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date_list</span><span class="p">))</span>
-    <span class="c">#return discharge and quality code data frame</span>
+        <span class="n">quality_code</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;qualifiers&quot;</span><span class="p">))</span>
+        <span class="n">date_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dateTime&quot;</span><span class="p">)[:</span><span class="mi">10</span><span class="p">])</span>
+    <span class="c1">#4/24/14 ended coding here.  need to write into dataframe</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;discharge&#39;</span><span class="p">:</span><span class="n">q</span><span class="p">,</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span><span class="n">quality_code</span><span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">date_list</span><span class="p">))</span>
+    <span class="c1">#return discharge and quality code data frame</span>
     <span class="k">return</span> <span class="n">data</span></div>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -356,13 +368,13 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>
 </html>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>olm.loggers package &mdash; olm 0.33 documentation</title>
+    <title>olm.loggers package &#8212; olm 0.33 documentation</title>
     
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,19 +17,19 @@
         VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="olm 0.33 documentation" href="index.html" />
-    <link rel="up" title="olm Package" href="olm.html" />
-    <link rel="next" title="olm.calcite.solutionFromCaPCO2" href="olm.calcite.solutionFromCaPCO2.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="olm.USGS.siteListExtraction.extractSitesFromXML" href="olm.USGS.siteListExtraction.extractSitesFromXML.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -39,20 +39,17 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="olm.calcite.solutionFromCaPCO2.html" title="olm.calcite.solutionFromCaPCO2"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
           <a href="olm.USGS.siteListExtraction.extractSitesFromXML.html" title="olm.USGS.siteListExtraction.extractSitesFromXML"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="olm.html" accesskey="U">olm Package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" accesskey="U">olm Package</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="olm-loggers-package">
 <h1>olm.loggers package<a class="headerlink" href="#olm-loggers-package" title="Permalink to this headline">¶</a></h1>
@@ -63,52 +60,224 @@
 <span id="olm-loggers-campbelltoolkit-module"></span><h2>olm.loggers.CampbellToolkit module<a class="headerlink" href="#module-olm.loggers.CampbellToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="olm.loggers.CampbellToolkit.read_dat">
-<tt class="descclassname">olm.loggers.CampbellToolkit.</tt><tt class="descname">read_dat</tt><big>(</big><em>dat_file</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/CampbellToolkit.html#read_dat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.CampbellToolkit.read_dat" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">olm.loggers.CampbellToolkit.</code><code class="descname">read_dat</code><span class="sig-paren">(</span><em>dat_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/CampbellToolkit.html#read_dat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.CampbellToolkit.read_dat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in data from a .dat file produced by Campbell&#8217;s data logging software.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>dat_file</strong> : string</p>
+<blockquote>
+<div><p>The name of the .dat file to read.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df</strong> : pandas.DataFrame</p>
+<blockquote class="last">
+<div><p>DataFrame containing data from .dat file.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-olm.loggers.HoboToolkit">
 <span id="olm-loggers-hobotoolkit-module"></span><h2>olm.loggers.HoboToolkit module<a class="headerlink" href="#module-olm.loggers.HoboToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="olm.loggers.HoboToolkit.read_hobo_csv">
-<tt class="descclassname">olm.loggers.HoboToolkit.</tt><tt class="descname">read_hobo_csv</tt><big>(</big><em>csv_file</em>, <em>all_columns=False</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/HoboToolkit.html#read_hobo_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.HoboToolkit.read_hobo_csv" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">olm.loggers.HoboToolkit.</code><code class="descname">read_hobo_csv</code><span class="sig-paren">(</span><em>csv_file</em>, <em>all_columns=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/HoboToolkit.html#read_hobo_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.HoboToolkit.read_hobo_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads data from a csv file exported from HOBOware.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>csv_file</strong> : string</p>
+<blockquote>
+<div><p>A string containing the file name of the csv file to be read.</p>
+</div></blockquote>
+<p><strong>all_columns</strong> : boolean (optional)</p>
+<blockquote>
+<div><p>Determines whether to read in all columns or just ones that we search for and relabel (RH, DewPt, Abs Pres, Temp, Attached, Stopped, Connected, EOF, Cond High Range, Cond Low Range). Default = False</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df</strong> : pandas.DataFrame</p>
+<blockquote class="last">
+<div><p>DataFrame containing data from HOBO csv file.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-olm.loggers.SchlumbergerCTDToolkit">
 <span id="olm-loggers-schlumbergerctdtoolkit-module"></span><h2>olm.loggers.SchlumbergerCTDToolkit module<a class="headerlink" href="#module-olm.loggers.SchlumbergerCTDToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="olm.loggers.SchlumbergerCTDToolkit.concatCTD">
-<tt class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</tt><tt class="descname">concatCTD</tt><big>(</big><em>dflist</em>, <em>zero_shift=True</em>, <em>n_to_average=5</em>, <em>offset_list=[]</em>, <em>offset_dates=[]</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#concatCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.concatCTD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</code><code class="descname">concatCTD</code><span class="sig-paren">(</span><em>dflist</em>, <em>zero_shift=True</em>, <em>n_to_average=5</em>, <em>offset_list=[]</em>, <em>offset_dates=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#concatCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.concatCTD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accepts a list of CTD DataFrames and concatenates them.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>dflist</strong> : list</p>
+<blockquote>
+<div><p>List of pandas.DataFrames to concatenate.</p>
+</div></blockquote>
+<p><strong>zero_shift</strong> : boolean</p>
+<blockquote>
+<div><p>If set to True, the pressure values will be adjusted at the time of each join, assuming that flow depth before and after the join was equal.  If set to False, no adjustment will be made in pressure values. This is useful when downloading the logger may have resulted in a slightly different position in the water column. (Default = True)</p>
+</div></blockquote>
+<p><strong>n_to_average</strong> : int</p>
+<blockquote>
+<div><p>Number of data points to average before and after join in order to determine data offset value for pressure</p>
+</div></blockquote>
+<p><strong>offset_list</strong> : list</p>
+<blockquote>
+<div><p>List of offsets to be applied manually to pressure data.</p>
+</div></blockquote>
+<p><strong>offset_dates</strong> : list</p>
+<blockquote>
+<div><p>List of datetime strings corresponding to manual offsets.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>(concatenated</strong> : pandas.DataFrame, offset_list</p>
+<blockquote class="last">
+<div><p>A tuple is returned with the first item being a DataFrame object containing the concatenated data and the second item in the tuple being a DataFrame object containing offsets with datetimes of the offsets as an index.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.SchlumbergerCTDToolkit.readBaro">
-<tt class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</tt><tt class="descname">readBaro</tt><big>(</big><em>csvfile</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readBaro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readBaro" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</code><code class="descname">readBaro</code><span class="sig-paren">(</span><em>csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readBaro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readBaro" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads data from a CSV or MON file from a Schlumberger Baro Diver.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>csv_file</strong> : string</p>
+<blockquote>
+<div><p>A string containing the file name of the CSV or MON file to be read.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df</strong> : pandas.DataFrame</p>
+<blockquote class="last">
+<div><p>DataFrame containing data from HOBO csv file.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.SchlumbergerCTDToolkit.readCTD">
-<tt class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</tt><tt class="descname">readCTD</tt><big>(</big><em>csvfile</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readCTD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</code><code class="descname">readCTD</code><span class="sig-paren">(</span><em>csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readCTD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads data from a CSV or MON file exported from a Schlumberger CTD Diver.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>csv_file</strong> : string</p>
+<blockquote>
+<div><p>A string containing the file name of the CSV or MON file to be read.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df</strong> : pandas.DataFrame</p>
+<blockquote class="last">
+<div><p>DataFrame containing data from HOBO csv file.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-olm.loggers.TruBluToolkit">
+<span id="olm-loggers-trublutoolkit-module"></span><h2>olm.loggers.TruBluToolkit module<a class="headerlink" href="#module-olm.loggers.TruBluToolkit" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="olm.loggers.TruBluToolkit.readTruBlu">
+<code class="descclassname">olm.loggers.TruBluToolkit.</code><code class="descname">readTruBlu</code><span class="sig-paren">(</span><em>csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/TruBluToolkit.html#readTruBlu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.TruBluToolkit.readTruBlu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads data from a CSV file exported from a TruBlu logger.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>csv_file</strong> : string</p>
+<blockquote>
+<div><p>A string containing the file name of the CSV or MON file to be read.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df</strong> : pandas.DataFrame</p>
+<blockquote class="last">
+<div><p>DataFrame containing data from a TruBlu csv file.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-olm.loggers.WTWpHToolkit">
 <span id="olm-loggers-wtwphtoolkit-module"></span><h2>olm.loggers.WTWpHToolkit module<a class="headerlink" href="#module-olm.loggers.WTWpHToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="olm.loggers.WTWpHToolkit.concatpH">
-<tt class="descclassname">olm.loggers.WTWpHToolkit.</tt><tt class="descname">concatpH</tt><big>(</big><em>dflist</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#concatpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.concatpH" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="olm.loggers.WTWpHToolkit.euroParser">
-<tt class="descclassname">olm.loggers.WTWpHToolkit.</tt><tt class="descname">euroParser</tt><big>(</big><em>datestring</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#euroParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.euroParser" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">olm.loggers.WTWpHToolkit.</code><code class="descname">euroParser</code><span class="sig-paren">(</span><em>datestring</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#euroParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.euroParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Date parser for European style dates separated by &#8216;.&#8217; characters.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>datestring</strong> : string</p>
+<blockquote>
+<div><p>String containing Euro style date</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><strong>dateTime</strong> : datetime object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.WTWpHToolkit.readpH">
-<tt class="descclassname">olm.loggers.WTWpHToolkit.</tt><tt class="descname">readpH</tt><big>(</big><em>csvfile</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#readpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.readpH" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">olm.loggers.WTWpHToolkit.</code><code class="descname">readpH</code><span class="sig-paren">(</span><em>csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#readpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.readpH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads data from a CSV file produced by WTW-pH data loggers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>csvfile</strong> : string</p>
+<blockquote>
+<div><p>Name of the CSV file to be read.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>df</strong> : pandas.DataFrame</p>
+<blockquote class="last">
+<div><p>DataFrame object containing pH data.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-olm.loggers.loggerScripts">
@@ -116,7 +285,7 @@
 <p>Contains functions that are useful in general for manipulation of data logger data</p>
 <dl class="function">
 <dt id="olm.loggers.loggerScripts.joinAndResampleLoggers">
-<tt class="descclassname">olm.loggers.loggerScripts.</tt><tt class="descname">joinAndResampleLoggers</tt><big>(</big><em>loggerlist</em>, <em>interval</em>, <em>suffixes=[]</em>, <em>how='inner'</em>, <em>interpolate=False</em>, <em>limit=None</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinAndResampleLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinAndResampleLoggers" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">joinAndResampleLoggers</code><span class="sig-paren">(</span><em>loggerlist</em>, <em>interval</em>, <em>suffixes=[]</em>, <em>how='inner'</em>, <em>interpolate=False</em>, <em>limit=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinAndResampleLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinAndResampleLoggers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Joins and resamples data from DataFrame objects provided in a list.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -160,7 +329,7 @@
 
 <dl class="function">
 <dt id="olm.loggers.loggerScripts.joinLoggers">
-<tt class="descclassname">olm.loggers.loggerScripts.</tt><tt class="descname">joinLoggers</tt><big>(</big><em>loggerlist</em>, <em>how='inner'</em>, <em>interpolate=False</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinLoggers" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">joinLoggers</code><span class="sig-paren">(</span><em>loggerlist</em>, <em>how='inner'</em>, <em>interpolate=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinLoggers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Joins the data from a list of logger DataFrame objects together.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -192,7 +361,7 @@
 
 <dl class="function">
 <dt id="olm.loggers.loggerScripts.linear_correction">
-<tt class="descclassname">olm.loggers.loggerScripts.</tt><tt class="descname">linear_correction</tt><big>(</big><em>rawSeries</em>, <em>correctionSeries</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#linear_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.linear_correction" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">linear_correction</code><span class="sig-paren">(</span><em>rawSeries</em>, <em>correctionSeries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#linear_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.linear_correction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses a Pandas Series of spot measured values to linearly correct time series data from a logger.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -220,7 +389,7 @@
 
 <dl class="function">
 <dt id="olm.loggers.loggerScripts.manualCompare">
-<tt class="descclassname">olm.loggers.loggerScripts.</tt><tt class="descname">manualCompare</tt><big>(</big><em>logger</em>, <em>manual</em>, <em>value_name=''</em>, <em>ltag='_log'</em>, <em>mtag='_man'</em><big>)</big><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#manualCompare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.manualCompare" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">manualCompare</code><span class="sig-paren">(</span><em>logger</em>, <em>manual</em>, <em>value_name=''</em>, <em>ltag='_log'</em>, <em>mtag='_man'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#manualCompare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.manualCompare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -258,6 +427,38 @@
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="olm.loggers.loggerScripts.shiftLogger">
+<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">shiftLogger</code><span class="sig-paren">(</span><em>logger</em>, <em>shift_to</em>, <em>align_at_start=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#shiftLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.shiftLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>logger</strong> : pandas.core.series.Series or pandas.core.dataframe.Dataframe</p>
+<blockquote>
+<div><p>A Pandas TimeSeries or DataFrame containing time stamps as indices.</p>
+</div></blockquote>
+<p><strong>shift_to</strong> : string</p>
+<blockquote>
+<div><p>A string that contains the date and time that the logger series should be shifted to. By default this is the correct starting time (first time stamp) of the series.</p>
+</div></blockquote>
+<p><strong>align_at_start</strong> : boolean</p>
+<blockquote>
+<div><p>If True, shift_to is assumed to represent the correct starting date for the series. If False, shift_to is assumed to represent the correct final date of the series. (default=True)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>logger</strong> : pandas.core.series.Series or pandas.core.dataframe.DataFrame</p>
+<blockquote class="last">
+<div><p>A Series or DataFrame object that contains the correct shifted time stamps.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-olm.loggers">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-olm.loggers" title="Permalink to this headline">¶</a></h2>
@@ -268,7 +469,7 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -277,6 +478,7 @@
 <li><a class="reference internal" href="#module-olm.loggers.CampbellToolkit">olm.loggers.CampbellToolkit module</a></li>
 <li><a class="reference internal" href="#module-olm.loggers.HoboToolkit">olm.loggers.HoboToolkit module</a></li>
 <li><a class="reference internal" href="#module-olm.loggers.SchlumbergerCTDToolkit">olm.loggers.SchlumbergerCTDToolkit module</a></li>
+<li><a class="reference internal" href="#module-olm.loggers.TruBluToolkit">olm.loggers.TruBluToolkit module</a></li>
 <li><a class="reference internal" href="#module-olm.loggers.WTWpHToolkit">olm.loggers.WTWpHToolkit module</a></li>
 <li><a class="reference internal" href="#module-olm.loggers.loggerScripts">olm.loggers.loggerScripts module</a></li>
 <li><a class="reference internal" href="#module-olm.loggers">Module contents</a></li>
@@ -287,32 +489,28 @@
   <h4>Previous topic</h4>
   <p class="topless"><a href="olm.USGS.siteListExtraction.extractSitesFromXML.html"
                         title="previous chapter">olm.USGS.siteListExtraction.extractSitesFromXML</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="olm.calcite.solutionFromCaPCO2.html"
-                        title="next chapter">olm.calcite.solutionFromCaPCO2</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/olm.loggers.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/olm.loggers.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -322,18 +520,15 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="olm.calcite.solutionFromCaPCO2.html" title="olm.calcite.solutionFromCaPCO2"
-             >next</a> |</li>
-        <li class="right" >
           <a href="olm.USGS.siteListExtraction.extractSitesFromXML.html" title="olm.USGS.siteListExtraction.extractSitesFromXML"
              >previous</a> |</li>
-        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="olm.html" >olm Package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>
 </html>

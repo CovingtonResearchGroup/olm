@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>olm.general &mdash; olm 0.33 documentation</title>
+    <title>olm.general &#8212; olm 0.33 documentation</title>
     
     <link rel="stylesheet" href="../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -17,17 +17,18 @@
         VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <link rel="top" title="olm 0.33 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" /> 
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,37 +37,37 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for olm.general</h1><div class="highlight"><pre>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="c">#properties of common ions</span>
+<span class="c1">#properties of common ions</span>
 <span class="n">properties</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s">&#39;H&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">1.00794</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="mf">1.</span><span class="p">,</span> <span class="s">&#39;radius&#39;</span><span class="p">:</span><span class="mf">9.</span><span class="p">},</span>
-    <span class="s">&#39;Ca&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">40.08</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="mf">2.</span><span class="p">,</span> <span class="s">&#39;radius&#39;</span><span class="p">:</span><span class="mf">6.</span> <span class="p">},</span>
-    <span class="s">&#39;Cl&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">35.46</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s">&#39;radius&#39;</span><span class="p">:</span><span class="mf">3.</span><span class="p">},</span>
-    <span class="s">&#39;CO3&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">60.01</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s">&#39;radius&#39;</span><span class="p">:</span><span class="mf">4.5</span><span class="p">},</span>
-    <span class="s">&#39;HCO3&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">61.02</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s">&#39;radius&#39;</span><span class="p">:</span><span class="mf">4.</span><span class="p">},</span>
-    <span class="s">&#39;K&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">39.10</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="mf">1.</span><span class="p">},</span>
-    <span class="s">&#39;Mg&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">24.32</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="mf">2.</span><span class="p">,</span> <span class="s">&#39;radius&#39;</span><span class="p">:</span><span class="mf">8.</span><span class="p">},</span>
-    <span class="s">&#39;Na&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">22.99</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="mf">1.</span><span class="p">,</span> <span class="s">&#39;radius&#39;</span><span class="p">:</span><span class="mf">4.</span><span class="p">},</span>
-    <span class="s">&#39;NO3&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">62.01</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">1.</span><span class="p">},</span>
-    <span class="s">&#39;PO4&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">94.98</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">3.</span><span class="p">},</span>
-    <span class="s">&#39;SO4&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">96.06</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s">&#39;radius&#39;</span><span class="p">:</span><span class="mf">4.</span><span class="p">},</span>
-    <span class="s">&#39;H2CO3&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">62.03</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="mf">0.</span><span class="p">},</span>
-    <span class="s">&#39;OH&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">17.01</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s">&#39;radius&#39;</span><span class="p">:</span><span class="mf">3.</span><span class="p">},</span>
-    <span class="s">&#39;CO2&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">44.01</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
-    <span class="s">&#39;H2CO3s&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">62.03</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
-    <span class="s">&#39;CaCO3&#39;</span><span class="p">:{</span><span class="s">&#39;weight&#39;</span><span class="p">:</span><span class="mf">100.09</span><span class="p">,</span> <span class="s">&#39;charge&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
+    <span class="s1">&#39;H&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">1.00794</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">9.</span><span class="p">},</span>
+    <span class="s1">&#39;Ca&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">40.08</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">6.</span> <span class="p">},</span>
+    <span class="s1">&#39;Cl&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">35.46</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">3.</span><span class="p">},</span>
+    <span class="s1">&#39;CO3&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">60.01</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">4.5</span><span class="p">},</span>
+    <span class="s1">&#39;HCO3&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">61.02</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">4.</span><span class="p">},</span>
+    <span class="s1">&#39;K&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">39.10</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="mf">1.</span><span class="p">},</span>
+    <span class="s1">&#39;Mg&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">24.32</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">8.</span><span class="p">},</span>
+    <span class="s1">&#39;Na&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">22.99</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">4.</span><span class="p">},</span>
+    <span class="s1">&#39;NO3&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">62.01</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">1.</span><span class="p">},</span>
+    <span class="s1">&#39;PO4&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">94.98</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">3.</span><span class="p">},</span>
+    <span class="s1">&#39;SO4&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">96.06</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">4.</span><span class="p">},</span>
+    <span class="s1">&#39;H2CO3&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">62.03</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="mf">0.</span><span class="p">},</span>
+    <span class="s1">&#39;OH&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">17.01</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span><span class="p">:</span><span class="mf">3.</span><span class="p">},</span>
+    <span class="s1">&#39;CO2&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">44.01</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+    <span class="s1">&#39;H2CO3s&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">62.03</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+    <span class="s1">&#39;CaCO3&#39;</span><span class="p">:{</span><span class="s1">&#39;weight&#39;</span><span class="p">:</span><span class="mf">100.09</span><span class="p">,</span> <span class="s1">&#39;charge&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
 <span class="p">}</span>
 
 <div class="viewcode-block" id="getProperties"><a class="viewcode-back" href="../../olm.general.getProperties.html#olm.general.getProperties">[docs]</a><span class="k">def</span> <span class="nf">getProperties</span><span class="p">():</span>
@@ -75,8 +76,8 @@
 <span class="sd">Returns the dictionary containing ion properties.</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">properties</span>
-</div>
+    <span class="k">return</span> <span class="n">properties</span></div>
+
 <div class="viewcode-block" id="condTo25"><a class="viewcode-back" href="../../olm.general.condTo25.html#olm.general.condTo25">[docs]</a><span class="k">def</span> <span class="nf">condTo25</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">temp</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts given value of specific conductance to the value at 25 C.</span>
@@ -97,10 +98,10 @@
 <span class="sd">       specific conductance at 25 C.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="mf">0.0187</span> <span class="c">#from Hayashi, 2004</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mf">0.0187</span> <span class="c1">#from Hayashi, 2004</span>
     <span class="n">cond25</span> <span class="o">=</span> <span class="n">cond</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">a</span><span class="o">*</span><span class="p">(</span><span class="n">temp</span> <span class="o">-</span> <span class="mf">25.0</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">cond25</span>
-</div>
+    <span class="k">return</span> <span class="n">cond25</span></div>
+
 <div class="viewcode-block" id="DebyeHuckel"><a class="viewcode-back" href="../../olm.general.DebyeHuckel.html#olm.general.DebyeHuckel">[docs]</a><span class="k">def</span> <span class="nf">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
@@ -129,10 +130,10 @@
     <span class="n">B</span> <span class="o">=</span> <span class="mf">0.3241</span> <span class="o">+</span> <span class="mf">1.6</span> <span class="o">*</span> <span class="n">T</span> <span class="o">*</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span>
     <span class="n">log_gamma</span> <span class="o">=</span> <span class="o">-</span><span class="n">A</span><span class="o">*</span><span class="p">(</span><span class="n">z</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">B</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">I</span><span class="p">))</span>
     <span class="n">gamma</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="n">log_gamma</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">gamma</span>
+    <span class="k">return</span> <span class="n">gamma</span></div>
 
-<span class="c">#Calculate activity coefficient for a neutral species</span>
-<span class="c"># from eq 2.9, Dreybrodt 1988</span></div>
+<span class="c1">#Calculate activity coefficient for a neutral species</span>
+<span class="c1"># from eq 2.9, Dreybrodt 1988</span>
 <div class="viewcode-block" id="neutralGamma"><a class="viewcode-back" href="../../olm.general.neutralGamma.html#olm.general.neutralGamma">[docs]</a><span class="k">def</span> <span class="nf">neutralGamma</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the activity coefficient for neutral species.</span>
@@ -150,8 +151,8 @@
 <span class="sd">       ion activity coefficient</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">gamma</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="mf">0.1</span><span class="o">*</span><span class="n">I</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">gamma</span>
-</div>
+    <span class="k">return</span> <span class="n">gamma</span></div>
+
 <div class="viewcode-block" id="gamma"><a class="viewcode-back" href="../../olm.general.gamma.html#olm.general.gamma">[docs]</a><span class="k">def</span> <span class="nf">gamma</span><span class="p">(</span><span class="n">ion</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="mf">25.</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
@@ -177,27 +178,27 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ion</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s">&#39;radius&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]:</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;radius&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]:</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="s">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]):</span> 
-                <span class="k">if</span> <span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]):</span> 
+                <span class="k">if</span> <span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
                     <span class="n">activity_coef</span> <span class="o">=</span> <span class="n">neutralGamma</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
                     <span class="k">return</span> <span class="n">activity_coef</span>
-            <span class="k">print</span> <span class="s">&quot;Radius of &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s">&quot; not available.&quot;</span>
-            <span class="k">return</span> <span class="bp">None</span>
-        <span class="k">if</span> <span class="s">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]:</span>
-            <span class="n">charge</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span>
+            <span class="nb">print</span> <span class="s2">&quot;Radius of &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s2">&quot; not available.&quot;</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s1">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]:</span>
+            <span class="n">charge</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s">&quot;Charge of &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s">&quot; not available.&quot;</span>
-            <span class="k">return</span> <span class="bp">None</span>
+            <span class="nb">print</span> <span class="s2">&quot;Charge of &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s2">&quot; not available.&quot;</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="n">activity_coef</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">charge</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">activity_coef</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&quot;Ion not in properties list: &quot;</span> <span class="o">+</span> <span class="n">ion</span>
-        <span class="k">return</span> <span class="bp">None</span>
-    </div>
-<div class="viewcode-block" id="HardnessFromCond"><a class="viewcode-back" href="../../olm.general.HardnessFromCond.html#olm.general.HardnessFromCond">[docs]</a><span class="k">def</span> <span class="nf">HardnessFromCond</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="s2">&quot;Ion not in properties list: &quot;</span> <span class="o">+</span> <span class="n">ion</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+    
+<div class="viewcode-block" id="HardnessFromCond"><a class="viewcode-back" href="../../olm.general.HardnessFromCond.html#olm.general.HardnessFromCond">[docs]</a><span class="k">def</span> <span class="nf">HardnessFromCond</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Function to estimate total hardness as mg/L CaCO3 from solution</span>
@@ -217,15 +218,15 @@
 <span class="sd">       hardness in mg/L CaCO3 (if cond is an array, an array is returned)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c">#This extra logic allows T_C to be an array</span>
-        <span class="k">if</span> <span class="n">T_C</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1">#This extra logic allows T_C to be an array</span>
+        <span class="k">if</span> <span class="n">T_C</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">cond</span> <span class="o">=</span> <span class="n">condTo25</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">T_C</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">cond</span> <span class="o">=</span> <span class="n">condTo25</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">T_C</span><span class="p">)</span> <span class="c">#If T_C has more than one element</span>
+        <span class="n">cond</span> <span class="o">=</span> <span class="n">condTo25</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">T_C</span><span class="p">)</span> <span class="c1">#If T_C has more than one element</span>
     <span class="n">hardness</span> <span class="o">=</span> <span class="p">(</span><span class="n">cond</span> <span class="o">-</span> <span class="mf">31.5</span><span class="p">)</span><span class="o">/</span><span class="mf">1.86</span>
-    <span class="k">return</span> <span class="n">hardness</span>
-</div>
-<div class="viewcode-block" id="CaFromCond"><a class="viewcode-back" href="../../olm.general.CaFromCond.html#olm.general.CaFromCond">[docs]</a><span class="k">def</span> <span class="nf">CaFromCond</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">mol_L</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">hardness</span></div>
+
+<div class="viewcode-block" id="CaFromCond"><a class="viewcode-back" href="../../olm.general.CaFromCond.html#olm.general.CaFromCond">[docs]</a><span class="k">def</span> <span class="nf">CaFromCond</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mol_L</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to estimate Ca mg/L from solution specific conductance</span>
 <span class="sd">    (microS/cm) using the empirical equation from Krawczyk and Ford,</span>
@@ -246,22 +247,22 @@
 <span class="sd">       concentration of Ca in mg/L or mol/L</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">hardness</span> <span class="o">=</span> <span class="n">HardnessFromCond</span><span class="p">(</span><span class="n">cond</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">)</span>
-    <span class="n">mw_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;weight&#39;</span><span class="p">]</span>
-    <span class="n">mw_CaCO3</span> <span class="o">=</span> <span class="n">mw_Ca</span> <span class="o">+</span> <span class="n">properties</span><span class="p">[</span><span class="s">&#39;CO3&#39;</span><span class="p">][</span><span class="s">&#39;weight&#39;</span><span class="p">]</span>
+    <span class="n">mw_Ca</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+    <span class="n">mw_CaCO3</span> <span class="o">=</span> <span class="n">mw_Ca</span> <span class="o">+</span> <span class="n">properties</span><span class="p">[</span><span class="s1">&#39;CO3&#39;</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
     <span class="n">Ca</span> <span class="o">=</span> <span class="n">hardness</span><span class="o">*</span><span class="p">(</span><span class="n">mw_Ca</span><span class="o">/</span><span class="n">mw_CaCO3</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">mol_L</span><span class="p">:</span>
-        <span class="c">#convert to mol/L</span>
-        <span class="n">Ca</span> <span class="o">=</span> <span class="n">Ca</span> <span class="o">/</span> <span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">][</span><span class="s">&#39;weight&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">1000.</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">Ca</span>
-</div>
+        <span class="c1">#convert to mol/L</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">Ca</span> <span class="o">/</span> <span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">1000.</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Ca</span></div>
+
 <div class="viewcode-block" id="CtoK"><a class="viewcode-back" href="../../olm.general.CtoK.html#olm.general.CtoK">[docs]</a><span class="k">def</span> <span class="nf">CtoK</span><span class="p">(</span><span class="n">T_C</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts Celsius to Kelvin.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">T_C</span> <span class="o">+</span> <span class="mf">273.15</span>
-</div>
+    <span class="k">return</span> <span class="n">T_C</span> <span class="o">+</span> <span class="mf">273.15</span></div>
+
 <div class="viewcode-block" id="KtoC"><a class="viewcode-back" href="../../olm.general.KtoC.html#olm.general.KtoC">[docs]</a><span class="k">def</span> <span class="nf">KtoC</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Converts Kelvin to Celsius.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">T_K</span> <span class="o">-</span> <span class="mf">273.15</span>
-</div>
+    <span class="k">return</span> <span class="n">T_K</span> <span class="o">-</span> <span class="mf">273.15</span></div>
+
 <div class="viewcode-block" id="approxI"><a class="viewcode-back" href="../../olm.general.approxI.html#olm.general.approxI">[docs]</a><span class="k">def</span> <span class="nf">approxI</span><span class="p">(</span><span class="n">metals_conc</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates approximate ionic strength from the total concentration</span>
@@ -281,8 +282,8 @@
 <span class="sd">       ionic strength</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">I</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">metals_conc</span>
-    <span class="k">return</span> <span class="n">I</span>
-</div>
+    <span class="k">return</span> <span class="n">I</span></div>
+
 <div class="viewcode-block" id="molL_to_mgL"><a class="viewcode-back" href="../../olm.general.molL_to_mgL.html#olm.general.molL_to_mgL">[docs]</a><span class="k">def</span> <span class="nf">molL_to_mgL</span><span class="p">(</span><span class="n">molL</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts concentrations from mol/L to mg/L.</span>
@@ -300,13 +301,13 @@
 <span class="sd">       concentration in mg/L</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ion</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-        <span class="n">mw</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;weight&#39;</span><span class="p">]</span>
+        <span class="n">mw</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
         <span class="n">mgL</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1000.</span> <span class="o">*</span> <span class="n">mw</span><span class="p">)</span><span class="o">*</span><span class="n">molL</span>
         <span class="k">return</span> <span class="n">mgL</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&quot;Ion +&quot;</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="s">&quot; not in properties.&quot;</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-</div>
+        <span class="nb">print</span> <span class="s2">&quot;Ion +&quot;</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="s2">&quot; not in properties.&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
+
 <div class="viewcode-block" id="mgL_to_molL"><a class="viewcode-back" href="../../olm.general.mgL_to_molL.html#olm.general.mgL_to_molL">[docs]</a><span class="k">def</span> <span class="nf">mgL_to_molL</span><span class="p">(</span><span class="n">mgL</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts concentrations from mg/L to mol/L.</span>
@@ -324,13 +325,13 @@
 <span class="sd">       concentration in mol/L</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ion</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-        <span class="n">mw</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;weight&#39;</span><span class="p">]</span>
+        <span class="n">mw</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
         <span class="n">molL</span> <span class="o">=</span> <span class="n">mgL</span><span class="o">/</span><span class="p">(</span><span class="mf">1000.</span><span class="o">*</span><span class="n">mw</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">molL</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&quot;Ion +&quot;</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="s">&quot; not in properties.&quot;</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-</div>
+        <span class="nb">print</span> <span class="s2">&quot;Ion +&quot;</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="s2">&quot; not in properties.&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
+
 <div class="viewcode-block" id="mmolL_to_meqL"><a class="viewcode-back" href="../../olm.general.mmolL_to_meqL.html#olm.general.mmolL_to_meqL">[docs]</a><span class="k">def</span> <span class="nf">mmolL_to_meqL</span><span class="p">(</span><span class="n">mmolL</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates milliequivalents per liter from mmol concentration.</span>
@@ -348,13 +349,13 @@
 <span class="sd">       milliequivalents per liter</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ion</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-        <span class="n">charge</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span>
+        <span class="n">charge</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span>
         <span class="n">meqL</span> <span class="o">=</span> <span class="n">mmolL</span><span class="o">*</span><span class="n">charge</span>
         <span class="k">return</span> <span class="n">meqL</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&quot;Ion +&quot;</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="s">&quot; not in properties.&quot;</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-</div>
+        <span class="nb">print</span> <span class="s2">&quot;Ion +&quot;</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="s2">&quot; not in properties.&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
+
 <div class="viewcode-block" id="molL_to_meqL"><a class="viewcode-back" href="../../olm.general.molL_to_meqL.html#olm.general.molL_to_meqL">[docs]</a><span class="k">def</span> <span class="nf">molL_to_meqL</span><span class="p">(</span><span class="n">molL</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates milliequivalents per liter from molar concentration.</span>
@@ -373,10 +374,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">mmolL</span> <span class="o">=</span> <span class="n">molL</span><span class="o">*</span><span class="mf">1000.</span>
     <span class="n">meqL</span> <span class="o">=</span> <span class="n">mmolL_to_meq</span><span class="p">(</span><span class="n">mmolL</span><span class="p">,</span><span class="n">ion</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">meqL</span>
+    <span class="k">return</span> <span class="n">meqL</span></div>
 
-<span class="c">##The solution object, which contains solution properties and methods</span>
-<span class="c">## for calculations concerning solutions</span></div>
+<span class="c1">##The solution object, which contains solution properties and methods</span>
+<span class="c1">## for calculations concerning solutions</span>
 <div class="viewcode-block" id="solution"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution">[docs]</a><span class="k">class</span> <span class="nc">solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     
     <span class="sd">&quot;&quot;&quot;</span>
@@ -411,8 +412,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="solution.__init__"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constituents</span><span class="p">,</span> <span class="n">concentrations</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mf">25.</span><span class="p">,</span> <span class="n">T_units</span><span class="o">=</span><span class="s">&#39;C&#39;</span><span class="p">,</span> <span class="n">cond</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>  
-<span class="c">#        print &#39;units=&#39;+str(units)</span>
+<div class="viewcode-block" id="solution.__init__"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">constituents</span><span class="p">,</span> <span class="n">concentrations</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mf">25.</span><span class="p">,</span> <span class="n">T_units</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">cond</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pH</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  
+<span class="c1">#        print &#39;units=&#39;+str(units)</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">units</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
             <span class="n">units</span> <span class="o">=</span> <span class="p">[</span><span class="n">units</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">constituents</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">constituents</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">units</span><span class="p">)):</span>            
@@ -420,55 +421,55 @@
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">units</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="n">units</span> <span class="o">=</span> <span class="p">[</span><span class="n">units</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">constituents</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">print</span> <span class="s">&quot;Units must either contain the same number of items as constituents or only contain one item.&quot;</span>
+                    <span class="nb">print</span> <span class="s2">&quot;Units must either contain the same number of items as constituents or only contain one item.&quot;</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span> <span class="s">&quot;Units must either be a list or a string.&quot;</span>
+                <span class="nb">print</span> <span class="s2">&quot;Units must either be a list or a string.&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">constituents</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">concentrations</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ions</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ion</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">constituents</span><span class="p">):</span>
                 <span class="n">ion_dict</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="k">if</span> <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;mg/L&#39;</span><span class="p">:</span> 
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mgL_to_molL</span><span class="p">(</span><span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mmol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">1000.</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;meq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mmolL_to_meqL</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mmol&#39;</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;mg/L&#39;</span><span class="p">:</span> 
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mgL_to_molL</span><span class="p">(</span><span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mmol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span><span class="o">*</span><span class="mf">1000.</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;meq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mmolL_to_meqL</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mmol&#39;</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">]</span> <span class="o">=</span> <span class="n">ion_dict</span>
-                <span class="k">elif</span> <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;mol/L&#39;</span><span class="p">:</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mmol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1000.</span><span class="o">*</span><span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>                       
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">molL_to_mgL</span><span class="p">(</span><span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;meq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mmolL_to_meqL</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mmol&#39;</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;mol/L&#39;</span><span class="p">:</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mmol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1000.</span><span class="o">*</span><span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>                       
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">molL_to_mgL</span><span class="p">(</span><span class="n">concentrations</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;meq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mmolL_to_meqL</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mmol&#39;</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">]</span> <span class="o">=</span> <span class="n">ion_dict</span>
-                <span class="k">elif</span> <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;mmol/L&#39;</span><span class="p">:</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mmol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">concentration</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">concentration</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="mf">1000.</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">molL_to_mgL</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mol&#39;</span><span class="p">])</span>
-                    <span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;meq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mmolL_to_meqL</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mmol&#39;</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;mmol/L&#39;</span><span class="p">:</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mmol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">concentration</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">concentration</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="mf">1000.</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">molL_to_mgL</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">])</span>
+                    <span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;meq&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mmolL_to_meqL</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mmol&#39;</span><span class="p">],</span> <span class="n">ion</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">]</span> <span class="o">=</span> <span class="n">ion_dict</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">print</span> <span class="s">&quot;Units for &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s">&quot; are incorrect, must either be mg/L, mmol/L, or mol/L&quot;</span>
-            <span class="k">if</span> <span class="n">T_units</span> <span class="o">==</span> <span class="s">&#39;C&#39;</span><span class="p">:</span>
+                    <span class="nb">print</span> <span class="s2">&quot;Units for &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s2">&quot; are incorrect, must either be mg/L, mmol/L, or mol/L&quot;</span>
+            <span class="k">if</span> <span class="n">T_units</span> <span class="o">==</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">T_C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">T_K</span> <span class="o">=</span> <span class="n">CtoK</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_C</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">T_units</span> <span class="o">==</span> <span class="s">&#39;K&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">T_units</span> <span class="o">==</span> <span class="s1">&#39;K&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">T_K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">T_C</span> <span class="o">=</span> <span class="n">KtoC</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_K</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span> <span class="s">&quot;T_units must equal either C or K.&quot;</span>
-            <span class="k">if</span> <span class="n">cond</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="s2">&quot;T_units must equal either C or K.&quot;</span>
+            <span class="k">if</span> <span class="n">cond</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">cond</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">cond</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">pH</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pH</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">pH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">pH</span><span class="p">)</span>
-            <span class="c">#loop through ions and calculate activities</span>
+            <span class="c1">#loop through ions and calculate activities</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">ion_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-                <span class="k">if</span> <span class="p">(</span><span class="s">&#39;conc_mol&#39;</span> <span class="ow">in</span> <span class="n">ion_dict</span><span class="p">):</span>
-                    <span class="n">gamma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity_coef</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="c">#estimates ionic strength</span>
-                    <span class="k">if</span> <span class="n">gamma</span> <span class="o">!=</span> <span class="bp">None</span><span class="p">:</span>
-                        <span class="n">activity</span> <span class="o">=</span> <span class="n">gamma</span><span class="o">*</span><span class="n">ion_dict</span><span class="p">[</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s">&#39;activity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity</span>
+                <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;conc_mol&#39;</span> <span class="ow">in</span> <span class="n">ion_dict</span><span class="p">):</span>
+                    <span class="n">gamma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activity_coef</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="c1">#estimates ionic strength</span>
+                    <span class="k">if</span> <span class="n">gamma</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">activity</span> <span class="o">=</span> <span class="n">gamma</span><span class="o">*</span><span class="n">ion_dict</span><span class="p">[</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;activity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">activity</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s">&quot;Length of constituents and concentrations lists must be equal.&quot;</span>
-</div>
+            <span class="nb">print</span> <span class="s2">&quot;Length of constituents and concentrations lists must be equal.&quot;</span></div>
+
 <div class="viewcode-block" id="solution.I"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.I">[docs]</a>    <span class="k">def</span> <span class="nf">I</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to calculate ionic strength of the solution object from full equation using known ion properties.</span>
@@ -481,11 +482,11 @@
         <span class="n">I</span><span class="o">=</span><span class="mf">0.</span>
         <span class="k">for</span> <span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">ion</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="s">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]):</span>
-                    <span class="n">I</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">*</span>\
-                        <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">I</span>
-</div>
+                <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]):</span>
+                    <span class="n">I</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">*</span>\
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">I</span></div>
+
 <div class="viewcode-block" id="solution.approxI"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.approxI">[docs]</a>    <span class="k">def</span> <span class="nf">approxI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to calculate approximate ionic strength of solution metal concentration.</span>
@@ -496,16 +497,16 @@
 <span class="sd">           ionic strength</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">metals_conc</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">metals</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;Ca&#39;</span><span class="p">,</span> <span class="s">&#39;Mg&#39;</span><span class="p">]</span>  <span class="c">#could add more metals here later</span>
+        <span class="n">metals</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Ca&#39;</span><span class="p">,</span> <span class="s1">&#39;Mg&#39;</span><span class="p">]</span>  <span class="c1">#could add more metals here later</span>
         <span class="k">for</span> <span class="n">metal</span> <span class="ow">in</span> <span class="n">metals</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">metal</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">:</span>
-                <span class="k">if</span> <span class="s">&#39;conc_mol&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">metal</span><span class="p">]:</span>
-                    <span class="n">metals_conc</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">metal</span><span class="p">][</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;conc_mol&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">metal</span><span class="p">]:</span>
+                    <span class="n">metals_conc</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">metal</span><span class="p">][</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">print</span> <span class="s">&quot;No known &quot;</span> <span class="o">+</span> <span class="n">metal</span> <span class="o">+</span> <span class="s">&quot; concentration in mol/L.&quot;</span>
+                    <span class="nb">print</span> <span class="s2">&quot;No known &quot;</span> <span class="o">+</span> <span class="n">metal</span> <span class="o">+</span> <span class="s2">&quot; concentration in mol/L.&quot;</span>
         <span class="n">I</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">metals_conc</span>
-        <span class="k">return</span> <span class="n">I</span>
-</div>
+        <span class="k">return</span> <span class="n">I</span></div>
+
 <div class="viewcode-block" id="solution.activity"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.activity">[docs]</a>    <span class="k">def</span> <span class="nf">activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the activity of a given ion in the solution in mol/L.</span>
@@ -520,9 +521,9 @@
 <span class="sd">           Activity of the specified ion in mol/L. </span>
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
-            <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;activity&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">activity</span>
-</div>
+            <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;activity&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">activity</span></div>
+
 <div class="viewcode-block" id="solution.mol"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.mol">[docs]</a>    <span class="k">def</span> <span class="nf">mol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the molar concentration of a given ion in the solution in mol/L.</span>
@@ -537,9 +538,9 @@
 <span class="sd">           Concentration of the specified ion in mol/L. </span>
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
-            <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;conc_mol&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">conc</span>
-</div>
+            <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">conc</span></div>
+
 <div class="viewcode-block" id="solution.mmol"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.mmol">[docs]</a>    <span class="k">def</span> <span class="nf">mmol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the molar concentration of a given ion in the solution in mol/L.</span>
@@ -554,9 +555,9 @@
 <span class="sd">           Concentration of the specified ion in mol/L. </span>
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
-            <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;conc_mmol&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">conc</span>
-</div>
+            <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;conc_mmol&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">conc</span></div>
+
 <div class="viewcode-block" id="solution.mg"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.mg">[docs]</a>    <span class="k">def</span> <span class="nf">mg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the concentration of a given ion in the solution in mg/L.</span>
@@ -571,9 +572,9 @@
 <span class="sd">           Concentration of the specified ion in mg/L. </span>
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
-            <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;conc_mg&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">conc</span>
-</div>
+            <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;conc_mg&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">conc</span></div>
+
 <div class="viewcode-block" id="solution.meq"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.meq">[docs]</a>    <span class="k">def</span> <span class="nf">meq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve meq for a given ion in the solution.</span>
@@ -588,10 +589,10 @@
 <span class="sd">           Concentration of the specified ion in meq/L. </span>
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
-            <span class="n">meq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;meq&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">meq</span>
-     </div>
-<div class="viewcode-block" id="solution.activity_coef"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.activity_coef">[docs]</a>    <span class="k">def</span> <span class="nf">activity_coef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+            <span class="n">meq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;meq&#39;</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">meq</span></div>
+     
+<div class="viewcode-block" id="solution.activity_coef"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.activity_coef">[docs]</a>    <span class="k">def</span> <span class="nf">activity_coef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate activity coefficient, gamma, for a given ion in the solution.</span>
 
@@ -606,32 +607,32 @@
 <span class="sd">        gamma : float</span>
 <span class="sd">           Activity coefficient for the ion specified.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">I</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
-            <span class="c">#if ionic strength was not input, approximate it</span>
-            <span class="c">#for calcite solutions</span>
+        <span class="k">if</span> <span class="n">I</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1">#if ionic strength was not input, approximate it</span>
+            <span class="c1">#for calcite solutions</span>
             <span class="n">I</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">approxI</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">ion</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s">&#39;radius&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]:</span>
-                <span class="n">radius</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;radius&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s1">&#39;radius&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]:</span>
+                <span class="n">radius</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;radius&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="s">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]):</span> 
-                    <span class="k">if</span> <span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]):</span> 
+                    <span class="k">if</span> <span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">):</span>
                         <span class="n">activity_coef</span> <span class="o">=</span> <span class="n">neutralGamma</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">activity_coef</span>
-                <span class="k">print</span> <span class="s">&quot;Radius of &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s">&quot; not available.&quot;</span>
-                <span class="k">return</span> <span class="bp">None</span>
-            <span class="k">if</span> <span class="s">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]:</span>
-                <span class="n">charge</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;charge&#39;</span><span class="p">]</span>
+                <span class="nb">print</span> <span class="s2">&quot;Radius of &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s2">&quot; not available.&quot;</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="s1">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]:</span>
+                <span class="n">charge</span> <span class="o">=</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span> <span class="s">&quot;Charge of &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s">&quot; not available.&quot;</span>
-                <span class="k">return</span> <span class="bp">None</span>
+                <span class="nb">print</span> <span class="s2">&quot;Charge of &quot;</span> <span class="o">+</span> <span class="n">ion</span> <span class="o">+</span> <span class="s2">&quot; not available.&quot;</span>
+                <span class="k">return</span> <span class="kc">None</span>
             <span class="n">activity_coef</span> <span class="o">=</span> <span class="n">DebyeHuckel</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">charge</span><span class="p">,</span><span class="n">radius</span><span class="p">,</span><span class="n">T</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">T_C</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">activity_coef</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s">&quot;Ion not in properties list:&quot;</span> <span class="o">+</span> <span class="n">ion</span>
-            <span class="k">return</span> <span class="bp">None</span>
-</div>
-<div class="viewcode-block" id="solution.charge_balance"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.charge_balance">[docs]</a>    <span class="k">def</span> <span class="nf">charge_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s">&#39;%&#39;</span><span class="p">):</span>
+            <span class="nb">print</span> <span class="s2">&quot;Ion not in properties list:&quot;</span> <span class="o">+</span> <span class="n">ion</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="solution.charge_balance"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.charge_balance">[docs]</a>    <span class="k">def</span> <span class="nf">charge_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;%&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the charge balance error for this solution.</span>
 
@@ -647,41 +648,38 @@
         <span class="n">numerator</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="n">denominator</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="k">for</span> <span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">:</span>
-            <span class="n">numerator</span> <span class="o">=</span> <span class="n">numerator</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;meq&#39;</span><span class="p">]</span>
-            <span class="n">denominator</span> <span class="o">=</span> <span class="n">denominator</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s">&#39;meq&#39;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="n">units</span><span class="o">==</span><span class="s">&#39;meq&#39;</span><span class="p">:</span>
+            <span class="n">numerator</span> <span class="o">=</span> <span class="n">numerator</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;meq&#39;</span><span class="p">]</span>
+            <span class="n">denominator</span> <span class="o">=</span> <span class="n">denominator</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;meq&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">units</span><span class="o">==</span><span class="s1">&#39;meq&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">numerator</span>
-        <span class="k">elif</span> <span class="n">units</span><span class="o">==</span><span class="s">&#39;%&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">units</span><span class="o">==</span><span class="s1">&#39;%&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">numerator</span><span class="o">/</span><span class="n">denominator</span><span class="o">*</span><span class="mf">100.</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s">&quot;Invalid value for units: &quot;</span><span class="p">,</span> <span class="n">units</span>
-            <span class="k">return</span>
-        </div></div>
+            <span class="nb">print</span> <span class="s2">&quot;Invalid value for units: &quot;</span><span class="p">,</span> <span class="n">units</span>
+            <span class="k">return</span></div></div>
+        
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -690,13 +688,13 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>
 </html>

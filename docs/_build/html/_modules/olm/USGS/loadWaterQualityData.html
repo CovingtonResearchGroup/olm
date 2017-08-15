@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>olm.USGS.loadWaterQualityData &mdash; olm 0.33 documentation</title>
+    <title>olm.USGS.loadWaterQualityData &#8212; olm 0.33 documentation</title>
     
     <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -17,17 +17,18 @@
         VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="olm 0.33 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,38 +37,37 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for olm.USGS.loadWaterQualityData</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Functions to load water quality data that has been processed and pickled by WQXtoPHREEQC</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">cPickle</span> <span class="kn">as</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">cPickle</span> <span class="k">as</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">pandas.io.pickle</span> <span class="k">import</span> <span class="n">read_pickle</span>
+<span class="kn">from</span> <span class="nn">siteListExtraction</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="k">import</span> <span class="n">glob</span>
 
-<span class="kn">from</span> <span class="nn">siteListExtraction</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="n">DEFAULT_DIR</span> <span class="o">=</span> <span class="s1">&#39;./Processed-Sites&#39;</span>
 
-<span class="n">DEFAULT_DIR</span> <span class="o">=</span> <span class="s">&#39;./Processed-Sites&#39;</span>
-
-<span class="c"># siteListText - list of sites separated by semi-colons</span>
-<span class="c"># siteFile - text file with list of sites</span>
-<span class="c"># regEx - a wildcard expression to use in directory</span>
-<div class="viewcode-block" id="loadSiteListData"><a class="viewcode-back" href="../../../olm.USGS.loadWaterQualityData.loadSiteListData.html#olm.USGS.loadWaterQualityData.loadSiteListData">[docs]</a><span class="k">def</span> <span class="nf">loadSiteListData</span><span class="p">(</span><span class="n">siteListText</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span>
-                     <span class="n">siteFile</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> 
-                     <span class="n">regEx</span> <span class="o">=</span> <span class="s">&#39;USGS-*&#39;</span><span class="p">,</span> 
+<span class="c1"># siteListText - list of sites separated by semi-colons</span>
+<span class="c1"># siteFile - text file with list of sites</span>
+<span class="c1"># regEx - a wildcard expression to use in directory</span>
+<div class="viewcode-block" id="loadSiteListData"><a class="viewcode-back" href="../../../olm.USGS.loadWaterQualityData.loadSiteListData.html#olm.USGS.loadWaterQualityData.loadSiteListData">[docs]</a><span class="k">def</span> <span class="nf">loadSiteListData</span><span class="p">(</span><span class="n">siteListText</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">siteFile</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+                     <span class="n">regEx</span> <span class="o">=</span> <span class="s1">&#39;USGS-*&#39;</span><span class="p">,</span> 
                      <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">,</span>
-                     <span class="n">loadData</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>
-                     <span class="n">loadPhreeqc</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
-                     <span class="n">loadMetaData</span> <span class="o">=</span> <span class="bp">False</span>
+                     <span class="n">loadPhreeqc</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                     <span class="n">loadMetaData</span> <span class="o">=</span> <span class="kc">False</span>
                      <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves site data for multiple sites within a processed sites directory.</span>
@@ -85,77 +85,82 @@
 
 <span class="sd">    processedSitesDir : string (optional)</span>
 <span class="sd">        directory that contains all of the processed site directories. It is important to change this if the default is not correct. (default=&#39;./Processed-Sites&#39;)</span>
+<span class="sd">        </span>
 <span class="sd">    loadPhreeqc : boolean</span>
 <span class="sd">        If set to true, PHREEQC outputs will also be loaded for each site. (default=False)</span>
+<span class="sd">        </span>
+<span class="sd">    loadMetaData : boolean</span>
+<span class="sd">        If set to true, the site metadata will be loaded for each site. (default=False)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    sitesDict : dict</span>
 <span class="sd">        A dictionary of site data panels keyed by site name.</span>
 
-<span class="sd">    or if loadPhreeqc is set to true</span>
-<span class="sd">    (sitesDict, sitesPheeqcDict) : tuple</span>
-<span class="sd">       A tuple containing both the sitesDict and a dict of PHREEQC data for each site.</span>
+<span class="sd">    or if loadPhreeqc or loadMetaData are set to true</span>
+<span class="sd">    (sitesDict, sitesPheeqcDict, sitesMetaDataDict) : tuple</span>
+<span class="sd">       A tuple containing the sitesDict and dicts of the PHREEQC data and/or metadata for each site. Order is as shown.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">siteList</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="c">#If the needed data is provided to find the site list then use it</span>
-    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">siteListText</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
-        <span class="c">#check whether we have a valid site directory</span>
+    <span class="c1">#If the needed data is provided to find the site list then use it</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">siteListText</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#check whether we have a valid site directory</span>
         <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
         <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromLine</span><span class="p">(</span><span class="n">siteListText</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="ow">not</span><span class="p">(</span><span class="n">siteFile</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
-        <span class="c">#check whether we have a valid site directory</span>
+    <span class="k">elif</span> <span class="ow">not</span><span class="p">(</span><span class="n">siteFile</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#check whether we have a valid site directory</span>
         <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
         <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="ow">not</span><span class="p">(</span><span class="n">regEx</span> <span class="o">==</span> <span class="bp">None</span><span class="p">):</span>
-        <span class="c">#check whether we have a valid site directory</span>
+    <span class="k">elif</span> <span class="ow">not</span><span class="p">(</span><span class="n">regEx</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#check whether we have a valid site directory</span>
         <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
         <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromRegEx</span><span class="p">(</span><span class="n">regEx</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c"># if not provided then query user for needed data</span>
-        <span class="n">processedSitesInput</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Path of the processed sites directory (Default = ./Processed-Sites): &quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">processedSitesInput</span> <span class="o">!=</span> <span class="s">&#39;&#39;</span><span class="p">):</span>
+        <span class="c1"># if not provided then query user for needed data</span>
+        <span class="n">processedSitesInput</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Path of the processed sites directory (Default = ./Processed-Sites): &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">processedSitesInput</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
             <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesInput</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
         <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
-        <span class="n">modeOK</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">modeOK</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">while</span> <span class="ow">not</span><span class="p">(</span><span class="n">modeOK</span><span class="p">):</span>
-            <span class="n">mode</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Do you want to: </span><span class="se">\n</span><span class="s"> </span><span class="se">\t</span><span class="s"> 1) enter a semi-colon separated list of sites </span><span class="se">\n</span><span class="s"> </span><span class="se">\t</span><span class="s"> 2) provide a text file of sites </span><span class="se">\n</span><span class="s"> </span><span class="se">\t</span><span class="s"> </span><span class="se">\n\t</span><span class="s"> 3) provide an XML list of sites </span><span class="se">\n</span><span class="s"> </span><span class="se">\t</span><span class="s"> 4) provide a wildcard expression to obtain sites from directory list</span><span class="se">\n</span><span class="s"> Enter 1, 2, 3, or 4: &quot;</span><span class="p">)</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Do you want to: </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> 1) enter a semi-colon separated list of sites </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> 2) provide a text file of sites </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> </span><span class="se">\n\t</span><span class="s2"> 3) provide an XML list of sites </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> 4) provide a wildcard expression to obtain sites from directory list</span><span class="se">\n</span><span class="s2"> Enter 1, 2, 3, or 4: &quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">mode</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
                 <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">):</span>
-                    <span class="n">modeOK</span> <span class="o">=</span> <span class="bp">True</span>
+                    <span class="n">modeOK</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Invalid input&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid input&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span><span class="p">(</span><span class="s">&quot;Invalid input&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid input&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">siteListText</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Enter list of sites separated by semi-colons: &quot;</span><span class="p">)</span>
+            <span class="n">siteListText</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Enter list of sites separated by semi-colons: &quot;</span><span class="p">)</span>
             <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromLine</span><span class="p">(</span><span class="n">siteListText</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="n">siteFile</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Enter path to text file containing site list: &quot;</span><span class="p">)</span>
+            <span class="n">siteFile</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Enter path to text file containing site list: &quot;</span><span class="p">)</span>
             <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span>
-            <span class="n">siteFile</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Enter path to XML file containing site list: &quot;</span><span class="p">)</span>
-            <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">,</span> <span class="n">XML</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+            <span class="n">siteFile</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Enter path to XML file containing site list: &quot;</span><span class="p">)</span>
+            <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">,</span> <span class="n">XML</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">):</span>
-            <span class="n">regEx</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Enter regular expression: &quot;</span><span class="p">)</span>
+            <span class="n">regEx</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Enter regular expression: &quot;</span><span class="p">)</span>
             <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromRegEx</span><span class="p">(</span><span class="n">regEx</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">siteList</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="c">#process the sites in the list</span>
+        <span class="c1">#process the sites in the list</span>
         
         <span class="n">sitesDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">sitesPhreeqcDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">sitesMetaDataDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteList</span><span class="p">:</span>            
             <span class="n">sitePanel</span> <span class="o">=</span> <span class="n">loadSiteData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
-            <span class="n">sitesDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">sitePanel</span>
-            <span class="k">if</span> <span class="n">loadPhreeqc</span><span class="p">:</span>
-                <span class="n">sitedf</span> <span class="o">=</span> <span class="n">loadSitePhreeqcData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
-                <span class="n">sitesPhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">sitedf</span>
-            <span class="k">if</span> <span class="n">loadMetaData</span><span class="p">:</span>
-                <span class="n">siteMetaData</span> <span class="o">=</span> <span class="n">loadSiteMetaData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
-                <span class="n">sitesMetaDataDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">siteMetaData</span>
+            <span class="k">if</span> <span class="n">sitePanel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="c1">#If site data does not read in correctly, loadSiteData returns None</span>
+                <span class="n">sitesDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">sitePanel</span>
+                <span class="k">if</span> <span class="n">loadPhreeqc</span><span class="p">:</span>
+                    <span class="n">sitedf</span> <span class="o">=</span> <span class="n">loadSitePhreeqcData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
+                    <span class="n">sitesPhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">sitedf</span>
+                <span class="k">if</span> <span class="n">loadMetaData</span><span class="p">:</span>
+                    <span class="n">siteMetaData</span> <span class="o">=</span> <span class="n">loadSiteMetaData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
+                    <span class="n">sitesMetaDataDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">siteMetaData</span>
         <span class="k">if</span> <span class="n">loadPhreeqc</span> <span class="ow">or</span> <span class="n">loadMetaData</span><span class="p">:</span>
             <span class="n">return_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">sitesDict</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">loadPhreeqc</span><span class="p">:</span>
@@ -164,19 +169,19 @@
                 <span class="n">return_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sitesMetaDataDict</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">return_list</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">sitesDict</span>
-</div>
-<span class="k">def</span> <span class="nf">loadSiteMetaData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">):</span>
-    <span class="c">#Add USGS tag if needed</span>
-    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;USGS-&#39;</span><span class="p">)):</span>
-        <span class="n">site</span> <span class="o">=</span> <span class="s">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
+            <span class="k">return</span> <span class="n">sitesDict</span></div>
+
+<div class="viewcode-block" id="loadSiteMetaData"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.loadWaterQualityData.loadSiteMetaData">[docs]</a><span class="k">def</span> <span class="nf">loadSiteMetaData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">):</span>
+    <span class="c1">#Add USGS tag if needed</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
+        <span class="n">site</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">metaDataFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s">&#39;-Site-Description.pkl&#39;</span><span class="p">)</span>
-        <span class="n">siteMetaData</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">metaDataFile</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">))</span>
+        <span class="n">metaDataFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Site-Description.pkl&#39;</span><span class="p">)</span>
+        <span class="n">siteMetaData</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">metaDataFile</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="k">print</span> <span class="p">(</span><span class="s">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">None</span>
-    <span class="k">return</span> <span class="n">siteMetaData</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">siteMetaData</span></div>
     
 
 
@@ -198,17 +203,18 @@
 <span class="sd">        A pandas panel object with data from the requested site.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#Add USGS tag if needed</span>
-    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;USGS-&#39;</span><span class="p">)):</span>
-        <span class="n">site</span> <span class="o">=</span> <span class="s">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
+    <span class="c1">#Add USGS tag if needed</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
+        <span class="n">site</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">panelFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s">&#39;-Panel.pkl&#39;</span><span class="p">)</span>
-        <span class="n">sitePanel</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">panelFile</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">))</span>
+        <span class="n">panelFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Panel.pkl&#39;</span><span class="p">)</span>
+<span class="c1">#        sitePanel = pickle.load(open(panelFile, &#39;rb&#39;))</span>
+        <span class="n">sitePanel</span> <span class="o">=</span> <span class="n">read_pickle</span><span class="p">(</span><span class="n">panelFile</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="k">print</span> <span class="p">(</span><span class="s">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">None</span>
-    <span class="k">return</span> <span class="n">sitePanel</span>
-</div>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">sitePanel</span></div>
+
 <div class="viewcode-block" id="loadSitePhreeqcData"><a class="viewcode-back" href="../../../olm.USGS.loadWaterQualityData.loadSitePhreeqcData.html#olm.USGS.loadWaterQualityData.loadSitePhreeqcData">[docs]</a><span class="k">def</span> <span class="nf">loadSitePhreeqcData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves site PHREEQC data for an individual site from a directory of processed sites.</span>
@@ -227,81 +233,79 @@
 <span class="sd">        A pandas dataframe object with PHREEQC data from the requested site.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#Add USGS tag if needed</span>
-    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;USGS-&#39;</span><span class="p">)):</span>
-        <span class="n">site</span> <span class="o">=</span> <span class="s">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
+    <span class="c1">#Add USGS tag if needed</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
+        <span class="n">site</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">phreeqcFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s">&#39;-PHREEQC.pkl&#39;</span><span class="p">)</span>
-        <span class="n">sitedf</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">phreeqcFile</span><span class="p">,</span> <span class="s">&#39;rb&#39;</span><span class="p">))</span>
+        <span class="n">phreeqcFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC.pkl&#39;</span><span class="p">)</span>
+        <span class="n">sitedf</span> <span class="o">=</span> <span class="n">read_pickle</span><span class="p">(</span><span class="n">phreeqcFile</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="k">print</span> <span class="p">(</span><span class="s">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">phreeqcFile</span> <span class="p">)</span>
-        <span class="k">return</span> <span class="bp">None</span>
-    <span class="k">return</span> <span class="n">sitedf</span>
-            </div>
-<span class="k">def</span> <span class="nf">siteListFromLine</span><span class="p">(</span><span class="n">siteListText</span><span class="p">):</span>
-    <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListText</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;;&#39;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">phreeqcFile</span> <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">sitedf</span></div>
+            
+<div class="viewcode-block" id="siteListFromLine"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.loadWaterQualityData.siteListFromLine">[docs]</a><span class="k">def</span> <span class="nf">siteListFromLine</span><span class="p">(</span><span class="n">siteListText</span><span class="p">):</span>
+    <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListText</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
     <span class="n">siteList</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">siteList</span><span class="p">]</span>
-    <span class="c">#check for USGS Tag at beginning of site number</span>
+    <span class="c1">#check for USGS Tag at beginning of site number</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">site</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">siteList</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;USGS-&#39;</span><span class="p">)):</span>
-            <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;USGS-&#39;</span> <span class="o">+</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">siteList</span>
+        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
+            <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span> <span class="o">+</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">siteList</span></div>
 
-<span class="k">def</span> <span class="nf">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">,</span> 
+<div class="viewcode-block" id="siteListFromFile"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.loadWaterQualityData.siteListFromFile">[docs]</a><span class="k">def</span> <span class="nf">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">,</span> 
                      <span class="n">sitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">,</span>
-                     <span class="n">XML</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">siteFile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.xml&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">XML</span> <span class="o">==</span> <span class="bp">True</span><span class="p">)):</span>
+                     <span class="n">XML</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">siteFile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.xml&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">XML</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)):</span>
         <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromXML</span><span class="p">(</span><span class="n">siteFile</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromText</span><span class="p">(</span><span class="n">siteFile</span><span class="p">)</span>
-    <span class="c">#check for USGS Tag at beginning of site number</span>
+    <span class="c1">#check for USGS Tag at beginning of site number</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">site</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">siteList</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;USGS-&#39;</span><span class="p">)):</span>
-            <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;USGS-&#39;</span> <span class="o">+</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
- <span class="c">#   siteList = [os.path.join(processedSitesDir, x) for x in siteList]</span>
-    <span class="k">return</span> <span class="n">siteList</span>
+        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
+            <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span> <span class="o">+</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+ <span class="c1">#   siteList = [os.path.join(processedSitesDir, x) for x in siteList]</span>
+    <span class="k">return</span> <span class="n">siteList</span></div>
 
-<span class="k">def</span> <span class="nf">siteListFromRegEx</span><span class="p">(</span><span class="n">regEx</span><span class="p">,</span>
+<div class="viewcode-block" id="siteListFromRegEx"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.loadWaterQualityData.siteListFromRegEx">[docs]</a><span class="k">def</span> <span class="nf">siteListFromRegEx</span><span class="p">(</span><span class="n">regEx</span><span class="p">,</span>
                       <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">):</span>
-<span class="c">#    print(&quot;processedSitesDir=&quot;+processedSitesDir)</span>
+<span class="c1">#    print(&quot;processedSitesDir=&quot;+processedSitesDir)</span>
     <span class="n">listText</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">regEx</span><span class="p">)</span>
     <span class="n">sitePath</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">listText</span><span class="p">)</span>
     <span class="n">siteList</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePath</span><span class="p">:</span>
         <span class="n">head</span><span class="p">,</span><span class="n">tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
         <span class="n">siteList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">siteList</span>
+    <span class="k">return</span> <span class="n">siteList</span></div>
 
-<span class="k">def</span> <span class="nf">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">):</span>
+<div class="viewcode-block" id="checkSitesDir"><a class="viewcode-back" href="../../../olm.USGS.html#olm.USGS.loadWaterQualityData.checkSitesDir">[docs]</a><span class="k">def</span> <span class="nf">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">):</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s">&quot;Invalid path to processed sites directory.&quot;</span><span class="p">)</span>
-        <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">(</span><span class="s">&quot;Path of the processed sites directory (Default = ./Processed-Sites): &quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">processedSitesDir</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid path to processed sites directory.&quot;</span><span class="p">)</span>
+        <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Path of the processed sites directory (Default = ./Processed-Sites): &quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">processedSitesDir</span></div>
+
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -310,13 +314,13 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>
 </html>

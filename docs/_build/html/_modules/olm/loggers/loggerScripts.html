@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>olm.loggers.loggerScripts &mdash; olm 0.33 documentation</title>
+    <title>olm.loggers.loggerScripts &#8212; olm 0.33 documentation</title>
     
     <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -17,17 +17,18 @@
         VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="../../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../../_static/doctools.js"></script>
-    <link rel="top" title="olm 0.33 documentation" href="../../../index.html" />
-    <link rel="up" title="Module code" href="../../index.html" /> 
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,26 +37,26 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <h1>Source code for olm.loggers.loggerScripts</h1><div class="highlight"><pre>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Contains functions that are useful in general for manipulation of data logger data</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">datetools</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Series</span><span class="p">,</span> <span class="n">notnull</span>
-<span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="kn">import</span> <span class="n">date2num</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">datetools</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Series</span><span class="p">,</span> <span class="n">notnull</span><span class="p">,</span> <span class="n">Timestamp</span>
+<span class="kn">from</span> <span class="nn">matplotlib.dates</span> <span class="k">import</span> <span class="n">date2num</span>
 
-<span class="c">#accepts a list of logger DateFrame objects as first argument</span>
-<div class="viewcode-block" id="joinLoggers"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.joinLoggers">[docs]</a><span class="k">def</span> <span class="nf">joinLoggers</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">&#39;inner&#39;</span><span class="p">,</span> <span class="n">interpolate</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
+<span class="c1">#accepts a list of logger DateFrame objects as first argument</span>
+<div class="viewcode-block" id="joinLoggers"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.joinLoggers">[docs]</a><span class="k">def</span> <span class="nf">joinLoggers</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">interpolate</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Joins the data from a list of logger DataFrame objects together.</span>
 
@@ -74,7 +75,7 @@
 <span class="sd">      DataFrame of joined loggers.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#merge data from multiple loggers</span>
+    <span class="c1">#merge data from multiple loggers</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">joined</span> <span class="o">=</span> <span class="n">loggerlist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">how</span><span class="o">=</span><span class="n">how</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">interpolate</span><span class="p">:</span>
@@ -83,10 +84,10 @@
                 <span class="n">joined</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">filled_col</span>
         <span class="k">return</span> <span class="n">joined</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&quot;Problem with input list: Need to input a list of DataFrame objects&quot;</span>
-        <span class="k">return</span> <span class="bp">None</span>
-</div>
-<div class="viewcode-block" id="joinAndResampleLoggers"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.joinAndResampleLoggers">[docs]</a><span class="k">def</span> <span class="nf">joinAndResampleLoggers</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[],</span> <span class="n">how</span><span class="o">=</span><span class="s">&#39;inner&#39;</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="s2">&quot;Problem with input list: Need to input a list of DataFrame objects&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="joinAndResampleLoggers"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.joinAndResampleLoggers">[docs]</a><span class="k">def</span> <span class="nf">joinAndResampleLoggers</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Joins and resamples data from DataFrame objects provided in a list.</span>
 
@@ -111,51 +112,51 @@
 <span class="sd">        DataFrame Object that contains joined DataFrames.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#If no suffixes were passed, create a list full of None values</span>
-    <span class="c">#  this keeps suffixes from being added in the code below</span>
+    <span class="c1">#If no suffixes were passed, create a list full of None values</span>
+    <span class="c1">#  this keeps suffixes from being added in the code below</span>
     <span class="k">if</span> <span class="n">suffixes</span><span class="o">==</span><span class="p">[]:</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">)):</span>
-            <span class="n">suffixes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">None</span><span class="p">)</span>
+            <span class="n">suffixes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">resampledList</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">)</span><span class="o">==</span><span class="nb">list</span><span class="p">:</span>
-        <span class="c">#print &quot;Processing list type loggerlist...&quot;</span>
+        <span class="c1">#print &quot;Processing list type loggerlist...&quot;</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">logger</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">suffixes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="bp">None</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">columns</span><span class="o">+=</span><span class="s">&#39;_&#39;</span><span class="o">+</span><span class="n">suffixes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">suffixes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">columns</span><span class="o">+=</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffixes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
             <span class="n">resampledList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">interval</span><span class="p">))</span>
     <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">)</span><span class="o">==</span><span class="nb">dict</span><span class="p">:</span>
-        <span class="c">#print &quot;Processing dict type loggerlist...&quot;</span>
+        <span class="c1">#print &quot;Processing dict type loggerlist...&quot;</span>
         <span class="k">for</span> <span class="n">logger_key</span> <span class="ow">in</span> <span class="n">loggerlist</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>            
             <span class="n">logger</span> <span class="o">=</span> <span class="n">loggerlist</span><span class="p">[</span><span class="n">logger_key</span><span class="p">]</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">suffixes</span><span class="p">)</span><span class="o">==</span><span class="nb">dict</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">suffixes</span><span class="p">[</span><span class="n">logger_key</span><span class="p">]</span><span class="o">!=</span><span class="bp">None</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">columns</span><span class="o">+=</span><span class="s">&#39;_&#39;</span><span class="o">+</span><span class="n">suffixes</span><span class="p">[</span><span class="n">logger_key</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">suffixes</span><span class="p">[</span><span class="n">logger_key</span><span class="p">]</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">columns</span><span class="o">+=</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffixes</span><span class="p">[</span><span class="n">logger_key</span><span class="p">]</span>
                 <span class="n">resampledList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">logger</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">interval</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">print</span> <span class="s">&quot;Problem with suffixes. If loggerlist is a dict, suffixes also must be a dict.&quot;</span>
-                <span class="k">return</span> <span class="bp">None</span>
+                <span class="nb">print</span> <span class="s2">&quot;Problem with suffixes. If loggerlist is a dict, suffixes also must be a dict.&quot;</span>
+                <span class="k">return</span> <span class="kc">None</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">print</span> <span class="s">&quot;Problem with logger list: Need to input a list or dict of DataFrame or Series objects&quot;</span>
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="nb">print</span> <span class="s2">&quot;Problem with logger list: Need to input a list or dict of DataFrame or Series objects&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span>
             
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">logger</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resampledList</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
             <span class="n">joined</span><span class="o">=</span><span class="n">logger</span>
-<span class="c">#            elif i==1:</span>
-<span class="c">#                joined=joined.join(logger, how=how, lsuffix=&#39;_&#39;+suffixes[0], rsuffix=&#39;_&#39;+suffixes[1])</span>
-<span class="c">#        elif i==3:</span>
-<span class="c">#            return joined</span>
+<span class="c1">#            elif i==1:</span>
+<span class="c1">#                joined=joined.join(logger, how=how, lsuffix=&#39;_&#39;+suffixes[0], rsuffix=&#39;_&#39;+suffixes[1])</span>
+<span class="c1">#        elif i==3:</span>
+<span class="c1">#            return joined</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">joined</span><span class="o">=</span><span class="n">joined</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="n">how</span><span class="p">)</span><span class="c">#, rsuffix=&#39;_&#39;+suffixes[i])</span>
+            <span class="n">joined</span><span class="o">=</span><span class="n">joined</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="n">how</span><span class="p">)</span><span class="c1">#, rsuffix=&#39;_&#39;+suffixes[i])</span>
     <span class="k">if</span> <span class="n">interpolate</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">joined</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-            <span class="k">print</span> <span class="n">joined</span>
-            <span class="k">print</span> <span class="n">col</span>
+<span class="c1">#            print joined</span>
+<span class="c1">#            print col</span>
             <span class="n">filled_col</span> <span class="o">=</span> <span class="n">joined</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">)</span>
             <span class="n">joined</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">filled_col</span>
-    <span class="k">return</span> <span class="n">joined</span>
+    <span class="k">return</span> <span class="n">joined</span></div>
 
-</div>
+
 <div class="viewcode-block" id="linear_correction"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.linear_correction">[docs]</a><span class="k">def</span> <span class="nf">linear_correction</span><span class="p">(</span><span class="n">rawSeries</span><span class="p">,</span> <span class="n">correctionSeries</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses a Pandas Series of spot measured values to linearly correct time series data from a logger.</span>
@@ -172,7 +173,7 @@
 <span class="sd">    rawSeries : pandas.core.series.Series</span>
 <span class="sd">        A corrected version of the rawSeries time series data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c">#loop through correction series and calculate multiplying factors</span>
+    <span class="c1">#loop through correction series and calculate multiplying factors</span>
     <span class="n">corrDict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">date</span><span class="p">,</span> <span class="n">measurement</span> <span class="ow">in</span> <span class="n">correctionSeries</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
         <span class="n">candidates</span> <span class="o">=</span> <span class="n">rawSeries</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">notnull</span><span class="p">(</span><span class="n">rawSeries</span><span class="p">)]</span>
@@ -188,12 +189,12 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">rawSeries</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">corrDict</span><span class="p">:</span>
         <span class="n">corrDict</span><span class="p">[</span><span class="n">rawSeries</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">corrDict</span><span class="p">[</span><span class="n">asOfDate</span><span class="p">]</span>
     <span class="n">k_series</span> <span class="o">=</span> <span class="n">Series</span><span class="p">(</span><span class="n">corrDict</span><span class="p">)</span>
-    <span class="n">joined_series</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s">&#39;raw&#39;</span><span class="p">:</span><span class="n">rawSeries</span><span class="p">,</span><span class="s">&#39;k&#39;</span><span class="p">:</span><span class="n">k_series</span><span class="p">})</span>
+    <span class="n">joined_series</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;raw&#39;</span><span class="p">:</span><span class="n">rawSeries</span><span class="p">,</span><span class="s1">&#39;k&#39;</span><span class="p">:</span><span class="n">k_series</span><span class="p">})</span>
     <span class="n">joined_series</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">joined_series</span><span class="o">.</span><span class="n">k</span><span class="o">.</span><span class="n">interpolate</span><span class="p">()</span>
     <span class="n">rawSeries</span> <span class="o">=</span> <span class="n">rawSeries</span><span class="o">*</span><span class="n">joined_series</span><span class="o">.</span><span class="n">k</span>
-    <span class="k">return</span> <span class="n">rawSeries</span>
-</div>
-<div class="viewcode-block" id="manualCompare"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.manualCompare">[docs]</a><span class="k">def</span> <span class="nf">manualCompare</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">manual</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="n">ltag</span><span class="o">=</span><span class="s">&#39;_log&#39;</span><span class="p">,</span> <span class="n">mtag</span><span class="o">=</span><span class="s">&#39;_man&#39;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">rawSeries</span></div>
+
+<div class="viewcode-block" id="manualCompare"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.manualCompare">[docs]</a><span class="k">def</span> <span class="nf">manualCompare</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">manual</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ltag</span><span class="o">=</span><span class="s1">&#39;_log&#39;</span><span class="p">,</span> <span class="n">mtag</span><span class="o">=</span><span class="s1">&#39;_man&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.</span>
 
@@ -215,39 +216,68 @@
 <span class="sd">    joined : pandas.core.dataframe.DataFrame</span>
 <span class="sd">        A DataFrame object containing values of manual measurements and corresponding values from the logger time series using the aligned index that is resampled to the hour.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">value_name</span><span class="o">==</span><span class="s">&#39;&#39;</span><span class="p">):</span>
-        <span class="n">value_name</span> <span class="o">+=</span> <span class="s">&#39;_&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">value_name</span><span class="o">==</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">value_name</span> <span class="o">+=</span> <span class="s1">&#39;_&#39;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">resampleHourly</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span>
     <span class="n">manual</span> <span class="o">=</span> <span class="n">resampleHourly</span><span class="p">(</span><span class="n">manual</span><span class="p">)</span>
     <span class="n">wantidx</span> <span class="o">=</span> <span class="n">manual</span><span class="o">.</span><span class="n">index</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="p">[</span><span class="n">wantidx</span><span class="p">]</span>
     <span class="n">joined</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="n">value_name</span><span class="o">+</span><span class="n">ltag</span><span class="p">:</span><span class="n">logger</span><span class="p">,</span> <span class="n">value_name</span><span class="o">+</span><span class="n">rtag</span><span class="p">:</span><span class="n">manual</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">joined</span></div>
+
+
+<div class="viewcode-block" id="shiftLogger"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.shiftLogger">[docs]</a><span class="k">def</span> <span class="nf">shiftLogger</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">shift_to</span><span class="p">,</span> <span class="n">align_at_start</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    logger : pandas.core.series.Series or pandas.core.dataframe.Dataframe</span>
+<span class="sd">        A Pandas TimeSeries or DataFrame containing time stamps as indices.</span>
+<span class="sd">    shift_to : string </span>
+<span class="sd">        A string that contains the date and time that the logger series should be shifted to. By default this is the correct starting time (first time stamp) of the series.</span>
+<span class="sd">    align_at_start : boolean</span>
+<span class="sd">        If True, shift_to is assumed to represent the correct starting date for the series. If False, shift_to is assumed to represent the correct final date of the series. (default=True)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    logger : pandas.core.series.Series or pandas.core.dataframe.DataFrame</span>
+<span class="sd">        A Series or DataFrame object that contains the correct shifted time stamps.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bad_times</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">index</span>
+    <span class="c1">#align at starting time stamp</span>
+    <span class="k">if</span> <span class="n">align_at_start</span><span class="p">:</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">Timestamp</span><span class="p">(</span><span class="n">shift_to</span><span class="p">)</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">-</span> <span class="n">bad_times</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1">#align at ending time stamp</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">Timestamp</span><span class="p">(</span><span class="n">shift_to</span><span class="p">)</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">bad_times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1">#shift index of original logger time series</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">index</span> <span class="o">+</span> <span class="n">dt</span>
+    <span class="k">return</span> <span class="n">logger</span></div>
 </pre></div>
 
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<div id="searchbox" style="display: none">
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -256,13 +286,13 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="../../../index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="../../index.html" >Module code</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>
 </html>

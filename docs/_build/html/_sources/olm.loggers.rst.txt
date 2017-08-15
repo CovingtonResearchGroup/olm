@@ -28,6 +28,14 @@ olm.loggers.SchlumbergerCTDToolkit module
     :undoc-members:
     :show-inheritance:
 
+olm.loggers.TruBluToolkit module
+--------------------------------
+
+.. automodule:: olm.loggers.TruBluToolkit
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 olm.loggers.WTWpHToolkit module
 -------------------------------
 

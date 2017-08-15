@@ -25,6 +25,7 @@ index.rst (this may work without manual editing if I set max depth to 2 when sph
 olm.rst
 olm.USGS.rst
 olm.general.solution.rst
+read-the-docs-requirements.txt
 
 
 

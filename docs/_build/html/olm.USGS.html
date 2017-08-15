@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>olm.USGS package &mdash; olm 0.33 documentation</title>
+    <title>olm.USGS package &#8212; olm 0.33 documentation</title>
     
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,140 +17,144 @@
         VERSION:     '0.33',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="olm 0.33 documentation" href="index.html" />
-    <link rel="up" title="olm Package" href="olm.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.USGS.WQXtoPandas.runWQXtoPandas" href="olm.USGS.WQXtoPandas.runWQXtoPandas.html" />
     <link rel="prev" title="olm.general.getProperties" href="olm.general.getProperties.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="olm.USGS.WQXtoPandas.runWQXtoPandas.html" title="olm.USGS.WQXtoPandas.runWQXtoPandas"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="olm.general.getProperties.html" title="olm.general.getProperties"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="olm.html" accesskey="U">olm Package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" accesskey="U">olm Package</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="olm-usgs-package">
 <h1>olm.USGS package<a class="headerlink" href="#olm-usgs-package" title="Permalink to this headline">¶</a></h1>
 <p>This package contains functions for retrieving and processing data from the USGS National Water Information System database (NWIS).  Using these modules it is possible to retrieve water quality data, discharge data, and site metadata.  These data are then converted into Pandas data objects and stored in pickled and spreadsheet format for later usage. The package also contains functions for processing the Pandas data objects through the USGS water chemistry code PHREEQC.  For this, an installation of PHREEQC is required.</p>
-<p>The most typical entry point is to use the convenience function <tt class="docutils literal"><span class="pre">runWQXtoPandas</span></tt>.  This function can be used from within python by importing it from the <tt class="docutils literal"><span class="pre">olm.USGS.WQXtoPandas</span></tt> module.  It can additionally be used from the command line using:</p>
-<div class="highlight-python"><div class="highlight"><pre>$./WQXtoPandas.py &lt;name of input xls file&gt;
+<p>The most typical entry point is to use the convenience function <code class="docutils literal"><span class="pre">runWQXtoPandas</span></code>.  This function can be used from within python by importing it from the <code class="docutils literal"><span class="pre">olm.USGS.WQXtoPandas</span></code> module.  It can additionally be used from the command line using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$./WQXtoPandas.py &lt;name of input xls file&gt;
 </pre></div>
 </div>
-<p>Most functionality can be controlled from within the Excel file.  A template is provided with the olm package in the examples directory. The examples file also contains some brief code illustrating how data can be read in from the pickled outputs of <tt class="docutils literal"><span class="pre">WQXtoPandas</span></tt> and plotted.</p>
+<p>Most functionality can be controlled from within the Excel file.  A template is provided with the olm package in the examples directory. The examples file also contains some brief code illustrating how data can be read in from the pickled outputs of <code class="docutils literal"><span class="pre">WQXtoPandas</span></code> and plotted.</p>
 <div class="section" id="olm-usgs-wqxtopandas-module">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">olm.USGS.WQXtoPandas</span></tt> module<a class="headerlink" href="#olm-usgs-wqxtopandas-module" title="Permalink to this headline">¶</a></h2>
+<h2><code class="xref py py-mod docutils literal"><span class="pre">olm.USGS.WQXtoPandas</span></code> module<a class="headerlink" href="#olm-usgs-wqxtopandas-module" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.WQXtoPandas.runWQXtoPandas.html#olm.USGS.WQXtoPandas.runWQXtoPandas" title="olm.USGS.WQXtoPandas.runWQXtoPandas"><tt class="xref py py-obj docutils literal"><span class="pre">runWQXtoPandas</span></tt></a>(startfilename[,&nbsp;autosplitnum])</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.WQXtoPandas.runWQXtoPandas.html#olm.USGS.WQXtoPandas.runWQXtoPandas" title="olm.USGS.WQXtoPandas.runWQXtoPandas"><code class="xref py py-obj docutils literal"><span class="pre">runWQXtoPandas</span></code></a>(startfilename[,&nbsp;autosplitnum])</td>
 <td>Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from the USGS NWIS database.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.USGS.WQXtoPandas.WQXtoPandas.html#olm.USGS.WQXtoPandas.WQXtoPandas" title="olm.USGS.WQXtoPandas.WQXtoPandas"><tt class="xref py py-obj docutils literal"><span class="pre">WQXtoPandas</span></tt></a>(xmlLocation,&nbsp;charDict[,&nbsp;...])</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.USGS.WQXtoPandas.WQXtoPandas.html#olm.USGS.WQXtoPandas.WQXtoPandas" title="olm.USGS.WQXtoPandas.WQXtoPandas"><code class="xref py py-obj docutils literal"><span class="pre">WQXtoPandas</span></code></a>(xmlLocation,&nbsp;charDict[,&nbsp;...])</td>
 <td>Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are stored in directories for each site.</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="olm-usgs-phreeqcpandas-module">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">olm.USGS.PhreeqcPandas</span></tt> module<a class="headerlink" href="#olm-usgs-phreeqcpandas-module" title="Permalink to this headline">¶</a></h2>
+<h2><code class="xref py py-mod docutils literal"><span class="pre">olm.USGS.PhreeqcPandas</span></code> module<a class="headerlink" href="#olm-usgs-phreeqcpandas-module" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.PhreeqcPandas.processPanel.html#olm.USGS.PhreeqcPandas.processPanel" title="olm.USGS.PhreeqcPandas.processPanel"><tt class="xref py py-obj docutils literal"><span class="pre">processPanel</span></tt></a>(site_panel,&nbsp;site_dir,&nbsp;...[,&nbsp;...])</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.PhreeqcPandas.processPanel.html#olm.USGS.PhreeqcPandas.processPanel" title="olm.USGS.PhreeqcPandas.processPanel"><code class="xref py py-obj docutils literal"><span class="pre">processPanel</span></code></a>(site_panel,&nbsp;site_dir,&nbsp;...[,&nbsp;...])</td>
 <td>Takes a WQXtoPandas site panel and runs all samples through PHREEQC, returning a dataframe of the outputs that is indexed by date.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html#olm.USGS.PhreeqcPandas.readPhreeqcOutput" title="olm.USGS.PhreeqcPandas.readPhreeqcOutput"><tt class="xref py py-obj docutils literal"><span class="pre">readPhreeqcOutput</span></tt></a>(phreeqcOutputFile)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html#olm.USGS.PhreeqcPandas.readPhreeqcOutput" title="olm.USGS.PhreeqcPandas.readPhreeqcOutput"><code class="xref py py-obj docutils literal"><span class="pre">readPhreeqcOutput</span></code></a>(phreeqcOutputFile)</td>
 <td>Reads the output file from a PHREEQC simulation run.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.PhreeqcPandas.writePhreeqcInput.html#olm.USGS.PhreeqcPandas.writePhreeqcInput" title="olm.USGS.PhreeqcPandas.writePhreeqcInput"><tt class="xref py py-obj docutils literal"><span class="pre">writePhreeqcInput</span></tt></a>(sample_row,&nbsp;phreeqc_file_name)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.PhreeqcPandas.writePhreeqcInput.html#olm.USGS.PhreeqcPandas.writePhreeqcInput" title="olm.USGS.PhreeqcPandas.writePhreeqcInput"><code class="xref py py-obj docutils literal"><span class="pre">writePhreeqcInput</span></code></a>(sample_row,&nbsp;phreeqc_file_name)</td>
 <td>Writes a PHREEQC input file using the row from a site panel.</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="olm-usgs-dataretrieval-module">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">olm.USGS.DataRetrieval</span></tt> module<a class="headerlink" href="#olm-usgs-dataretrieval-module" title="Permalink to this headline">¶</a></h2>
+<h2><code class="xref py py-mod docutils literal"><span class="pre">olm.USGS.DataRetrieval</span></code> module<a class="headerlink" href="#olm-usgs-dataretrieval-module" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetDailyDischarge.html#olm.USGS.DataRetrieval.GetDailyDischarge" title="olm.USGS.DataRetrieval.GetDailyDischarge"><tt class="xref py py-obj docutils literal"><span class="pre">GetDailyDischarge</span></tt></a>(location,&nbsp;date)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetDailyDischarge.html#olm.USGS.DataRetrieval.GetDailyDischarge" title="olm.USGS.DataRetrieval.GetDailyDischarge"><code class="xref py py-obj docutils literal"><span class="pre">GetDailyDischarge</span></code></a>(location,&nbsp;date)</td>
 <td>Retrieve daily average discharge value from USGS database for given date and USGS site.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetDailyDischargeRecord.html#olm.USGS.DataRetrieval.GetDailyDischargeRecord" title="olm.USGS.DataRetrieval.GetDailyDischargeRecord"><tt class="xref py py-obj docutils literal"><span class="pre">GetDailyDischargeRecord</span></tt></a>(location,&nbsp;start_date)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetDailyDischargeRecord.html#olm.USGS.DataRetrieval.GetDailyDischargeRecord" title="olm.USGS.DataRetrieval.GetDailyDischargeRecord"><code class="xref py py-obj docutils literal"><span class="pre">GetDailyDischargeRecord</span></code></a>(location,&nbsp;start_date)</td>
 <td>Retrieve daily average discharge values from USGS database for given date range and USGS site.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetSiteData.html#olm.USGS.DataRetrieval.GetSiteData" title="olm.USGS.DataRetrieval.GetSiteData"><tt class="xref py py-obj docutils literal"><span class="pre">GetSiteData</span></tt></a>(location)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.DataRetrieval.GetSiteData.html#olm.USGS.DataRetrieval.GetSiteData" title="olm.USGS.DataRetrieval.GetSiteData"><code class="xref py py-obj docutils literal"><span class="pre">GetSiteData</span></code></a>(location)</td>
 <td>Retrieves meta data about a USGS site using the full site identifier.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.USGS.DataRetrieval.querySiteList.html#olm.USGS.DataRetrieval.querySiteList" title="olm.USGS.DataRetrieval.querySiteList"><tt class="xref py py-obj docutils literal"><span class="pre">querySiteList</span></tt></a>(siteList,&nbsp;charList)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.USGS.DataRetrieval.querySiteList.html#olm.USGS.DataRetrieval.querySiteList" title="olm.USGS.DataRetrieval.querySiteList"><code class="xref py py-obj docutils literal"><span class="pre">querySiteList</span></code></a>(siteList,&nbsp;charList)</td>
 <td></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="olm-usgs-loadwaterqualitydata-module">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">olm.USGS.loadWaterQualityData</span></tt> module<a class="headerlink" href="#olm-usgs-loadwaterqualitydata-module" title="Permalink to this headline">¶</a></h2>
+<h2><code class="xref py py-mod docutils literal"><span class="pre">olm.USGS.loadWaterQualityData</span></code> module<a class="headerlink" href="#olm-usgs-loadwaterqualitydata-module" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.loadWaterQualityData.loadSiteListData.html#olm.USGS.loadWaterQualityData.loadSiteListData" title="olm.USGS.loadWaterQualityData.loadSiteListData"><tt class="xref py py-obj docutils literal"><span class="pre">loadSiteListData</span></tt></a>([siteListText,&nbsp;siteFile,&nbsp;...])</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.loadWaterQualityData.loadSiteListData.html#olm.USGS.loadWaterQualityData.loadSiteListData" title="olm.USGS.loadWaterQualityData.loadSiteListData"><code class="xref py py-obj docutils literal"><span class="pre">loadSiteListData</span></code></a>([siteListText,&nbsp;siteFile,&nbsp;...])</td>
 <td>Retrieves site data for multiple sites within a processed sites directory.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.USGS.loadWaterQualityData.loadSiteData.html#olm.USGS.loadWaterQualityData.loadSiteData" title="olm.USGS.loadWaterQualityData.loadSiteData"><tt class="xref py py-obj docutils literal"><span class="pre">loadSiteData</span></tt></a>(site[,&nbsp;processedSitesDir])</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.USGS.loadWaterQualityData.loadSiteData.html#olm.USGS.loadWaterQualityData.loadSiteData" title="olm.USGS.loadWaterQualityData.loadSiteData"><code class="xref py py-obj docutils literal"><span class="pre">loadSiteData</span></code></a>(site[,&nbsp;processedSitesDir])</td>
 <td>Retrieves site data for an individual site from a directory of processed sites.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.loadWaterQualityData.loadSitePhreeqcData.html#olm.USGS.loadWaterQualityData.loadSitePhreeqcData" title="olm.USGS.loadWaterQualityData.loadSitePhreeqcData"><tt class="xref py py-obj docutils literal"><span class="pre">loadSitePhreeqcData</span></tt></a>(site[,&nbsp;processedSitesDir])</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.loadWaterQualityData.loadSitePhreeqcData.html#olm.USGS.loadWaterQualityData.loadSitePhreeqcData" title="olm.USGS.loadWaterQualityData.loadSitePhreeqcData"><code class="xref py py-obj docutils literal"><span class="pre">loadSitePhreeqcData</span></code></a>(site[,&nbsp;processedSitesDir])</td>
 <td>Retrieves site PHREEQC data for an individual site from a directory of processed sites.</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section" id="olm-usgs-sitelistextraction-module">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">olm.USGS.siteListExtraction</span></tt> module<a class="headerlink" href="#olm-usgs-sitelistextraction-module" title="Permalink to this headline">¶</a></h2>
+<h2><code class="xref py py-mod docutils literal"><span class="pre">olm.USGS.siteListExtraction</span></code> module<a class="headerlink" href="#olm-usgs-sitelistextraction-module" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.siteListExtraction.extractSitesFromText.html#olm.USGS.siteListExtraction.extractSitesFromText" title="olm.USGS.siteListExtraction.extractSitesFromText"><tt class="xref py py-obj docutils literal"><span class="pre">extractSitesFromText</span></tt></a>(textFile)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.USGS.siteListExtraction.extractSitesFromText.html#olm.USGS.siteListExtraction.extractSitesFromText" title="olm.USGS.siteListExtraction.extractSitesFromText"><code class="xref py py-obj docutils literal"><span class="pre">extractSitesFromText</span></code></a>(textFile)</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.USGS.siteListExtraction.extractSitesFromXML.html#olm.USGS.siteListExtraction.extractSitesFromXML" title="olm.USGS.siteListExtraction.extractSitesFromXML"><tt class="xref py py-obj docutils literal"><span class="pre">extractSitesFromXML</span></tt></a>(xmlFile)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.USGS.siteListExtraction.extractSitesFromXML.html#olm.USGS.siteListExtraction.extractSitesFromXML" title="olm.USGS.siteListExtraction.extractSitesFromXML"><code class="xref py py-obj docutils literal"><span class="pre">extractSitesFromXML</span></code></a>(xmlFile)</td>
 <td></td>
 </tr>
 </tbody>
@@ -162,16 +166,16 @@
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">olm.USGS package</a><ul>
-<li><a class="reference internal" href="#olm-usgs-wqxtopandas-module"><tt class="docutils literal"><span class="pre">olm.USGS.WQXtoPandas</span></tt> module</a></li>
-<li><a class="reference internal" href="#olm-usgs-phreeqcpandas-module"><tt class="docutils literal"><span class="pre">olm.USGS.PhreeqcPandas</span></tt> module</a></li>
-<li><a class="reference internal" href="#olm-usgs-dataretrieval-module"><tt class="docutils literal"><span class="pre">olm.USGS.DataRetrieval</span></tt> module</a></li>
-<li><a class="reference internal" href="#olm-usgs-loadwaterqualitydata-module"><tt class="docutils literal"><span class="pre">olm.USGS.loadWaterQualityData</span></tt> module</a></li>
-<li><a class="reference internal" href="#olm-usgs-sitelistextraction-module"><tt class="docutils literal"><span class="pre">olm.USGS.siteListExtraction</span></tt> module</a></li>
+<li><a class="reference internal" href="#olm-usgs-wqxtopandas-module"><code class="docutils literal"><span class="pre">olm.USGS.WQXtoPandas</span></code> module</a></li>
+<li><a class="reference internal" href="#olm-usgs-phreeqcpandas-module"><code class="docutils literal"><span class="pre">olm.USGS.PhreeqcPandas</span></code> module</a></li>
+<li><a class="reference internal" href="#olm-usgs-dataretrieval-module"><code class="docutils literal"><span class="pre">olm.USGS.DataRetrieval</span></code> module</a></li>
+<li><a class="reference internal" href="#olm-usgs-loadwaterqualitydata-module"><code class="docutils literal"><span class="pre">olm.USGS.loadWaterQualityData</span></code> module</a></li>
+<li><a class="reference internal" href="#olm-usgs-sitelistextraction-module"><code class="docutils literal"><span class="pre">olm.USGS.siteListExtraction</span></code> module</a></li>
 </ul>
 </li>
 </ul>
@@ -182,47 +186,49 @@
   <h4>Next topic</h4>
   <p class="topless"><a href="olm.USGS.WQXtoPandas.runWQXtoPandas.html"
                         title="next chapter">olm.USGS.WQXtoPandas.runWQXtoPandas</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/olm.USGS.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/olm.USGS.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="olm.USGS.WQXtoPandas.runWQXtoPandas.html" title="olm.USGS.WQXtoPandas.runWQXtoPandas"
              >next</a> |</li>
         <li class="right" >
           <a href="olm.general.getProperties.html" title="olm.general.getProperties"
              >previous</a> |</li>
-        <li><a href="index.html">olm 0.33 documentation</a> &raquo;</li>
-          <li><a href="olm.html" >olm Package</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.33 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014,2015 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
     </div>
   </body>
 </html>
