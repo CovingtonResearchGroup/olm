@@ -12,6 +12,14 @@ olm.loggers.CampbellToolkit module
     :undoc-members:
     :show-inheritance:
 
+olm.loggers.CyclopsToolkit module
+---------------------------------
+
+.. automodule:: olm.loggers.CyclopsToolkit
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 olm.loggers.HoboToolkit module
 ------------------------------
 
