@@ -50,7 +50,7 @@ def PCO2FromSolution(sol):
         pCO2 = (gamma_H * gamma_HCO3 / (K_1*K_H*(1+1/K_0)) ) * \
                (H_conc**2. + 2.0*H_conc*Ca_conc)
         return pCO2
-    is_series = (type(sol)==pandas.core.series.Series) or (type(sol)==pandas.core.series.TimeSeries)
+    is_series = (type(sol)==pandas.core.series.Series) #or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
         pCO2 = np.zeros(np.size(sol))
         for i, single_sol in enumerate(sol):
@@ -81,7 +81,7 @@ def concCaEqFromSolution(sol):
     Assumes a H20-CO2-CaCO3 system.
     """
     PCO2 = PCO2FromSolution(sol)
-    is_series = (type(sol)==pandas.core.series.Series) or (type(sol)==pandas.core.series.TimeSeries)
+    is_series = (type(sol)==pandas.core.series.Series) #or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
         T_C = np.zeros(np.size(sol))
         for i, single_sol in enumerate(sol):
@@ -140,7 +140,7 @@ def concCaEqFromPCO2(PCO2, T_C = 25.):
     guess_Ca = (PCO2*K_1*K_c*K_H/(4.*K_2))**(1./3.)
     maxCa = 10.*guess_Ca
     minCa = guess_Ca
-    is_series = (type(PCO2)==pandas.core.series.Series) or (type(PCO2)==pandas.core.series.TimeSeries)
+    is_series = (type(PCO2)==pandas.core.series.Series) #or (type(PCO2)==pandas.core.series.TimeSeries)
     if (type(PCO2)==np.ndarray) or is_series:
         #We have a numpy array or pandas Series. Loop through solutions.
         CaEq = np.zeros(np.size(PCO2))       
@@ -305,7 +305,7 @@ def solutionFromCaPCO2(Ca, PCO2, T_C = 25., per_tol = 0.001):
                        [H_new, OH, CO3, HCO3, Ca_in, CO2, H2CO3, H2CO3s],
                        "mol/L", T=T_C_in, pH = pH)
         return sol
-    is_series = (type(Ca)==pandas.core.series.Series) or (type(Ca)==pandas.core.series.TimeSeries)
+    is_series = (type(Ca)==pandas.core.series.Series) #or (type(Ca)==pandas.core.series.TimeSeries)
     if (type(Ca)==np.ndarray) or is_series:
         sol_arr = np.empty(np.size(Ca),dtype=object)        
         for i, this_Ca in enumerate(Ca):
@@ -451,7 +451,7 @@ def solutionFrompHCaRelaxed(Ca, pH, T_C = 25.):
     K_1 = calc_K_1(T_K)
     #equation 2.30a with chi-->infty
     HCO3 = 2.*Ca + H
-    is_series = (type(Ca)==pandas.core.series.Series) or (type(Ca)==pandas.core.series.TimeSeries)
+    is_series = (type(Ca)==pandas.core.series.Series) #or (type(Ca)==pandas.core.series.TimeSeries)
     if (type(Ca)==np.ndarray) or is_series:
         sol_arr = np.empty(np.size(Ca),dtype=object)
         for i in range(np.size(Ca)):
@@ -571,7 +571,7 @@ def pwpFromSolution(sol, PCO2=None, method='theory'):
         else:
             print "Not all necessary ions are present in the solution object."
             return -1 
-    is_series = (type(sol)==pandas.core.series.Series) or (type(sol)==pandas.core.series.TimeSeries)
+    is_series = (type(sol)==pandas.core.series.Series) #or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
         rate_arr = np.empty(np.size(sol))
         for i, this_sol in enumerate(sol):            
@@ -684,7 +684,7 @@ def pwpRateTheory(a_Ca=0., a_H2CO3s=0., a_H=0., a_HCO3=0., T_K=25.+273.15,PCO2=0
     kappa1 = calc_kappa1(T_K)
     kappa2 = calc_kappa2(T_K)
     kappa3 = calc_kappa3(T_K)
-    is_series = (type(a_Ca)==pandas.core.series.Series) or (type(a_Ca)==pandas.core.series.TimeSeries)
+    is_series = (type(a_Ca)==pandas.core.series.Series) #or (type(a_Ca)==pandas.core.series.TimeSeries)
     if (type(a_Ca)==np.ndarray) or is_series:
         #We have a numpy array or pandas Series. Loop through and calculate rates individually    
         R = np.zeros(np.size(a_Ca))       
@@ -1263,7 +1263,7 @@ def palmerFromSolution(sol, PCO2=np.array([]), rho=2.6, impure=True):
         return palmerRate(T, PCO2, Sat_Ratio, rho, impure=impure, interp_funcs=interp_funcs)
     
     #Loop through series or array if we have one
-    is_series = (type(sol)==pandas.core.series.Series) or (type(sol)==pandas.core.series.TimeSeries)
+    is_series = (type(sol)==pandas.core.series.Series) #or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
         rate_arr = np.empty(np.size(sol))
         for i, this_sol in enumerate(sol):
