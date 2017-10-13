@@ -5,8 +5,8 @@ Contains functions used to download data from USGS databases.
 
 from lxml import etree
 import lxml.html
-import urllib.request, urllib.parse, urllib.error, requests #could eventually rework to use only requests
-from io import StringIO
+import urllib, requests #could eventually rework to use only requests
+from StringIO import StringIO
 from pandas import read_csv, DataFrame, to_datetime
 #import requests
 #import os
@@ -122,7 +122,7 @@ def GetSiteData(location):#, writedir='.'): #Changed so that we don't write out 
     BASEURL = 'https://waterservices.usgs.gov/nwis/site/?site='
     queryURL = BASEURL + sitenum + '&siteOutput=expanded'
     #Need to skip header, which is hopefully uniform across USGS queries
-    skiprows = list(range(0,59))
+    skiprows = range(0,59)
     skiprows.append(60)
     siteDF = read_csv(queryURL, sep='\t', skiprows=skiprows)
     siteDF = siteDF.ix[0] #change axis so that we only have key-data pairs
@@ -149,7 +149,7 @@ def querySiteList(siteList, charList):
     #add mime type
     queryText += '&mimeType=xml'
     #convert query string to url special characters
-    queryText = urllib.parse.quote(queryText, safe="/&=:?")
+    queryText = urllib.quote(queryText, safe="/&=:?")
     return queryText
     
  
@@ -190,7 +190,7 @@ def GetDailyDischarge(location, date):
         r = requests.get(query_html)
         qtree = etree.parse(StringIO(r.content))
     except IOError:
-        print("Problem retrieving discharge value (IOError).")
+        print "Problem retrieving discharge value (IOError)."
         return -1
     #parse xml file to pull out discharge and quality code
     root = qtree.getroot()
@@ -258,7 +258,7 @@ def GetDailyDischargeRecord(location, start_date, end_date=None):
         r = requests.get(query_html)
         qtree = etree.parse(StringIO(r.content))
     except IOError:
-        print("Problem retrieving discharge value (IOError).")
+        print "Problem retrieving discharge value (IOError)."
         return -1
     #parse xml file to pull out discharge and quality code
     root = qtree.getroot()

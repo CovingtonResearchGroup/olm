@@ -107,7 +107,7 @@ def concatCTD(dflist, zero_shift = True, n_to_average = 5, offset_list=[], offse
         if len(offset_list) > 0:
             #offset each data file by the value in offset list
             if len(offset_list) != len(dflist) - 1:
-                print("Number of elements in offset_list must be one less than number of data files to concatenate")
+                print "Number of elements in offset_list must be one less than number of data files to concatenate"
                 return None
             else:
                 for i, df in enumerate(dflist):

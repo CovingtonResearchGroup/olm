@@ -7,16 +7,16 @@ This script takes an input file in USGS/EPA WQX xml format and creates a Pandas 
 import sys,xlrd,os,subprocess,string,requests
 from glob import glob
 from math import ceil
-import pickle as pickle
+import cPickle as pickle
 from lxml import etree
 from pandas import DataFrame, Panel, to_datetime, Series, concat
 from olm.USGS.PhreeqcPandas import processPanel
 
 #import functions from olm package
-from .siteListExtraction import extractSitesFromXML
-from .siteListExtraction import extractSitesFromText
-from .DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
-from .dataSlice import extractValues
+from siteListExtraction import extractSitesFromXML
+from siteListExtraction import extractSitesFromText
+from DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
+from dataSlice import extractValues
 
 def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites', RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/', DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log', START_FILE = None, splittag='',bracket_charge_balance=False):
     """
@@ -69,12 +69,12 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
         #Check to see if output directory exists
         absOutputDirPath = os.path.abspath(outputPath)
         sitesdir = os.path.join(absOutputDirPath, outputDirName)
-        print("sitesdir",sitesdir)
+        print "sitesdir",sitesdir
         if not(os.path.exists(sitesdir)):
             try:
                 os.makedirs(sitesdir)
             except os.error:
-                print(("Problem creating output directory. Check output path name: "+outputPath))
+                print("Problem creating output directory. Check output path name: "+outputPath)
                 return -1
         #create xml tree
         if fromFile:
@@ -86,7 +86,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
             if ( os.path.isfile(xmlSaveFile) ):
                 goodAnswer = False
                 while not(goodAnswer):
-                    answer = input("An xml file ("+ xmlSaveFile+ ") already exists.  \n Use this instead of html query (y or n)?")
+                    answer = raw_input("An xml file ("+ xmlSaveFile+ ") already exists.  \n Use this instead of html query (y or n)?")
                     if (answer.startswith('y')):
                         #read from file
                         wqxtree = etree.ElementTree(file=xmlSaveFile)
@@ -99,18 +99,18 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 queryXML = True
             #If we don't have a matching xml file, or we want to obtain a new one, then get the new xml
             if (queryXML):
-                print("Obtaining xml file from USGS NWIS using html query...")
+                print "Obtaining xml file from USGS NWIS using html query..."
                 #parse from html query                
                 r = requests.get(xmlLocation)
                 #write to xml file          
                 try:
                     #write xml to file
                     xmlFile = open(xmlSaveFile, 'w')
-                    print(r.text, file=xmlFile)
+                    print >>xmlFile, r.text
                     xmlFile.close()
                     wqxtree = etree.ElementTree(file = xmlSaveFile)
                 except IOError:
-                    print(("Problem writing to xml file to store html query: " + xmlSaveFile))
+                    print ("Problem writing to xml file to store html query: " + xmlSaveFile)
                     return -1
         #begin parsing XML tree
         root = wqxtree.getroot()
@@ -141,7 +141,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 descriptionDict = None
                 processThisSample = False
                 reason = 'No description'
-            print(('Processing sample from ' + location + ' on ' + datetext))
+            print ('Processing sample from ' + location + ' on ' + datetext)
             #create null sample dict
             sampleDict = {}
             sampleMetaDict = {}
@@ -229,13 +229,13 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                                     sampleMetaDict[characteristic] = {'samplefraction':samplefraction, 'units':units, 'pcode':pcode, 'quality':quality, 'count':count}
                     #end results loop
                     except etree.XMLSyntaxError as detail:
-                        print("File contains invalid XML syntax: ", detail)   
+                        print "File contains invalid XML syntax: ", detail   
                         processThisSample = False
                         reason = "Entry contains invalid XML syntax."
             #check whether sample has all the required constituents
 #            print "Checking for requirements."
             if (processThisSample):                
-                for characteristic in charDict.keys():
+                for characteristic in charDict.iterkeys():
                     if (charDict[characteristic]['IsRequired'] != '0'):
                         if not(characteristic in sampleDict):
                             processThisSample = False
@@ -247,7 +247,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                     try:
                         os.makedirs(sampledir)
                     except os.error:
-                        print(("Problem creating location directory: " + sampledir))
+                        print ("Problem creating location directory: " + sampledir)
                         processThisSample = False
                         reason = "Problem creating location directory: " + sampledir
                 
@@ -280,13 +280,13 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 #Create Panel to contain sample meta data                
                 samplePanelRow = Panel({
                         'data':DataFrame(sampleDict, index=[rowdate], dtype='float'),
-                        'time':DataFrame(descriptionDict['time'],index=[rowdate], columns=list(sampleMetaDict.keys())), 
-                        'timezone':DataFrame(descriptionDict['timezone'],index=[rowdate], columns=list(sampleMetaDict.keys())), 
-                        'pcode':DataFrame([extractValues(sampleMetaDict, ['pcode'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
-                        'quality':DataFrame([extractValues(sampleMetaDict, ['quality'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
-                        'fraction':DataFrame([extractValues(sampleMetaDict, ['samplefraction'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
-                        'units':DataFrame([extractValues(sampleMetaDict, ['units'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
-                        'count':DataFrame([extractValues(sampleMetaDict, ['count'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
+                        'time':DataFrame(descriptionDict['time'],index=[rowdate], columns=sampleMetaDict.keys()), 
+                        'timezone':DataFrame(descriptionDict['timezone'],index=[rowdate], columns=sampleMetaDict.keys()), 
+                        'pcode':DataFrame([extractValues(sampleMetaDict, ['pcode'])['values']], index=[rowdate], columns=sampleMetaDict.keys()),
+                        'quality':DataFrame([extractValues(sampleMetaDict, ['quality'])['values']], index=[rowdate], columns=sampleMetaDict.keys()),
+                        'fraction':DataFrame([extractValues(sampleMetaDict, ['samplefraction'])['values']], index=[rowdate], columns=sampleMetaDict.keys()),
+                        'units':DataFrame([extractValues(sampleMetaDict, ['units'])['values']], index=[rowdate], columns=sampleMetaDict.keys()),
+                        'count':DataFrame([extractValues(sampleMetaDict, ['count'])['values']], index=[rowdate], columns=sampleMetaDict.keys()),
                         })
                 #sampleMetaRow = Series(sampleMetaDict, index=[to_datetime(datetext)], dtype='object')
                 #Previous solution was reading/writing from pickle files
@@ -306,12 +306,12 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 samples_processed.append(location + ' ' + datetext)
             else:
                 samples_not_processed.append(location + ' ' + datetext + ' - ' + reason)
-        print(('Number of Samples Processed = '+ str(len(samples_processed))))
-        print(('Number of Samples Not Processed = ' + str(len(samples_not_processed))))
+        print('Number of Samples Processed = '+ str(len(samples_processed)))
+        print('Number of Samples Not Processed = ' + str(len(samples_not_processed)))
         
         #Write out individual site data pickle and csv files in each site directory
         print('Writing out site data files...')
-        for location, pnl in sitesDict.items():
+        for location, pnl in sitesDict.iteritems():
             print(location)
             pickleFile =  os.path.join(sitesdir, location, location + '-Panel.pkl')
             pickle.dump(pnl, open(pickleFile, 'wb'))
@@ -324,7 +324,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
         #Process sites through PHREEQC
         if RUN_PHREEQC:
             print("Processing site water chemisty data in PHREEQC...")
-            for location, pnl in sitesDict.items():               
+            for location, pnl in sitesDict.iteritems():               
                 phreeqc_df = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE)  
                 phreeqc_site_file = os.path.join(sitesdir,location,location+'-PHREEQC.pkl')
                 try:
@@ -333,7 +333,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 except IOError:
                     print('Problem writing out PHREEQC data file.')
             if bracket_charge_balance:
-                for location, pnl in sitesDict.items():               
+                for location, pnl in sitesDict.iteritems():               
                     #Force balance on Calcium
                     phreeqc_df_ca = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE, force_balance='Ca')               
                     phreeqc_site_file_ca = os.path.join(sitesdir,location,location+'-PHREEQC-Ca.pkl')
@@ -351,40 +351,40 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                     except IOError:
                         print('Problem writing out PHREEQC Alk data file.')                
         #Create log file
-        print(('Writing log file: '+LOG_FILE+splittag))
+        print('Writing log file: '+LOG_FILE+splittag)
         try: 
             log_file = open(LOG_FILE+splittag, 'w')
-            print('Start file = ' + START_FILE, file=log_file)
-            print('Number of Samples Processed = '+ str(len(samples_processed)), file=log_file)
-            print('Number of Samples Not Processed = ' + str(len(samples_not_processed)), file=log_file)
-            print("###############", file=log_file)
-            print("Characteristics", file=log_file)
-            print("###############", file=log_file)
+            print >>log_file, 'Start file = ' + START_FILE
+            print >>log_file, 'Number of Samples Processed = '+ str(len(samples_processed))
+            print >>log_file, 'Number of Samples Not Processed = ' + str(len(samples_not_processed))
+            print >>log_file, "###############"
+            print >>log_file, "Characteristics"
+            print >>log_file, "###############"
             printColumnNames = True
-            for key, flags in charDict.items():
+            for key, flags in charDict.iteritems():
                 if (printColumnNames):
                     names = ['characteristic']# + '\t'
-                    for column in flags.keys():
+                    for column in flags.iterkeys():
                         names.append(str(column))
-                    print(str("\t".join(names)), file=log_file)
+                    print >>log_file, str("\t".join(names))
                     printColumnNames = False
                 columns = [key]
-                for column in flags.keys():
-                    if isinstance(flags[column], str):
+                for column in flags.iterkeys():
+                    if isinstance(flags[column], basestring):
                         columns.append(flags[column])                
-                print(str("\t".join(columns)), file=log_file)
-            print("###############", file=log_file)
-            print("Samples processed", file=log_file)
-            print("###############", file=log_file)
+                print >>log_file, str("\t".join(columns))
+            print >>log_file, "###############"
+            print >>log_file, "Samples processed"
+            print >>log_file, "###############"
             for line in samples_processed:
-                print(line, file=log_file)
-            print("###############", file=log_file)
-            print("Samples not processed", file=log_file)
-            print("###############", file=log_file)
+                print >>log_file, line
+            print >>log_file, "###############"
+            print >>log_file, "Samples not processed"
+            print >>log_file, "###############"
             for line in samples_not_processed:
-                print(line, file=log_file)                
+                print >>log_file, line                
         except IOError:
-            print(("Problem opening log file: " + LOG_FILE))
+            print("Problem opening log file: " + LOG_FILE)
             return -1
     #exceptions for parsing of xml file
     except IOError:
@@ -392,9 +392,9 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
         #Note: can throw this error when discharge values are not read correctly,
         #I should fix this, 6/16/2014
     except etree.XMLSyntaxError as detail:
-        print("File contains invalid XML syntax: ", detail)
+        print "File contains invalid XML syntax: ", detail
     except requests.exceptions.RequestException as detail:
-        print("Error retrieving data by xml query: ", detail) 
+        print "Error retrieving data by xml query: ", detail 
     return 0
 
 
@@ -424,9 +424,9 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
     num_samples = 0
     num_processed = 0
     if not(type(autosplitnum)==int):
-        print("autosplitnum must be an integer.")
+        print "autosplitnum must be an integer."
         return -1
-    print(('Processing: '+ startfilename))
+    print('Processing: '+ startfilename)
     try:
         #open start file
         startfile = xlrd.open_workbook(startfilename)
@@ -446,7 +446,7 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
                         column_headings = line[1:]
                         characteristicsBlockStarted = True
                 else: #we are in the characteristics block
-                    charDict[line[0]] = dict(list(zip(column_headings,line[1:]))) 
+                    charDict[line[0]] = dict(zip(column_headings,line[1:])) 
         DATABASE_FILE = os.path.join(
             settingsDict['Path to chemical database'], 
             settingsDict['Name of chemical database'])
@@ -465,8 +465,8 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
                 settingsDict['Input file'])
             xml_list = glob(xml_file_string)
             if xml_list==[]:
-                print("Empty xml file list. Check path for xml file.")
-                print("xml file string =", xml_file_string)
+                print "Empty xml file list. Check path for xml file."
+                print "xml file string =", xml_file_string
                 return -1
             n_xml = len(xml_list)
             if n_xml>1:
@@ -503,11 +503,11 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
             try:
                 siteList = extractSitesFromXML(settingsDict['Input file'])
             except IOError:
-                print("Problem extracting sites from XML file "+settingsDict['Input file']+" check to see if file name is correct and file is in right location.")
+                print "Problem extracting sites from XML file "+settingsDict['Input file']+" check to see if file name is correct and file is in right location."
                 return -1
             charList = []
             #collect list of characteristics to query
-            for key in charDict.keys():
+            for key in charDict.iterkeys():
                 charList.append(str(key))
             if len(siteList)>autosplitnum:
                 #We have too long of a list and should split into multiple queries
@@ -552,12 +552,12 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
             try:
                 siteList = extractSitesFromText(settingsDict['Input file'])
             except IOError:
-                print("Problem extracting sites from text file "+settingsDict['Input file']+" check to see if file name is correct and file is in right location.")
+                print "Problem extracting sites from text file "+settingsDict['Input file']+" check to see if file name is correct and file is in right location."
                 return -1
             if (siteList != -1):
                 charList = []
                 #collect list of characteristics to query
-                for key in charDict.keys():
+                for key in charDict.iterkeys():
                     charList.append(str(key))
                 if len(siteList)>autosplitnum:
                     #We have too long of a list and should split into multiple queries
@@ -598,7 +598,7 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
             else:
                 print("Problem obtaining site list.")
         else:
-            print(('Problem with "Input Method" of start file: ' + settingsDict['Input method']))
+            print('Problem with "Input Method" of start file: ' + settingsDict['Input method'])
 
     except IOError:
         print("Problem reading start file.  Check file name.")
