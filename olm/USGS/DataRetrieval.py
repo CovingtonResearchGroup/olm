@@ -132,7 +132,7 @@ def querySiteList(siteList, charList):
     BASE_URL = 'https://www.waterqualitydata.us/Result/search?'
     queryText = BASE_URL + 'siteid='
     #add sites to query
-    for site in siteList: 
+    for site in siteList:
         #check for USGS prefixes (are there others?  EPA?)
         if not(site.startswith('USGS-')):
             site = 'USGS-' + site
@@ -151,15 +151,15 @@ def querySiteList(siteList, charList):
     #convert query string to url special characters
     queryText = urllib.parse.quote(queryText, safe="/&=:?")
     return queryText
-    
- 
+
+
 def GetDailyDischarge(location, date):
     """
     Retrieve daily average discharge value from USGS database for given date and USGS site.
 
     Parameters
     ----------
-    location : string 
+    location : string
         Full USGS site number starting with 'USGS-' or a string that just contains the bare integer number of a USGS site.
     date : string
         String containing the date for which discharge will be retrieved.  Should be given as YYYY-MM-DD.
@@ -187,13 +187,15 @@ def GetDailyDischarge(location, date):
     query_html = BASE_URL + '&sites=' + site_number + '&startDT='+date+'&endDT='+date
     #read in xml file through html query
     try:
+        print("Discharge query html: ",query_html)
         r = requests.get(query_html)
-        qtree = etree.parse(StringIO(r.content))
+        #qtree = etree.parse(r.raw)
+        root = etree.fromstring(r.content)
     except IOError:
         print("Problem retrieving discharge value (IOError).")
         return -1
     #parse xml file to pull out discharge and quality code
-    root = qtree.getroot()
+    #root = qtree.getroot()
     #get namespace map
     NSMAP = root.nsmap
     NS1 = "{%s}" % NSMAP['ns1']
@@ -222,16 +224,16 @@ def GetDailyDischargeRecord(location, start_date, end_date=None):
 
     Parameters
     ----------
-    location : str 
+    location : str
         Full USGS site number starting with 'USGS-' or a string that just contains the bare integer number of a USGS site.
     start_date : str
         String containing the beginning date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.
     end_date : str (optional)
         String containing the ending date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.  If not provided then data will be retrieved up to the current date.
- 
+
     Returns
     -------
-    data : pandas dataframe 
+    data : pandas dataframe
         Returns a Pandas dataframe with an index of the date, a column 'discharge' of discharge values, and a column 'quality' of the USGS quality rating.
 
     Notes
@@ -256,12 +258,13 @@ def GetDailyDischargeRecord(location, start_date, end_date=None):
     #read in xml file through html query
     try:
         r = requests.get(query_html)
-        qtree = etree.parse(StringIO(r.content))
+        #qtree = etree.parse(r.raw)
+        root = etree.fromstring(r.content)
     except IOError:
         print("Problem retrieving discharge value (IOError).")
         return -1
     #parse xml file to pull out discharge and quality code
-    root = qtree.getroot()
+    #root = qtree.getroot()
     #get namespace map
     NSMAP = root.nsmap
     NS1 = "{%s}" % NSMAP['ns1']

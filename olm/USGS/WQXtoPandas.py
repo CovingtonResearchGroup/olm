@@ -13,10 +13,10 @@ from pandas import DataFrame, Panel, to_datetime, Series, concat
 from olm.USGS.PhreeqcPandas import processPanel
 
 #import functions from olm package
-from siteListExtraction import extractSitesFromXML
-from siteListExtraction import extractSitesFromText
-from DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
-from dataSlice import extractValues
+from olm.USGS.siteListExtraction import extractSitesFromXML
+from olm.USGS.siteListExtraction import extractSitesFromText
+from olm.USGS.DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
+from olm.USGS.dataSlice import extractValues
 
 def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites', RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/', DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log', START_FILE = None, splittag='',bracket_charge_balance=False):
     """
@@ -99,15 +99,15 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 queryXML = True
             #If we don't have a matching xml file, or we want to obtain a new one, then get the new xml
             if (queryXML):
-                print "Obtaining xml file from USGS NWIS using html query..."
+                print("Obtaining xml file from USGS NWIS using html query...")
                 #parse from html query
-                print "XML query string: ",xmlLocation
+                print("XML query string: ",xmlLocation)
                 r = requests.get(xmlLocation)
                 if not r.ok:
                     #There is some problem with the xml query
-                    print("Response: "+str(r))
-                    print("Reason: " + r.reason)
-                    print("Warning: " + r.headers['Warning'])
+                    print("Response: ", str(r))
+                    print("Reason: ", r.reason)
+                    print("Warning: ", r.headers['Warning'])
                 #write to xml file
                 try:
                     #write xml to file
