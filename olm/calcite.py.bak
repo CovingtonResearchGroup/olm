@@ -4,7 +4,7 @@
 
 import numpy as np
 import pandas
-from .general import *
+from general import *
 from scipy.optimize import brentq#, fminbound
 from scipy.optimize import fsolve
 from scipy.interpolate import LinearNDInterpolator, interp1d
@@ -570,11 +570,11 @@ def pwpFromSolution(sol, PCO2=None, method='theory'):
             elif method=='franci':
                 R = pwpRateFranci(a_Ca=a_Ca, a_H2CO3s=a_H2CO3s, a_H=a_H, a_HCO3=a_HCO3, T_K=T_K,PCO2=PCO2_in)
             else:
-                print("method must be set to 'theory', 'pascal', or 'franci'")
+                print "method must be set to 'theory', 'pascal', or 'franci'"
                 return -1
             return R
         else:
-            print("Not all necessary ions are present in the solution object.")
+            print "Not all necessary ions are present in the solution object."
             return -1 
     is_series = (type(sol)==pandas.core.series.Series)
     #or (type(sol)==pandas.core.series.TimeSeries)
@@ -1212,16 +1212,16 @@ def palmerRate(T_C, PCO2, Sat_Ratio, rho=2.6, impure=True, interp_funcs=np.array
     T_min = 5.
     T_max = 25.
     if logPCO2<logPCO2_min:
-        print("Warning! Low PCO2 outside of interpolation range is set to minimum from table.")
+        print "Warning! Low PCO2 outside of interpolation range is set to minimum from table."
         logPCO2=logPCO2_min
     if logPCO2>logPCO2_max:
-        print("Warning! High PCO2 outside of interpolation range is set to maximum from table.")
+        print "Warning! High PCO2 outside of interpolation range is set to maximum from table."
         logPCO2=logPCO2_max
     if T_C<T_min:
-        print("Warning! Low temp outside of interpolation range is set to minimum from table.")
+        print "Warning! Low temp outside of interpolation range is set to minimum from table."
         T_C=T_min
     if T_C>T_max:
-        print("Warning! High temp outside of interpolation range is set to maximum from table.")
+        print "Warning! High temp outside of interpolation range is set to maximum from table."
         T_C = T_max
     palmer_k1, palmer_C_Cs_T, palmer_n = interp_funcs
     k1 = palmer_k1(T_C, logPCO2)

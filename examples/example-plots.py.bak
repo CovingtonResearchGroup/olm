@@ -3,7 +3,7 @@
 #make some initial plots of the data using the code below.  This
 #provides only a short example of what can be done.
 
-import pickle as pickle
+import cPickle as pickle
 from pylab import *
 
 #Read in the Pandas Panel that contains the data for one site from the pickled output file.
@@ -17,9 +17,9 @@ data_phrq = pickle.load(open('alaska/USGS-15024800/USGS-15024800-PHREEQC.pkl', '
 data = data.join(data_phrq, rsuffix='_phrq')
 
 #These are the column labels we have available
-print("Available data:")
-print((data.columns.values))
-print(" ")
+print "Available data:"
+print(data.columns.values)
+print " "
 #Grab temperature data
 temp = data['Temperature, water']
 #Plot it out as a time series
@@ -28,7 +28,7 @@ temp.plot()
 ylabel("Water temperature (C)")
 show()
 #Get alkalinity
-alk = data['Alkalinity, total']
+alk = data['Alkalinity']
 #Get mean discharges
 discharge = data['Stream flow, mean. daily']
 #Plot alkalinity vs. discharge on a loglog plot with squares as symbols
@@ -38,9 +38,9 @@ xlabel('Discharge (cfs)')
 ylabel('Alkalinity (as mg/L CaCO3)')
 show()
 #We can also do some simple stats
-print("Alkalinity stats:")
-print((alk.describe()))
-print(" ")
+print "Alkalinity stats:"
+print(alk.describe())
+print " "
 
 #Plot SI Calcite vs. Discharge
 figure()
@@ -58,8 +58,8 @@ name = site_data['station_nm']
 lat = site_data['dec_lat_va']
 longitude = site_data['dec_long_va']
 
-print('Station name = ', name)
-print('Latitude = ', lat)
-print('Longitude = ', longitude)
-print('Time Zone = ', timezone)
-print('Drainage basin area = ', area)
+print 'Station name = ', name
+print 'Latitude = ', lat
+print 'Longitude = ', longitude
+print 'Time Zone = ', timezone
+print 'Drainage basin area = ', area

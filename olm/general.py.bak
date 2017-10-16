@@ -135,17 +135,17 @@ def gamma(ion, I, T_C=25.):
                 if (properties[ion]['charge']==0):
                     activity_coef = neutralGamma(I)
                     return activity_coef
-            print("Radius of " + ion + " not available.")
+            print "Radius of " + ion + " not available."
             return None
         if 'charge' in properties[ion]:
             charge = properties[ion]['charge']
         else:
-            print("Charge of " + ion + " not available.")
+            print "Charge of " + ion + " not available."
             return None
         activity_coef = DebyeHuckel(I,charge,radius,T=T_C)
         return activity_coef
     else:
-        print("Ion not in properties list: " + ion)
+        print "Ion not in properties list: " + ion
         return None
     
 def HardnessFromCond(cond, T_C=None):
@@ -255,7 +255,7 @@ def molL_to_mgL(molL, ion):
         mgL = (1000. * mw)*molL
         return mgL
     else:
-        print("Ion +", ion, " not in properties.")
+        print "Ion +", ion, " not in properties."
         return -1
 
 def mgL_to_molL(mgL, ion):
@@ -279,7 +279,7 @@ def mgL_to_molL(mgL, ion):
         molL = mgL/(1000.*mw)
         return molL
     else:
-        print("Ion +", ion, " not in properties.")
+        print "Ion +", ion, " not in properties."
         return -1
 
 def mmolL_to_meqL(mmolL, ion):
@@ -303,7 +303,7 @@ def mmolL_to_meqL(mmolL, ion):
         meqL = mmolL*charge
         return meqL
     else:
-        print("Ion +", ion, " not in properties.")
+        print "Ion +", ion, " not in properties."
         return -1
 
 def molL_to_meqL(molL, ion):
@@ -371,9 +371,9 @@ class solution(object):
                 if len(units) == 1:
                     units = [units[0]] * len(constituents)
                 else:
-                    print("Units must either contain the same number of items as constituents or only contain one item.")
+                    print "Units must either contain the same number of items as constituents or only contain one item."
             else:
-                print("Units must either be a list or a string.")
+                print "Units must either be a list or a string."
         if len(constituents) == len(concentrations):
             self.ions = {}
             for i, ion in enumerate(constituents):
@@ -397,7 +397,7 @@ class solution(object):
                     ion_dict['meq'] = mmolL_to_meqL(ion_dict['conc_mmol'], ion)
                     self.ions[ion] = ion_dict
                 else:
-                    print("Units for " + ion + " are incorrect, must either be mg/L, mmol/L, or mol/L")
+                    print "Units for " + ion + " are incorrect, must either be mg/L, mmol/L, or mol/L"
             if T_units == 'C':
                 self.T_C = np.float(T)
                 self.T_K = CtoK(self.T_C)
@@ -405,20 +405,20 @@ class solution(object):
                 self.T_K = np.float(T)
                 self.T_C = KtoC(self.T_K)
             else:
-                print("T_units must equal either C or K.")
+                print "T_units must equal either C or K."
             if cond != None:
                 self.cond = np.float(cond)
             if pH != None:
                 self.pH = np.float(pH)
             #loop through ions and calculate activities
-            for key, ion_dict in self.ions.items():
+            for key, ion_dict in self.ions.iteritems():
                 if ('conc_mol' in ion_dict):
                     gamma = self.activity_coef(key) #estimates ionic strength
                     if gamma != None:
                         activity = gamma*ion_dict['conc_mol']
                         self.ions[key]['activity'] = activity
         else:
-            print("Length of constituents and concentrations lists must be equal.")
+            print "Length of constituents and concentrations lists must be equal."
 
     def I(self):
         """
@@ -453,7 +453,7 @@ class solution(object):
                 if 'conc_mol' in self.ions[metal]:
                     metals_conc += self.ions[metal]['conc_mol']
                 else:
-                    print("No known " + metal + " concentration in mol/L.")
+                    print "No known " + metal + " concentration in mol/L."
         I = 3.0 * metals_conc
         return I
 
@@ -569,17 +569,17 @@ class solution(object):
                     if (properties[ion]['charge']==0):
                         activity_coef = neutralGamma(I)
                         return activity_coef
-                print("Radius of " + ion + " not available.")
+                print "Radius of " + ion + " not available."
                 return None
             if 'charge' in properties[ion]:
                 charge = properties[ion]['charge']
             else:
-                print("Charge of " + ion + " not available.")
+                print "Charge of " + ion + " not available."
                 return None
             activity_coef = DebyeHuckel(I,charge,radius,T=self.T_C)
             return activity_coef
         else:
-            print("Ion not in properties list:" + ion)
+            print "Ion not in properties list:" + ion
             return None
 
     def charge_balance(self, units='%'):
@@ -605,6 +605,6 @@ class solution(object):
         elif units=='%':
             return numerator/denominator*100.
         else:
-            print("Invalid value for units: ", units)
+            print "Invalid value for units: ", units
             return
         

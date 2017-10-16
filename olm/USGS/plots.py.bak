@@ -84,7 +84,7 @@ def make_pwp_vs_Q_plots(sitesDir, siteList=None, siteFile=None, makeHistograms=T
     plotsDir = os.path.join(sitesDir, 'plots/')
     #Check for plots directory and make it if one doesn't exist
     check_plots_dir(sitesDir)
-    for site in list(sitePanelDict.keys()):
+    for site in sitePanelDict.keys():
         if classFile !='':
             #read in classification for this site
             this_class = class_xls['recharge'][site]
@@ -92,7 +92,7 @@ def make_pwp_vs_Q_plots(sitesDir, siteList=None, siteFile=None, makeHistograms=T
             site_class.append(this_class)
         else:
             this_color='black'
-        print(("Making plot for: "+site))
+        print("Making plot for: "+site)
         Q = sitePanelDict[site].data['Stream flow, mean. daily']
         pwp_rates = calc_site_pwp(sitePanelDict[site], sitePhreeqcDict[site])
         pwp_rates = pwp_to_mm_yr(pwp_rates)
@@ -108,9 +108,9 @@ def make_pwp_vs_Q_plots(sitesDir, siteList=None, siteFile=None, makeHistograms=T
                 k = opt_params[0]
                 a = opt_params[1]
                 beta = opt_params[2]
-            except RuntimeError as e:
+            except RuntimeError, e:
                 fit_converged = False
-                print(e)
+                print e
         else:
             fit_converged = False
         #Make Discharge vs. Saturation Ratio Plot
@@ -190,15 +190,15 @@ def make_pwp_vs_Q_plots(sitesDir, siteList=None, siteFile=None, makeHistograms=T
     arr_site_class = arr_site_class[goodids]
     if arr_rs[arr_site_class==1].shape[0]>1:
         arr1_rs_sig = arr_rs[logical_and(arr_site_class==1, arr_ps<0.05)]
-        print("Class 1: number of sig ps = ",arr1_rs_sig.size,  "number insig = ", arr_rs[arr_site_class==1].size - arr1_rs_sig.size)       
+        print "Class 1: number of sig ps = ",arr1_rs_sig.size,  "number insig = ", arr_rs[arr_site_class==1].size - arr1_rs_sig.size       
         hist(arr1_rs_sig, nbins, color=class_colors[1], alpha=0.5)
     if arr_rs[arr_site_class==2].shape[0]>1:
         arr2_rs_sig = arr_rs[logical_and(arr_site_class==2, arr_ps<0.05)]
-        print("Class 2: number of sig ps = ",arr2_rs_sig.size,  "number insig = ", arr_rs[arr_site_class==2].size - arr2_rs_sig.size)       
+        print "Class 2: number of sig ps = ",arr2_rs_sig.size,  "number insig = ", arr_rs[arr_site_class==2].size - arr2_rs_sig.size       
         hist(arr2_rs_sig, nbins, color=class_colors[2], alpha=0.5)
     if arr_rs[arr_site_class==3].shape[0]>1:
         arr3_rs_sig = arr_rs[logical_and(arr_site_class==3, arr_ps<0.05)]
-        print("Class 3: number of sig ps = ",arr3_rs_sig.size,  "number insig = ", arr_rs[arr_site_class==3].size - arr3_rs_sig.size)       
+        print "Class 3: number of sig ps = ",arr3_rs_sig.size,  "number insig = ", arr_rs[arr_site_class==3].size - arr3_rs_sig.size       
         hist(arr3_rs_sig, nbins, color=class_colors[3], alpha=0.5)
     xlabel('Pearson R')
     ylabel('Frequency')
@@ -226,15 +226,15 @@ def make_pwp_vs_Q_plots(sitesDir, siteList=None, siteFile=None, makeHistograms=T
     figure()
     if arr_spr[arr_site_class==1].shape[0]>1:
         arr1_spr_sig = arr_spr[logical_and(arr_site_class==1, arr_spp<0.05)]
-        print("Class 1: number of sig ps = ",arr1_spr_sig.size,  "number insig = ", arr_spr[arr_site_class==1].size - arr1_spr_sig.size)       
+        print "Class 1: number of sig ps = ",arr1_spr_sig.size,  "number insig = ", arr_spr[arr_site_class==1].size - arr1_spr_sig.size       
         hist(arr1_spr_sig, nbins, color=class_colors[1], alpha=0.5)
     if arr_spr[arr_site_class==2].shape[0]>1:
         arr2_spr_sig = arr_spr[logical_and(arr_site_class==2, arr_spp<0.05)]
-        print("Class 2: number of sig ps = ",arr2_spr_sig.size,  "number insig = ", arr_spr[arr_site_class==2].size - arr2_spr_sig.size)       
+        print "Class 2: number of sig ps = ",arr2_spr_sig.size,  "number insig = ", arr_spr[arr_site_class==2].size - arr2_spr_sig.size       
         hist(arr2_spr_sig, nbins, color=class_colors[2], alpha=0.5)
     if arr_spr[arr_site_class==3].shape[0]>1:
         arr3_spr_sig = arr_spr[logical_and(arr_site_class==3, arr_spp<0.05)]
-        print("Class 3: number of sig ps = ",arr3_spr_sig.size,  "number insig = ", arr_spr[arr_site_class==3].size - arr3_spr_sig.size)       
+        print "Class 3: number of sig ps = ",arr3_spr_sig.size,  "number insig = ", arr_spr[arr_site_class==3].size - arr3_spr_sig.size       
         hist(arr3_spr_sig, nbins, color=class_colors[3], alpha=0.5)
     xlabel('Spearman R')
     ylabel('Frequency')
@@ -264,7 +264,7 @@ def make_pwp_vs_saturation_ratio_plots(sitesDir, siteList=None, siteFile=None,  
     plotsDir = os.path.join(sitesDir, 'plots/')
     #Check for plots directory and make it if one doesn't exist
     check_plots_dir(sitesDir)
-    for site in list(sitePanelDict.keys()):
+    for site in sitePanelDict.keys():
         if classFile !='':
             #read in classification for this site
             this_class = class_xls['recharge'][site]
@@ -272,7 +272,7 @@ def make_pwp_vs_saturation_ratio_plots(sitesDir, siteList=None, siteFile=None,  
             site_class.append(this_class)
         else:
             this_color='black'
-        print(("Making plot for: "+site))
+        print("Making plot for: "+site)
         Q = sitePanelDict[site].data['Stream flow, mean. daily']
         pwp_rates = calc_site_pwp(sitePanelDict[site], sitePhreeqcDict[site])
         pwp_rates = pwp_to_mm_yr(pwp_rates)
@@ -306,7 +306,7 @@ def make_pwp_vs_saturation_ratio_plots(sitesDir, siteList=None, siteFile=None,  
     #Make histogram of pearson r values    
     figure()
     arr_rs = array(rs)
-    print("size arr_rs=", arr_rs.size)
+    print "size arr_rs=", arr_rs.size
     arr_ps = array(ps)
     arr_spr = array(spr)
     arr_spp = array(spp)
@@ -352,14 +352,14 @@ def make_pwp_vs_T_plots(sitesDir, siteList=None, siteFile=None, makeHistograms=T
     ps = []
     slopes = []
     plotsDir = os.path.join(sitesDir, 'plots/')
-    for site in list(sitePanelDict.keys()):
+    for site in sitePanelDict.keys():
         if classFile !='':
             #read in classification for this site
             this_class = class_xls['recharge'][site]
             this_color=class_colors[this_class]
         else:
             this_color='black'
-        print(("Making plot for: "+site))
+        print("Making plot for: "+site)
         #Read out data into shorter variable names
         Q = sitePanelDict[site].data['Stream flow, mean. daily']
         T_C = sitePanelDict[site].data['Temperature, water']
@@ -426,8 +426,8 @@ def make_saturation_index_vs_Q_plots(sitesDir, siteList=None, siteFile=None, mak
     ps = []
     slopes = []
     plotsDir = os.path.join(sitesDir, 'plots/')
-    for site in list(sitePanelDict.keys()):
-        print(("Making plot for: "+site))
+    for site in sitePanelDict.keys():
+        print("Making plot for: "+site)
         #Read out data into shorter variable names
         Q = sitePanelDict[site].data['Stream flow, mean. daily']
         SI = sitePhreeqcDict[site].SI_Calcite
@@ -467,8 +467,8 @@ def make_saturation_ratio_vs_Q_plots(sitesDir, siteList=None, siteFile=None, mak
     ps = []
     slopes = []
     plotsDir = os.path.join(sitesDir, 'plots/')
-    for site in list(sitePanelDict.keys()):
-        print(("Making plot for: "+site))
+    for site in sitePanelDict.keys():
+        print("Making plot for: "+site)
         #Read out data into shorter variable names
         Q = sitePanelDict[site].data['Stream flow, mean. daily']
         T_C = sitePanelDict[site].data['Temperature, water']
@@ -529,7 +529,7 @@ def make_pwp_vs_PCO2_plots(sitesDir, siteList=None, siteFile=None, makeHistogram
     plotsDir = os.path.join(sitesDir, 'plots/')
     #Check for plots directory and make it if one doesn't exist
     check_plots_dir(sitesDir)
-    for site in list(sitePanelDict.keys()):
+    for site in sitePanelDict.keys():
         if classFile !='':
             #read in classification for this site
             this_class = class_xls['recharge'][site]
@@ -537,7 +537,7 @@ def make_pwp_vs_PCO2_plots(sitesDir, siteList=None, siteFile=None, makeHistogram
             site_class.append(this_class)
         else:
             this_color='black'
-        print(("Making plot for: "+site))
+        print("Making plot for: "+site)
         Q = sitePanelDict[site].data['Stream flow, mean. daily']
         pwp_rates,PCO2 = calc_site_pwp(sitePanelDict[site], sitePhreeqcDict[site], returnPCO2=True)
         pwp_rates = pwp_to_mm_yr(pwp_rates)
@@ -684,7 +684,7 @@ def make_PCO2_vs_Q_plots(sitesDir, siteList=None, siteFile=None, classFile='', m
     site_class = []
     slopes = []
     plotsDir = os.path.join(sitesDir, 'plots/')
-    for site in list(sitePanelDict.keys()):
+    for site in sitePanelDict.keys():
         if classFile !='':
             #read in classification for this site
             this_class = class_xls['recharge'][site]
@@ -692,7 +692,7 @@ def make_PCO2_vs_Q_plots(sitesDir, siteList=None, siteFile=None, classFile='', m
             site_class.append(this_class)
         else:
             this_color='black'
-        print(("Making plot for: "+site))
+        print("Making plot for: "+site)
         #Read out data into shorter variable names
         Q = sitePanelDict[site].data['Stream flow, mean. daily']
         T_C = sitePanelDict[site].data['Temperature, water']
@@ -740,7 +740,7 @@ def make_PCO2_vs_T_plots(sitesDir, siteList=None, siteFile=None, classFile='', m
         class_xls = read_excel(classFile, 'Sheet1',index_col=1, names=['name','site', 'recharge', 'age'])
     site_class = []
     plotsDir = os.path.join(sitesDir, 'plots/')
-    for site in list(sitePanelDict.keys()):
+    for site in sitePanelDict.keys():
         if classFile !='':
             #read in classification for this site
             this_class = class_xls['recharge'][site]
@@ -748,7 +748,7 @@ def make_PCO2_vs_T_plots(sitesDir, siteList=None, siteFile=None, classFile='', m
             site_class.append(this_class)
         else:
             this_color='black'
-        print(("Making plot for: "+site))
+        print("Making plot for: "+site)
         #Read out data into shorter variable names
         T_C = sitePanelDict[site].data['Temperature, water']
         CO2 = sitePhreeqcDict[site].CO2_Molality
@@ -771,7 +771,7 @@ def make_PCO2_vs_Month_plots(sitesDir, siteList=None, siteFile=None, classFile='
         class_xls = read_excel(classFile, 'Sheet1',index_col=1, names=['name','site', 'recharge', 'age'])
     site_class = []
     plotsDir = os.path.join(sitesDir, 'plots/')
-    for site in list(sitePanelDict.keys()):
+    for site in sitePanelDict.keys():
         if classFile !='':
             #read in classification for this site
             this_class = class_xls['recharge'][site]
@@ -779,7 +779,7 @@ def make_PCO2_vs_Month_plots(sitesDir, siteList=None, siteFile=None, classFile='
             site_class.append(this_class)
         else:
             this_color='black'
-        print(("Making plot for: "+site))
+        print("Making plot for: "+site)
         #Read out data into shorter variable names
         T_C = sitePanelDict[site].data['Temperature, water']
         CO2 = sitePhreeqcDict[site].CO2_Molality

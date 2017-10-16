@@ -21,7 +21,7 @@ def extractValues(dataDict, dataKeyList=None, iterKeyList=None):
         iterDict = tempIterDict
     values = []
     gaps = []
-    for subDictKey in iterDict.keys():
+    for subDictKey in iterDict.iterkeys():
         subDict = iterDict[subDictKey]
         temp = subDict
         isGap = False
@@ -52,7 +52,7 @@ def extractValueSet(dataDict, dataKey2DList, iterKeyList = None, getKeys = False
     for list in enumerate(dataKey2DList):
         valuesList.append([])
         gapsList.append([])
-    for subDictKey in iterDict.keys():
+    for subDictKey in iterDict.iterkeys():
         subDict = iterDict[subDictKey]
         isGap = False
         variableList = []

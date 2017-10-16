@@ -13,10 +13,10 @@ def extractSitesFromXML(xmlFile):
             siteList.append(siteNum)
         return siteList
     except IOError:
-        print(("Error opening file: " + xmlFile))
+        print("Error opening file: " + xmlFile)
         return -1
     except etree.XMLSyntaxError:
-        print(("File contains invalid XML Syntax: " + xmlFile))
+        print ("File contains invalid XML Syntax: " + xmlFile)
         return -1
 
 def extractSitesFromText(textFile):

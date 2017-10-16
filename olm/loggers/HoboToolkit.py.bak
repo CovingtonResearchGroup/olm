@@ -75,8 +75,8 @@ def read_hobo_csv(csv_file, all_columns=False):
             rename_dict[label]=new_name
     #If there is only one conductivity column, we'll label it as 'Cond'
     if cond_count==1:
-        old_names = list(rename_dict.keys())
-        for old_name,new_name in rename_dict.items():
+        old_names = rename_dict.keys()
+        for old_name,new_name in rename_dict.iteritems():
             if 'Cond' in new_name:
                 cond_key = old_name
         rename_dict[cond_key] = 'Cond'
@@ -84,7 +84,7 @@ def read_hobo_csv(csv_file, all_columns=False):
     if not(all_columns):
         #Trim out unwanted columns
         s_dict = {}
-        for col in rename_dict.values():
+        for col in rename_dict.itervalues():
             s = df[col]
             s_dict[col] = s
         df = DataFrame(s_dict)

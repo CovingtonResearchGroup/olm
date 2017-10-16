@@ -2,9 +2,9 @@
 Functions to load water quality data that has been processed and pickled by WQXtoPHREEQC
 """
 import os
-import pickle as pickle
+import cPickle as pickle
 from pandas.io.pickle import read_pickle
-from .siteListExtraction import *
+from siteListExtraction import *
 from glob import glob
 
 DEFAULT_DIR = './Processed-Sites'
@@ -68,14 +68,14 @@ def loadSiteListData(siteListText = None,
         siteList = siteListFromRegEx(regEx, processedSitesDir = processedSitesDir)
     else:
         # if not provided then query user for needed data
-        processedSitesInput = input("Path of the processed sites directory (Default = ./Processed-Sites): ")
+        processedSitesInput = raw_input("Path of the processed sites directory (Default = ./Processed-Sites): ")
         if (processedSitesInput != ''):
             processedSitesDir = processedSitesInput
         print(processedSitesDir)
         processedSitesDir = checkSitesDir(processedSitesDir)
         modeOK = False
         while not(modeOK):
-            mode = input("Do you want to: \n \t 1) enter a semi-colon separated list of sites \n \t 2) provide a text file of sites \n \t \n\t 3) provide an XML list of sites \n \t 4) provide a wildcard expression to obtain sites from directory list\n Enter 1, 2, 3, or 4: ")
+            mode = raw_input("Do you want to: \n \t 1) enter a semi-colon separated list of sites \n \t 2) provide a text file of sites \n \t \n\t 3) provide an XML list of sites \n \t 4) provide a wildcard expression to obtain sites from directory list\n Enter 1, 2, 3, or 4: ")
             if mode.isdigit():
                 if ( (int(mode) > 0) and (int(mode) < 5) ):
                     modeOK = True
@@ -84,16 +84,16 @@ def loadSiteListData(siteListText = None,
             else:
                 print("Invalid input")
         if (int(mode) == 1):
-            siteListText = input("Enter list of sites separated by semi-colons: ")
+            siteListText = raw_input("Enter list of sites separated by semi-colons: ")
             siteList = siteListFromLine(siteListText)
         elif (int(mode) == 2):
-            siteFile = input("Enter path to text file containing site list: ")
+            siteFile = raw_input("Enter path to text file containing site list: ")
             siteList = siteListFromFile(siteFile)
         elif (int(mode) == 3):
-            siteFile = input("Enter path to XML file containing site list: ")
+            siteFile = raw_input("Enter path to XML file containing site list: ")
             siteList = siteListFromFile(siteFile, XML=True)
         elif (int(mode) == 4):
-            regEx = input("Enter regular expression: ")
+            regEx = raw_input("Enter regular expression: ")
             siteList = siteListFromRegEx(regEx)
     if (siteList != -1):
         #process the sites in the list
@@ -129,7 +129,7 @@ def loadSiteMetaData(site, processedSitesDir = DEFAULT_DIR):
         metaDataFile = os.path.join(processedSitesDir, site, site+'-Site-Description.pkl')
         siteMetaData = pickle.load(open(metaDataFile, 'rb'))
     except IOError:
-        print(("Problem reading pickle file: " + panelFile ))
+        print ("Problem reading pickle file: " + panelFile )
         return None
     return siteMetaData
     
@@ -161,7 +161,7 @@ def loadSiteData(site, processedSitesDir = DEFAULT_DIR):
 #        sitePanel = pickle.load(open(panelFile, 'rb'))
         sitePanel = read_pickle(panelFile)
     except IOError:
-        print(("Problem reading pickle file: " + panelFile ))
+        print ("Problem reading pickle file: " + panelFile )
         return None
     return sitePanel
 
@@ -190,7 +190,7 @@ def loadSitePhreeqcData(site, processedSitesDir = DEFAULT_DIR):
         phreeqcFile = os.path.join(processedSitesDir, site, site+'-PHREEQC.pkl')
         sitedf = read_pickle(phreeqcFile)
     except IOError:
-        print(("Problem reading pickle file: " + phreeqcFile ))
+        print ("Problem reading pickle file: " + phreeqcFile )
         return None
     return sitedf
             
@@ -231,6 +231,6 @@ def siteListFromRegEx(regEx,
 def checkSitesDir(processedSitesDir):
     while not os.path.exists(processedSitesDir):
         print("Invalid path to processed sites directory.")
-        processedSitesDir = input("Path of the processed sites directory (Default = ./Processed-Sites): ")
+        processedSitesDir = raw_input("Path of the processed sites directory (Default = ./Processed-Sites): ")
     return processedSitesDir
 
