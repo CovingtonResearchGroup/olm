@@ -28,7 +28,7 @@ temp.plot()
 ylabel("Water temperature (C)")
 show()
 #Get alkalinity
-alk = data['Alkalinity']
+alk = data['Alkalinity, total']
 #Get mean discharges
 discharge = data['Stream flow, mean. daily']
 #Plot alkalinity vs. discharge on a loglog plot with squares as symbols
