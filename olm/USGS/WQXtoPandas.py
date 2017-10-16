@@ -1,4 +1,4 @@
-#! /usr/bin/env python 
+#! /usr/bin/env python
 
 """
 This script takes an input file in USGS/EPA WQX xml format and creates a Pandas panel that contains time series of water quality data and discharge combined with layers that contain meta data for each data value.  You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas function for calling within a Python session.
@@ -21,7 +21,7 @@ from dataSlice import extractValues
 def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites', RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/', DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log', START_FILE = None, splittag='',bracket_charge_balance=False):
     """
     Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are stored in directories for each site.
-    
+
     Parameters
     ----------
     xmlLocation : string
@@ -80,7 +80,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
         if fromFile:
             #read from file
             wqxtree = etree.ElementTree(file=xmlLocation)
-        else:            
+        else:
             #check whether we already have a matching xml file
             xmlSaveFile = LOG_FILE + splittag + '.xml'
             if ( os.path.isfile(xmlSaveFile) ):
@@ -99,21 +99,16 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 queryXML = True
             #If we don't have a matching xml file, or we want to obtain a new one, then get the new xml
             if (queryXML):
-<<<<<<< HEAD
-                print("Obtaining xml file from USGS NWIS using html query...")
-                #parse from html query                
-=======
                 print "Obtaining xml file from USGS NWIS using html query..."
                 #parse from html query
                 print "XML query string: ",xmlLocation
->>>>>>> c5688b4c265583cf6dc9bb6659c45a9b805a6d1f
                 r = requests.get(xmlLocation)
                 if not r.ok:
                     #There is some problem with the xml query
                     print("Response: "+str(r))
                     print("Reason: " + r.reason)
                     print("Warning: " + r.headers['Warning'])
-                #write to xml file          
+                #write to xml file
                 try:
                     #write xml to file
                     xmlFile = open(xmlSaveFile, 'w')
@@ -159,13 +154,13 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
             #iterate though all results for this activity
             for result in activity.getiterator(tag = WQX + 'Result'):
                 if (processThisSample):
-                    try: 
+                    try:
                         resultdesc = result.find(WQX + "ResultDescription")
                         characteristic = resultdesc.findtext(WQX + "CharacteristicName")
                         if (characteristic in charDict):
                             samplefraction = resultdesc.findtext(WQX + "ResultSampleFractionText")
                             pcode = resultdesc.findtext(WQX + "USGSPCode")
-                            quality = resultdesc.findtext(WQX + "ResultStatusIdentifier")                        
+                            quality = resultdesc.findtext(WQX + "ResultStatusIdentifier")
                             measure = resultdesc.find(WQX + "ResultMeasure")
                             count = 1.0
                             if not(measure == None):
@@ -187,7 +182,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                                     if (charDict[characteristic]['fraction'] != samplefraction):
                                         addCharacteristic= False
                                 if (addCharacteristic):
-                                    if (charDict[characteristic]['pcode'] != '0'):  
+                                    if (charDict[characteristic]['pcode'] != '0'):
                                         #test for correct pcode
 #                                        print("pcode = "+pcode)
 #                                        print("pcodeList = "+str(pcodeList))
@@ -234,18 +229,18 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                                             priorUnits = \
                                                 sampleMetaDict[characteristic]['units']
                                             units = priorUnits + '; ' + units
-    
+
                                 if (addCharacteristic):
                                     sampleDict[characteristic] = value
                                     sampleMetaDict[characteristic] = {'samplefraction':samplefraction, 'units':units, 'pcode':pcode, 'quality':quality, 'count':count}
                     #end results loop
                     except etree.XMLSyntaxError as detail:
-                        print("File contains invalid XML syntax: ", detail)   
+                        print("File contains invalid XML syntax: ", detail)
                         processThisSample = False
                         reason = "Entry contains invalid XML syntax."
             #check whether sample has all the required constituents
 #            print "Checking for requirements."
-            if (processThisSample):                
+            if (processThisSample):
                 for characteristic in charDict.keys():
                     if (charDict[characteristic]['IsRequired'] != '0'):
                         if not(characteristic in sampleDict):
@@ -261,7 +256,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                         print(("Problem creating location directory: " + sampledir))
                         processThisSample = False
                         reason = "Problem creating location directory: " + sampledir
-                
+
             if (processThisSample):
                 #Pull daily discharge data from USGS website
                 good_discharge_value = False
@@ -275,7 +270,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                         num_Q_tries += 1
                         dischargeDict = None
                 if (dischargeDict != None):
-                    sampleDict['Stream flow, mean. daily'] = dischargeDict['discharge'] 
+                    sampleDict['Stream flow, mean. daily'] = dischargeDict['discharge']
                     sampleMetaDict['Stream flow, mean. daily'] = {'units':'cfs', 'pcode':'00060', 'quality':dischargeDict['quality'], 'count':1, 'samplefraction':None}
                     descriptionDict['name'] = dischargeDict['name']
                 else:
@@ -288,11 +283,11 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 else:
                     rowdate = to_datetime(datetext)
                 #sampleRow = DataFrame(sampleDict, index=[rowdate], dtype='float')
-                #Create Panel to contain sample meta data                
+                #Create Panel to contain sample meta data
                 samplePanelRow = Panel({
                         'data':DataFrame(sampleDict, index=[rowdate], dtype='float'),
-                        'time':DataFrame(descriptionDict['time'],index=[rowdate], columns=list(sampleMetaDict.keys())), 
-                        'timezone':DataFrame(descriptionDict['timezone'],index=[rowdate], columns=list(sampleMetaDict.keys())), 
+                        'time':DataFrame(descriptionDict['time'],index=[rowdate], columns=list(sampleMetaDict.keys())),
+                        'timezone':DataFrame(descriptionDict['timezone'],index=[rowdate], columns=list(sampleMetaDict.keys())),
                         'pcode':DataFrame([extractValues(sampleMetaDict, ['pcode'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
                         'quality':DataFrame([extractValues(sampleMetaDict, ['quality'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
                         'fraction':DataFrame([extractValues(sampleMetaDict, ['samplefraction'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
@@ -303,7 +298,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 #Previous solution was reading/writing from pickle files
                 #New solution will keep all data in memory until end.
                 #This could cause memory problems with large data sets
-                
+
                 #Test whether a df for this location already exists
                 if location in sitesDict:
 #                    tempDF = sitesDict[location]
@@ -319,7 +314,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 samples_not_processed.append(location + ' ' + datetext + ' - ' + reason)
         print(('Number of Samples Processed = '+ str(len(samples_processed))))
         print(('Number of Samples Not Processed = ' + str(len(samples_not_processed))))
-        
+
         #Write out individual site data pickle and csv files in each site directory
         print('Writing out site data files...')
         for location, pnl in sitesDict.items():
@@ -335,8 +330,8 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
         #Process sites through PHREEQC
         if RUN_PHREEQC:
             print("Processing site water chemisty data in PHREEQC...")
-            for location, pnl in sitesDict.items():               
-                phreeqc_df = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE)  
+            for location, pnl in sitesDict.items():
+                phreeqc_df = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE)
                 phreeqc_site_file = os.path.join(sitesdir,location,location+'-PHREEQC.pkl')
                 try:
                     pickle.dump(phreeqc_df, open(phreeqc_site_file, 'wb'))
@@ -344,26 +339,26 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 except IOError:
                     print('Problem writing out PHREEQC data file.')
             if bracket_charge_balance:
-                for location, pnl in sitesDict.items():               
+                for location, pnl in sitesDict.items():
                     #Force balance on Calcium
-                    phreeqc_df_ca = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE, force_balance='Ca')               
+                    phreeqc_df_ca = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE, force_balance='Ca')
                     phreeqc_site_file_ca = os.path.join(sitesdir,location,location+'-PHREEQC-Ca.pkl')
                     try:
                         pickle.dump(phreeqc_df_ca, open(phreeqc_site_file_ca, 'wb'))
                         phreeqc_df_ca.to_csv(phreeqc_site_file_ca[:-3]+'csv')
                     except IOError:
-                        print('Problem writing out PHREEQC Ca data file.')               
+                        print('Problem writing out PHREEQC Ca data file.')
                     #Force balance on Alkalinity
-                    phreeqc_df_alk = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE, force_balance='Alk')               
+                    phreeqc_df_alk = processPanel(pnl, os.path.join(sitesdir,location), PHREEQC_PATH, DATABASE_FILE, force_balance='Alk')
                     phreeqc_site_file_alk = os.path.join(sitesdir,location,location+'-PHREEQC-Alk.pkl')
                     try:
                         pickle.dump(phreeqc_df_alk, open(phreeqc_site_file_alk, 'wb'))
                         phreeqc_df_alk.to_csv(phreeqc_site_file_alk[:-3]+'csv')
                     except IOError:
-                        print('Problem writing out PHREEQC Alk data file.')                
+                        print('Problem writing out PHREEQC Alk data file.')
         #Create log file
         print(('Writing log file: '+LOG_FILE+splittag))
-        try: 
+        try:
             log_file = open(LOG_FILE+splittag, 'w')
             print('Start file = ' + START_FILE, file=log_file)
             print('Number of Samples Processed = '+ str(len(samples_processed)), file=log_file)
@@ -382,7 +377,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 columns = [key]
                 for column in flags.keys():
                     if isinstance(flags[column], str):
-                        columns.append(flags[column])                
+                        columns.append(flags[column])
                 print(str("\t".join(columns)), file=log_file)
             print("###############", file=log_file)
             print("Samples processed", file=log_file)
@@ -393,7 +388,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
             print("Samples not processed", file=log_file)
             print("###############", file=log_file)
             for line in samples_not_processed:
-                print(line, file=log_file)                
+                print(line, file=log_file)
         except IOError:
             print(("Problem opening log file: " + LOG_FILE))
             return -1
@@ -405,14 +400,14 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
     except etree.XMLSyntaxError as detail:
         print("File contains invalid XML syntax: ", detail)
     except requests.exceptions.RequestException as detail:
-        print("Error retrieving data by xml query: ", detail) 
+        print("Error retrieving data by xml query: ", detail)
     return 0
 
 
 def runWQXtoPandas(startfilename, autosplitnum=20):
     """
     Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from the USGS NWIS database.
-    
+
     Parameters
     ----------
     startfilename : string
@@ -457,14 +452,14 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
                         column_headings = line[1:]
                         characteristicsBlockStarted = True
                 else: #we are in the characteristics block
-                    charDict[line[0]] = dict(list(zip(column_headings,line[1:]))) 
+                    charDict[line[0]] = dict(list(zip(column_headings,line[1:])))
         DATABASE_FILE = os.path.join(
-            settingsDict['Path to chemical database'], 
+            settingsDict['Path to chemical database'],
             settingsDict['Name of chemical database'])
         LOG_FILE = os.path.join(
             settingsDict['Path to output directory'],
             settingsDict['Name of output directory'],
-            settingsDict['Log file name'])  
+            settingsDict['Log file name'])
         RUN_PHREEQC = settingsDict['Run PHREEQC?'] == 'Yes'
         bracket_charge_balance = settingsDict['Force balance on Ca and Alk'] == 'Yes'
         if (settingsDict['Input method'] == '1'):
@@ -484,31 +479,31 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
                 for xml_file in xml_list:
                     WQXtoPandas(
                         xml_file,
-                        charDict, 
-                        outputPath = settingsDict['Path to output directory'], 
-                        outputDirName = settingsDict['Name of output directory'], 
-                        fromFile = True, 
+                        charDict,
+                        outputPath = settingsDict['Path to output directory'],
+                        outputDirName = settingsDict['Name of output directory'],
+                        fromFile = True,
                         RUN_PHREEQC = RUN_PHREEQC,
                         bracket_charge_balance=bracket_charge_balance,
-                        PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
-                        DATABASE_FILE = DATABASE_FILE, 
+                        PHREEQC_PATH = settingsDict['Path to PHREEQC'],
+                        DATABASE_FILE = DATABASE_FILE,
                         LOG_FILE = LOG_FILE,
                         START_FILE = startfilename)
             else:
                 WQXtoPandas(
-                    settingsDict['Input file'], 
-                    charDict, 
-                    outputPath = settingsDict['Path to output directory'], 
-                    outputDirName = settingsDict['Name of output directory'], 
-                    fromFile = True, 
+                    settingsDict['Input file'],
+                    charDict,
+                    outputPath = settingsDict['Path to output directory'],
+                    outputDirName = settingsDict['Name of output directory'],
+                    fromFile = True,
                     RUN_PHREEQC = RUN_PHREEQC,
                     bracket_charge_balance=bracket_charge_balance,
-                    PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
-                    DATABASE_FILE = DATABASE_FILE, 
+                    PHREEQC_PATH = settingsDict['Path to PHREEQC'],
+                    DATABASE_FILE = DATABASE_FILE,
                     LOG_FILE = LOG_FILE,
                     START_FILE = startfilename)
         elif (settingsDict['Input method'] == '2'):
-            #   We will use a list of sites from a NWIS XML file and query these 
+            #   We will use a list of sites from a NWIS XML file and query these
             #   sites for water quality data
             #First extract site list from XML file
             try:
@@ -530,34 +525,34 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
                         WQXtoPandas(
                             queryText,
                             charDict,
-                            outputPath = settingsDict['Path to output directory'], 
-                            outputDirName = settingsDict['Name of output directory'], 
-                            fromFile = False, 
+                            outputPath = settingsDict['Path to output directory'],
+                            outputDirName = settingsDict['Name of output directory'],
+                            fromFile = False,
                             RUN_PHREEQC = RUN_PHREEQC,
                             bracket_charge_balance=bracket_charge_balance,
-                            PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
-                            DATABASE_FILE = DATABASE_FILE, 
+                            PHREEQC_PATH = settingsDict['Path to PHREEQC'],
+                            DATABASE_FILE = DATABASE_FILE,
                             splittag = '.'+str(i),
                             LOG_FILE = LOG_FILE,
-                            START_FILE = startfilename)     
-            else:        
+                            START_FILE = startfilename)
+            else:
                 #get html for query
                 queryText = querySiteList(siteList, charList)
-                if (queryText != None): 
+                if (queryText != None):
                     WQXtoPandas(
                         queryText,
                         charDict,
-                        outputPath = settingsDict['Path to output directory'], 
-                        outputDirName = settingsDict['Name of output directory'], 
-                        fromFile = False, 
+                        outputPath = settingsDict['Path to output directory'],
+                        outputDirName = settingsDict['Name of output directory'],
+                        fromFile = False,
                         RUN_PHREEQC = RUN_PHREEQC,
                         bracket_charge_balance=bracket_charge_balance,
-                        PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
-                        DATABASE_FILE = DATABASE_FILE, 
+                        PHREEQC_PATH = settingsDict['Path to PHREEQC'],
+                        DATABASE_FILE = DATABASE_FILE,
                         LOG_FILE = LOG_FILE,
-                        START_FILE = startfilename)          
+                        START_FILE = startfilename)
         elif (settingsDict['Input method'] == '3'):
-            #   We will use a list of sites from a text file and query these 
+            #   We will use a list of sites from a text file and query these
             #   sites for water quality data
             #First extract site list from text file
             try:
@@ -576,18 +571,18 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
                     for i in range(n_groups):
                         shortList = siteList[i*autosplitnum:i*autosplitnum+autosplitnum]
                         queryText = querySiteList(shortList, charList)
-                        if (queryText != None): 
+                        if (queryText != None):
                                      WQXtoPandas(
                                          queryText,
                                          charDict,
-                                         outputPath = settingsDict['Path to output directory'], 
-                                         outputDirName = settingsDict['Name of output directory'], 
-                                         fromFile = False, 
+                                         outputPath = settingsDict['Path to output directory'],
+                                         outputDirName = settingsDict['Name of output directory'],
+                                         fromFile = False,
                                          RUN_PHREEQC = RUN_PHREEQC,
                                          bracket_charge_balance=bracket_charge_balance,
                                          PHREEQC_PATH = settingsDict['Path to PHREEQC'],
-                                         splittag = '.'+str(i), 
-                                         DATABASE_FILE = DATABASE_FILE, 
+                                         splittag = '.'+str(i),
+                                         DATABASE_FILE = DATABASE_FILE,
                                          LOG_FILE = LOG_FILE,
                                          START_FILE = startfilename)
                 else:
@@ -597,13 +592,13 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
                         WQXtoPandas(
                             queryText,
                             charDict,
-                            outputPath = settingsDict['Path to output directory'], 
-                            outputDirName = settingsDict['Name of output directory'], 
-                            fromFile = False, 
+                            outputPath = settingsDict['Path to output directory'],
+                            outputDirName = settingsDict['Name of output directory'],
+                            fromFile = False,
                             RUN_PHREEQC = RUN_PHREEQC,
                             bracket_charge_balance=bracket_charge_balance,
-                            PHREEQC_PATH = settingsDict['Path to PHREEQC'], 
-                            DATABASE_FILE = DATABASE_FILE, 
+                            PHREEQC_PATH = settingsDict['Path to PHREEQC'],
+                            DATABASE_FILE = DATABASE_FILE,
                             LOG_FILE = LOG_FILE,
                             START_FILE = startfilename)
             else:
