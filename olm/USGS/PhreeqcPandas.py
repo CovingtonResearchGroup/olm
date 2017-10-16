@@ -14,7 +14,7 @@ from olm.general import molL_to_mgL
 default_phreeqc_to_WQX_translation = {
     'Temperature, water':'temp',
     'pH':'pH',
-    'Alkalinity':'Alkalinity',
+    'Alkalinity, total':'Alkalinity',
     'Calcium':'Ca',
     'Magnesium':'Mg',
     'Potassium':'K',

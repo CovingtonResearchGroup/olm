@@ -99,9 +99,20 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 queryXML = True
             #If we don't have a matching xml file, or we want to obtain a new one, then get the new xml
             if (queryXML):
+<<<<<<< HEAD
                 print("Obtaining xml file from USGS NWIS using html query...")
                 #parse from html query                
+=======
+                print "Obtaining xml file from USGS NWIS using html query..."
+                #parse from html query
+                print "XML query string: ",xmlLocation
+>>>>>>> c5688b4c265583cf6dc9bb6659c45a9b805a6d1f
                 r = requests.get(xmlLocation)
+                if not r.ok:
+                    #There is some problem with the xml query
+                    print("Response: "+str(r))
+                    print("Reason: " + r.reason)
+                    print("Warning: " + r.headers['Warning'])
                 #write to xml file          
                 try:
                     #write xml to file

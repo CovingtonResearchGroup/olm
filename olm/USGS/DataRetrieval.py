@@ -129,7 +129,7 @@ def GetSiteData(location):#, writedir='.'): #Changed so that we don't write out 
     return siteDF
 
 def querySiteList(siteList, charList):
-    BASE_URL = 'https://waterqualitydata.us/Result/search?'
+    BASE_URL = 'https://www.waterqualitydata.us/Result/search?'
     queryText = BASE_URL + 'siteid='
     #add sites to query
     for site in siteList: 
