@@ -13,10 +13,10 @@ from pandas import DataFrame, Panel, to_datetime, Series, concat
 from olm.USGS.PhreeqcPandas import processPanel
 
 #import functions from olm package
-from siteListExtraction import extractSitesFromXML
-from siteListExtraction import extractSitesFromText
-from DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
-from dataSlice import extractValues
+from .siteListExtraction import extractSitesFromXML
+from .siteListExtraction import extractSitesFromText
+from .DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
+from .dataSlice import extractValues
 
 def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites', RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/', DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log', START_FILE = None, splittag='',bracket_charge_balance=False):
     """
