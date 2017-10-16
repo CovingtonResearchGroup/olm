@@ -1,9 +1,9 @@
-#! /usr/bin/env python 
+#! /usr/bin/env python
 
 """
 Collection of functions to interface between WaterChem and PHREEQC.
 """
-
+from __future__ import print_function
 from numpy import isnan,size
 from pandas import DataFrame
 import pickle as pickle
@@ -40,7 +40,7 @@ def readPhreeqcOutput(phreeqcOutputFile):
 
     Notes
     -----
-    While this function can be used on its own. It is primarily designed to be used by the processPanel function, which provides a more convenient interface. 
+    While this function can be used on its own. It is primarily designed to be used by the processPanel function, which provides a more convenient interface.
     """
     with open(phreeqcOutputFile, 'r') as phreeqc_output:
         simulationDict = {}
@@ -49,7 +49,7 @@ def readPhreeqcOutput(phreeqcOutputFile):
         endOfRun = False
         for line in phreeqc_output:
             if not(endOfRun):
-                if ('ERROR' in line): 
+                if ('ERROR' in line):
                     print("PHREEQC has encountered an error while running this sample.")
                     return None
                 if (block == 'beginning'):
@@ -64,7 +64,7 @@ def readPhreeqcOutput(phreeqcOutputFile):
                 elif (block == 'composition'):
                     if not('Elements' in line):
                         linestrip = line.strip()
-                        linesplit = linestrip.split()                     
+                        linesplit = linestrip.split()
                     if ('Description of solution' in line):
                         block = 'description'
                     elif (len(linesplit) == 3):
@@ -112,7 +112,7 @@ def readPhreeqcOutput(phreeqcOutputFile):
 #                            simulationList.append(simData)
                             block = 'simulation'
         return simulationDict
-                
+
 
 def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, force_balance=''):
     """
@@ -121,7 +121,7 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
     Parameters
     ----------
     site_panel : Pandas panel
-       The Pandas panel object produced for each site by WQXtoPandas that is to be processed through PHREEQC. 
+       The Pandas panel object produced for each site by WQXtoPandas that is to be processed through PHREEQC.
 
     site_dir : string
        The directory containing the site data and where the results should be written out.
@@ -170,11 +170,11 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
         print("PHREEQC return code = ",retcode)
         if retcode == 0:
             simulationDict = readPhreeqcOutput(phreeqcOutputFile)
-        else: 
+        else:
             #This catches cases where PHREEQC fails (e.g. doesn't converge)
             simulationDict = None
         if force_balance=='Alk' and simulationDict!=None:
-            #Force charge balance on Alkalinity            
+            #Force charge balance on Alkalinity
             alk_converged=False
             number_of_iterations = 0
             max_iterations = 10
@@ -192,7 +192,7 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
                         # Perhaps negative alkalinity??
                         alk = 0.0
                     print("alk=", alk)
-                    New_alk_molL = alk + balance_eq#attempt to stabilize this using a factor of 0.9. Otherwise it seems to overshoot. this didn't work. 
+                    New_alk_molL = alk + balance_eq#attempt to stabilize this using a factor of 0.9. Otherwise it seems to overshoot. this didn't work.
                     if New_alk_molL < 0:#PHREEQC won't take negative alkalinity inputs
                         New_alk_molL = alk*0.5
                     print("new alk=", New_alk_molL)
@@ -251,11 +251,11 @@ def writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=default_phreeqc
        Name of PHREEQC input file to write.
 
     phreeqcDict : dict
-       a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.    
+       a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.
 
     datetext : str
        String containing the text that describes the date as it should be written into the PHREEQC input file.
-       
+
     Returns
     -------
     status : int
@@ -330,23 +330,23 @@ def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx=
                 print('Problem writing out PHREEQC data file.')
     if bracket_charge_balance:
         #Run PHREEQC using bracketed charge balance for sites
-        for site, site_panel in sitesDict.items():               
+        for site, site_panel in sitesDict.items():
             #Force balance on Calcium
-            phreeqc_df_ca = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH, DATABASE_FILE, force_balance='Ca')               
+            phreeqc_df_ca = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH, DATABASE_FILE, force_balance='Ca')
             phreeqc_site_file_ca = os.path.join(sitesDir,site,site+'-PHREEQC-Ca.pkl')
             try:
                 pickle.dump(phreeqc_df_ca, open(phreeqc_site_file_ca, 'wb'))
                 phreeqc_df_ca.to_csv(phreeqc_site_file_ca[:-3]+'csv')
             except IOError:
-                print('Problem writing out PHREEQC Ca data file.')               
+                print('Problem writing out PHREEQC Ca data file.')
             #Force balance on Alkalinity
-            phreeqc_df_alk = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH, DATABASE_FILE, force_balance='Alk')               
+            phreeqc_df_alk = processPanel(site_panel, os.path.join(sitesDir,site), PHREEQC_PATH, DATABASE_FILE, force_balance='Alk')
             phreeqc_site_file_alk = os.path.join(sitesDir,site,site+'-PHREEQC-Alk.pkl')
             try:
                 pickle.dump(phreeqc_df_alk, open(phreeqc_site_file_alk, 'wb'))
                 phreeqc_df_alk.to_csv(phreeqc_site_file_alk[:-3]+'csv')
             except IOError:
-                print('Problem writing out PHREEQC Alk data file.')                
+                print('Problem writing out PHREEQC Alk data file.')
 
 
 def runPHREEQC(startfilename, process_regular=True):
@@ -357,7 +357,7 @@ def runPHREEQC(startfilename, process_regular=True):
      ----------
      startfilename : str
           Name of start file to find settings for running PHREEQC.
-     
+
      """
      print("Processing site water chemisty data in PHREEQC...")
      startfile = xlrd.open_workbook(startfilename)
@@ -377,15 +377,15 @@ def runPHREEQC(startfilename, process_regular=True):
          settingsDict['Path to output directory'],
          settingsDict['Name of output directory'])
      DATABASE_FILE = os.path.join(
-         settingsDict['Path to chemical database'], 
+         settingsDict['Path to chemical database'],
          settingsDict['Name of chemical database'])
      LOG_FILE = os.path.join(
          settingsDict['Path to output directory'],
          settingsDict['Name of output directory'],
-         settingsDict['Log file name'])  
+         settingsDict['Log file name'])
      PHREEQC_PATH = settingsDict['Path to PHREEQC']
      bracket_charge_balance = settingsDict['Force balance on Ca and Alk'] == 'Yes'
-   
+
      processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=bracket_charge_balance, process_regular=process_regular)
 
 

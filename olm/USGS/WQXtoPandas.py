@@ -4,6 +4,7 @@
 This script takes an input file in USGS/EPA WQX xml format and creates a Pandas panel that contains time series of water quality data and discharge combined with layers that contain meta data for each data value.  You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas function for calling within a Python session.
 """
 
+from __future__ import print_function
 import sys,xlrd,os,subprocess,string,requests
 from glob import glob
 from math import ceil

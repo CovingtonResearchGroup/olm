@@ -4,8 +4,11 @@ Contains functions used to download data from USGS databases.
 """
 
 from lxml import etree
-import lxml.html
-import urllib.request, urllib.parse, urllib.error, requests #could eventually rework to use only requests
+import lxml.html, requests
+try:
+    from urllib.parse import quote #could eventually rework to use only requests
+except ImportError:
+    from urllib import quote
 from io import StringIO
 from pandas import read_csv, DataFrame, to_datetime
 #import requests
@@ -149,7 +152,7 @@ def querySiteList(siteList, charList):
     #add mime type
     queryText += '&mimeType=xml'
     #convert query string to url special characters
-    queryText = urllib.parse.quote(queryText, safe="/&=:?")
+    queryText = quote(queryText, safe="/&=:?")
     return queryText
 
 
