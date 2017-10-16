@@ -9,7 +9,7 @@ Unzip the source code and run:
 ```sh
 python setup.py install
 ```
-However, you will first want to make sure you have the following dependencies installed.
+However, you will first want to make sure you have the following dependencies installed. 
 
 Dependencies
 ------------
@@ -22,7 +22,7 @@ Dependencies
  * xlwt
  * requests
 
-To compile the documentation, you will also need 'numpydoc'.
+To compile the documentation, you will also need 'numpydoc'. This package should now be compatible with Python 2 or 3. If you have trouble in either of these Python versions, please create an issue that explains the problem.
 
 Full documentation can be found at:
 
