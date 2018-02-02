@@ -1316,9 +1316,9 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
     error_num : integer
        Size of random sample used in Monte Carlo Error propagation. default=100
     Ca_err: float, numpy.ndarray, or pandas Series
-       Percent error in calcite concentration(s)
+       Percent error in calcite concentration(s) (1=100%)
     PCO2_err: float, numpy.ndarray, or pandas Series
-       Percent error in PCO2 values
+       Percent error in PCO2 values (1=100%)
     molL : boolean
        Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)
 
@@ -1330,64 +1330,82 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
        error in dissolution rate (if keyword error=True)
        
     """
+    #Function for Monte Carlo error estimation
+    def err_est(Ca,PCO2,T_C):
+        rate_sample = np.zeros(error_num)
+        Ca_factor = 1. + Ca_err*np.random.randn(error_num)
+        Ca_sample = Ca*Ca_factor
+        PCO2_factor = 1. + PCO2_err*np.random.randn(error_num)
+        PCO2_sample = PCO2*PCO2_factor
+        for j in np.arange(error_num):
+        #    print j, Ca_sample[j], PCO2_sample[j]
+            #Create solution object
+            rand_sol = solutionFromCaPCO2(Ca_sample[j], PCO2_sample[j], T_C=T_C, per_tol=per_tol)
+            #Calculate dissolution rate
+            if method=='PWP':
+                rate_sample[j] = pwp_to_mm_yr(pwpFromSolution(rand_sol, PCO2=PCO2_sample[j]), rho=rho)
+            elif method=='Palmer':
+                rate_sample[j] = palmerFromSolution(rand_sol, PCO2_sample[j], rho=rho, impure=impure)
+            else:
+                print "Invalid method keyword!"
+                return None
+        #Estimated error is standard deviation from random sample
+        return np.std(rate_sample)
+ 
+
+    
     if not molL:
         #convert Ca units to mol/L
-        Ca = mgL_to_molL(Ca)
+        Ca = mgL_to_molL(Ca, 'Ca')
     is_series = (type(Ca)==pandas.core.series.Series)
-#    if (type(Ca)==np.ndarray) or is_series:
-    rate_arr = np.empty(np.size(Ca), dtype=object)
-    if error:
-        err_arr = np.empty(np.size(Ca), dtype=object)
-    for i, this_Ca in enumerate(Ca):
-        #Create solution object
-        if np.size(T_C)==1:
-            sol = solutionFromCaPCO2(this_Ca, PCO2[i], T_C=T_C, per_tol=per_tol)
+    if (type(Ca)==np.ndarray) or is_series:
+        rate_arr = np.empty(np.size(Ca), dtype=object)
+        if error:
+            err_arr = np.empty(np.size(Ca), dtype=object)
+        for i, this_Ca in enumerate(Ca):
+            if (i % 100)==0:
+                print "Solution number "+str(i)
+            #Create solution object
+            if np.size(T_C)==1:
+                sol = solutionFromCaPCO2(this_Ca, PCO2[i], T_C=T_C, per_tol=per_tol)
+            else:
+                sol = solutionFromCaPCO2(this_Ca, PCO2[i], T_C=T_C[i], per_tol=per_tol)
+            #Calculate dissolution rate
+            if method=='PWP':
+                rate_arr[i] = pwp_to_mm_yr(pwpFromSolution(sol, PCO2=PCO2[i]), rho=rho)
+            elif method=='Palmer':
+                rate_arr[i] = palmerFromSolution(sol, PCO2[i],rho=rho,impure=impure)
+            else:
+                print "Invalid method keyword!"
+                return None
+            #Monte Carlo error estimate on rate
+            if error:
+                if np.size(T_C)==1:
+                    err_arr[i] = err_est(this_Ca, PCO2[i], T_C)
+                else:
+                    err_arr[i] = err_est(this_Ca, PCO2[i], T_C[i])
+                                        
+        if is_series:
+            rate_arr = pandas.Series(rate_arr, index=Ca.index)
+            if error:
+                err_arr = pandas.Series(err_arr, index=Ca.index)
+        if error:
+            return rate_arr, err_arr
         else:
-            sol = solutionFromCaPCO2(this_Ca, PCO2[i], T_C=T_C[i], per_tol=per_tol) 
+            return rate_arr
+    else:
+        #we have single values
+        sol = solutionFromCaPCO2(Ca, PCO2, T_C=T_C, per_tol=per_tol)
         #Calculate dissolution rate
         if method=='PWP':
-            rate_arr[i] = pwp_to_mm_yr(pwpFromSolution(sol, PCO2=PCO2[i]), rho=rho)
+            R = pwp_to_mm_yr(pwpFromSolution(sol, PCO2=PCO2), rho=rho)
         elif method=='Palmer':
-            rate_arr[i] = palmerFromSolution(sol, PCO2[i],rho=rho,impure=impure)
+            R = palmerFromSolution(sol, PCO2,rho=rho,impure=impure)
         else:
             print "Invalid method keyword!"
             return None
-        #Monte Carlo error estimate on rate
         if error:
-            rate_sample = np.zeros(error_num)
-            Ca_factor = 1. + Ca_err*np.randn(error_num)
-            Ca_sample = this_Ca*Ca_factor
-            PCO2_factor = 1. + PCO2_err*np.randn(error_num)
-            PCO2_sample = PCO2[i]*PCO2_factor
-            for j in arange(error_num):
-                #Create solution object
-                if np.size(T_C)==1:
-                    rand_sol = solutionFromCaPCO2(Ca_sample[j], PCO2_sample[j], T_C=T_C, per_tol=per_tol)
-                else:
-                    rand_sol = solutionFromCaPCO2(Ca_sample[j], PCO2_sample[j], T_C=T_C[i], per_tol=per_tol)
-                #Calculate dissolution rate
-                if method=='PWP':
-                    rate_sample[j] = pwp_to_mm_yr(pwpFromSolution(rand_sol, PCO2=PCO2_sample[j]), rho=rho)
-                elif method=='Palmer':
-                    rate_sample[j] = palmerFromSolution(rand_sol, PCO2_sample[j], rho=rho, impure=impure)
-                else:
-                    print "Invalid method keyword!"
-                    return None
-            #Estimated error is standard deviation from random sample
-            err_arr[i] = np.std(rate_sample)
-    if is_series:
-        rate_arr = pandas.Series(rate_arr, index=Ca.index)
-        err_arr = pandas.Series(err_arr, index=Ca.index)
-    if error:
-        #If single values were provided, array only has one item, extract it upon return
-        if np.size(R)==1:
-            return R[0], err_arr[0]
-        else:
-            return R, err_arr
-    else:
-        if np.size(R)==1:
-            return R[0]
-        else:
-            return R
-
-    
+            err = err_est(Ca, PCO2, T_C)
+            return R, err
+        return R
+  
