@@ -28,6 +28,7 @@ The olm package provides a chemical ``solution`` object along with a suite of fu
    palmerRate
    palmerFromSolution
    createPalmerInterpolationFunctions
+   dissRateFromCaPCO2
    pwp_to_mm_yr
    calc_K_H
    calc_K_W
