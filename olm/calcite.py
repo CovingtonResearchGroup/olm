@@ -1293,7 +1293,7 @@ def palmerFromSolution(sol, PCO2=np.array([]), rho=2.6, impure=True):
 
 def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol=0.001, error=False, error_num=100, Ca_err=None, PCO2_err=None, molL=False):
     """
-    Calculates the calcite/limestone dissolution rate from given calcite concentration and PCO2.
+    Calculates the calcite/limestone dissolution rate from given calcium concentration and PCO2. Optionally uses Monte Carlo error propagation to calculate uncertainty in rates.
 
     Parameters
     ----------
@@ -1327,7 +1327,7 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
     R : float, numpy.ndarray, or pandas Series
        calcite dissolution rate in mm/yr
     R_err : float, numpy.ndarray, or pandas Series
-       error in dissolution rate (if keyword error=True)
+       error in dissolution rate (returned with R if keyword error=True)
        
     """
     #Function for Monte Carlo error estimation

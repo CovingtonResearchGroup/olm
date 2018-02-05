@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>olm.calcite &#8212; olm 0.33 documentation</title>
+    <title>olm.calcite &#8212; olm 0.34 documentation</title>
     <link rel="stylesheet" href="../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.33',
+        VERSION:     '0.34',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.33 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.34 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -1340,7 +1340,7 @@
 
 <div class="viewcode-block" id="dissRateFromCaPCO2"><a class="viewcode-back" href="../../olm.calcite.dissRateFromCaPCO2.html#olm.calcite.dissRateFromCaPCO2">[docs]</a><span class="k">def</span> <span class="nf">dissRateFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">error_num</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ca_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PCO2_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">molL</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Calculates the calcite/limestone dissolution rate from given calcite concentration and PCO2.</span>
+<span class="sd">    Calculates the calcite/limestone dissolution rate from given calcium concentration and PCO2. Optionally uses Monte Carlo error propagation to calculate uncertainty in rates.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1374,7 +1374,7 @@
 <span class="sd">    R : float, numpy.ndarray, or pandas Series</span>
 <span class="sd">       calcite dissolution rate in mm/yr</span>
 <span class="sd">    R_err : float, numpy.ndarray, or pandas Series</span>
-<span class="sd">       error in dissolution rate (if keyword error=True)</span>
+<span class="sd">       error in dissolution rate (returned with R if keyword error=True)</span>
 <span class="sd">       </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#Function for Monte Carlo error estimation</span>
@@ -1486,12 +1486,12 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.33 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.34 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014,2015 Matthew Covington.
+        &#169; Copyright 2014-2018 Matthew Covington.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
