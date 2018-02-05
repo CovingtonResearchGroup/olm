@@ -1290,3 +1290,122 @@ def palmerFromSolution(sol, PCO2=np.array([]), rho=2.6, impure=True):
             PCO2 = PCO2FromSolution(sol)
         return calc_rate(sol, PCO2, rho)
 
+
+def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol=0.001, error=False, error_num=100, Ca_err=None, PCO2_err=None, molL=False):
+    """
+    Calculates the calcite/limestone dissolution rate from given calcite concentration and PCO2.
+
+    Parameters
+    ----------
+    Ca : float, numpy.ndarray or pandas Series
+       Calcium concentration, default units are mg/L. Change to mol/L by setting keyword mol_L=true.
+    PCO2 : float, numpy.ndarray, or pandas Series
+       The partial pressure of CO2 for the solution(s).
+    T_C : float, numpy.ndarray, or pandas Series
+       The temperature of the water in degrees Celcius. 
+    rho : float
+       Density of rock in g/cm^3. (default=2.6)
+    method : string
+       Determines method used to calculate dissolution rates. Set to either 'PWP' or 'Palmer'. This keyword is required.
+    impure : boolean
+       Used when calculating Palmer rates. Determines whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)
+    per_tol : float
+       the fractional change in H concentration between iterations upon which the iteration is terminated (see solutionFromCaPCO2). default=0.001
+    error: boolean
+       Set to true if you want to use Monte Carlo Error propagation to estimate error in dissolution rate. Requires values for Ca_err and PCO2_err. (default=False)
+    error_num : integer
+       Size of random sample used in Monte Carlo Error propagation. default=100
+    Ca_err: float, numpy.ndarray, or pandas Series
+       Percent error in calcite concentration(s) (1=100%)
+    PCO2_err: float, numpy.ndarray, or pandas Series
+       Percent error in PCO2 values (1=100%)
+    molL : boolean
+       Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)
+
+    Returns
+    -------
+    R : float, numpy.ndarray, or pandas Series
+       calcite dissolution rate in mm/yr
+    R_err : float, numpy.ndarray, or pandas Series
+       error in dissolution rate (if keyword error=True)
+       
+    """
+    #Function for Monte Carlo error estimation
+    def err_est(Ca,PCO2,T_C):
+        rate_sample = np.zeros(error_num)
+        Ca_factor = 1. + Ca_err*np.random.randn(error_num)
+        Ca_sample = Ca*Ca_factor
+        PCO2_factor = 1. + PCO2_err*np.random.randn(error_num)
+        PCO2_sample = PCO2*PCO2_factor
+        for j in np.arange(error_num):
+        #    print j, Ca_sample[j], PCO2_sample[j]
+            #Create solution object
+            rand_sol = solutionFromCaPCO2(Ca_sample[j], PCO2_sample[j], T_C=T_C, per_tol=per_tol)
+            #Calculate dissolution rate
+            if method=='PWP':
+                rate_sample[j] = pwp_to_mm_yr(pwpFromSolution(rand_sol, PCO2=PCO2_sample[j]), rho=rho)
+            elif method=='Palmer':
+                rate_sample[j] = palmerFromSolution(rand_sol, PCO2_sample[j], rho=rho, impure=impure)
+            else:
+                print "Invalid method keyword!"
+                return None
+        #Estimated error is standard deviation from random sample
+        return np.std(rate_sample)
+ 
+
+    
+    if not molL:
+        #convert Ca units to mol/L
+        Ca = mgL_to_molL(Ca, 'Ca')
+    is_series = (type(Ca)==pandas.core.series.Series)
+    if (type(Ca)==np.ndarray) or is_series:
+        rate_arr = np.empty(np.size(Ca), dtype=object)
+        if error:
+            err_arr = np.empty(np.size(Ca), dtype=object)
+        for i, this_Ca in enumerate(Ca):
+            if (i % 100)==0:
+                print "Solution number "+str(i)
+            #Create solution object
+            if np.size(T_C)==1:
+                sol = solutionFromCaPCO2(this_Ca, PCO2[i], T_C=T_C, per_tol=per_tol)
+            else:
+                sol = solutionFromCaPCO2(this_Ca, PCO2[i], T_C=T_C[i], per_tol=per_tol)
+            #Calculate dissolution rate
+            if method=='PWP':
+                rate_arr[i] = pwp_to_mm_yr(pwpFromSolution(sol, PCO2=PCO2[i]), rho=rho)
+            elif method=='Palmer':
+                rate_arr[i] = palmerFromSolution(sol, PCO2[i],rho=rho,impure=impure)
+            else:
+                print "Invalid method keyword!"
+                return None
+            #Monte Carlo error estimate on rate
+            if error:
+                if np.size(T_C)==1:
+                    err_arr[i] = err_est(this_Ca, PCO2[i], T_C)
+                else:
+                    err_arr[i] = err_est(this_Ca, PCO2[i], T_C[i])
+                                        
+        if is_series:
+            rate_arr = pandas.Series(rate_arr, index=Ca.index)
+            if error:
+                err_arr = pandas.Series(err_arr, index=Ca.index)
+        if error:
+            return rate_arr, err_arr
+        else:
+            return rate_arr
+    else:
+        #we have single values
+        sol = solutionFromCaPCO2(Ca, PCO2, T_C=T_C, per_tol=per_tol)
+        #Calculate dissolution rate
+        if method=='PWP':
+            R = pwp_to_mm_yr(pwpFromSolution(sol, PCO2=PCO2), rho=rho)
+        elif method=='Palmer':
+            R = palmerFromSolution(sol, PCO2,rho=rho,impure=impure)
+        else:
+            print "Invalid method keyword!"
+            return None
+        if error:
+            err = err_est(Ca, PCO2, T_C)
+            return R, err
+        return R
+  
