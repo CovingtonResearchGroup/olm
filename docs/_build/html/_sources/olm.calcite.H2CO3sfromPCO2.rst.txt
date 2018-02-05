@@ -1,5 +1,5 @@
-olm.calcite.H2CO3sfromPCO2
-==========================
+olm\.calcite\.H2CO3sfromPCO2
+============================
 
 .. currentmodule:: olm.calcite
 

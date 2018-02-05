@@ -1,5 +1,5 @@
-olm.calcite.pwp_to_mm_yr
-========================
+olm\.calcite\.pwp\_to\_mm\_yr
+=============================
 
 .. currentmodule:: olm.calcite
 

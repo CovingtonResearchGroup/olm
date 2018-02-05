@@ -1,5 +1,5 @@
-olm.calcite.concCaEqFromSolution
-================================
+olm\.calcite\.concCaEqFromSolution
+==================================
 
 .. currentmodule:: olm.calcite
 

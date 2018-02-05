@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>olm.calcite &#8212; olm 0.33 documentation</title>
-    
     <link rel="stylesheet" href="../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
@@ -27,7 +24,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -54,7 +51,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
-<span class="kn">from</span> <span class="nn">general</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.general</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">brentq</span><span class="c1">#, fminbound</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">fsolve</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">LinearNDInterpolator</span><span class="p">,</span> <span class="n">interp1d</span>
@@ -100,7 +97,8 @@
         <span class="n">pCO2</span> <span class="o">=</span> <span class="p">(</span><span class="n">gamma_H</span> <span class="o">*</span> <span class="n">gamma_HCO3</span> <span class="o">/</span> <span class="p">(</span><span class="n">K_1</span><span class="o">*</span><span class="n">K_H</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="n">K_0</span><span class="p">))</span> <span class="p">)</span> <span class="o">*</span> \
                <span class="p">(</span><span class="n">H_conc</span><span class="o">**</span><span class="mf">2.</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">H_conc</span><span class="o">*</span><span class="n">Ca_conc</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pCO2</span>
-    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="c1">#or (type(sol)==pandas.core.series.TimeSeries)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
         <span class="n">pCO2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">sol</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">single_sol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>
@@ -131,7 +129,8 @@
 <span class="sd">    Assumes a H20-CO2-CaCO3 system.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">PCO2</span> <span class="o">=</span> <span class="n">PCO2FromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
-    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="c1">#or (type(sol)==pandas.core.series.TimeSeries)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
         <span class="n">T_C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">sol</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">single_sol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>
@@ -190,7 +189,8 @@
     <span class="n">guess_Ca</span> <span class="o">=</span> <span class="p">(</span><span class="n">PCO2</span><span class="o">*</span><span class="n">K_1</span><span class="o">*</span><span class="n">K_c</span><span class="o">*</span><span class="n">K_H</span><span class="o">/</span><span class="p">(</span><span class="mf">4.</span><span class="o">*</span><span class="n">K_2</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mf">3.</span><span class="p">)</span>
     <span class="n">maxCa</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">*</span><span class="n">guess_Ca</span>
     <span class="n">minCa</span> <span class="o">=</span> <span class="n">guess_Ca</span>
-    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="c1">#or (type(PCO2)==pandas.core.series.TimeSeries)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">PCO2</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
         <span class="c1">#We have a numpy array or pandas Series. Loop through solutions.</span>
         <span class="n">CaEq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">PCO2</span><span class="p">))</span>       
@@ -355,7 +355,8 @@
                        <span class="p">[</span><span class="n">H_new</span><span class="p">,</span> <span class="n">OH</span><span class="p">,</span> <span class="n">CO3</span><span class="p">,</span> <span class="n">HCO3</span><span class="p">,</span> <span class="n">Ca_in</span><span class="p">,</span> <span class="n">CO2</span><span class="p">,</span> <span class="n">H2CO3</span><span class="p">,</span> <span class="n">H2CO3s</span><span class="p">],</span>
                        <span class="s2">&quot;mol/L&quot;</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">,</span> <span class="n">pH</span> <span class="o">=</span> <span class="n">pH</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">sol</span>
-    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="c1">#or (type(Ca)==pandas.core.series.TimeSeries)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
         <span class="n">sol_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>        
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">this_Ca</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Ca</span><span class="p">):</span>
@@ -501,7 +502,8 @@
     <span class="n">K_1</span> <span class="o">=</span> <span class="n">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="c1">#equation 2.30a with chi--&gt;infty</span>
     <span class="n">HCO3</span> <span class="o">=</span> <span class="mf">2.</span><span class="o">*</span><span class="n">Ca</span> <span class="o">+</span> <span class="n">H</span>
-    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="c1">#or (type(Ca)==pandas.core.series.TimeSeries)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
         <span class="n">sol_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">)):</span>
@@ -615,13 +617,14 @@
             <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;franci&#39;</span><span class="p">:</span>
                 <span class="n">R</span> <span class="o">=</span> <span class="n">pwpRateFranci</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="n">a_Ca</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="n">a_H2CO3s</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="n">a_H</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="n">a_HCO3</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="n">T_K</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2_in</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span> <span class="s2">&quot;method must be set to &#39;theory&#39;, &#39;pascal&#39;, or &#39;franci&#39;&quot;</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;method must be set to &#39;theory&#39;, &#39;pascal&#39;, or &#39;franci&#39;&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
             <span class="k">return</span> <span class="n">R</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span> <span class="s2">&quot;Not all necessary ions are present in the solution object.&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Not all necessary ions are present in the solution object.&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> 
-    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="c1">#or (type(sol)==pandas.core.series.TimeSeries)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
         <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">sol</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">this_sol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>            
@@ -734,7 +737,8 @@
     <span class="n">kappa1</span> <span class="o">=</span> <span class="n">calc_kappa1</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">kappa2</span> <span class="o">=</span> <span class="n">calc_kappa2</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
     <span class="n">kappa3</span> <span class="o">=</span> <span class="n">calc_kappa3</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
-    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a_Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a_Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a_Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="c1">#or (type(a_Ca)==pandas.core.series.TimeSeries)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a_Ca</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
         <span class="c1">#We have a numpy array or pandas Series. Loop through and calculate rates individually    </span>
         <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">a_Ca</span><span class="p">))</span>       
@@ -1255,16 +1259,16 @@
     <span class="n">T_min</span> <span class="o">=</span> <span class="mf">5.</span>
     <span class="n">T_max</span> <span class="o">=</span> <span class="mf">25.</span>
     <span class="k">if</span> <span class="n">logPCO2</span><span class="o">&lt;</span><span class="n">logPCO2_min</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="s2">&quot;Warning! Low PCO2 outside of interpolation range is set to minimum from table.&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning! Low PCO2 outside of interpolation range is set to minimum from table.&quot;</span><span class="p">)</span>
         <span class="n">logPCO2</span><span class="o">=</span><span class="n">logPCO2_min</span>
     <span class="k">if</span> <span class="n">logPCO2</span><span class="o">&gt;</span><span class="n">logPCO2_max</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="s2">&quot;Warning! High PCO2 outside of interpolation range is set to maximum from table.&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning! High PCO2 outside of interpolation range is set to maximum from table.&quot;</span><span class="p">)</span>
         <span class="n">logPCO2</span><span class="o">=</span><span class="n">logPCO2_max</span>
     <span class="k">if</span> <span class="n">T_C</span><span class="o">&lt;</span><span class="n">T_min</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="s2">&quot;Warning! Low temp outside of interpolation range is set to minimum from table.&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning! Low temp outside of interpolation range is set to minimum from table.&quot;</span><span class="p">)</span>
         <span class="n">T_C</span><span class="o">=</span><span class="n">T_min</span>
     <span class="k">if</span> <span class="n">T_C</span><span class="o">&gt;</span><span class="n">T_max</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="s2">&quot;Warning! High temp outside of interpolation range is set to maximum from table.&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning! High temp outside of interpolation range is set to maximum from table.&quot;</span><span class="p">)</span>
         <span class="n">T_C</span> <span class="o">=</span> <span class="n">T_max</span>
     <span class="n">palmer_k1</span><span class="p">,</span> <span class="n">palmer_C_Cs_T</span><span class="p">,</span> <span class="n">palmer_n</span> <span class="o">=</span> <span class="n">interp_funcs</span>
     <span class="n">k1</span> <span class="o">=</span> <span class="n">palmer_k1</span><span class="p">(</span><span class="n">T_C</span><span class="p">,</span> <span class="n">logPCO2</span><span class="p">)</span>
@@ -1313,7 +1317,8 @@
         <span class="k">return</span> <span class="n">palmerRate</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">Sat_Ratio</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="n">impure</span><span class="p">,</span> <span class="n">interp_funcs</span><span class="o">=</span><span class="n">interp_funcs</span><span class="p">)</span>
     
     <span class="c1">#Loop through series or array if we have one</span>
-    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">TimeSeries</span><span class="p">)</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="c1">#or (type(sol)==pandas.core.series.TimeSeries)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
         <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">sol</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">this_sol</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>
@@ -1332,6 +1337,125 @@
             <span class="n">PCO2</span> <span class="o">=</span> <span class="n">PCO2FromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">calc_rate</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="dissRateFromCaPCO2"><a class="viewcode-back" href="../../olm.calcite.dissRateFromCaPCO2.html#olm.calcite.dissRateFromCaPCO2">[docs]</a><span class="k">def</span> <span class="nf">dissRateFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">error_num</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ca_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PCO2_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">molL</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the calcite/limestone dissolution rate from given calcite concentration and PCO2.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Ca : float, numpy.ndarray or pandas Series</span>
+<span class="sd">       Calcium concentration, default units are mg/L. Change to mol/L by setting keyword mol_L=true.</span>
+<span class="sd">    PCO2 : float, numpy.ndarray, or pandas Series</span>
+<span class="sd">       The partial pressure of CO2 for the solution(s).</span>
+<span class="sd">    T_C : float, numpy.ndarray, or pandas Series</span>
+<span class="sd">       The temperature of the water in degrees Celcius. </span>
+<span class="sd">    rho : float</span>
+<span class="sd">       Density of rock in g/cm^3. (default=2.6)</span>
+<span class="sd">    method : string</span>
+<span class="sd">       Determines method used to calculate dissolution rates. Set to either &#39;PWP&#39; or &#39;Palmer&#39;. This keyword is required.</span>
+<span class="sd">    impure : boolean</span>
+<span class="sd">       Used when calculating Palmer rates. Determines whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)</span>
+<span class="sd">    per_tol : float</span>
+<span class="sd">       the fractional change in H concentration between iterations upon which the iteration is terminated (see solutionFromCaPCO2). default=0.001</span>
+<span class="sd">    error: boolean</span>
+<span class="sd">       Set to true if you want to use Monte Carlo Error propagation to estimate error in dissolution rate. Requires values for Ca_err and PCO2_err. (default=False)</span>
+<span class="sd">    error_num : integer</span>
+<span class="sd">       Size of random sample used in Monte Carlo Error propagation. default=100</span>
+<span class="sd">    Ca_err: float, numpy.ndarray, or pandas Series</span>
+<span class="sd">       Percent error in calcite concentration(s) (1=100%)</span>
+<span class="sd">    PCO2_err: float, numpy.ndarray, or pandas Series</span>
+<span class="sd">       Percent error in PCO2 values (1=100%)</span>
+<span class="sd">    molL : boolean</span>
+<span class="sd">       Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    R : float, numpy.ndarray, or pandas Series</span>
+<span class="sd">       calcite dissolution rate in mm/yr</span>
+<span class="sd">    R_err : float, numpy.ndarray, or pandas Series</span>
+<span class="sd">       error in dissolution rate (if keyword error=True)</span>
+<span class="sd">       </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#Function for Monte Carlo error estimation</span>
+    <span class="k">def</span> <span class="nf">err_est</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span><span class="n">PCO2</span><span class="p">,</span><span class="n">T_C</span><span class="p">):</span>
+        <span class="n">rate_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">error_num</span><span class="p">)</span>
+        <span class="n">Ca_factor</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">+</span> <span class="n">Ca_err</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">error_num</span><span class="p">)</span>
+        <span class="n">Ca_sample</span> <span class="o">=</span> <span class="n">Ca</span><span class="o">*</span><span class="n">Ca_factor</span>
+        <span class="n">PCO2_factor</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">+</span> <span class="n">PCO2_err</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">error_num</span><span class="p">)</span>
+        <span class="n">PCO2_sample</span> <span class="o">=</span> <span class="n">PCO2</span><span class="o">*</span><span class="n">PCO2_factor</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">error_num</span><span class="p">):</span>
+        <span class="c1">#    print j, Ca_sample[j], PCO2_sample[j]</span>
+            <span class="c1">#Create solution object</span>
+            <span class="n">rand_sol</span> <span class="o">=</span> <span class="n">solutionFromCaPCO2</span><span class="p">(</span><span class="n">Ca_sample</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">PCO2_sample</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="n">per_tol</span><span class="p">)</span>
+            <span class="c1">#Calculate dissolution rate</span>
+            <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;PWP&#39;</span><span class="p">:</span>
+                <span class="n">rate_sample</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">pwpFromSolution</span><span class="p">(</span><span class="n">rand_sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2_sample</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;Palmer&#39;</span><span class="p">:</span>
+                <span class="n">rate_sample</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">palmerFromSolution</span><span class="p">(</span><span class="n">rand_sol</span><span class="p">,</span> <span class="n">PCO2_sample</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="n">impure</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="s2">&quot;Invalid method keyword!&quot;</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="c1">#Estimated error is standard deviation from random sample</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">rate_sample</span><span class="p">)</span>
+ 
+
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">molL</span><span class="p">:</span>
+        <span class="c1">#convert Ca units to mol/L</span>
+        <span class="n">Ca</span> <span class="o">=</span> <span class="n">mgL_to_molL</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="s1">&#39;Ca&#39;</span><span class="p">)</span>
+    <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
+        <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">err_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">this_Ca</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Ca</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="s2">&quot;Solution number &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="c1">#Create solution object</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">sol</span> <span class="o">=</span> <span class="n">solutionFromCaPCO2</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="n">per_tol</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sol</span> <span class="o">=</span> <span class="n">solutionFromCaPCO2</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">per_tol</span><span class="o">=</span><span class="n">per_tol</span><span class="p">)</span>
+            <span class="c1">#Calculate dissolution rate</span>
+            <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;PWP&#39;</span><span class="p">:</span>
+                <span class="n">rate_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">pwpFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;Palmer&#39;</span><span class="p">:</span>
+                <span class="n">rate_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">palmerFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span><span class="n">impure</span><span class="o">=</span><span class="n">impure</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="s2">&quot;Invalid method keyword!&quot;</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="c1">#Monte Carlo error estimate on rate</span>
+            <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">err_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">err_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                                        
+        <span class="k">if</span> <span class="n">is_series</span><span class="p">:</span>
+            <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">rate_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">Ca</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+                <span class="n">err_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">err_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">Ca</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rate_arr</span><span class="p">,</span> <span class="n">err_arr</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rate_arr</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#we have single values</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">solutionFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="n">per_tol</span><span class="p">)</span>
+        <span class="c1">#Calculate dissolution rate</span>
+        <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;PWP&#39;</span><span class="p">:</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">pwpFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2</span><span class="p">),</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;Palmer&#39;</span><span class="p">:</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">palmerFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span><span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">,</span><span class="n">impure</span><span class="o">=</span><span class="n">impure</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s2">&quot;Invalid method keyword!&quot;</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">R</span><span class="p">,</span> <span class="n">err</span>
+        <span class="k">return</span> <span class="n">R</span></div>
+  
 </pre></div>
 
           </div>
@@ -1368,7 +1492,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

@@ -1,5 +1,5 @@
-olm.USGS.PhreeqcPandas.readPhreeqcOutput
-========================================
+olm\.USGS\.PhreeqcPandas\.readPhreeqcOutput
+===========================================
 
 .. currentmodule:: olm.USGS.PhreeqcPandas
 

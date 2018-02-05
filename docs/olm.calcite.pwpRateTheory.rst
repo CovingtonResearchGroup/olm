@@ -1,5 +1,5 @@
-olm.calcite.pwpRateTheory
-=========================
+olm\.calcite\.pwpRateTheory
+===========================
 
 .. currentmodule:: olm.calcite
 

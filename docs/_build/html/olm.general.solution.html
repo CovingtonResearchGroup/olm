@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>olm.general.solution &#8212; olm 0.33 documentation</title>
-    
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
@@ -29,7 +26,7 @@
     <link rel="next" title="olm.general.condTo25" href="olm.general.condTo25.html" />
     <link rel="prev" title="olm.calcite.calc_k_neg2" href="olm.calcite.calc_k_neg2.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -75,7 +72,7 @@
 </div></blockquote>
 <p><strong>units</strong> : string or list</p>
 <blockquote>
-<div><p>a string or list of strings containing concentration units (&#8216;mg/L&#8217;, &#8216;mol/L&#8217;,  or &#8216;mmol/L&#8217;)</p>
+<div><p>a string or list of strings containing concentration units (‘mg/L’, ‘mol/L’,  or ‘mmol/L’)</p>
 </div></blockquote>
 <p><strong>T</strong> : float</p>
 <blockquote>
@@ -83,7 +80,7 @@
 </div></blockquote>
 <p><strong>T_units</strong> : str</p>
 <blockquote>
-<div><p>temperature units &#8216;C&#8217; or &#8216;K&#8217; (default=&#8217;C&#8217;)</p>
+<div><p>temperature units ‘C’ or ‘K’ (default=’C’)</p>
 </div></blockquote>
 <p><strong>cond</strong> : float</p>
 <blockquote>
@@ -105,7 +102,7 @@
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td>ions</td>
-<td>(dict) A dictionary containing ion activities and concentrations.  The values for a given ion are accessed using a the name of the ion as a key.  Then, the additional keys &#8216;activity&#8217;, &#8216;conc_mg&#8217;, &#8216;conc_mol&#8217;, &#8216;conc_mmol&#8217;, and &#8216;meq&#8217; access the ion activity (in units of mol/L), concentration in mg/L, concentration in mol/L, concentration in mmol/L and meq/L, respectively.</td>
+<td>(dict) A dictionary containing ion activities and concentrations.  The values for a given ion are accessed using a the name of the ion as a key.  Then, the additional keys ‘activity’, ‘conc_mg’, ‘conc_mol’, ‘conc_mmol’, and ‘meq’ access the ion activity (in units of mol/L), concentration in mg/L, concentration in mol/L, concentration in mmol/L and meq/L, respectively.</td>
 </tr>
 <tr class="row-even"><td>T_C</td>
 <td>(float) temperature of solution in degrees C</td>
@@ -190,7 +187,7 @@
 <div><p>string containing ion name for which to calculate activity coefficient</p>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <p><strong>activity</strong> : float</p>
 <blockquote class="last">
 <div><p>Activity of the specified ion in mol/L.</p>
@@ -218,7 +215,7 @@
 <div><p>Ionic strength of solution.  If None, it will be approximated from metal concentration. (default=None)</p>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <p><strong>gamma</strong> : float</p>
 <blockquote class="last">
 <div><p>Activity coefficient for the ion specified.</p>
@@ -257,10 +254,10 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>units</strong> : str (optional)</p>
 <blockquote>
-<div><p>If set to &#8216;%&#8217; (default) then the function will return the percent charge balance error.  If set to &#8216;meq&#8217;, then the function will return the difference in cation and anion balance in meq/L.</p>
+<div><p>If set to ‘%’ (default) then the function will return the percent charge balance error.  If set to ‘meq’, then the function will return the difference in cation and anion balance in meq/L.</p>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <p><strong>balance</strong> : float</p>
 <blockquote class="last">
 <div><p>The charge balance error for the solution.</p>
@@ -284,7 +281,7 @@
 <div><p>string containing ion name for which to calculate activity coefficient</p>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <p><strong>meqL</strong> : float</p>
 <blockquote class="last">
 <div><p>Concentration of the specified ion in meq/L.</p>
@@ -308,7 +305,7 @@
 <div><p>string containing ion name for which to calculate activity coefficient</p>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <p><strong>mgL</strong> : float</p>
 <blockquote class="last">
 <div><p>Concentration of the specified ion in mg/L.</p>
@@ -332,7 +329,7 @@
 <div><p>string containing ion name for which to calculate activity coefficient</p>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <p><strong>mmolL</strong> : float</p>
 <blockquote class="last">
 <div><p>Concentration of the specified ion in mol/L.</p>
@@ -356,7 +353,7 @@
 <div><p>string containing ion name for which to calculate activity coefficient</p>
 </div></blockquote>
 <p><strong>Returns</strong></p>
-<p><strong>&#8212;&#8212;-</strong></p>
+<p><strong>——-</strong></p>
 <p><strong>molL</strong> : float</p>
 <blockquote class="last">
 <div><p>Concentration of the specified ion in mol/L.</p>
@@ -425,7 +422,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

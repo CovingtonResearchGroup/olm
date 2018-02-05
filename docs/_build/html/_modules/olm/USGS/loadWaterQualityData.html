@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>olm.USGS.loadWaterQualityData &#8212; olm 0.33 documentation</title>
-    
     <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
@@ -27,7 +24,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -52,9 +49,9 @@
 <span class="sd">Functions to load water quality data that has been processed and pickled by WQXtoPHREEQC</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">cPickle</span> <span class="k">as</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pickle</span>
 <span class="kn">from</span> <span class="nn">pandas.io.pickle</span> <span class="k">import</span> <span class="n">read_pickle</span>
-<span class="kn">from</span> <span class="nn">siteListExtraction</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.siteListExtraction</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="k">import</span> <span class="n">glob</span>
 
 <span class="n">DEFAULT_DIR</span> <span class="o">=</span> <span class="s1">&#39;./Processed-Sites&#39;</span>
@@ -118,14 +115,14 @@
         <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromRegEx</span><span class="p">(</span><span class="n">regEx</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># if not provided then query user for needed data</span>
-        <span class="n">processedSitesInput</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Path of the processed sites directory (Default = ./Processed-Sites): &quot;</span><span class="p">)</span>
+        <span class="n">processedSitesInput</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Path of the processed sites directory (Default = ./Processed-Sites): &quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">processedSitesInput</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
             <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesInput</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
         <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
         <span class="n">modeOK</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">while</span> <span class="ow">not</span><span class="p">(</span><span class="n">modeOK</span><span class="p">):</span>
-            <span class="n">mode</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Do you want to: </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> 1) enter a semi-colon separated list of sites </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> 2) provide a text file of sites </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> </span><span class="se">\n\t</span><span class="s2"> 3) provide an XML list of sites </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> 4) provide a wildcard expression to obtain sites from directory list</span><span class="se">\n</span><span class="s2"> Enter 1, 2, 3, or 4: &quot;</span><span class="p">)</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Do you want to: </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> 1) enter a semi-colon separated list of sites </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> 2) provide a text file of sites </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> </span><span class="se">\n\t</span><span class="s2"> 3) provide an XML list of sites </span><span class="se">\n</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> 4) provide a wildcard expression to obtain sites from directory list</span><span class="se">\n</span><span class="s2"> Enter 1, 2, 3, or 4: &quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">mode</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
                 <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">):</span>
                     <span class="n">modeOK</span> <span class="o">=</span> <span class="kc">True</span>
@@ -134,16 +131,16 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid input&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">siteListText</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Enter list of sites separated by semi-colons: &quot;</span><span class="p">)</span>
+            <span class="n">siteListText</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter list of sites separated by semi-colons: &quot;</span><span class="p">)</span>
             <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromLine</span><span class="p">(</span><span class="n">siteListText</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="n">siteFile</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Enter path to text file containing site list: &quot;</span><span class="p">)</span>
+            <span class="n">siteFile</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter path to text file containing site list: &quot;</span><span class="p">)</span>
             <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span>
-            <span class="n">siteFile</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Enter path to XML file containing site list: &quot;</span><span class="p">)</span>
+            <span class="n">siteFile</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter path to XML file containing site list: &quot;</span><span class="p">)</span>
             <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">,</span> <span class="n">XML</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">):</span>
-            <span class="n">regEx</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Enter regular expression: &quot;</span><span class="p">)</span>
+            <span class="n">regEx</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Enter regular expression: &quot;</span><span class="p">)</span>
             <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromRegEx</span><span class="p">(</span><span class="n">regEx</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">siteList</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
         <span class="c1">#process the sites in the list</span>
@@ -179,7 +176,7 @@
         <span class="n">metaDataFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Site-Description.pkl&#39;</span><span class="p">)</span>
         <span class="n">siteMetaData</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">metaDataFile</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">)</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">siteMetaData</span>
     
@@ -211,7 +208,7 @@
 <span class="c1">#        sitePanel = pickle.load(open(panelFile, &#39;rb&#39;))</span>
         <span class="n">sitePanel</span> <span class="o">=</span> <span class="n">read_pickle</span><span class="p">(</span><span class="n">panelFile</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">)</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">sitePanel</span></div>
 
@@ -240,7 +237,7 @@
         <span class="n">phreeqcFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC.pkl&#39;</span><span class="p">)</span>
         <span class="n">sitedf</span> <span class="o">=</span> <span class="n">read_pickle</span><span class="p">(</span><span class="n">phreeqcFile</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">phreeqcFile</span> <span class="p">)</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">phreeqcFile</span> <span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">sitedf</span></div>
             
@@ -281,7 +278,7 @@
 <span class="k">def</span> <span class="nf">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">):</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid path to processed sites directory.&quot;</span><span class="p">)</span>
-        <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">raw_input</span><span class="p">(</span><span class="s2">&quot;Path of the processed sites directory (Default = ./Processed-Sites): &quot;</span><span class="p">)</span>
+        <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Path of the processed sites directory (Default = ./Processed-Sites): &quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">processedSitesDir</span>
 
 </pre></div>
@@ -320,7 +317,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

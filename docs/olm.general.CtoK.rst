@@ -1,5 +1,5 @@
-olm.general.CtoK
-================
+olm\.general\.CtoK
+==================
 
 .. currentmodule:: olm.general
 

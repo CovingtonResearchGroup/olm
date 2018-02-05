@@ -1,5 +1,5 @@
-olm.general.molL_to_mgL
-=======================
+olm\.general\.molL\_to\_mgL
+===========================
 
 .. currentmodule:: olm.general
 

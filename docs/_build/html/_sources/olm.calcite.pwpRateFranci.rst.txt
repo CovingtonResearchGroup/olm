@@ -1,5 +1,5 @@
-olm.calcite.pwpRateFranci
-=========================
+olm\.calcite\.pwpRateFranci
+===========================
 
 .. currentmodule:: olm.calcite
 

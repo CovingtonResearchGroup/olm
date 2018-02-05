@@ -1,16 +1,13 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
     <title>olm.USGS.DataRetrieval &#8212; olm 0.33 documentation</title>
-    
     <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../../',
@@ -27,7 +24,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -54,9 +51,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="k">import</span> <span class="n">etree</span>
-<span class="kn">import</span> <span class="nn">lxml.html</span>
-<span class="kn">import</span> <span class="nn">urllib</span><span class="o">,</span> <span class="nn">requests</span> <span class="c1">#could eventually rework to use only requests</span>
-<span class="kn">from</span> <span class="nn">StringIO</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">lxml.html</span><span class="o">,</span> <span class="nn">requests</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">quote</span> <span class="c1">#could eventually rework to use only requests</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">urllib</span> <span class="k">import</span> <span class="n">quote</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">read_csv</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">to_datetime</span>
 <span class="c1">#import requests</span>
 <span class="c1">#import os</span>
@@ -172,17 +172,17 @@
     <span class="n">BASEURL</span> <span class="o">=</span> <span class="s1">&#39;https://waterservices.usgs.gov/nwis/site/?site=&#39;</span>
     <span class="n">queryURL</span> <span class="o">=</span> <span class="n">BASEURL</span> <span class="o">+</span> <span class="n">sitenum</span> <span class="o">+</span> <span class="s1">&#39;&amp;siteOutput=expanded&#39;</span>
     <span class="c1">#Need to skip header, which is hopefully uniform across USGS queries</span>
-    <span class="n">skiprows</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">59</span><span class="p">)</span>
+    <span class="n">skiprows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">59</span><span class="p">))</span>
     <span class="n">skiprows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
     <span class="n">siteDF</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">queryURL</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">)</span>
     <span class="n">siteDF</span> <span class="o">=</span> <span class="n">siteDF</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#change axis so that we only have key-data pairs</span>
     <span class="k">return</span> <span class="n">siteDF</span></div>
 
 <div class="viewcode-block" id="querySiteList"><a class="viewcode-back" href="../../../olm.USGS.DataRetrieval.querySiteList.html#olm.USGS.DataRetrieval.querySiteList">[docs]</a><span class="k">def</span> <span class="nf">querySiteList</span><span class="p">(</span><span class="n">siteList</span><span class="p">,</span> <span class="n">charList</span><span class="p">):</span>
-    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://waterqualitydata.us/Result/search?&#39;</span>
+    <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://www.waterqualitydata.us/Result/search?&#39;</span>
     <span class="n">queryText</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s1">&#39;siteid=&#39;</span>
     <span class="c1">#add sites to query</span>
-    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteList</span><span class="p">:</span> 
+    <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteList</span><span class="p">:</span>
         <span class="c1">#check for USGS prefixes (are there others?  EPA?)</span>
         <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
             <span class="n">site</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span> <span class="o">+</span> <span class="n">site</span>
@@ -199,17 +199,17 @@
     <span class="c1">#add mime type</span>
     <span class="n">queryText</span> <span class="o">+=</span> <span class="s1">&#39;&amp;mimeType=xml&#39;</span>
     <span class="c1">#convert query string to url special characters</span>
-    <span class="n">queryText</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">quote</span><span class="p">(</span><span class="n">queryText</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="s2">&quot;/&amp;=:?&quot;</span><span class="p">)</span>
+    <span class="n">queryText</span> <span class="o">=</span> <span class="n">quote</span><span class="p">(</span><span class="n">queryText</span><span class="p">,</span> <span class="n">safe</span><span class="o">=</span><span class="s2">&quot;/&amp;=:?&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">queryText</span></div>
-    
- 
+
+
 <div class="viewcode-block" id="GetDailyDischarge"><a class="viewcode-back" href="../../../olm.USGS.DataRetrieval.GetDailyDischarge.html#olm.USGS.DataRetrieval.GetDailyDischarge">[docs]</a><span class="k">def</span> <span class="nf">GetDailyDischarge</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve daily average discharge value from USGS database for given date and USGS site.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    location : string </span>
+<span class="sd">    location : string</span>
 <span class="sd">        Full USGS site number starting with &#39;USGS-&#39; or a string that just contains the bare integer number of a USGS site.</span>
 <span class="sd">    date : string</span>
 <span class="sd">        String containing the date for which discharge will be retrieved.  Should be given as YYYY-MM-DD.</span>
@@ -237,13 +237,15 @@
     <span class="n">query_html</span> <span class="o">=</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="s1">&#39;&amp;sites=&#39;</span> <span class="o">+</span> <span class="n">site_number</span> <span class="o">+</span> <span class="s1">&#39;&amp;startDT=&#39;</span><span class="o">+</span><span class="n">date</span><span class="o">+</span><span class="s1">&#39;&amp;endDT=&#39;</span><span class="o">+</span><span class="n">date</span>
     <span class="c1">#read in xml file through html query</span>
     <span class="k">try</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Discharge query html: &quot;</span><span class="p">,</span><span class="n">query_html</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query_html</span><span class="p">)</span>
-        <span class="n">qtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+        <span class="c1">#qtree = etree.parse(r.raw)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="s2">&quot;Problem retrieving discharge value (IOError).&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem retrieving discharge value (IOError).&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
     <span class="c1">#parse xml file to pull out discharge and quality code</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">qtree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+    <span class="c1">#root = qtree.getroot()</span>
     <span class="c1">#get namespace map</span>
     <span class="n">NSMAP</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">nsmap</span>
     <span class="n">NS1</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">%s</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">NSMAP</span><span class="p">[</span><span class="s1">&#39;ns1&#39;</span><span class="p">]</span>
@@ -272,16 +274,16 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    location : str </span>
+<span class="sd">    location : str</span>
 <span class="sd">        Full USGS site number starting with &#39;USGS-&#39; or a string that just contains the bare integer number of a USGS site.</span>
 <span class="sd">    start_date : str</span>
 <span class="sd">        String containing the beginning date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.</span>
 <span class="sd">    end_date : str (optional)</span>
 <span class="sd">        String containing the ending date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.  If not provided then data will be retrieved up to the current date.</span>
-<span class="sd"> </span>
+
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    data : pandas dataframe </span>
+<span class="sd">    data : pandas dataframe</span>
 <span class="sd">        Returns a Pandas dataframe with an index of the date, a column &#39;discharge&#39; of discharge values, and a column &#39;quality&#39; of the USGS quality rating.</span>
 
 <span class="sd">    Notes</span>
@@ -306,12 +308,13 @@
     <span class="c1">#read in xml file through html query</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query_html</span><span class="p">)</span>
-        <span class="n">qtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+        <span class="c1">#qtree = etree.parse(r.raw)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="s2">&quot;Problem retrieving discharge value (IOError).&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem retrieving discharge value (IOError).&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
     <span class="c1">#parse xml file to pull out discharge and quality code</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">qtree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+    <span class="c1">#root = qtree.getroot()</span>
     <span class="c1">#get namespace map</span>
     <span class="n">NSMAP</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">nsmap</span>
     <span class="n">NS1</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">%s</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">NSMAP</span><span class="p">[</span><span class="s1">&#39;ns1&#39;</span><span class="p">]</span>
@@ -374,7 +377,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014,2015 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

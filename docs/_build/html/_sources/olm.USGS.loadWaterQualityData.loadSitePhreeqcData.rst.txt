@@ -1,5 +1,5 @@
-olm.USGS.loadWaterQualityData.loadSitePhreeqcData
-=================================================
+olm\.USGS\.loadWaterQualityData\.loadSitePhreeqcData
+====================================================
 
 .. currentmodule:: olm.USGS.loadWaterQualityData
 

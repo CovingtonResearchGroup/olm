@@ -1,5 +1,5 @@
-olm.calcite.solutionFromCaPCO2Relaxed
-=====================================
+olm\.calcite\.solutionFromCaPCO2Relaxed
+=======================================
 
 .. currentmodule:: olm.calcite
 

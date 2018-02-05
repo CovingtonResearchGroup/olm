@@ -1,5 +1,5 @@
-olm.calcite.calc_K_2
-====================
+olm\.calcite\.calc\_K\_2
+========================
 
 .. currentmodule:: olm.calcite
 
