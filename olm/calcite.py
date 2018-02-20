@@ -1347,7 +1347,7 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
             elif method=='Palmer':
                 rate_sample[j] = palmerFromSolution(rand_sol, PCO2_sample[j], rho=rho, impure=impure)
             else:
-                print "Invalid method keyword!"
+                print( "Invalid method keyword!")
                 return None
         #Estimated error is standard deviation from random sample
         return np.std(rate_sample)
@@ -1364,7 +1364,7 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
             err_arr = np.empty(np.size(Ca), dtype=object)
         for i, this_Ca in enumerate(Ca):
             if (i % 100)==0:
-                print "Solution number "+str(i)
+                print( "Solution number "+str(i))
             #Create solution object
             if np.size(T_C)==1:
                 sol = solutionFromCaPCO2(this_Ca, PCO2[i], T_C=T_C, per_tol=per_tol)
@@ -1376,7 +1376,7 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
             elif method=='Palmer':
                 rate_arr[i] = palmerFromSolution(sol, PCO2[i],rho=rho,impure=impure)
             else:
-                print "Invalid method keyword!"
+                print("Invalid method keyword!")
                 return None
             #Monte Carlo error estimate on rate
             if error:
@@ -1402,7 +1402,7 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
         elif method=='Palmer':
             R = palmerFromSolution(sol, PCO2,rho=rho,impure=impure)
         else:
-            print "Invalid method keyword!"
+            print("Invalid method keyword!")
             return None
         if error:
             err = err_est(Ca, PCO2, T_C)
