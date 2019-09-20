@@ -42,7 +42,7 @@ def readPhreeqcOutput(phreeqcOutputFile):
     -----
     While this function can be used on its own. It is primarily designed to be used by the processPanel function, which provides a more convenient interface.
     """
-    with open(phreeqcOutputFile, 'r') as phreeqc_output:
+    with open(phreeqcOutputFile, 'r', encoding='latin_1') as phreeqc_output:
         simulationDict = {}
         #loop through all lines of file
         block = 'beginning'
