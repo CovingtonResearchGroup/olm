@@ -256,6 +256,8 @@ def writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=default_phreeqc
     datetext : str
        String containing the text that describes the date as it should be written into the PHREEQC input file.
 
+    charge : str
+        String containing name of element (or pH) that should be adjusted to obtain charge balance. This is done internally by PHREEQC. (Default=None)
     Returns
     -------
     status : int
