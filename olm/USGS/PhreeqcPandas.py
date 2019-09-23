@@ -114,6 +114,61 @@ def readPhreeqcOutput(phreeqcOutputFile):
         return simulationDict
 
 
+def writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=default_phreeqc_to_WQX_translation, datetext='', charge=None):
+    """
+    Writes a PHREEQC input file using the row from a site panel.
+
+    Parameters
+    ----------
+    sample_row : pandas data frame row
+       The row from the pandas data frame for the site and date to be processed.
+
+    phreeqc_file_name : str
+       Name of PHREEQC input file to write.
+
+    phreeqcDict : dict
+       a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.
+
+    datetext : str
+       String containing the text that describes the date as it should be written into the PHREEQC input file.
+
+    charge : str
+        String containing name of element (or pH) that should be adjusted to obtain charge balance. This is done internally by PHREEQC. (Default=None)
+    Returns
+    -------
+    status : int
+       OK if equal to 1. Error writing to file if equal to -1.
+    """
+    try:
+        phreeqc_input_file = open(phreeqc_file_name, 'w')
+        print('SOLUTION ' + ' on ' + datetext, file=phreeqc_input_file)
+        print('units mg/l', file=phreeqc_input_file)
+        #loop through all characteristics that should be included in PHREEQC analysis
+        for characteristic in phreeqcDict.keys():
+            #Check to see if this characteristic is in our panel
+            if characteristic in list(sample_row.keys()):
+                #Check for cases with duplicate dates and no time information
+                #In this case, get only first sample on that date
+                if size(sample_row.shape)>1 and min(sample_row.shape)>1:
+                    sample_row = sample_row.ix[0]
+                if not isnan(sample_row[characteristic] ):
+                    if phreeqcDict[characteristic]==charge:
+                        print(phreeqcDict[characteristic] +' ' + str(sample_row[characteristic])+ ' '+'charge', file=phreeqc_input_file)
+                    else:
+                        print(phreeqcDict[characteristic] +' ' + str(sample_row[characteristic]), file=phreeqc_input_file)
+        print("END", file=phreeqc_input_file)
+        phreeqc_input_file.close()
+        return 1
+    except IOError:
+        phreeqc_input_file.close()
+        print ("Problem opening sample PHREEQC input file.")
+        return -1
+
+def PHREEQC_set_PCO2(phreeqcOutputFile,logPCO2):
+    solution_inputs = readPhreeqcOutput(phreeqcOutputFile)
+    solution_inputs['C']= '   1   CO2(g)   ' + str(logPCO2)
+
+
 def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, force_balance=''):
     """
     Takes a WQXtoPandas site panel and runs all samples through PHREEQC, returning a dataframe of the outputs that is indexed by date. Will run automatically within WQXtoPandas if specified in the excel start file.  However, the function can also be called later by reading in a pickled site panel.
@@ -237,56 +292,6 @@ def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=
         print("Number of converged alkalinity forced charge balance cases = ", num_converged)
         print("Total number of samples = ", total_num)
     return phreeqc_df
-
-def writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=default_phreeqc_to_WQX_translation, datetext='', charge=None):
-    """
-    Writes a PHREEQC input file using the row from a site panel.
-
-    Parameters
-    ----------
-    sample_row : pandas data frame row
-       The row from the pandas data frame for the site and date to be processed.
-
-    phreeqc_file_name : str
-       Name of PHREEQC input file to write.
-
-    phreeqcDict : dict
-       a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.
-
-    datetext : str
-       String containing the text that describes the date as it should be written into the PHREEQC input file.
-
-    charge : str
-        String containing name of element (or pH) that should be adjusted to obtain charge balance. This is done internally by PHREEQC. (Default=None)
-    Returns
-    -------
-    status : int
-       OK if equal to 1. Error writing to file if equal to -1.
-    """
-    try:
-        phreeqc_input_file = open(phreeqc_file_name, 'w')
-        print('SOLUTION ' + ' on ' + datetext, file=phreeqc_input_file)
-        print('units mg/l', file=phreeqc_input_file)
-        #loop through all characteristics that should be included in PHREEQC analysis
-        for characteristic in phreeqcDict.keys():
-            #Check to see if this characteristic is in our panel
-            if characteristic in list(sample_row.keys()):
-                #Check for cases with duplicate dates and no time information
-                #In this case, get only first sample on that date
-                if size(sample_row.shape)>1 and min(sample_row.shape)>1:
-                    sample_row = sample_row.ix[0]
-                if not isnan(sample_row[characteristic] ):
-                    if phreeqcDict[characteristic]==charge:
-                        print(phreeqcDict[characteristic] +' ' + str(sample_row[characteristic])+ ' '+'charge', file=phreeqc_input_file)
-                    else:
-                        print(phreeqcDict[characteristic] +' ' + str(sample_row[characteristic]), file=phreeqc_input_file)
-        print("END", file=phreeqc_input_file)
-        phreeqc_input_file.close()
-        return 1
-    except IOError:
-        phreeqc_input_file.close()
-        print ("Problem opening sample PHREEQC input file.")
-        return -1
 
 def processSites(sitesDir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, regEx='USGS-*', bracket_charge_balance=False, process_regular=True):
     """
