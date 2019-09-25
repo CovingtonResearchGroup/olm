@@ -63,24 +63,24 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>location</strong> : str</p>
-<blockquote>
-<div><p>Full USGS site number starting with ‘USGS-‘ or a string that just contains the bare integer number of a USGS site.</p>
-</div></blockquote>
-<p><strong>start_date</strong> : str</p>
-<blockquote>
-<div><p>String containing the beginning date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.</p>
-</div></blockquote>
-<p><strong>end_date</strong> : str (optional)</p>
-<blockquote>
-<div><p>String containing the ending date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.  If not provided then data will be retrieved up to the current date.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>location</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Full USGS site number starting with ‘USGS-‘ or a string that just contains the bare integer number of a USGS site.</p>
+</dd>
+<dt><strong>start_date</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">String containing the beginning date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.</p>
+</dd>
+<dt><strong>end_date</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str (optional)</span></dt>
+<dd><p class="first last">String containing the ending date in the range for which discharge will be retrieved.  Should be given as YYYY-MM-DD.  If not provided then data will be retrieved up to the current date.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>data</strong> : pandas dataframe</p>
-<blockquote class="last">
-<div><p>Returns a Pandas dataframe with an index of the date, a column ‘discharge’ of discharge values, and a column ‘quality’ of the USGS quality rating.</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>data</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas dataframe</span></dt>
+<dd><p class="first last">Returns a Pandas dataframe with an index of the date, a column ‘discharge’ of discharge values, and a column ‘quality’ of the USGS quality rating.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -146,7 +146,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
     </div>
   </body>
 </html>

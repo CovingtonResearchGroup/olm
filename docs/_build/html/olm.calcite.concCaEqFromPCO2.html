@@ -63,26 +63,27 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>PCO2</strong> : float, numpy.ndarray, or pandas Series</p>
-<blockquote>
-<div><p>partial pressure of CO2 (atm)</p>
-</div></blockquote>
-<p><strong>T_C</strong> : float, numpy.ndarray, or pandas Series (optional)</p>
-<blockquote>
-<div><p>temperature of solution in degrees Celsius (default = 25 C)</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>PCO2</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
+<dd><p class="first last">partial pressure of CO2 (atm)</p>
+</dd>
+<dt><strong>T_C</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series (optional)</span></dt>
+<dd><p class="first last">temperature of solution in degrees Celsius (default = 25 C)</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>CaEq</strong> : float, numpy.ndarray, or pandas Series</p>
-<blockquote class="last">
-<div><p>Equilibrium concentration(s) of calcium in mol/L</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>CaEq</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
+<dd><p class="first last">Equilibrium concentration(s) of calcium in mol/L</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>Assumes a H20-CO2-CaCO3 system.   
+<p>Assumes a H20-CO2-CaCO3 system.
 If a numpy array or pandas Series object are passed in as PCO2 arguments, then equilibrium concentrations will be found iteratively in a for-loop and returned as the same data type given in the argument.</p>
 </dd></dl>
 
@@ -142,7 +143,7 @@ If a numpy array or pandas Series object are passed in as PCO2 arguments, then e
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
     </div>
   </body>
 </html>

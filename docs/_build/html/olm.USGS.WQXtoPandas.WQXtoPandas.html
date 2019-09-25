@@ -63,53 +63,47 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>xmlLocation</strong> : string</p>
-<blockquote>
-<div><p>Content depends on mode in which WQXtoPandas is run. When fromFile is set to False (input methods 2 or 3 in excel file) this string contains the html for a query to the USGS NWIS database to obtain an xml file of the desired data.  Alternatively, if fromFile is True (input method 1 in excel file) then this string contains the name of the xml file from which to read the data.</p>
-</div></blockquote>
-<p><strong>charDict</strong> : dict</p>
-<blockquote>
-<div><p>A dictionary containing information about the characteristics to be processed.  Keys are EPA SRS characteristic names. Each entry in the dictionary is a second dictionary that contains keys IsRequired, pcode, fraction, and quality. These entries tell WQXtoPandas whether a given characteristic is required in order to process a sample, and whether a specific pcode, fraction, or quality should be required.  See excel example file for more details.</p>
-</div></blockquote>
-<p><strong>outputPath</strong> : string</p>
-<blockquote>
-<div><p>path to directory that will contain output directory</p>
-</div></blockquote>
-<p><strong>fromFile</strong> : boolean</p>
-<blockquote>
-<div><p>True if data will be read from an xml file already present on computer.  False if xml file should be queried from NWIS. (Default=False)</p>
-</div></blockquote>
-<p><strong>outputDirName</strong> : string</p>
-<blockquote>
-<div><p>Name of output directory where all site data will be written out. (Default=’Processed-Sites’)</p>
-</div></blockquote>
-<p><strong>RUN_PHREEQC</strong> : boolean</p>
-<blockquote>
-<div><p>Set to true if samples should be processed through PHREEQC. (Default=False)</p>
-</div></blockquote>
-<p><strong>PHREEQC_PATH</strong> : string</p>
-<blockquote>
-<div><p>Path to PHREEQC executable (folder only, not executable file name)</p>
-</div></blockquote>
-<p><strong>DATABASE_FILE</strong> : string</p>
-<blockquote>
-<div><p>Path to database file that PHREEQC should use, including database file name.</p>
-</div></blockquote>
-<p><strong>LOG_FILE</strong> : string</p>
-<blockquote>
-<div><p>Name of log file that WQXtoPandas will create. (Default=’Result.log’)</p>
-</div></blockquote>
-<p><strong>START_FILE</strong> : string</p>
-<blockquote>
-<div><p>Name of xls start file that was used to run this instance of WQXtoPandas. Name will be written out in log file.</p>
-</div></blockquote>
-<p><strong>bracket_charge_balance</strong> : bool</p>
-<blockquote>
-<div><p>If set to true, WQXtoPandas will alternately force charge balance on calcium and alkalinity, while the latter is not physically meaningful, this provides a useful estimate of uncertainty for cases with high charge balance errors.  This is most useful for water that is very dilute or with high organic content, such that titrated alkalinity values are artificially high.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>xmlLocation</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">Content depends on mode in which WQXtoPandas is run. When fromFile is set to False (input methods 2 or 3 in excel file) this string contains the html for a query to the USGS NWIS database to obtain an xml file of the desired data.  Alternatively, if fromFile is True (input method 1 in excel file) then this string contains the name of the xml file from which to read the data.</p>
+</dd>
+<dt><strong>charDict</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">A dictionary containing information about the characteristics to be processed.  Keys are EPA SRS characteristic names. Each entry in the dictionary is a second dictionary that contains keys IsRequired, pcode, fraction, and quality. These entries tell WQXtoPandas whether a given characteristic is required in order to process a sample, and whether a specific pcode, fraction, or quality should be required.  See excel example file for more details.</p>
+</dd>
+<dt><strong>outputPath</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">path to directory that will contain output directory</p>
+</dd>
+<dt><strong>fromFile</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd><p class="first last">True if data will be read from an xml file already present on computer.  False if xml file should be queried from NWIS. (Default=False)</p>
+</dd>
+<dt><strong>outputDirName</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">Name of output directory where all site data will be written out. (Default=’Processed-Sites’)</p>
+</dd>
+<dt><strong>RUN_PHREEQC</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd><p class="first last">Set to true if samples should be processed through PHREEQC. (Default=False)</p>
+</dd>
+<dt><strong>PHREEQC_PATH</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">Path to PHREEQC executable (folder only, not executable file name)</p>
+</dd>
+<dt><strong>DATABASE_FILE</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">Path to database file that PHREEQC should use, including database file name.</p>
+</dd>
+<dt><strong>LOG_FILE</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">Name of log file that WQXtoPandas will create. (Default=’Result.log’)</p>
+</dd>
+<dt><strong>START_FILE</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">Name of xls start file that was used to run this instance of WQXtoPandas. Name will be written out in log file.</p>
+</dd>
+<dt><strong>bracket_charge_balance</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">If set to true, WQXtoPandas will alternately force charge balance on calcium and alkalinity, while the latter is not physically meaningful, this provides a useful estimate of uncertainty for cases with high charge balance errors.  This is most useful for water that is very dilute or with high organic content, such that titrated alkalinity values are artificially high.</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Returns 0 if execution successful.  Returns -1 in case of error.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>Returns 0 if execution successful.  Returns -1 in case of error.</strong></dt>
+<dd></dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -175,7 +169,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
     </div>
   </body>
 </html>

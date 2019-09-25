@@ -62,64 +62,54 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>Ca</strong> : float, numpy.ndarray or pandas Series</p>
-<blockquote>
-<div><p>Calcium concentration, default units are mg/L. Change to mol/L by setting keyword mol_L=true.</p>
-</div></blockquote>
-<p><strong>PCO2</strong> : float, numpy.ndarray, or pandas Series</p>
-<blockquote>
-<div><p>The partial pressure of CO2 for the solution(s).</p>
-</div></blockquote>
-<p><strong>T_C</strong> : float, numpy.ndarray, or pandas Series</p>
-<blockquote>
-<div><p>The temperature of the water in degrees Celcius.</p>
-</div></blockquote>
-<p><strong>rho</strong> : float</p>
-<blockquote>
-<div><p>Density of rock in g/cm^3. (default=2.6)</p>
-</div></blockquote>
-<p><strong>method</strong> : string</p>
-<blockquote>
-<div><p>Determines method used to calculate dissolution rates. Set to either ‘PWP’ or ‘Palmer’. This keyword is required.</p>
-</div></blockquote>
-<p><strong>impure</strong> : boolean</p>
-<blockquote>
-<div><p>Used when calculating Palmer rates. Determines whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)</p>
-</div></blockquote>
-<p><strong>per_tol</strong> : float</p>
-<blockquote>
-<div><p>the fractional change in H concentration between iterations upon which the iteration is terminated (see solutionFromCaPCO2). default=0.001</p>
-</div></blockquote>
-<p><strong>error: boolean</strong></p>
-<blockquote>
-<div><p>Set to true if you want to use Monte Carlo Error propagation to estimate error in dissolution rate. Requires values for Ca_err and PCO2_err. (default=False)</p>
-</div></blockquote>
-<p><strong>error_num</strong> : integer</p>
-<blockquote>
-<div><p>Size of random sample used in Monte Carlo Error propagation. default=100</p>
-</div></blockquote>
-<p><strong>Ca_err: float, numpy.ndarray, or pandas Series</strong></p>
-<blockquote>
-<div><p>Percent error in calcite concentration(s) (1=100%)</p>
-</div></blockquote>
-<p><strong>PCO2_err: float, numpy.ndarray, or pandas Series</strong></p>
-<blockquote>
-<div><p>Percent error in PCO2 values (1=100%)</p>
-</div></blockquote>
-<p><strong>molL</strong> : boolean</p>
-<blockquote>
-<div><p>Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>Ca</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray or pandas Series</span></dt>
+<dd><p class="first last">Calcium concentration, default units are mg/L. Change to mol/L by setting keyword mol_L=true.</p>
+</dd>
+<dt><strong>PCO2</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
+<dd><p class="first last">The partial pressure of CO2 for the solution(s).</p>
+</dd>
+<dt><strong>T_C</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
+<dd><p class="first last">The temperature of the water in degrees Celcius.</p>
+</dd>
+<dt><strong>rho</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Density of rock in g/cm^3. (default=2.6)</p>
+</dd>
+<dt><strong>method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">Determines method used to calculate dissolution rates. Set to either ‘PWP’ or ‘Palmer’. This keyword is required.</p>
+</dd>
+<dt><strong>impure</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd><p class="first last">Used when calculating Palmer rates. Determines whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)</p>
+</dd>
+<dt><strong>per_tol</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">the fractional change in H concentration between iterations upon which the iteration is terminated (see solutionFromCaPCO2). default=0.001</p>
+</dd>
+<dt><strong>error: boolean</strong></dt>
+<dd><p class="first last">Set to true if you want to use Monte Carlo Error propagation to estimate error in dissolution rate. Requires values for Ca_err and PCO2_err. (default=False)</p>
+</dd>
+<dt><strong>error_num</strong> <span class="classifier-delimiter">:</span> <span class="classifier">integer</span></dt>
+<dd><p class="first last">Size of random sample used in Monte Carlo Error propagation. default=100</p>
+</dd>
+<dt><strong>Ca_err: float, numpy.ndarray, or pandas Series</strong></dt>
+<dd><p class="first last">Percent error in calcite concentration(s) (1=100%)</p>
+</dd>
+<dt><strong>PCO2_err: float, numpy.ndarray, or pandas Series</strong></dt>
+<dd><p class="first last">Percent error in PCO2 values (1=100%)</p>
+</dd>
+<dt><strong>molL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd><p class="first last">Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)</p>
+</dd>
+</dl>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>R</strong> : float, numpy.ndarray, or pandas Series</p>
-<blockquote>
-<div><p>calcite dissolution rate in mm/yr</p>
-</div></blockquote>
-<p><strong>R_err</strong> : float, numpy.ndarray, or pandas Series</p>
-<blockquote class="last">
-<div><p>error in dissolution rate (returned with R if keyword error=True)</p>
-</div></blockquote>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>R</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
+<dd><p class="first last">calcite dissolution rate in mm/yr</p>
+</dd>
+<dt><strong>R_err</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
+<dd><p class="first last">error in dissolution rate (returned with R if keyword error=True)</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -182,7 +172,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
     </div>
   </body>
 </html>

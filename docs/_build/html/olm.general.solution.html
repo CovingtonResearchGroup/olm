@@ -62,53 +62,43 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>constituents</strong> : array like</p>
-<blockquote>
-<div><p>a list (or array) of strings with ion names</p>
-</div></blockquote>
-<p><strong>concentrations</strong> : array like</p>
-<blockquote>
-<div><p>a list (or array) of ion concentrations</p>
-</div></blockquote>
-<p><strong>units</strong> : string or list</p>
-<blockquote>
-<div><p>a string or list of strings containing concentration units (‘mg/L’, ‘mol/L’,  or ‘mmol/L’)</p>
-</div></blockquote>
-<p><strong>T</strong> : float</p>
-<blockquote>
-<div><p>temperature in degrees Celsius (default=25)</p>
-</div></blockquote>
-<p><strong>T_units</strong> : str</p>
-<blockquote>
-<div><p>temperature units ‘C’ or ‘K’ (default=’C’)</p>
-</div></blockquote>
-<p><strong>cond</strong> : float</p>
-<blockquote>
-<div><p>specific conductance (default=None)</p>
-</div></blockquote>
-<p><strong>pH</strong> : float</p>
-<blockquote class="last">
-<div><p>pH of solution (default=None)</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>constituents</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array like</span></dt>
+<dd><p class="first last">a list (or array) of strings with ion names</p>
+</dd>
+<dt><strong>concentrations</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array like</span></dt>
+<dd><p class="first last">a list (or array) of ion concentrations</p>
+</dd>
+<dt><strong>units</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string or list</span></dt>
+<dd><p class="first last">a string or list of strings containing concentration units (‘mg/L’, ‘mol/L’,  or ‘mmol/L’)</p>
+</dd>
+<dt><strong>T</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">temperature in degrees Celsius (default=25)</p>
+</dd>
+<dt><strong>T_units</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">temperature units ‘C’ or ‘K’ (default=’C’)</p>
+</dd>
+<dt><strong>cond</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">specific conductance (default=None)</p>
+</dd>
+<dt><strong>pH</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">pH of solution (default=None)</p>
+</dd>
+</dl>
 </td>
 </tr>
-</tbody>
-</table>
-<p class="rubric">Attributes</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="1%" />
-<col width="99%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>ions</td>
-<td>(dict) A dictionary containing ion activities and concentrations.  The values for a given ion are accessed using a the name of the ion as a key.  Then, the additional keys ‘activity’, ‘conc_mg’, ‘conc_mol’, ‘conc_mmol’, and ‘meq’ access the ion activity (in units of mol/L), concentration in mg/L, concentration in mol/L, concentration in mmol/L and meq/L, respectively.</td>
-</tr>
-<tr class="row-even"><td>T_C</td>
-<td>(float) temperature of solution in degrees C</td>
-</tr>
-<tr class="row-odd"><td>T_K</td>
-<td>(float) temperature of solution in degrees K</td>
+<tr class="field-even field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>ions</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">A dictionary containing ion activities and concentrations.  The values for a given ion are accessed using a the name of the ion as a key.  Then, the additional keys ‘activity’, ‘conc_mg’, ‘conc_mol’, ‘conc_mmol’, and ‘meq’ access the ion activity (in units of mol/L), concentration in mg/L, concentration in mol/L, concentration in mmol/L and meq/L, respectively.</p>
+</dd>
+<dt><strong>T_C</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">temperature of solution in degrees C</p>
+</dd>
+<dt><strong>T_K</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">temperature of solution in degrees K</p>
+</dd>
+</dl>
+</td>
 </tr>
 </tbody>
 </table>
@@ -164,10 +154,11 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">I - float</p>
-<blockquote class="last">
-<div><p>ionic strength</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>I - float</strong></dt>
+<dd><p class="first last">ionic strength</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -182,16 +173,18 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ion</strong> : str</p>
-<blockquote>
-<div><p>string containing ion name for which to calculate activity coefficient</p>
-</div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>——-</strong></p>
-<p><strong>activity</strong> : float</p>
-<blockquote class="last">
-<div><p>Activity of the specified ion in mol/L.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>activity</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Activity of the specified ion in mol/L.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -206,20 +199,21 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ion</strong> : str</p>
-<blockquote>
-<div><p>string containing ion name for which to calculate activity coefficient</p>
-</div></blockquote>
-<p><strong>I</strong> : float</p>
-<blockquote>
-<div><p>Ionic strength of solution.  If None, it will be approximated from metal concentration. (default=None)</p>
-</div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>——-</strong></p>
-<p><strong>gamma</strong> : float</p>
-<blockquote class="last">
-<div><p>Activity coefficient for the ion specified.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+</dd>
+<dt><strong>I</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Ionic strength of solution.  If None, it will be approximated from metal concentration. (default=None)</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>gamma</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Activity coefficient for the ion specified.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -234,10 +228,11 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>I</strong> : float</p>
-<blockquote class="last">
-<div><p>ionic strength</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>I</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">ionic strength</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -252,16 +247,18 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>units</strong> : str (optional)</p>
-<blockquote>
-<div><p>If set to ‘%’ (default) then the function will return the percent charge balance error.  If set to ‘meq’, then the function will return the difference in cation and anion balance in meq/L.</p>
-</div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>——-</strong></p>
-<p><strong>balance</strong> : float</p>
-<blockquote class="last">
-<div><p>The charge balance error for the solution.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>units</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str (optional)</span></dt>
+<dd><p class="first last">If set to ‘%’ (default) then the function will return the percent charge balance error.  If set to ‘meq’, then the function will return the difference in cation and anion balance in meq/L.</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>balance</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">The charge balance error for the solution.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -276,16 +273,18 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ion</strong> : str</p>
-<blockquote>
-<div><p>string containing ion name for which to calculate activity coefficient</p>
-</div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>——-</strong></p>
-<p><strong>meqL</strong> : float</p>
-<blockquote class="last">
-<div><p>Concentration of the specified ion in meq/L.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>meqL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Concentration of the specified ion in meq/L.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -300,16 +299,18 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ion</strong> : str</p>
-<blockquote>
-<div><p>string containing ion name for which to calculate activity coefficient</p>
-</div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>——-</strong></p>
-<p><strong>mgL</strong> : float</p>
-<blockquote class="last">
-<div><p>Concentration of the specified ion in mg/L.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>mgL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Concentration of the specified ion in mg/L.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -324,16 +325,18 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ion</strong> : str</p>
-<blockquote>
-<div><p>string containing ion name for which to calculate activity coefficient</p>
-</div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>——-</strong></p>
-<p><strong>mmolL</strong> : float</p>
-<blockquote class="last">
-<div><p>Concentration of the specified ion in mol/L.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>mmolL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Concentration of the specified ion in mol/L.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -348,16 +351,18 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>ion</strong> : str</p>
-<blockquote>
-<div><p>string containing ion name for which to calculate activity coefficient</p>
-</div></blockquote>
-<p><strong>Returns</strong></p>
-<p><strong>——-</strong></p>
-<p><strong>molL</strong> : float</p>
-<blockquote class="last">
-<div><p>Concentration of the specified ion in mol/L.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>molL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Concentration of the specified ion in mol/L.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -422,7 +427,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
     </div>
   </body>
 </html>

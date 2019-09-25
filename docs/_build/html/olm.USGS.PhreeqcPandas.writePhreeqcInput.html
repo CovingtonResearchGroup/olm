@@ -57,34 +57,36 @@
 <h1>olm.USGS.PhreeqcPandas.writePhreeqcInput<a class="headerlink" href="#olm-usgs-phreeqcpandas-writephreeqcinput" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.USGS.PhreeqcPandas.writePhreeqcInput">
-<code class="descclassname">olm.USGS.PhreeqcPandas.</code><code class="descname">writePhreeqcInput</code><span class="sig-paren">(</span><em>sample_row</em>, <em>phreeqc_file_name</em>, <em>phreeqcDict={'Calcium': 'Ca'</em>, <em>'Magnesium': 'Mg'</em>, <em>'Sodium': 'Na'</em>, <em>'Nitrate': 'N'</em>, <em>'Temperature</em>, <em>water': 'temp'</em>, <em>'pH': 'pH'</em>, <em>'Alkalinity</em>, <em>total': 'Alkalinity'</em>, <em>'Chloride': 'Cl'</em>, <em>'Potassium': 'K'</em>, <em>'Sulfate': 'S'}</em>, <em>datetext=''</em>, <em>charge=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#writePhreeqcInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.writePhreeqcInput" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">olm.USGS.PhreeqcPandas.</code><code class="descname">writePhreeqcInput</code><span class="sig-paren">(</span><em>sample_row</em>, <em>phreeqc_file_name</em>, <em>phreeqcDict={'Alkalinity</em>, <em>total': 'Alkalinity'</em>, <em>'Calcium': 'Ca'</em>, <em>'Chloride': 'Cl'</em>, <em>'Magnesium': 'Mg'</em>, <em>'Nitrate': 'N'</em>, <em>'Potassium': 'K'</em>, <em>'Sodium': 'Na'</em>, <em>'Sulfate': 'S'</em>, <em>'Temperature</em>, <em>water': 'temp'</em>, <em>'pH': 'pH'}</em>, <em>datetext=''</em>, <em>charge=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#writePhreeqcInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.writePhreeqcInput" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a PHREEQC input file using the row from a site panel.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>sample_row</strong> : pandas data frame row</p>
-<blockquote>
-<div><p>The row from the pandas data frame for the site and date to be processed.</p>
-</div></blockquote>
-<p><strong>phreeqc_file_name</strong> : str</p>
-<blockquote>
-<div><p>Name of PHREEQC input file to write.</p>
-</div></blockquote>
-<p><strong>phreeqcDict</strong> : dict</p>
-<blockquote>
-<div><p>a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</p>
-</div></blockquote>
-<p><strong>datetext</strong> : str</p>
-<blockquote>
-<div><p>String containing the text that describes the date as it should be written into the PHREEQC input file.</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>status</strong> : int</p>
-<blockquote class="last">
-<div><p>OK if equal to 1. Error writing to file if equal to -1.</p>
-</div></blockquote>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>sample_row</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas data frame row</span></dt>
+<dd><p class="first last">The row from the pandas data frame for the site and date to be processed.</p>
+</dd>
+<dt><strong>phreeqc_file_name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Name of PHREEQC input file to write.</p>
+</dd>
+<dt><strong>phreeqcDict</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</p>
+</dd>
+<dt><strong>datetext</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">String containing the text that describes the date as it should be written into the PHREEQC input file.</p>
+</dd>
+<dt><strong>charge</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">String containing name of element (or pH) that should be adjusted to obtain charge balance. This is done internally by PHREEQC. (Default=None)</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>status</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">OK if equal to 1. Error writing to file if equal to -1.</p>
+</dd>
+</dl>
 </td>
 </tr>
 </tbody>
@@ -148,7 +150,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
     </div>
   </body>
 </html>

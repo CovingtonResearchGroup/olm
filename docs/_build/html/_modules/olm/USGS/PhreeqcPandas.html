@@ -52,6 +52,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">isnan</span><span class="p">,</span><span class="n">size</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">brentq</span>
 <span class="kn">from</span> <span class="nn">pandas</span> <span class="k">import</span> <span class="n">DataFrame</span>
 <span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">xlrd</span><span class="o">,</span> <span class="nn">sys</span>
@@ -89,7 +90,7 @@
 <span class="sd">    -----</span>
 <span class="sd">    While this function can be used on its own. It is primarily designed to be used by the processPanel function, which provides a more convenient interface.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">phreeqc_output</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;latin_1&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">phreeqc_output</span><span class="p">:</span>
         <span class="n">simulationDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1">#loop through all lines of file</span>
         <span class="n">block</span> <span class="o">=</span> <span class="s1">&#39;beginning&#39;</span>
@@ -160,6 +161,193 @@
                             <span class="n">block</span> <span class="o">=</span> <span class="s1">&#39;simulation&#39;</span>
         <span class="k">return</span> <span class="n">simulationDict</span></div>
 
+
+<div class="viewcode-block" id="writePhreeqcInput"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.writePhreeqcInput.html#olm.USGS.PhreeqcPandas.writePhreeqcInput">[docs]</a><span class="k">def</span> <span class="nf">writePhreeqcInput</span><span class="p">(</span><span class="n">sample_row</span><span class="p">,</span> <span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">default_phreeqc_to_WQX_translation</span><span class="p">,</span> <span class="n">datetext</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writes a PHREEQC input file using the row from a site panel.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sample_row : pandas data frame row</span>
+<span class="sd">       The row from the pandas data frame for the site and date to be processed.</span>
+
+<span class="sd">    phreeqc_file_name : str</span>
+<span class="sd">       Name of PHREEQC input file to write.</span>
+
+<span class="sd">    phreeqcDict : dict</span>
+<span class="sd">       a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</span>
+
+<span class="sd">    datetext : str</span>
+<span class="sd">       String containing the text that describes the date as it should be written into the PHREEQC input file.</span>
+
+<span class="sd">    charge : str</span>
+<span class="sd">        String containing name of element (or pH) that should be adjusted to obtain charge balance. This is done internally by PHREEQC. (Default=None)</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    status : int</span>
+<span class="sd">       OK if equal to 1. Error writing to file if equal to -1.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">phreeqc_input_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SOLUTION &#39;</span> <span class="o">+</span> <span class="s1">&#39; on &#39;</span> <span class="o">+</span> <span class="n">datetext</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;units mg/l&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
+        <span class="c1">#loop through all characteristics that should be included in PHREEQC analysis</span>
+        <span class="k">for</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="n">phreeqcDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1">#Check to see if this characteristic is in our panel</span>
+            <span class="k">if</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="c1">#Check for cases with duplicate dates and no time information</span>
+                <span class="c1">#In this case, get only first sample on that date</span>
+                <span class="k">if</span> <span class="n">size</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="nb">min</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">sample_row</span> <span class="o">=</span> <span class="n">sample_row</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">isnan</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="p">):</span>
+                    <span class="k">if</span> <span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span><span class="o">==</span><span class="n">charge</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">+</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">])</span><span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">+</span><span class="s1">&#39;charge&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">+</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]),</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;END&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
+        <span class="n">phreeqc_input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+        <span class="n">phreeqc_input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Problem opening sample PHREEQC input file.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
+
+<span class="k">def</span> <span class="nf">PHREEQCRunSetPCO2</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a PHREEQC input file, modifies it to a set PCO2 and runs the modified file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phreecInputFile : str</span>
+<span class="sd">       The name of the input file to modify.</span>
+
+<span class="sd">    logPCO2 : float</span>
+<span class="sd">        Log10 of the PCO2 value to set the sample to.</span>
+
+<span class="sd">    PHREEQC_PATH : string</span>
+<span class="sd">       The path to the PHREEQC executable.</span>
+
+<span class="sd">    DATABASE_FILE : string</span>
+<span class="sd">       The database file to be used by PHREEQC.</span>
+
+<span class="sd">    newInputFile : string</span>
+<span class="sd">        The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and &#39;set-PCO2.phrq will be added.&#39;</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    simulationDict : Dict</span>
+<span class="sd">        A dictionary that contains the output of readPhreeqcOutput() run on the set PCO2 simulation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqcInputFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">input_file_text</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">wrote_CO2_line</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">PCO2_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">C</span><span class="se">\t</span><span class="s1">1</span><span class="se">\t</span><span class="s1">CO2(g)</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">for</span> <span class="n">linenum</span><span class="p">,</span> <span class="n">input_line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file_text</span><span class="p">):</span>
+        <span class="c1">#If there is a pH input line we will overwrite it</span>
+        <span class="k">if</span> <span class="s1">&#39;pH&#39;</span> <span class="ow">in</span> <span class="n">input_line</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">wrote_CO2_line</span><span class="p">:</span>
+                <span class="n">input_file_text</span><span class="p">[</span><span class="n">linenum</span><span class="p">]</span> <span class="o">=</span> <span class="n">PCO2_str</span>
+                <span class="n">wrote_CO2_line</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is more than one line with pH. This code only works for PHREEQC inputs with a single solution. Check input file!&quot;</span><span class="p">)</span>
+    <span class="c1">#If there was no pH line, we still need to add the PCO2 line</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">wrote_CO2_line</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">linenum</span><span class="p">,</span> <span class="n">input_line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file_text</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;SOLUTION&#39;</span> <span class="ow">in</span> <span class="n">input_line</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">wrote_CO2_line</span><span class="p">:</span>
+                    <span class="n">input_file_text</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">linenum</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">PCO2_str</span><span class="p">)</span>
+                    <span class="n">wrote_CO2_line</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is more than one line with SOLUTION. This code only works for PHREEQC inputs with a single solution. Check input file!&quot;</span><span class="p">)</span>
+    <span class="c1">#Write out new input file text with set PCO2</span>
+    <span class="k">if</span> <span class="n">newInputFile</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">newInputFile</span> <span class="o">=</span> <span class="n">phreeqcInputFile</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;-set-PCO2.phrq&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">newInputFile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">input_file_text</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="c1">#run phreeqc on the input file just created</span>
+    <span class="n">blank</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">split_file_name</span> <span class="o">=</span> <span class="n">newInputFile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">split_list</span> <span class="o">=</span> <span class="n">split_file_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="c1">#Trim off file ending</span>
+    <span class="n">phreeqcOutputFile</span> <span class="o">=</span> <span class="n">blank</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">split_list</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.out&#39;</span>
+    <span class="n">retcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PHREEQC_PATH</span><span class="p">,</span><span class="s1">&#39;phreeqc&#39;</span><span class="p">),</span> <span class="n">newInputFile</span><span class="p">,</span> <span class="n">phreeqcOutputFile</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC return code = &quot;</span><span class="p">,</span><span class="n">retcode</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">retcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">simulationDict</span> <span class="o">=</span> <span class="n">readPhreeqcOutput</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1">#This catches cases where PHREEQC fails (e.g. doesn&#39;t converge)</span>
+        <span class="n">simulationDict</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">simulationDict</span>
+
+
+    <span class="c1">#solution_inputs = readPhreeqcOutput(phreeqcOutputFile)</span>
+    <span class="c1">#solution_inputs[&#39;C&#39;]= &#39;   1   CO2(g)   &#39; + str(logPCO2)</span>
+    <span class="c1">#writePhreeqcInput(solution_inputs)</span>
+
+<span class="k">def</span> <span class="nf">calciteSaturationAtFixedPCO2</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function used in root finding of saturation PCO2.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phreecInputFile : str</span>
+<span class="sd">       The name of the input file to modify.</span>
+
+<span class="sd">    logPCO2 : float</span>
+<span class="sd">        Log10 of the PCO2 value to set the sample to.</span>
+
+<span class="sd">    PHREEQC_PATH : string</span>
+<span class="sd">       The path to the PHREEQC executable.</span>
+
+<span class="sd">    DATABASE_FILE : string</span>
+<span class="sd">       The database file to be used by PHREEQC.</span>
+
+<span class="sd">    newInputFile : string</span>
+<span class="sd">        The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and &#39;set-PCO2.phrq will be added.&#39;</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    SI : float</span>
+<span class="sd">        Saturation index of calcite for given PCO2.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">simulationDict</span> <span class="o">=</span> <span class="n">PHREEQCRunSetPCO2</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="n">newInputFile</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">simulationDict</span><span class="p">[</span><span class="s1">&#39;SI_Calcite&#39;</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">findPCO2atCalciteSaturation</span><span class="p">(</span><span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;atm&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds the PCO2 where calcite would be saturated by modifing PCO2 of a PHREEQC input file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phreecInputFile : str</span>
+<span class="sd">       The name of the input file to modify.</span>
+
+<span class="sd">    PHREEQC_PATH : string</span>
+<span class="sd">       The path to the PHREEQC executable.</span>
+
+<span class="sd">    DATABASE_FILE : string</span>
+<span class="sd">       The database file to be used by PHREEQC.</span>
+
+<span class="sd">    newInputFile : string</span>
+<span class="sd">        The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and &#39;set-PCO2.phrq will be added.&#39;</span>
+
+<span class="sd">    units: string</span>
+<span class="sd">        The units in which to return the partial pressure of CO2. Currently, &#39;ppm&#39; and &#39;atm&#39; are allowed (Default=atm).</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    PCO2 : float</span>
+<span class="sd">        The PCO2 at which calcite would be in equilibrium.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="p">)</span>
+    <span class="n">eqLogPCO2</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">calciteSaturationAtFixedPCO2</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">units</span> <span class="o">==</span> <span class="s1">&#39;ppm&#39;</span><span class="p">:</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="mf">10.</span><span class="o">**</span><span class="n">eqLogPCO2</span>
+    <span class="k">elif</span> <span class="n">units</span> <span class="o">==</span> <span class="s1">&#39;atm&#39;</span><span class="p">:</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="n">eqLogPCO2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specified units were not valid, use &#39;ppm&#39; or &#39;atm&#39;.&quot;</span><span class="p">)</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">PCO2</span>
 
 <div class="viewcode-block" id="processPanel"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.processPanel.html#olm.USGS.PhreeqcPandas.processPanel">[docs]</a><span class="k">def</span> <span class="nf">processPanel</span><span class="p">(</span><span class="n">site_panel</span><span class="p">,</span> <span class="n">site_dir</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_balance</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -284,54 +472,6 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of converged alkalinity forced charge balance cases = &quot;</span><span class="p">,</span> <span class="n">num_converged</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total number of samples = &quot;</span><span class="p">,</span> <span class="n">total_num</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">phreeqc_df</span></div>
-
-<div class="viewcode-block" id="writePhreeqcInput"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.writePhreeqcInput.html#olm.USGS.PhreeqcPandas.writePhreeqcInput">[docs]</a><span class="k">def</span> <span class="nf">writePhreeqcInput</span><span class="p">(</span><span class="n">sample_row</span><span class="p">,</span> <span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">default_phreeqc_to_WQX_translation</span><span class="p">,</span> <span class="n">datetext</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Writes a PHREEQC input file using the row from a site panel.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    sample_row : pandas data frame row</span>
-<span class="sd">       The row from the pandas data frame for the site and date to be processed.</span>
-
-<span class="sd">    phreeqc_file_name : str</span>
-<span class="sd">       Name of PHREEQC input file to write.</span>
-
-<span class="sd">    phreeqcDict : dict</span>
-<span class="sd">       a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</span>
-
-<span class="sd">    datetext : str</span>
-<span class="sd">       String containing the text that describes the date as it should be written into the PHREEQC input file.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    status : int</span>
-<span class="sd">       OK if equal to 1. Error writing to file if equal to -1.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">phreeqc_input_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SOLUTION &#39;</span> <span class="o">+</span> <span class="s1">&#39; on &#39;</span> <span class="o">+</span> <span class="n">datetext</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;units mg/l&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
-        <span class="c1">#loop through all characteristics that should be included in PHREEQC analysis</span>
-        <span class="k">for</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="n">phreeqcDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="c1">#Check to see if this characteristic is in our panel</span>
-            <span class="k">if</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-                <span class="c1">#Check for cases with duplicate dates and no time information</span>
-                <span class="c1">#In this case, get only first sample on that date</span>
-                <span class="k">if</span> <span class="n">size</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="nb">min</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-                    <span class="n">sample_row</span> <span class="o">=</span> <span class="n">sample_row</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">isnan</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="p">):</span>
-                    <span class="k">if</span> <span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span><span class="o">==</span><span class="n">charge</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">+</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">])</span><span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">+</span><span class="s1">&#39;charge&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">+</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]),</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;END&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
-        <span class="n">phreeqc_input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">return</span> <span class="mi">1</span>
-    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="n">phreeqc_input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Problem opening sample PHREEQC input file.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
 
 <span class="k">def</span> <span class="nf">processSites</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">regEx</span><span class="o">=</span><span class="s1">&#39;USGS-*&#39;</span><span class="p">,</span> <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">process_regular</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -480,7 +620,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
     </div>
   </body>
 </html>
