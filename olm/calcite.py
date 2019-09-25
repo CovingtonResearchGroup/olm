@@ -162,6 +162,55 @@ def concCaEqFromPCO2(PCO2, T_C = 25.):
             CaEq = np.nan
     return CaEq
 
+#Calculate the equilibrium concentration of Ca using PCO2 and T_C
+def PCO2EqFromCa(Ca, T_C = 25., I=None):
+    """
+    Calculates the equilibrium PCO2 for a given concentration of calcium and temp.
+
+    Parameters
+    ----------
+    Ca : float, numpy.ndarray, or pandas Series
+       Concentration of calcium in mol/L.
+    T_C : float, numpy.ndarray, or pandas Series (optional)
+       temperature of solution in degrees Celsius (default = 25 C)
+    I :  float, numpy.ndarray, or pandas Series (optional)
+        Ionic strength of solution. If not provided, will be calculated from Ca alone.
+    Returns
+    -------
+    PCO2Eq : float, numpy.ndarray, or pandas Series
+       Partial pressure of CO2 (atm) at which the solution would be in equilibrium w.r.t. calcite.
+
+    Notes
+    -----
+    Assumes a H20-CO2-CaCO3 system.
+    If a numpy array or pandas Series object are passed in as Ca arguments, then equilibrium PCO2s will be found iteratively in a for-loop and returned as the same data type given in the argument.
+    """
+    #If there is only one value for T_C, but multiple PCO2 values, make an array of equal values
+    if (np.size(Ca)>1) and (np.size(T_C) == 1):
+        T_C = T_C + np.zeros(np.size(Ca))
+    #Calculate equilibrium constants as a function of T
+    T_K = CtoK(T_C)
+    K_c = calc_K_c(T_K)
+    K_2 = calc_K_2(T_K)
+    K_1 = calc_K_1(T_K)
+    K_H = calc_K_H(T_K)
+    #Calculate ionic strength
+    if I == None:
+        I = approxI(Ca)#Neglects other metals in the solution (might change this)
+    #Calculate activity coefficients
+    properties = getProperties()
+    z_Ca = properties['Ca']['charge']
+    r_Ca = properties['Ca']['radius']
+    gamma_Ca = DebyeHuckel(I,z_Ca,r_Ca,T=T_C)
+    z_HCO3 = properties['HCO3']['charge']
+    r_HCO3 = properties['HCO3']['radius']
+    gamma_HCO3 = DebyeHuckel(I,z_HCO3,r_HCO3,T=T_C)
+    #Calculate PCO2 from eqn 2.35c in Dreybrodt (1988)
+    PCO2 = Ca**3. * 4.*K_2*gamma_Ca*gamma_HCO3**2. / (K_1*K_c*K_H)
+    return PCO2
+
+
+
 #Calculates equilibrium activity of H+ given PCO2
 #  - uses relaxed charge balance assumption
 def activityHFromPCO2(PCO2, T_C = 25., CaEq = None):

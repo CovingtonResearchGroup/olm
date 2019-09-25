@@ -262,7 +262,7 @@ def calciteSaturationAtFixedPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABA
     return float(simulationDict['SI_Calcite'])
 
 
-def findPCO2atCalciteSaturation(phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=None, units='ppm'):
+def findPCO2atCalciteSaturation(phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=None, units='atm'):
     """
     Finds the PCO2 where calcite would be saturated by modifing PCO2 of a PHREEQC input file.
 
@@ -281,7 +281,7 @@ def findPCO2atCalciteSaturation(phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, n
         The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and 'set-PCO2.phrq will be added.'
 
     units: string
-        The units in which to return the partial pressure of CO2. Currently, 'ppm' and 'atm' are allowed (Default=ppm).
+        The units in which to return the partial pressure of CO2. Currently, 'ppm' and 'atm' are allowed (Default=atm).
     Returns
     -------
     PCO2 : float
