@@ -218,7 +218,10 @@ def PHREEQCRunSetPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, ne
         for line in input_file_text:
             f.write(line)
     #run phreeqc on the input file just created
-    phreeqcOutputFile = newInputFile+'.out'
+    blank = ''
+    split_file_name = newInputFile.split('.')
+    split_list = split_file_name[:-1]#Trim off file ending
+    phreeqcOutputFile = blank.join(split_list) + '.out'
     retcode = subprocess.call([os.path.join(PHREEQC_PATH,'phreeqc'), newInputFile, phreeqcOutputFile, DATABASE_FILE])
     print("PHREEQC return code = ",retcode)
     if retcode == 0:
