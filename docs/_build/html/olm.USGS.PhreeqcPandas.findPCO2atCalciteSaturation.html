@@ -1,0 +1,156 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation &#8212; olm 0.35 documentation</title>
+    <link rel="stylesheet" href="_static//default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.35',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2" href="olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2.html" />
+    <link rel="prev" title="olm.USGS.PhreeqcPandas.writePhreeqcInput" href="olm.USGS.PhreeqcPandas.writePhreeqcInput.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2.html" title="olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.PhreeqcPandas.writePhreeqcInput.html" title="olm.USGS.PhreeqcPandas.writePhreeqcInput"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.35 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="olm-usgs-phreeqcpandas-findpco2atcalcitesaturation">
+<h1>olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation<a class="headerlink" href="#olm-usgs-phreeqcpandas-findpco2atcalcitesaturation" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation">
+<code class="descclassname">olm.USGS.PhreeqcPandas.</code><code class="descname">findPCO2atCalciteSaturation</code><span class="sig-paren">(</span><em>phreeqcInputFile</em>, <em>PHREEQC_PATH</em>, <em>DATABASE_FILE</em>, <em>newInputFile=None</em>, <em>units='atm'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#findPCO2atCalciteSaturation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the PCO2 where calcite would be saturated by modifing PCO2 of a PHREEQC input file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>phreecInputFile</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">The name of the input file to modify.</p>
+</dd>
+<dt><strong>PHREEQC_PATH</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The path to the PHREEQC executable.</p>
+</dd>
+<dt><strong>DATABASE_FILE</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The database file to be used by PHREEQC.</p>
+</dd>
+<dt><strong>newInputFile</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
+<dd><p class="first last">The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and ‘set-PCO2.phrq will be added.’</p>
+</dd>
+<dt><strong>units: string</strong></dt>
+<dd><p class="first last">The units in which to return the partial pressure of CO2. Currently, ‘ppm’ and ‘atm’ are allowed (Default=atm).</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>PCO2</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">The PCO2 at which calcite would be in equilibrium.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="olm.USGS.PhreeqcPandas.writePhreeqcInput.html"
+                        title="previous chapter">olm.USGS.PhreeqcPandas.writePhreeqcInput</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2.html"
+                        title="next chapter">olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2.html" title="olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="olm.USGS.PhreeqcPandas.writePhreeqcInput.html" title="olm.USGS.PhreeqcPandas.writePhreeqcInput"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.35 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2014-2018 Matthew Covington.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+    </div>
+  </body>
+</html>

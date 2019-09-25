@@ -32,7 +32,10 @@ Most functionality can be controlled from within the Excel file.  A template is 
    processPanel
    readPhreeqcOutput
    writePhreeqcInput
-
+   findPCO2atCalciteSaturation
+   phreeqcRunSetPCO2
+   calciteSaturationAtFixedPCO2
+   
 :mod:`olm.USGS.DataRetrieval` module
 ------------------------------------------
 

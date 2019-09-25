@@ -5,13 +5,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>olm Package &#8212; olm 0.34 documentation</title>
+    <title>olm Package &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.34',
+        VERSION:     '0.35',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true,
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="index.html" title="Welcome to olm’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.34 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.35 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -86,85 +86,88 @@
 <tr class="row-even"><td><a class="reference internal" href="olm.calcite.concCaEqFromPCO2.html#olm.calcite.concCaEqFromPCO2" title="olm.calcite.concCaEqFromPCO2"><code class="xref py py-obj docutils literal"><span class="pre">concCaEqFromPCO2</span></code></a>(PCO2[,&nbsp;T_C])</td>
 <td>Calculates the equilibrium concentration of calcium using PCO2 and temp.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.concCaEqFromSolution.html#olm.calcite.concCaEqFromSolution" title="olm.calcite.concCaEqFromSolution"><code class="xref py py-obj docutils literal"><span class="pre">concCaEqFromSolution</span></code></a>(sol)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.PCO2EqFromCa.html#olm.calcite.PCO2EqFromCa" title="olm.calcite.PCO2EqFromCa"><code class="xref py py-obj docutils literal"><span class="pre">PCO2EqFromCa</span></code></a>(Ca[,&nbsp;T_C,&nbsp;I])</td>
+<td>Calculates the equilibrium PCO2 for a given concentration of calcium and temp.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.concCaEqFromSolution.html#olm.calcite.concCaEqFromSolution" title="olm.calcite.concCaEqFromSolution"><code class="xref py py-obj docutils literal"><span class="pre">concCaEqFromSolution</span></code></a>(sol)</td>
 <td>Calculates the equilibrium concentration of calcium for a solution object.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.concHFromCaPCO2Relaxed.html#olm.calcite.concHFromCaPCO2Relaxed" title="olm.calcite.concHFromCaPCO2Relaxed"><code class="xref py py-obj docutils literal"><span class="pre">concHFromCaPCO2Relaxed</span></code></a>(Ca,&nbsp;PCO2[,&nbsp;T_C])</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.concHFromCaPCO2Relaxed.html#olm.calcite.concHFromCaPCO2Relaxed" title="olm.calcite.concHFromCaPCO2Relaxed"><code class="xref py py-obj docutils literal"><span class="pre">concHFromCaPCO2Relaxed</span></code></a>(Ca,&nbsp;PCO2[,&nbsp;T_C])</td>
 <td>Calculates concentration of H+ from calcium concentration and PCO2 using relaxed charge balance.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.pwpFromSolution.html#olm.calcite.pwpFromSolution" title="olm.calcite.pwpFromSolution"><code class="xref py py-obj docutils literal"><span class="pre">pwpFromSolution</span></code></a>(sol[,&nbsp;PCO2,&nbsp;method])</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.pwpFromSolution.html#olm.calcite.pwpFromSolution" title="olm.calcite.pwpFromSolution"><code class="xref py py-obj docutils literal"><span class="pre">pwpFromSolution</span></code></a>(sol[,&nbsp;PCO2,&nbsp;method])</td>
 <td>Calculates the PWP dissolution rate from a solution object.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.pwpRateTheory.html#olm.calcite.pwpRateTheory" title="olm.calcite.pwpRateTheory"><code class="xref py py-obj docutils literal"><span class="pre">pwpRateTheory</span></code></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.pwpRateTheory.html#olm.calcite.pwpRateTheory" title="olm.calcite.pwpRateTheory"><code class="xref py py-obj docutils literal"><span class="pre">pwpRateTheory</span></code></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;…])</td>
 <td>Calculates PWP rate using theoretical relation for kappa4 from PWP.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.pwpRatePascal.html#olm.calcite.pwpRatePascal" title="olm.calcite.pwpRatePascal"><code class="xref py py-obj docutils literal"><span class="pre">pwpRatePascal</span></code></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;…])</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.pwpRatePascal.html#olm.calcite.pwpRatePascal" title="olm.calcite.pwpRatePascal"><code class="xref py py-obj docutils literal"><span class="pre">pwpRatePascal</span></code></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;…])</td>
 <td>Calculates PWP rate using relation for kappa4 found in PASCAL code.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.pwpRateFranci.html#olm.calcite.pwpRateFranci" title="olm.calcite.pwpRateFranci"><code class="xref py py-obj docutils literal"><span class="pre">pwpRateFranci</span></code></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.pwpRateFranci.html#olm.calcite.pwpRateFranci" title="olm.calcite.pwpRateFranci"><code class="xref py py-obj docutils literal"><span class="pre">pwpRateFranci</span></code></a>([a_Ca,&nbsp;a_H2CO3s,&nbsp;a_H,&nbsp;a_HCO3,&nbsp;…])</td>
 <td>Calculates PWP rate using relation for kappa4 used in Franci Gabrovsek’s code.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.palmerRate.html#olm.calcite.palmerRate" title="olm.calcite.palmerRate"><code class="xref py py-obj docutils literal"><span class="pre">palmerRate</span></code></a>(T_C,&nbsp;PCO2,&nbsp;Sat_Ratio[,&nbsp;rho,&nbsp;…])</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.palmerRate.html#olm.calcite.palmerRate" title="olm.calcite.palmerRate"><code class="xref py py-obj docutils literal"><span class="pre">palmerRate</span></code></a>(T_C,&nbsp;PCO2,&nbsp;Sat_Ratio[,&nbsp;rho,&nbsp;…])</td>
 <td>Calculates the calcite/limestone dissolution rate given temperature, PCO2, and a calcium saturation ratio using relationship from Palmer (1991).</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.palmerFromSolution.html#olm.calcite.palmerFromSolution" title="olm.calcite.palmerFromSolution"><code class="xref py py-obj docutils literal"><span class="pre">palmerFromSolution</span></code></a>(sol[,&nbsp;PCO2,&nbsp;dtype,&nbsp;rho,&nbsp;…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.palmerFromSolution.html#olm.calcite.palmerFromSolution" title="olm.calcite.palmerFromSolution"><code class="xref py py-obj docutils literal"><span class="pre">palmerFromSolution</span></code></a>(sol[,&nbsp;PCO2,&nbsp;dtype,&nbsp;rho,&nbsp;…])</td>
 <td>Calculates the calcite/limestone dissolution rate from a solution object using relationship from Palmer (1991).</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.createPalmerInterpolationFunctions.html#olm.calcite.createPalmerInterpolationFunctions" title="olm.calcite.createPalmerInterpolationFunctions"><code class="xref py py-obj docutils literal"><span class="pre">createPalmerInterpolationFunctions</span></code></a>([impure])</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.createPalmerInterpolationFunctions.html#olm.calcite.createPalmerInterpolationFunctions" title="olm.calcite.createPalmerInterpolationFunctions"><code class="xref py py-obj docutils literal"><span class="pre">createPalmerInterpolationFunctions</span></code></a>([impure])</td>
 <td>Creates interpolation functions for kinetic rate constants using linear interpolation from Table from Palmer (1991).</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.dissRateFromCaPCO2.html#olm.calcite.dissRateFromCaPCO2" title="olm.calcite.dissRateFromCaPCO2"><code class="xref py py-obj docutils literal"><span class="pre">dissRateFromCaPCO2</span></code></a>(Ca,&nbsp;PCO2,&nbsp;T_C[,&nbsp;rho,&nbsp;…])</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.dissRateFromCaPCO2.html#olm.calcite.dissRateFromCaPCO2" title="olm.calcite.dissRateFromCaPCO2"><code class="xref py py-obj docutils literal"><span class="pre">dissRateFromCaPCO2</span></code></a>(Ca,&nbsp;PCO2,&nbsp;T_C[,&nbsp;rho,&nbsp;…])</td>
 <td>Calculates the calcite/limestone dissolution rate from given calcium concentration and PCO2.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.pwp_to_mm_yr.html#olm.calcite.pwp_to_mm_yr" title="olm.calcite.pwp_to_mm_yr"><code class="xref py py-obj docutils literal"><span class="pre">pwp_to_mm_yr</span></code></a>(R[,&nbsp;rho])</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.pwp_to_mm_yr.html#olm.calcite.pwp_to_mm_yr" title="olm.calcite.pwp_to_mm_yr"><code class="xref py py-obj docutils literal"><span class="pre">pwp_to_mm_yr</span></code></a>(R[,&nbsp;rho])</td>
 <td>Converts the PWP dissolution rates from mmol/cm^2/s to mm/year.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_K_H.html#olm.calcite.calc_K_H" title="olm.calcite.calc_K_H"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_H</span></code></a>(T_K)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_K_H.html#olm.calcite.calc_K_H" title="olm.calcite.calc_K_H"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_H</span></code></a>(T_K)</td>
 <td>Calculates Henry’s law constant for CO2.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_K_W.html#olm.calcite.calc_K_W" title="olm.calcite.calc_K_W"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_W</span></code></a>(T_K)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_K_W.html#olm.calcite.calc_K_W" title="olm.calcite.calc_K_W"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_W</span></code></a>(T_K)</td>
 <td>Calculates mass action constant for dissociation water.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_K_0.html#olm.calcite.calc_K_0" title="olm.calcite.calc_K_0"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_0</span></code></a>(T_K)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_K_0.html#olm.calcite.calc_K_0" title="olm.calcite.calc_K_0"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_0</span></code></a>(T_K)</td>
 <td>Calculates mass action constant for conversion of CO2 to carbonic acid.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_K_1.html#olm.calcite.calc_K_1" title="olm.calcite.calc_K_1"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_1</span></code></a>(T_K)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_K_1.html#olm.calcite.calc_K_1" title="olm.calcite.calc_K_1"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_1</span></code></a>(T_K)</td>
 <td>Calculates mass action constant for dissociation of carbonic acid.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_K_2.html#olm.calcite.calc_K_2" title="olm.calcite.calc_K_2"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_2</span></code></a>(T_K)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_K_2.html#olm.calcite.calc_K_2" title="olm.calcite.calc_K_2"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_2</span></code></a>(T_K)</td>
 <td>Calculates mass action constant for dissociation of bicarbonate.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_K_c.html#olm.calcite.calc_K_c" title="olm.calcite.calc_K_c"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_c</span></code></a>(T_K)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_K_c.html#olm.calcite.calc_K_c" title="olm.calcite.calc_K_c"><code class="xref py py-obj docutils literal"><span class="pre">calc_K_c</span></code></a>(T_K)</td>
 <td>Calculates equilibrium constant for calcite.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_kappa1.html#olm.calcite.calc_kappa1" title="olm.calcite.calc_kappa1"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa1</span></code></a>(T_K)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_kappa1.html#olm.calcite.calc_kappa1" title="olm.calcite.calc_kappa1"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa1</span></code></a>(T_K)</td>
 <td>Calculates kappa1 in the PWP equation.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_kappa2.html#olm.calcite.calc_kappa2" title="olm.calcite.calc_kappa2"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa2</span></code></a>(T_K)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_kappa2.html#olm.calcite.calc_kappa2" title="olm.calcite.calc_kappa2"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa2</span></code></a>(T_K)</td>
 <td>Calculates kappa2 in the PWP equation.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_kappa3.html#olm.calcite.calc_kappa3" title="olm.calcite.calc_kappa3"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa3</span></code></a>(T_K)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_kappa3.html#olm.calcite.calc_kappa3" title="olm.calcite.calc_kappa3"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa3</span></code></a>(T_K)</td>
 <td>Calculates kappa3 in the PWP equation.</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_kappa4Theory.html#olm.calcite.calc_kappa4Theory" title="olm.calcite.calc_kappa4Theory"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Theory</span></code></a>(T_K,&nbsp;PCO2,&nbsp;a_H2CO3s)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_kappa4Theory.html#olm.calcite.calc_kappa4Theory" title="olm.calcite.calc_kappa4Theory"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Theory</span></code></a>(T_K,&nbsp;PCO2,&nbsp;a_H2CO3s)</td>
 <td>Calculates kappa4 in the PWP equation using the theoretical relation for kappa4 from Plummer, Wigley, and Parkhurst (1978) Equation 25 (as described in Dreybrodt [1988] equation 6.22b).</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_kappa4Pascal.html#olm.calcite.calc_kappa4Pascal" title="olm.calcite.calc_kappa4Pascal"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Pascal</span></code></a>(T_K,&nbsp;PCO2)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_kappa4Pascal.html#olm.calcite.calc_kappa4Pascal" title="olm.calcite.calc_kappa4Pascal"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Pascal</span></code></a>(T_K,&nbsp;PCO2)</td>
 <td>Calculates kappa4 in the PWP equation using fit from Buhmann and Dreybrodt (1985).</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_kappa4Franci.html#olm.calcite.calc_kappa4Franci" title="olm.calcite.calc_kappa4Franci"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Franci</span></code></a>(T_K,&nbsp;a_H,&nbsp;a_H2CO3s)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_kappa4Franci.html#olm.calcite.calc_kappa4Franci" title="olm.calcite.calc_kappa4Franci"><code class="xref py py-obj docutils literal"><span class="pre">calc_kappa4Franci</span></code></a>(T_K,&nbsp;a_H,&nbsp;a_H2CO3s)</td>
 <td>Calculates kappa4 in the PWP equation using approach from Franci’s code.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_k1.html#olm.calcite.calc_k1" title="olm.calcite.calc_k1"><code class="xref py py-obj docutils literal"><span class="pre">calc_k1</span></code></a>(T_K)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_k1.html#olm.calcite.calc_k1" title="olm.calcite.calc_k1"><code class="xref py py-obj docutils literal"><span class="pre">calc_k1</span></code></a>(T_K)</td>
 <td>Calculates k1+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_k2.html#olm.calcite.calc_k2" title="olm.calcite.calc_k2"><code class="xref py py-obj docutils literal"><span class="pre">calc_k2</span></code></a>(T_K)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_k2.html#olm.calcite.calc_k2" title="olm.calcite.calc_k2"><code class="xref py py-obj docutils literal"><span class="pre">calc_k2</span></code></a>(T_K)</td>
 <td>Calculates k2+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_k_neg1.html#olm.calcite.calc_k_neg1" title="olm.calcite.calc_k_neg1"><code class="xref py py-obj docutils literal"><span class="pre">calc_k_neg1</span></code></a>(T_K)</td>
+<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_k_neg1.html#olm.calcite.calc_k_neg1" title="olm.calcite.calc_k_neg1"><code class="xref py py-obj docutils literal"><span class="pre">calc_k_neg1</span></code></a>(T_K)</td>
 <td>Calculates k1- kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="olm.calcite.calc_k_neg2.html#olm.calcite.calc_k_neg2" title="olm.calcite.calc_k_neg2"><code class="xref py py-obj docutils literal"><span class="pre">calc_k_neg2</span></code></a>(T_K)</td>
+<tr class="row-even"><td><a class="reference internal" href="olm.calcite.calc_k_neg2.html#olm.calcite.calc_k_neg2" title="olm.calcite.calc_k_neg2"><code class="xref py py-obj docutils literal"><span class="pre">calc_k_neg2</span></code></a>(T_K)</td>
 <td>Calculates k2- kinetic constant from Table 1 in Kaufmann and Dreybrodt (2007).</td>
 </tr>
 </tbody>
@@ -240,6 +243,9 @@
 <li class="toctree-l3"><a class="reference internal" href="olm.USGS.PhreeqcPandas.processPanel.html">olm.USGS.PhreeqcPandas.processPanel</a></li>
 <li class="toctree-l3"><a class="reference internal" href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html">olm.USGS.PhreeqcPandas.readPhreeqcOutput</a></li>
 <li class="toctree-l3"><a class="reference internal" href="olm.USGS.PhreeqcPandas.writePhreeqcInput.html">olm.USGS.PhreeqcPandas.writePhreeqcInput</a></li>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation.html">olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2.html">olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2.html">olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="olm.USGS.html#olm-usgs-dataretrieval-module"><code class="docutils literal"><span class="pre">olm.USGS.DataRetrieval</span></code> module</a><ul>
@@ -337,7 +343,7 @@
         <li class="right" >
           <a href="index.html" title="Welcome to olm’s documentation!"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.34 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.35 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

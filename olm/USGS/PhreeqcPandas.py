@@ -165,7 +165,7 @@ def writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=default_phreeqc
         print ("Problem opening sample PHREEQC input file.")
         return -1
 
-def PHREEQCRunSetPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=None):
+def phreeqcRunSetPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=None):
     """
     Reads a PHREEQC input file, modifies it to a set PCO2 and runs the modified file.
 
@@ -240,6 +240,8 @@ def calciteSaturationAtFixedPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABA
     """
     Function used in root finding of saturation PCO2.
 
+    Function is used by findPCO2atCalciteSaturation(). As a stand alone function, it's better to use phreeqcRunSetPCO2().
+
     Parameters
     ----------
     phreecInputFile : str
@@ -261,7 +263,7 @@ def calciteSaturationAtFixedPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABA
     SI : float
         Saturation index of calcite for given PCO2.
     """
-    simulationDict = PHREEQCRunSetPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=newInputFile)
+    simulationDict = phreeqcRunSetPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=newInputFile)
     return float(simulationDict['SI_Calcite'])
 
 

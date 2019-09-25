@@ -19,6 +19,7 @@ The olm package provides a chemical ``solution`` object along with a suite of fu
    PCO2FromSolution
    activityHFromPCO2
    concCaEqFromPCO2
+   PCO2EqFromCa
    concCaEqFromSolution
    concHFromCaPCO2Relaxed
    pwpFromSolution
