@@ -5,6 +5,7 @@ Collection of functions to interface between WaterChem and PHREEQC.
 """
 from __future__ import print_function
 from numpy import isnan,size
+from scipy.optimize import brentq
 from pandas import DataFrame
 import pickle as pickle
 import os, subprocess, xlrd, sys
@@ -164,10 +165,139 @@ def writePhreeqcInput(sample_row, phreeqc_file_name, phreeqcDict=default_phreeqc
         print ("Problem opening sample PHREEQC input file.")
         return -1
 
-def PHREEQC_set_PCO2(phreeqcOutputFile,logPCO2):
-    solution_inputs = readPhreeqcOutput(phreeqcOutputFile)
-    solution_inputs['C']= '   1   CO2(g)   ' + str(logPCO2)
+def PHREEQCRunSetPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=None):
+    """
+    Reads a PHREEQC input file, modifies it to a set PCO2 and runs the modified file.
 
+    Parameters
+    ----------
+    phreecInputFile : str
+       The name of the input file to modify.
+
+    logPCO2 : float
+        Log10 of the PCO2 value to set the sample to.
+
+    PHREEQC_PATH : string
+       The path to the PHREEQC executable.
+
+    DATABASE_FILE : string
+       The database file to be used by PHREEQC.
+
+    newInputFile : string
+        The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and 'set-PCO2.phrq will be added.'
+    Returns
+    -------
+    simulationDict : Dict
+        A dictionary that contains the output of readPhreeqcOutput() run on the set PCO2 simulation.
+    """
+    with open(phreeqcInputFile) as f:
+        input_file_text = f.readlines()
+    wrote_CO2_line = False
+    PCO2_str = '\tC\t1\tCO2(g)\t' + str(logPCO2)+'\n'
+    for linenum, input_line in enumerate(input_file_text):
+        #If there is a pH input line we will overwrite it
+        if 'pH' in input_line:
+            if not wrote_CO2_line:
+                input_file_text[linenum] = PCO2_str
+                wrote_CO2_line = True
+            else:
+                print("There is more than one line with pH. This code only works for PHREEQC inputs with a single solution. Check input file!")
+    #If there was no pH line, we still need to add the PCO2 line
+    if not wrote_CO2_line:
+        for linenum, input_line in enumerate(input_file_text):
+            if 'SOLUTION' in input_line:
+                if not wrote_CO2_line:
+                    input_file_text.insert(linenum+1, PCO2_str)
+                    wrote_CO2_line = True
+                else:
+                    print("There is more than one line with SOLUTION. This code only works for PHREEQC inputs with a single solution. Check input file!")
+    #Write out new input file text with set PCO2
+    if newInputFile == None:
+        newInputFile = phreeqcInputFile[:-5]+'-set-PCO2.phrq'
+    with open(newInputFile, 'w') as f:
+        for line in input_file_text:
+            f.write(line)
+    #run phreeqc on the input file just created
+    phreeqcOutputFile = newInputFile+'.out'
+    retcode = subprocess.call([os.path.join(PHREEQC_PATH,'phreeqc'), newInputFile, phreeqcOutputFile, DATABASE_FILE])
+    print("PHREEQC return code = ",retcode)
+    if retcode == 0:
+        simulationDict = readPhreeqcOutput(phreeqcOutputFile)
+    else:
+        #This catches cases where PHREEQC fails (e.g. doesn't converge)
+        simulationDict = None
+    return simulationDict
+
+
+    #solution_inputs = readPhreeqcOutput(phreeqcOutputFile)
+    #solution_inputs['C']= '   1   CO2(g)   ' + str(logPCO2)
+    #writePhreeqcInput(solution_inputs)
+
+def calciteSaturationAtFixedPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=None):
+    """
+    Function used in root finding of saturation PCO2.
+
+    Parameters
+    ----------
+    phreecInputFile : str
+       The name of the input file to modify.
+
+    logPCO2 : float
+        Log10 of the PCO2 value to set the sample to.
+
+    PHREEQC_PATH : string
+       The path to the PHREEQC executable.
+
+    DATABASE_FILE : string
+       The database file to be used by PHREEQC.
+
+    newInputFile : string
+        The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and 'set-PCO2.phrq will be added.'
+    Returns
+    -------
+    SI : float
+        Saturation index of calcite for given PCO2.
+    """
+    simulationDict = PHREEQCRunSetPCO2(logPCO2, phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=newInputFile)
+    return float(simulationDict['SI_Calcite'])
+
+
+def findPCO2atCalciteSaturation(phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile=None, units='ppm'):
+    """
+    Finds the PCO2 where calcite would be saturated by modifing PCO2 of a PHREEQC input file.
+
+    Parameters
+    ----------
+    phreecInputFile : str
+       The name of the input file to modify.
+
+    PHREEQC_PATH : string
+       The path to the PHREEQC executable.
+
+    DATABASE_FILE : string
+       The database file to be used by PHREEQC.
+
+    newInputFile : string
+        The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and 'set-PCO2.phrq will be added.'
+
+    units: string
+        The units in which to return the partial pressure of CO2. Currently, 'ppm' and 'atm' are allowed (Default=ppm).
+    Returns
+    -------
+    PCO2 : float
+        The PCO2 at which calcite would be in equilibrium.
+
+    """
+    args = (phreeqcInputFile, PHREEQC_PATH, DATABASE_FILE, newInputFile)
+    eqLogPCO2 = brentq(calciteSaturationAtFixedPCO2, -6., 0., args=args, xtol=0.01)
+    if units == 'ppm':
+        PCO2 = 1e6 * 10.**eqLogPCO2
+    elif units == 'atm':
+        PCO2 = 10.**eqLogPCO2
+    else:
+        print("Specified units were not valid, use 'ppm' or 'atm'.")
+        PCO2 = None
+    return PCO2
 
 def processPanel(site_panel, site_dir, PHREEQC_PATH, DATABASE_FILE, phreeqcDict=None, force_balance=''):
     """
