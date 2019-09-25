@@ -32,14 +32,14 @@ def PCO2FromSolution(sol):
 
     """
     def calc_PCO2(this_sol):
-        Ca_conc = this_sol.ions['Ca']['conc_mol']    
+        Ca_conc = this_sol.ions['Ca']['conc_mol']
         gamma_H = this_sol.activity_coef('H')
         gamma_HCO3 = this_sol.activity_coef('HCO3')
         gamma_Ca = this_sol.activity_coef('Ca')
         pH = this_sol.pH
         H_conc = 10.0**(-pH)/gamma_H
-        #calculate mass action constans 
-        T_K = this_sol.T_K    
+        #calculate mass action constans
+        T_K = this_sol.T_K
         K_c = calc_K_c(T_K)
         K_2 = calc_K_2(T_K)
         K_1 = calc_K_1(T_K)
@@ -98,7 +98,7 @@ def concCaEqFromPCO2(PCO2, T_C = 25.):
     """
     Calculates the equilibrium concentration of calcium using PCO2 and temp.
 
-    Iteratively solves for the equilibrium concentration of calcium from PCO2 and temp.  First guesses that activity coefficients are 1, and then iterates to solution using scipy's brentq function. 
+    Iteratively solves for the equilibrium concentration of calcium from PCO2 and temp.  First guesses that activity coefficients are 1, and then iterates to solution using scipy's brentq function.
 
     Parameters
     ----------
@@ -111,13 +111,13 @@ def concCaEqFromPCO2(PCO2, T_C = 25.):
     -------
     CaEq : float, numpy.ndarray, or pandas Series
        Equilibrium concentration(s) of calcium in mol/L
- 
+
     Notes
     -----
-    Assumes a H20-CO2-CaCO3 system.   
+    Assumes a H20-CO2-CaCO3 system.
     If a numpy array or pandas Series object are passed in as PCO2 arguments, then equilibrium concentrations will be found iteratively in a for-loop and returned as the same data type given in the argument.
     """
-    
+
     def Ca_minimize(Ca,T_C_func,K_c,K_2,K_1,K_H,PCO2_func):
         if Ca<0:
             return 10.
@@ -146,7 +146,7 @@ def concCaEqFromPCO2(PCO2, T_C = 25.):
     #or (type(PCO2)==pandas.core.series.TimeSeries)
     if (type(PCO2)==np.ndarray) or is_series:
         #We have a numpy array or pandas Series. Loop through solutions.
-        CaEq = np.zeros(np.size(PCO2))       
+        CaEq = np.zeros(np.size(PCO2))
         for i, single_PCO2 in enumerate(PCO2):
             try:
                 CaEq[i] = brentq(Ca_minimize, guess_Ca[i], 10.*guess_Ca[i], args=(T_C[i],K_c[i],K_2[i],K_1[i],K_H[i], PCO2[i]))
@@ -249,19 +249,19 @@ def solutionFromCaPCO2(Ca, PCO2, T_C = 25., per_tol = 0.001):
 
     Parameters
     ----------
-    Ca : float, numpy.ndarray, or pandas Series 
+    Ca : float, numpy.ndarray, or pandas Series
        concentration of calcium in mol/L
-    PCO2 : float, numpy.ndarray, or pandas Series 
+    PCO2 : float, numpy.ndarray, or pandas Series
        partial pressure of CO2 (atm)
     T_C : float, , numpy.ndarray, or pandas Series (optional)
        temperature of solution in degrees Celsius (default = 25 C)
     per_tol : float
        the fractional change in H concentration between iterations upon which the iteration is terminated
-    
+
 
     Returns
     -------
-    sol : solution object, numpy.ndarray of solution objects, or pandas Series of solution objects       
+    sol : solution object, numpy.ndarray of solution objects, or pandas Series of solution objects
 
     Notes
     -----
@@ -283,7 +283,7 @@ def solutionFromCaPCO2(Ca, PCO2, T_C = 25., per_tol = 0.001):
             gamma_H = gamma('H', I_guess, T_C=T_C_in)
             gamma_OH = gamma('OH', I_guess, T_C=T_C_in)
             gamma_HCO3 = gamma('HCO3', I_guess, T_C=T_C_in)
-            gamma_CO3 = gamma('CO3', I_guess, T_C=T_C_in)        
+            gamma_CO3 = gamma('CO3', I_guess, T_C=T_C_in)
             H_new= fsolve(lambda H: 2.*Ca_in + H - K_W/(gamma_H*gamma_OH*H)\
                           - K_6*K_H*PCO2_in/(gamma_HCO3*gamma_H*H)*\
                           (1. + 2.*K_2*gamma_HCO3/(gamma_CO3*gamma_H*H)),\
@@ -311,7 +311,7 @@ def solutionFromCaPCO2(Ca, PCO2, T_C = 25., per_tol = 0.001):
     is_series = (type(Ca)==pandas.core.series.Series)
     #or (type(Ca)==pandas.core.series.TimeSeries)
     if (type(Ca)==np.ndarray) or is_series:
-        sol_arr = np.empty(np.size(Ca),dtype=object)        
+        sol_arr = np.empty(np.size(Ca),dtype=object)
         for i, this_Ca in enumerate(Ca):
             if np.size(T_C)==1:
                 sol_arr[i] = calc_sol(Ca[i],PCO2[i],T_C,per_tol=per_tol)
@@ -324,18 +324,16 @@ def solutionFromCaPCO2(Ca, PCO2, T_C = 25., per_tol = 0.001):
     else:
         return calc_sol(Ca,PCO2,T_C,per_tol=per_tol)
 
-        
-# Function to calculate H+ concentration from Calcium concentration and pC02 
-# using approximation in equation 2.30a (with an additional assumption that 
+
+# Function to calculate H+ concentration from Calcium concentration and pC02
+# using approximation in equation 2.30a (with an additional assumption that
 # chi -> infty, as for an open system) from Dreybrodt 1988. which assumes
 # pH < 8 such that carbonate and OH- species can be neglected
 #   Ca = Calcium concentration mol/L
 #   PCO2 = partial pressure of CO2
 def solutionFromCaPCO2Relaxed(Ca, PCO2, T_C = 25.):
     """
-    Creates a solution object from a given concentration of calcium and PCO2.
-
-    Creates a solution object from a given concentration of calcium, PCO2, and optional temperature.  Uses the approximate charge balance assumption (equation 2.30a in Dreybrodt [1988]).  This is valid when pH < 8, such that CO3- and OH- species can be neglected.  
+    Creates a solution object from a given concentration of calcium, PCO2, and optional temperature.  Uses the approximate charge balance assumption (equation 2.30a in Dreybrodt [1988]).  This is valid when pH < 8, such that CO3- and OH- species can be neglected.
 
     Parameters
     ----------
@@ -349,7 +347,7 @@ def solutionFromCaPCO2Relaxed(Ca, PCO2, T_C = 25.):
     Returns
     -------
     sol : solution object
-       
+
     Notes
     -----
     Assumes a H20-CO2-CaCO3 system.  Calculates concentration of H using relaxed charge balance assumption.
@@ -359,11 +357,11 @@ def solutionFromCaPCO2Relaxed(Ca, PCO2, T_C = 25.):
     H2CO3 = H2CO3fromPCO2(PCO2, T_K=T_K)
     properties = getProperties()
     I = approxI(Ca)
-    gamma_H = DebyeHuckel(I, 
+    gamma_H = DebyeHuckel(I,
                           properties['H']['charge'],
                           properties['H']['radius'],
                           T = T_C)
-    gamma_HCO3 = DebyeHuckel(I, 
+    gamma_HCO3 = DebyeHuckel(I,
                           properties['HCO3']['charge'],
                           properties['HCO3']['radius'],
                           T = T_C)
@@ -389,7 +387,7 @@ def solutionFromCaPCO2Relaxed(Ca, PCO2, T_C = 25.):
     return sol
 
 # Function to calculate solution from Calcium concentration and pH
-# using approximation in equation 2.30a (with an additional assumption that 
+# using approximation in equation 2.30a (with an additional assumption that
 # chi -> infty, as for an open system) from Dreybrodt 1988. which assumes
 # pH < 8 such that carbonate and OH- species can be neglected
 #   Ca = Calcium concentration mol/L
@@ -398,7 +396,7 @@ def solutionFrompHCaRelaxed(Ca, pH, T_C = 25.):
     """
     Creates a solution object from a given concentration of calcium and pH.
 
-    Creates a solution object from a given concentration of calcium, pH, and optional temperature.  Uses the approximate charge balance assumption (equation 2.30a in Dreybrodt [1988]).  This is valid when pH < 8, such that CO3- and OH- species can be neglected.  
+    Creates a solution object from a given concentration of calcium, pH, and optional temperature.  Uses the approximate charge balance assumption (equation 2.30a in Dreybrodt [1988]).  This is valid when pH < 8, such that CO3- and OH- species can be neglected.
 
     Parameters
     ----------
@@ -412,7 +410,7 @@ def solutionFrompHCaRelaxed(Ca, pH, T_C = 25.):
     Returns
     -------
     sol : solution object
-       
+
     Notes
     -----
     Assumes a H20-CO2-CaCO3 system.  Calculates concentration of H using relaxed charge balance assumption.
@@ -420,11 +418,11 @@ def solutionFrompHCaRelaxed(Ca, pH, T_C = 25.):
     T_K = CtoK(T_C)
     properties = getProperties()
     I = approxI(Ca)
-    gamma_H = DebyeHuckel(I, 
+    gamma_H = DebyeHuckel(I,
                           properties['H']['charge'],
                           properties['H']['radius'],
                           T = T_C)
-    gamma_HCO3 = DebyeHuckel(I, 
+    gamma_HCO3 = DebyeHuckel(I,
                           properties['HCO3']['charge'],
                           properties['HCO3']['radius'],
                           T = T_C)
@@ -432,13 +430,13 @@ def solutionFrompHCaRelaxed(Ca, pH, T_C = 25.):
                             properties['CO3']['charge'],
                             properties['CO3']['radius'],
                             T = T_C)
-    
-    gamma_Ca = DebyeHuckel(I, 
+
+    gamma_Ca = DebyeHuckel(I,
                            properties['Ca']['charge'],
                            properties['Ca']['radius'],
                            T = T_C)
     H = 10.0**(-pH)/gamma_H
-    #calculate mass action constans 
+    #calculate mass action constans
     K_c = calc_K_c(T_K)
     K_2 = calc_K_2(T_K)
     K_1 = calc_K_1(T_K)
@@ -476,7 +474,7 @@ def solutionFrompHCaRelaxed(Ca, pH, T_C = 25.):
 def H2CO3fromPCO2(PCO2, T_K = 273.15 + 25., T_C = None):
     """
     Calculate concentration of carbonic acid in equilibrium with a certain PCO2.
-    
+
     Parameters
     ----------
     PCO2 : float
@@ -484,7 +482,7 @@ def H2CO3fromPCO2(PCO2, T_K = 273.15 + 25., T_C = None):
     T_K : float, optional       temperature in degrees Kelvin (default = 273.15 + 25)
     T_C : float, optional
        temperature in degrees Celsius (default = None).  If None, function assumes T_K was given or uses default value.  If T_C is given in function call, then function uses T_C value to calculate T_K.
-       
+
     Returns
     -------
     H2CO3 : float
@@ -493,7 +491,7 @@ def H2CO3fromPCO2(PCO2, T_K = 273.15 + 25., T_C = None):
     if T_C != None:
         T_K = CtoK(T_C)
     K_H = calc_K_H(T_K)
-    K_0 = calc_K_0(T_K)    
+    K_0 = calc_K_0(T_K)
     H2CO3 = K_H*PCO2/K_0
     return H2CO3
 
@@ -501,7 +499,7 @@ def H2CO3fromPCO2(PCO2, T_K = 273.15 + 25., T_C = None):
 def H2CO3sfromPCO2(PCO2, T_K = 273.15 + 25., T_C = None):
     """
     Calculate concentration of carbonic acid + aqueous CO2 in equilibrium with a certain PCO2. [H2CO3s] = [H2CO3] + [CO2]
-    
+
     Parameters
     ----------
     PCO2 : float
@@ -509,7 +507,7 @@ def H2CO3sfromPCO2(PCO2, T_K = 273.15 + 25., T_C = None):
     T_K : float, optional       temperature in degrees Kelvin (default = 273.15 + 25)
     T_C : float, optional
        temperature in degrees Celsius (default = None).  If None, function assumes T_K was given or uses default value.  If T_C is given in function call, then function uses T_C value to calculate T_K.
-       
+
     Returns
     -------
     H2CO3s : float
@@ -518,7 +516,7 @@ def H2CO3sfromPCO2(PCO2, T_K = 273.15 + 25., T_C = None):
     if T_C != None:
         T_K = CtoK(T_C)
     K_H = calc_K_H(T_K)
-    K_0 = calc_K_0(T_K)    
+    K_0 = calc_K_0(T_K)
     H2CO3s = K_H*PCO2*(1+1/K_0)
     return H2CO3s
 
@@ -539,12 +537,12 @@ def pwpFromSolution(sol, PCO2=None, method='theory'):
     -------
     R : float, numpy.ndarray, or pandas Series
        calcite dissolution rate according to the PWP equation (mmol/cm^2/s)
-       
+
     """
     if PCO2==None:
         PCO2 = PCO2FromSolution(sol)
 
-    def calc_rate(sol_in,PCO2_in):    
+    def calc_rate(sol_in,PCO2_in):
         #Check whether all necessary ions are present
         if ('Ca' in sol_in.ions) and ('H' in sol_in.ions) and ('HCO3' in sol_in.ions):
             #Check whether H2CO3s is present, and calculate if necessary
@@ -575,21 +573,21 @@ def pwpFromSolution(sol, PCO2=None, method='theory'):
             return R
         else:
             print("Not all necessary ions are present in the solution object.")
-            return -1 
+            return -1
     is_series = (type(sol)==pandas.core.series.Series)
     #or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
         rate_arr = np.empty(np.size(sol))
-        for i, this_sol in enumerate(sol):            
+        for i, this_sol in enumerate(sol):
             rate_arr[i] = calc_rate(this_sol,PCO2[i])
         if is_series:
             rate_arr = pandas.Series(rate_arr, index=sol.index)
         return rate_arr
     else:
         return calc_rate(sol,PCO2)
-        
+
 #Calculate dissolution rate from PWP equation using an input concentrations
-# kappa4 is calculated using relation from Dreybrodt's PASCAL code. 
+# kappa4 is calculated using relation from Dreybrodt's PASCAL code.
 def pwpRatePascal(a_Ca=0., a_H2CO3s=0., a_H=0., a_HCO3=0., T_K=25.+273.15,PCO2=0.):
     """
     Calculates PWP rate using relation for kappa4 found in PASCAL code.
@@ -693,8 +691,8 @@ def pwpRateTheory(a_Ca=0., a_H2CO3s=0., a_H=0., a_HCO3=0., T_K=25.+273.15,PCO2=0
     is_series = (type(a_Ca)==pandas.core.series.Series)
     #or (type(a_Ca)==pandas.core.series.TimeSeries)
     if (type(a_Ca)==np.ndarray) or is_series:
-        #We have a numpy array or pandas Series. Loop through and calculate rates individually    
-        R = np.zeros(np.size(a_Ca))       
+        #We have a numpy array or pandas Series. Loop through and calculate rates individually
+        R = np.zeros(np.size(a_Ca))
         for i, single_R in enumerate(R):
             kappa4 = calc_kappa4Theory(T_K[i], PCO2[i], a_H2CO3s[i])
             R[i] = kappa1[i]*a_H[i] + kappa2[i]*a_H2CO3s[i] + kappa3[i] - kappa4*a_Ca[i]*a_HCO3[i]
@@ -773,7 +771,7 @@ def calc_kappa2(T_K):
     kappa2 : float
        constant kappa2 in the PWP equation (cm/s)
     """
-    
+
     kappa2 = 10.**(2.84 - 2177./T_K)
     return kappa2
 def calc_kappa3(T_K):
@@ -825,7 +823,7 @@ def calc_kappa4Kaufmann(T_K, PCO2):
 
     Notes
     -----
-    
+
     """
     T_C = KtoC(T_K)
     if PCO2>0.05:
@@ -859,7 +857,7 @@ def calc_kappa4Pascal(T_K,PCO2):
     B = 3.077-0.0146*T_C
     kappa4 = 10.**(-B)*(1/PCO2)**0.611
     return kappa4
-    
+
 def calc_kappa4Franci(T_K, a_H, a_H2CO3s):
     """
     Calculates kappa4 in the PWP equation using approach from Franci's code.
@@ -887,7 +885,7 @@ def calc_kappa4Franci(T_K, a_H, a_H2CO3s):
     kappa1 = calc_kappa1(T_K)
     kappa2 = calc_kappa2(T_K)
     kappa3 = calc_kappa3(T_K)
-    kappa4 = (K_2/K_c)*(kappa1 + 1/a_H*(kappa2*a_H2CO3s + kappa3) ) 
+    kappa4 = (K_2/K_c)*(kappa1 + 1/a_H*(kappa2*a_H2CO3s + kappa3) )
     return kappa4
 
 def calc_kappa4Theory(T_K, PCO2, a_H2CO3s):
@@ -912,7 +910,7 @@ def calc_kappa4Theory(T_K, PCO2, a_H2CO3s):
     -----
     See more info under documentation for pwpRateTheory().
     """
-  
+
     T_C = KtoC(T_K)
     K_2 = calc_K_2(T_K)
     K_c = calc_K_c(T_K)
@@ -921,7 +919,7 @@ def calc_kappa4Theory(T_K, PCO2, a_H2CO3s):
     kappa3 = calc_kappa3(T_K)
     #calculate equilbrium activity of H at surface
     a_Heq = activityHFromPCO2(PCO2, T_C=T_C)
-    kappa4 = (K_2/K_c)*(kappa1 + 1/a_Heq*(kappa2*a_H2CO3s + kappa3) ) 
+    kappa4 = (K_2/K_c)*(kappa1 + 1/a_Heq*(kappa2*a_H2CO3s + kappa3) )
     return kappa4
 
 
@@ -1045,7 +1043,7 @@ def calc_K_W(T_K):
 
 def calc_k1(T_K):
     """
-    Calculates k1+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007). 
+    Calculates k1+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).
 
     Parameters
     ----------
@@ -1147,7 +1145,7 @@ def createPalmerInterpolationFunctions(impure=True):
     -------
     (palmer_k1, palmer_C_Cs_T, palmer_n) : tuple
        Interpolation functions for k1, C_Cs_T, and n.
-       
+
     """
     #Construct linear interpolation functions for Table from Palmer (1991)
     T_arr = np.array([5.,15.,25.])
@@ -1168,7 +1166,7 @@ def createPalmerInterpolationFunctions(impure=True):
                             [0.6,0.7,0.8],
                             [0.6,0.7,0.8]])
     n_arr = np.array([1.5,1.6,1.7,2.2])
-    
+
     palmer_k1 = LinearNDInterpolator((T_grid.ravel(), CO2_grid.ravel()), k1_grid.ravel())
     palmer_C_Cs_T = LinearNDInterpolator((T_grid.ravel(), CO2_grid.ravel()), C_Cs_T_grid.ravel())
     palmer_n = interp1d(logPCO2_arr, n_arr)
@@ -1184,7 +1182,7 @@ def palmerRate(T_C, PCO2, Sat_Ratio, rho=2.6, impure=True, interp_funcs=np.array
     T_C : float
        Temperature in degrees Celcius.
     PCO2 : float
-       The partial pressure of CO2. 
+       The partial pressure of CO2.
     Sat_Ratio : float
        The ratio of calcium concentration to the calcium concentration at equilibrium ([Ca]/[Ca]_eq).
     rho : float
@@ -1197,7 +1195,7 @@ def palmerRate(T_C, PCO2, Sat_Ratio, rho=2.6, impure=True, interp_funcs=np.array
     -------
     R : float
        calcite dissolution rate according to the Palmer (1991) equation (mm/yr)
-       
+
     """
 
     if np.size(interp_funcs)!=3:
@@ -1258,7 +1256,7 @@ def palmerFromSolution(sol, PCO2=np.array([]), rho=2.6, impure=True):
     -------
     R : float, numpy.ndarray, or pandas Series
        calcite dissolution rate according to the Palmer (1991) equation (mm/yr)
-       
+
     """
     interp_funcs = createPalmerInterpolationFunctions(impure=impure)
     #Process solution
@@ -1268,7 +1266,7 @@ def palmerFromSolution(sol, PCO2=np.array([]), rho=2.6, impure=True):
         Ca = sol.ions['Ca']['conc_mol']
         Sat_Ratio = Ca/Ca_eq
         return palmerRate(T, PCO2, Sat_Ratio, rho, impure=impure, interp_funcs=interp_funcs)
-    
+
     #Loop through series or array if we have one
     is_series = (type(sol)==pandas.core.series.Series)
     #or (type(sol)==pandas.core.series.TimeSeries)
@@ -1302,7 +1300,7 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
     PCO2 : float, numpy.ndarray, or pandas Series
        The partial pressure of CO2 for the solution(s).
     T_C : float, numpy.ndarray, or pandas Series
-       The temperature of the water in degrees Celcius. 
+       The temperature of the water in degrees Celcius.
     rho : float
        Density of rock in g/cm^3. (default=2.6)
     method : string
@@ -1328,7 +1326,7 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
        calcite dissolution rate in mm/yr
     R_err : float, numpy.ndarray, or pandas Series
        error in dissolution rate (returned with R if keyword error=True)
-       
+
     """
     #Function for Monte Carlo error estimation
     def err_est(Ca,PCO2,T_C):
@@ -1351,9 +1349,9 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
                 return None
         #Estimated error is standard deviation from random sample
         return np.std(rate_sample)
- 
 
-    
+
+
     if not molL:
         #convert Ca units to mol/L
         Ca = mgL_to_molL(Ca, 'Ca')
@@ -1384,7 +1382,7 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
                     err_arr[i] = err_est(this_Ca, PCO2[i], T_C)
                 else:
                     err_arr[i] = err_est(this_Ca, PCO2[i], T_C[i])
-                                        
+
         if is_series:
             rate_arr = pandas.Series(rate_arr, index=Ca.index)
             if error:
@@ -1408,4 +1406,3 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
             err = err_est(Ca, PCO2, T_C)
             return R, err
         return R
-  
