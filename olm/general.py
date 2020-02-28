@@ -323,7 +323,7 @@ def molL_to_meqL(molL, ion):
        milliequivalents per liter
     """
     mmolL = molL*1000.
-    meqL = mmolL_to_meq(mmolL,ion)
+    meqL = mmolL_to_meqL(mmolL,ion)
     return meqL
 
 ##The solution object, which contains solution properties and methods
@@ -391,8 +391,8 @@ class solution(object):
                     ion_dict['meq'] = mmolL_to_meqL(ion_dict['conc_mmol'], ion)
                     self.ions[ion] = ion_dict
                 elif units[i] == 'mmol/L':
-                    ion_dict['conc_mmol'] = concentration[i]
-                    ion_dict['conc_mol'] = concentration[i]/1000.
+                    ion_dict['conc_mmol'] = concentrations[i]
+                    ion_dict['conc_mol'] = concentrations[i]/1000.
                     ion_dict['conc_mg'] = molL_to_mgL(ion_dict['conc_mol'])
                     ion_dict['meq'] = mmolL_to_meqL(ion_dict['conc_mmol'], ion)
                     self.ions[ion] = ion_dict
