@@ -1,5 +1,5 @@
-olm\.USGS\.DataRetrieval\.querySiteList
-=======================================
+olm.USGS.DataRetrieval.querySiteList
+====================================
 
 .. currentmodule:: olm.USGS.DataRetrieval
 

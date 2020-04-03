@@ -1,31 +1,23 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>olm.loggers package &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.35',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="olm.USGS.siteListExtraction.extractSitesFromXML" href="olm.USGS.siteListExtraction.extractSitesFromXML.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -57,28 +49,22 @@
 <span id="olm-loggers-campbelltoolkit-module"></span><h2>olm.loggers.CampbellToolkit module<a class="headerlink" href="#module-olm.loggers.CampbellToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="olm.loggers.CampbellToolkit.read_dat">
-<code class="descclassname">olm.loggers.CampbellToolkit.</code><code class="descname">read_dat</code><span class="sig-paren">(</span><em>dat_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/CampbellToolkit.html#read_dat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.CampbellToolkit.read_dat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.CampbellToolkit.</code><code class="sig-name descname">read_dat</code><span class="sig-paren">(</span><em class="sig-param">dat_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/CampbellToolkit.html#read_dat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.CampbellToolkit.read_dat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in data from a .dat file produced by Campbell’s data logging software.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>dat_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">The name of the .dat file to read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dat_file</strong><span class="classifier">string</span></dt><dd><p>The name of the .dat file to read.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame</span></dt>
-<dd><p class="first last">DataFrame containing data from .dat file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>df</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing data from .dat file.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -86,54 +72,42 @@
 <span id="olm-loggers-cyclopstoolkit-module"></span><h2>olm.loggers.CyclopsToolkit module<a class="headerlink" href="#module-olm.loggers.CyclopsToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="olm.loggers.CyclopsToolkit.read_cat">
-<code class="descclassname">olm.loggers.CyclopsToolkit.</code><code class="descname">read_cat</code><span class="sig-paren">(</span><em>cat_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/CyclopsToolkit.html#read_cat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.CyclopsToolkit.read_cat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.CyclopsToolkit.</code><code class="sig-name descname">read_cat</code><span class="sig-paren">(</span><em class="sig-param">cat_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/CyclopsToolkit.html#read_cat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.CyclopsToolkit.read_cat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in data from a concatenated Cyclops file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>dat_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">The name of the Cat.txt file to read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dat_file</strong><span class="classifier">string</span></dt><dd><p>The name of the Cat.txt file to read.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame</span></dt>
-<dd><p class="first last">DataFrame containing data from cat file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>df</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing data from cat file.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.CyclopsToolkit.read_single">
-<code class="descclassname">olm.loggers.CyclopsToolkit.</code><code class="descname">read_single</code><span class="sig-paren">(</span><em>txt_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/CyclopsToolkit.html#read_single"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.CyclopsToolkit.read_single" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.CyclopsToolkit.</code><code class="sig-name descname">read_single</code><span class="sig-paren">(</span><em class="sig-param">txt_file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/CyclopsToolkit.html#read_single"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.CyclopsToolkit.read_single" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in data from a single non-concatenated Cyclops file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>txt_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">The name of the Cat.txt file to read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>txt_file</strong><span class="classifier">string</span></dt><dd><p>The name of the Cat.txt file to read.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame</span></dt>
-<dd><p class="first last">DataFrame containing data from cat file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>df</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing data from cat file.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -141,31 +115,24 @@
 <span id="olm-loggers-hobotoolkit-module"></span><h2>olm.loggers.HoboToolkit module<a class="headerlink" href="#module-olm.loggers.HoboToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="olm.loggers.HoboToolkit.read_hobo_csv">
-<code class="descclassname">olm.loggers.HoboToolkit.</code><code class="descname">read_hobo_csv</code><span class="sig-paren">(</span><em>csv_file</em>, <em>all_columns=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/HoboToolkit.html#read_hobo_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.HoboToolkit.read_hobo_csv" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.HoboToolkit.</code><code class="sig-name descname">read_hobo_csv</code><span class="sig-paren">(</span><em class="sig-param">csv_file</em>, <em class="sig-param">all_columns=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/HoboToolkit.html#read_hobo_csv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.HoboToolkit.read_hobo_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads data from a csv file exported from HOBOware.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>csv_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">A string containing the file name of the csv file to be read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>csv_file</strong><span class="classifier">string</span></dt><dd><p>A string containing the file name of the csv file to be read.</p>
 </dd>
-<dt><strong>all_columns</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean (optional)</span></dt>
-<dd><p class="first last">Determines whether to read in all columns or just ones that we search for and relabel (RH, DewPt, Abs Pres, Temp, Attached, Stopped, Connected, EOF, Cond High Range, Cond Low Range). Default = False</p>
+<dt><strong>all_columns</strong><span class="classifier">boolean (optional)</span></dt><dd><p>Determines whether to read in all columns or just ones that we search for and relabel (RH, DewPt, Abs Pres, Temp, Attached, Stopped, Connected, EOF, Cond High Range, Cond Low Range). Default = False</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame</span></dt>
-<dd><p class="first last">DataFrame containing data from HOBO csv file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>df</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing data from HOBO csv file.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -173,92 +140,70 @@
 <span id="olm-loggers-schlumbergerctdtoolkit-module"></span><h2>olm.loggers.SchlumbergerCTDToolkit module<a class="headerlink" href="#module-olm.loggers.SchlumbergerCTDToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="olm.loggers.SchlumbergerCTDToolkit.concatCTD">
-<code class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</code><code class="descname">concatCTD</code><span class="sig-paren">(</span><em>dflist</em>, <em>zero_shift=True</em>, <em>n_to_average=5</em>, <em>offset_list=[]</em>, <em>offset_dates=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#concatCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.concatCTD" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.SchlumbergerCTDToolkit.</code><code class="sig-name descname">concatCTD</code><span class="sig-paren">(</span><em class="sig-param">dflist</em>, <em class="sig-param">zero_shift=True</em>, <em class="sig-param">n_to_average=5</em>, <em class="sig-param">offset_list=[]</em>, <em class="sig-param">offset_dates=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#concatCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.concatCTD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accepts a list of CTD DataFrames and concatenates them.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>dflist</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
-<dd><p class="first last">List of pandas.DataFrames to concatenate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dflist</strong><span class="classifier">list</span></dt><dd><p>List of pandas.DataFrames to concatenate.</p>
 </dd>
-<dt><strong>zero_shift</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
-<dd><p class="first last">If set to True, the pressure values will be adjusted at the time of each join, assuming that flow depth before and after the join was equal.  If set to False, no adjustment will be made in pressure values. This is useful when downloading the logger may have resulted in a slightly different position in the water column. (Default = True)</p>
+<dt><strong>zero_shift</strong><span class="classifier">boolean</span></dt><dd><p>If set to True, the pressure values will be adjusted at the time of each join, assuming that flow depth before and after the join was equal.  If set to False, no adjustment will be made in pressure values. This is useful when downloading the logger may have resulted in a slightly different position in the water column. (Default = True)</p>
 </dd>
-<dt><strong>n_to_average</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">Number of data points to average before and after join in order to determine data offset value for pressure</p>
+<dt><strong>n_to_average</strong><span class="classifier">int</span></dt><dd><p>Number of data points to average before and after join in order to determine data offset value for pressure</p>
 </dd>
-<dt><strong>offset_list</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
-<dd><p class="first last">List of offsets to be applied manually to pressure data.</p>
+<dt><strong>offset_list</strong><span class="classifier">list</span></dt><dd><p>List of offsets to be applied manually to pressure data.</p>
 </dd>
-<dt><strong>offset_dates</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
-<dd><p class="first last">List of datetime strings corresponding to manual offsets.</p>
+<dt><strong>offset_dates</strong><span class="classifier">list</span></dt><dd><p>List of datetime strings corresponding to manual offsets.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>(concatenated</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame, offset_list</span></dt>
-<dd><p class="first last">A tuple is returned with the first item being a DataFrame object containing the concatenated data and the second item in the tuple being a DataFrame object containing offsets with datetimes of the offsets as an index.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>(concatenated</strong><span class="classifier">pandas.DataFrame, offset_list</span></dt><dd><p>A tuple is returned with the first item being a DataFrame object containing the concatenated data and the second item in the tuple being a DataFrame object containing offsets with datetimes of the offsets as an index.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.SchlumbergerCTDToolkit.readBaro">
-<code class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</code><code class="descname">readBaro</code><span class="sig-paren">(</span><em>csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readBaro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readBaro" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.SchlumbergerCTDToolkit.</code><code class="sig-name descname">readBaro</code><span class="sig-paren">(</span><em class="sig-param">csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readBaro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readBaro" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads data from a CSV or MON file from a Schlumberger Baro Diver.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>csv_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">A string containing the file name of the CSV or MON file to be read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>csv_file</strong><span class="classifier">string</span></dt><dd><p>A string containing the file name of the CSV or MON file to be read.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame</span></dt>
-<dd><p class="first last">DataFrame containing data from HOBO csv file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>df</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing data from HOBO csv file.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.SchlumbergerCTDToolkit.readCTD">
-<code class="descclassname">olm.loggers.SchlumbergerCTDToolkit.</code><code class="descname">readCTD</code><span class="sig-paren">(</span><em>csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readCTD" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.SchlumbergerCTDToolkit.</code><code class="sig-name descname">readCTD</code><span class="sig-paren">(</span><em class="sig-param">csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/SchlumbergerCTDToolkit.html#readCTD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.SchlumbergerCTDToolkit.readCTD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads data from a CSV or MON file exported from a Schlumberger CTD Diver.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>csv_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">A string containing the file name of the CSV or MON file to be read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>csv_file</strong><span class="classifier">string</span></dt><dd><p>A string containing the file name of the CSV or MON file to be read.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame</span></dt>
-<dd><p class="first last">DataFrame containing data from HOBO csv file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>df</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing data from HOBO csv file.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -266,28 +211,22 @@
 <span id="olm-loggers-trublutoolkit-module"></span><h2>olm.loggers.TruBluToolkit module<a class="headerlink" href="#module-olm.loggers.TruBluToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="olm.loggers.TruBluToolkit.readTruBlu">
-<code class="descclassname">olm.loggers.TruBluToolkit.</code><code class="descname">readTruBlu</code><span class="sig-paren">(</span><em>csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/TruBluToolkit.html#readTruBlu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.TruBluToolkit.readTruBlu" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.TruBluToolkit.</code><code class="sig-name descname">readTruBlu</code><span class="sig-paren">(</span><em class="sig-param">csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/TruBluToolkit.html#readTruBlu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.TruBluToolkit.readTruBlu" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads data from a CSV file exported from a TruBlu logger.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>csv_file</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">A string containing the file name of the CSV or MON file to be read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>csv_file</strong><span class="classifier">string</span></dt><dd><p>A string containing the file name of the CSV or MON file to be read.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame</span></dt>
-<dd><p class="first last">DataFrame containing data from a TruBlu csv file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>df</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame containing data from a TruBlu csv file.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -295,53 +234,41 @@
 <span id="olm-loggers-wtwphtoolkit-module"></span><h2>olm.loggers.WTWpHToolkit module<a class="headerlink" href="#module-olm.loggers.WTWpHToolkit" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="olm.loggers.WTWpHToolkit.euroParser">
-<code class="descclassname">olm.loggers.WTWpHToolkit.</code><code class="descname">euroParser</code><span class="sig-paren">(</span><em>datestring</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#euroParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.euroParser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.WTWpHToolkit.</code><code class="sig-name descname">euroParser</code><span class="sig-paren">(</span><em class="sig-param">datestring</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#euroParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.euroParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Date parser for European style dates separated by ‘.’ characters.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>datestring</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">String containing Euro style date</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>datestring</strong><span class="classifier">string</span></dt><dd><p>String containing Euro style date</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>dateTime</strong> <span class="classifier-delimiter">:</span> <span class="classifier">datetime object</span></dt>
-<dd></dd>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>dateTime</strong><span class="classifier">datetime object</span></dt><dd></dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.WTWpHToolkit.readpH">
-<code class="descclassname">olm.loggers.WTWpHToolkit.</code><code class="descname">readpH</code><span class="sig-paren">(</span><em>csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#readpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.readpH" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.WTWpHToolkit.</code><code class="sig-name descname">readpH</code><span class="sig-paren">(</span><em class="sig-param">csvfile</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/WTWpHToolkit.html#readpH"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.WTWpHToolkit.readpH" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads data from a CSV file produced by WTW-pH data loggers.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>csvfile</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Name of the CSV file to be read.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>csvfile</strong><span class="classifier">string</span></dt><dd><p>Name of the CSV file to be read.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>df</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame</span></dt>
-<dd><p class="first last">DataFrame object containing pH data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>df</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame object containing pH data.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -350,174 +277,130 @@
 <p>Contains functions that are useful in general for manipulation of data logger data</p>
 <dl class="function">
 <dt id="olm.loggers.loggerScripts.joinAndResampleLoggers">
-<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">joinAndResampleLoggers</code><span class="sig-paren">(</span><em>loggerlist</em>, <em>interval</em>, <em>suffixes=[]</em>, <em>how='inner'</em>, <em>interpolate=False</em>, <em>limit=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinAndResampleLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinAndResampleLoggers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.loggerScripts.</code><code class="sig-name descname">joinAndResampleLoggers</code><span class="sig-paren">(</span><em class="sig-param">loggerlist</em>, <em class="sig-param">interval</em>, <em class="sig-param">suffixes=[]</em>, <em class="sig-param">how='inner'</em>, <em class="sig-param">interpolate=False</em>, <em class="sig-param">limit=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinAndResampleLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinAndResampleLoggers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Joins and resamples data from DataFrame objects provided in a list.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>loggerlist</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
-<dd><p class="first last">List of logger pandas.core.dataframe.DataFrame objects to be joined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>loggerlist</strong><span class="classifier">list</span></dt><dd><p>List of logger pandas.core.dataframe.DataFrame objects to be joined.</p>
 </dd>
-<dt><strong>interval</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Pandas offset string (<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases">http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases</a>) on which the DataFrames should be resampled (e.g. ‘H’=hour, ‘T’=minute, ‘D’=day).</p>
+<dt><strong>interval</strong><span class="classifier">string</span></dt><dd><p>Pandas offset string (<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases">http://pandas.pydata.org/pandas-docs/stable/timeseries.html#offset-aliases</a>) on which the DataFrames should be resampled (e.g. ‘H’=hour, ‘T’=minute, ‘D’=day).</p>
 </dd>
-<dt><strong>suffixes</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
-<dd><p class="first last">A list of strings (same length as loggerlist) that contains suffixes to be applied to each logger. This is useful if multiple loggers have the same column names.</p>
+<dt><strong>suffixes</strong><span class="classifier">list</span></dt><dd><p>A list of strings (same length as loggerlist) that contains suffixes to be applied to each logger. This is useful if multiple loggers have the same column names.</p>
 </dd>
-<dt><strong>how</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Method for joining loggers (default = ‘inner’).</p>
+<dt><strong>how</strong><span class="classifier">string</span></dt><dd><p>Method for joining loggers (default = ‘inner’).</p>
 </dd>
-<dt><strong>interpolate</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
-<dd><p class="first last">Whether data should be interpolated to fill gaps in rows (default=False).</p>
+<dt><strong>interpolate</strong><span class="classifier">boolean</span></dt><dd><p>Whether data should be interpolated to fill gaps in rows (default=False).</p>
 </dd>
-<dt><strong>limit</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">Maximum number of consecutive NaNs to fill if data are interpolated.</p>
+<dt><strong>limit</strong><span class="classifier">int</span></dt><dd><p>Maximum number of consecutive NaNs to fill if data are interpolated.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>joined</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.core.dataframe.DataFrame</span></dt>
-<dd><p class="first last">DataFrame Object that contains joined DataFrames.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>joined</strong><span class="classifier">pandas.core.dataframe.DataFrame</span></dt><dd><p>DataFrame Object that contains joined DataFrames.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.loggerScripts.joinLoggers">
-<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">joinLoggers</code><span class="sig-paren">(</span><em>loggerlist</em>, <em>how='inner'</em>, <em>interpolate=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinLoggers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.loggerScripts.</code><code class="sig-name descname">joinLoggers</code><span class="sig-paren">(</span><em class="sig-param">loggerlist</em>, <em class="sig-param">how='inner'</em>, <em class="sig-param">interpolate=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#joinLoggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.joinLoggers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Joins the data from a list of logger DataFrame objects together.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>loggerlist</strong> <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
-<dd><p class="first last">A list of logger DataFrame objects to be joined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>loggerlist</strong><span class="classifier">list</span></dt><dd><p>A list of logger DataFrame objects to be joined.</p>
 </dd>
-<dt><strong>how</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string, optional</span></dt>
-<dd><p class="first last">How the two DataFrames are to be joined. Default is inner.</p>
+<dt><strong>how</strong><span class="classifier">string, optional</span></dt><dd><p>How the two DataFrames are to be joined. Default is inner.</p>
 </dd>
-<dt><strong>interpolate</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean, optional</span></dt>
-<dd><p class="first last">Determines whether empty rows are to be filled with data via interpolation. Uses Pandas Dataframe.interpolate(). Default = False</p>
+<dt><strong>interpolate</strong><span class="classifier">boolean, optional</span></dt><dd><p>Determines whether empty rows are to be filled with data via interpolation. Uses Pandas Dataframe.interpolate(). Default = False</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>joined</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.DataFrame</span></dt>
-<dd><p class="first last">DataFrame of joined loggers.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>joined</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame of joined loggers.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.loggerScripts.linear_correction">
-<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">linear_correction</code><span class="sig-paren">(</span><em>rawSeries</em>, <em>correctionSeries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#linear_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.linear_correction" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.loggerScripts.</code><code class="sig-name descname">linear_correction</code><span class="sig-paren">(</span><em class="sig-param">rawSeries</em>, <em class="sig-param">correctionSeries</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#linear_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.linear_correction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uses a Pandas Series of spot measured values to linearly correct time series data from a logger.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>rawSeries</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.core.series.Series</span></dt>
-<dd><p class="first last">A Pandas Series that contains the time series data to be corrected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>rawSeries</strong><span class="classifier">pandas.core.series.Series</span></dt><dd><p>A Pandas Series that contains the time series data to be corrected.</p>
 </dd>
-<dt><strong>correctionSeries</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.core.series.Series</span></dt>
-<dd><p class="first last">A Pandas Series that contains spot measurement data that are to be used to correct rawSeries.</p>
+<dt><strong>correctionSeries</strong><span class="classifier">pandas.core.series.Series</span></dt><dd><p>A Pandas Series that contains spot measurement data that are to be used to correct rawSeries.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>rawSeries</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.core.series.Series</span></dt>
-<dd><p class="first last">A corrected version of the rawSeries time series data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>rawSeries</strong><span class="classifier">pandas.core.series.Series</span></dt><dd><p>A corrected version of the rawSeries time series data.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.loggerScripts.manualCompare">
-<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">manualCompare</code><span class="sig-paren">(</span><em>logger</em>, <em>manual</em>, <em>value_name=''</em>, <em>ltag='_log'</em>, <em>mtag='_man'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#manualCompare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.manualCompare" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.loggerScripts.</code><code class="sig-name descname">manualCompare</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">manual</em>, <em class="sig-param">value_name=''</em>, <em class="sig-param">ltag='_log'</em>, <em class="sig-param">mtag='_man'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#manualCompare"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.manualCompare" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>logger</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.core.series.Series</span></dt>
-<dd><p class="first last">A Pandas TimeSeries containing a single column and time stamps as indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>logger</strong><span class="classifier">pandas.core.series.Series</span></dt><dd><p>A Pandas TimeSeries containing a single column and time stamps as indices.</p>
 </dd>
-<dt><strong>manual</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.core.series.Series</span></dt>
-<dd><p class="first last">A Pandas TimeSeries containing a single variable from the manual data set</p>
+<dt><strong>manual</strong><span class="classifier">pandas.core.series.Series</span></dt><dd><p>A Pandas TimeSeries containing a single variable from the manual data set</p>
 </dd>
-<dt><strong>value_name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">A string to use as the base for the collumn labels in the output DataFrame.</p>
+<dt><strong>value_name</strong><span class="classifier">string</span></dt><dd><p>A string to use as the base for the collumn labels in the output DataFrame.</p>
 </dd>
-<dt><strong>ltag</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">A suffix to be added to the logger column name, or used as the logger column name if value_name is not set.</p>
+<dt><strong>ltag</strong><span class="classifier">string</span></dt><dd><p>A suffix to be added to the logger column name, or used as the logger column name if value_name is not set.</p>
 </dd>
-<dt><strong>mtag</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">A suffix to be added to the manual measurement column name, or used as the manual measurement column name if value_name is not set.</p>
+<dt><strong>mtag</strong><span class="classifier">string</span></dt><dd><p>A suffix to be added to the manual measurement column name, or used as the manual measurement column name if value_name is not set.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>joined</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.core.dataframe.DataFrame</span></dt>
-<dd><p class="first last">A DataFrame object containing values of manual measurements and corresponding values from the logger time series using the aligned index that is resampled to the hour.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>joined</strong><span class="classifier">pandas.core.dataframe.DataFrame</span></dt><dd><p>A DataFrame object containing values of manual measurements and corresponding values from the logger time series using the aligned index that is resampled to the hour.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="olm.loggers.loggerScripts.shiftLogger">
-<code class="descclassname">olm.loggers.loggerScripts.</code><code class="descname">shiftLogger</code><span class="sig-paren">(</span><em>logger</em>, <em>shift_to</em>, <em>align_at_start=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#shiftLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.shiftLogger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.loggers.loggerScripts.</code><code class="sig-name descname">shiftLogger</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">shift_to</em>, <em class="sig-param">align_at_start=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/loggers/loggerScripts.html#shiftLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.loggers.loggerScripts.shiftLogger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>logger</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.core.series.Series or pandas.core.dataframe.Dataframe</span></dt>
-<dd><p class="first last">A Pandas TimeSeries or DataFrame containing time stamps as indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>logger</strong><span class="classifier">pandas.core.series.Series or pandas.core.dataframe.Dataframe</span></dt><dd><p>A Pandas TimeSeries or DataFrame containing time stamps as indices.</p>
 </dd>
-<dt><strong>shift_to</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">A string that contains the date and time that the logger series should be shifted to. By default this is the correct starting time (first time stamp) of the series.</p>
+<dt><strong>shift_to</strong><span class="classifier">string</span></dt><dd><p>A string that contains the date and time that the logger series should be shifted to. By default this is the correct starting time (first time stamp) of the series.</p>
 </dd>
-<dt><strong>align_at_start</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
-<dd><p class="first last">If True, shift_to is assumed to represent the correct starting date for the series. If False, shift_to is assumed to represent the correct final date of the series. (default=True)</p>
+<dt><strong>align_at_start</strong><span class="classifier">boolean</span></dt><dd><p>If True, shift_to is assumed to represent the correct starting date for the series. If False, shift_to is assumed to represent the correct final date of the series. (default=True)</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>logger</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas.core.series.Series or pandas.core.dataframe.DataFrame</span></dt>
-<dd><p class="first last">A Series or DataFrame object that contains the correct shifted time stamps.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>logger</strong><span class="classifier">pandas.core.series.Series or pandas.core.dataframe.DataFrame</span></dt><dd><p>A Series or DataFrame object that contains the correct shifted time stamps.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -532,7 +415,7 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
+  <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">olm.loggers package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
@@ -559,15 +442,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -590,7 +473,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

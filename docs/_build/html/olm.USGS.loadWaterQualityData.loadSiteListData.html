@@ -1,32 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>olm.USGS.loadWaterQualityData.loadSiteListData &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.35',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.USGS.loadWaterQualityData.loadSiteData" href="olm.USGS.loadWaterQualityData.loadSiteData.html" />
     <link rel="prev" title="olm.USGS.DataRetrieval.querySiteList" href="olm.USGS.DataRetrieval.querySiteList.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -57,48 +49,35 @@
 <h1>olm.USGS.loadWaterQualityData.loadSiteListData<a class="headerlink" href="#olm-usgs-loadwaterqualitydata-loadsitelistdata" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.USGS.loadWaterQualityData.loadSiteListData">
-<code class="descclassname">olm.USGS.loadWaterQualityData.</code><code class="descname">loadSiteListData</code><span class="sig-paren">(</span><em>siteListText=None</em>, <em>siteFile=None</em>, <em>regEx='USGS-*'</em>, <em>processedSitesDir='./Processed-Sites'</em>, <em>loadPhreeqc=False</em>, <em>loadMetaData=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/loadWaterQualityData.html#loadSiteListData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.loadWaterQualityData.loadSiteListData" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.USGS.loadWaterQualityData.</code><code class="sig-name descname">loadSiteListData</code><span class="sig-paren">(</span><em class="sig-param">siteListText=None</em>, <em class="sig-param">siteFile=None</em>, <em class="sig-param">regEx='USGS-*'</em>, <em class="sig-param">processedSitesDir='./Processed-Sites'</em>, <em class="sig-param">loadPhreeqc=False</em>, <em class="sig-param">loadMetaData=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/loadWaterQualityData.html#loadSiteListData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.loadWaterQualityData.loadSiteListData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves site data for multiple sites within a processed sites directory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>siteListText</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
-<dd><p class="first last">a list of sites separated by semi-colons</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>siteListText</strong><span class="classifier">string (optional)</span></dt><dd><p>a list of sites separated by semi-colons</p>
 </dd>
-<dt><strong>siteFile</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
-<dd><p class="first last">a filename of a text file with a list of sites</p>
+<dt><strong>siteFile</strong><span class="classifier">string (optional)</span></dt><dd><p>a filename of a text file with a list of sites</p>
 </dd>
-<dt><strong>regEx</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
-<dd><p class="first last">regular expression used to search for site directories within the processed sites directory (default = ‘USGS-‘)</p>
+<dt><strong>regEx</strong><span class="classifier">string (optional)</span></dt><dd><p>regular expression used to search for site directories within the processed sites directory (default = ‘USGS-‘)</p>
 </dd>
-<dt><strong>processedSitesDir</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string (optional)</span></dt>
-<dd><p class="first last">directory that contains all of the processed site directories. It is important to change this if the default is not correct. (default=’./Processed-Sites’)</p>
+<dt><strong>processedSitesDir</strong><span class="classifier">string (optional)</span></dt><dd><p>directory that contains all of the processed site directories. It is important to change this if the default is not correct. (default=’./Processed-Sites’)</p>
 </dd>
-<dt><strong>loadPhreeqc</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
-<dd><p class="first last">If set to true, PHREEQC outputs will also be loaded for each site. (default=False)</p>
+<dt><strong>loadPhreeqc</strong><span class="classifier">boolean</span></dt><dd><p>If set to true, PHREEQC outputs will also be loaded for each site. (default=False)</p>
 </dd>
-<dt><strong>loadMetaData</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
-<dd><p class="first last">If set to true, the site metadata will be loaded for each site. (default=False)</p>
+<dt><strong>loadMetaData</strong><span class="classifier">boolean</span></dt><dd><p>If set to true, the site metadata will be loaded for each site. (default=False)</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>sitesDict</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
-<dd><p class="first last">A dictionary of site data panels keyed by site name.</p>
 </dd>
-<dt><strong>or if loadPhreeqc or loadMetaData are set to true</strong></dt>
-<dd></dd>
-<dt><strong>(sitesDict, sitesPheeqcDict, sitesMetaDataDict)</strong> <span class="classifier-delimiter">:</span> <span class="classifier">tuple</span></dt>
-<dd><p class="first last">A tuple containing the sitesDict and dicts of the PHREEQC data and/or metadata for each site. Order is as shown.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>sitesDict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of site data panels keyed by site name.</p>
+</dd>
+<dt>or if loadPhreeqc or loadMetaData are set to true</dt><dd></dd>
+<dt><strong>(sitesDict, sitesPheeqcDict, sitesMetaDataDict)</strong><span class="classifier">tuple</span></dt><dd><p>A tuple containing the sitesDict and dicts of the PHREEQC data and/or metadata for each site. Order is as shown.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -123,15 +102,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -158,7 +137,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

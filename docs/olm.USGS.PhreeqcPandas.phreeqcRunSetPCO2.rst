@@ -1,5 +1,5 @@
-olm\.USGS\.PhreeqcPandas\.phreeqcRunSetPCO2
-===========================================
+olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2
+========================================
 
 .. currentmodule:: olm.USGS.PhreeqcPandas
 

@@ -1,5 +1,5 @@
-olm\.USGS\.WQXtoPandas\.WQXtoPandas
-===================================
+olm.USGS.WQXtoPandas.WQXtoPandas
+================================
 
 .. currentmodule:: olm.USGS.WQXtoPandas
 

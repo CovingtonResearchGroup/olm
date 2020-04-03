@@ -1,32 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>olm.USGS.PhreeqcPandas.processPanel &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.35',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.USGS.PhreeqcPandas.readPhreeqcOutput" href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html" />
     <link rel="prev" title="olm.USGS.WQXtoPandas.WQXtoPandas" href="olm.USGS.WQXtoPandas.WQXtoPandas.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -57,36 +49,26 @@
 <h1>olm.USGS.PhreeqcPandas.processPanel<a class="headerlink" href="#olm-usgs-phreeqcpandas-processpanel" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.USGS.PhreeqcPandas.processPanel">
-<code class="descclassname">olm.USGS.PhreeqcPandas.</code><code class="descname">processPanel</code><span class="sig-paren">(</span><em>site_panel</em>, <em>site_dir</em>, <em>PHREEQC_PATH</em>, <em>DATABASE_FILE</em>, <em>phreeqcDict=None</em>, <em>force_balance=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#processPanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.processPanel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.USGS.PhreeqcPandas.</code><code class="sig-name descname">processPanel</code><span class="sig-paren">(</span><em class="sig-param">site_panel</em>, <em class="sig-param">site_dir</em>, <em class="sig-param">PHREEQC_PATH</em>, <em class="sig-param">DATABASE_FILE</em>, <em class="sig-param">phreeqcDict=None</em>, <em class="sig-param">force_balance=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#processPanel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.processPanel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a WQXtoPandas site panel and runs all samples through PHREEQC, returning a dataframe of the outputs that is indexed by date. Will run automatically within WQXtoPandas if specified in the excel start file.  However, the function can also be called later by reading in a pickled site panel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>site_panel</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Pandas panel</span></dt>
-<dd><p class="first last">The Pandas panel object produced for each site by WQXtoPandas that is to be processed through PHREEQC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>site_panel</strong><span class="classifier">Pandas panel</span></dt><dd><p>The Pandas panel object produced for each site by WQXtoPandas that is to be processed through PHREEQC.</p>
 </dd>
-<dt><strong>site_dir</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">The directory containing the site data and where the results should be written out.</p>
+<dt><strong>site_dir</strong><span class="classifier">string</span></dt><dd><p>The directory containing the site data and where the results should be written out.</p>
 </dd>
-<dt><strong>PHREEQC_PATH</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">The path to the PHREEQC executable.</p>
+<dt><strong>PHREEQC_PATH</strong><span class="classifier">string</span></dt><dd><p>The path to the PHREEQC executable.</p>
 </dd>
-<dt><strong>DATABASE_FILE</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">The database file to be used by PHREEQC.</p>
+<dt><strong>DATABASE_FILE</strong><span class="classifier">string</span></dt><dd><p>The database file to be used by PHREEQC.</p>
 </dd>
-<dt><strong>phreeqcDict</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
-<dd><p class="first last">a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</p>
+<dt><strong>phreeqcDict</strong><span class="classifier">dict</span></dt><dd><p>a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</p>
 </dd>
-<dt><strong>force_balance</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">PHREEQC should force charge balance on the ion indicated in this string. Use the string that represents the ion internally in PHREEQC. It is also possible to force balance on pH using force_balance=’pH’, or on alkalinity using force_balance=’Alk’</p>
+<dt><strong>force_balance</strong><span class="classifier">str</span></dt><dd><p>PHREEQC should force charge balance on the ion indicated in this string. Use the string that represents the ion internally in PHREEQC. It is also possible to force balance on pH using force_balance=’pH’, or on alkalinity using force_balance=’Alk’</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -111,15 +93,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -146,7 +128,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

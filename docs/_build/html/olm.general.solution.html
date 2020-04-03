@@ -1,32 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>olm.general.solution &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.35',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.general.condTo25" href="olm.general.condTo25.html" />
     <link rel="prev" title="olm.calcite.calc_k_neg2" href="olm.calcite.calc_k_neg2.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -56,317 +48,237 @@
 <h1>olm.general.solution<a class="headerlink" href="#olm-general-solution" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="olm.general.solution">
-<em class="property">class </em><code class="descclassname">olm.general.</code><code class="descname">solution</code><span class="sig-paren">(</span><em>constituents</em>, <em>concentrations</em>, <em>units</em>, <em>T=25.0</em>, <em>T_units='C'</em>, <em>cond=None</em>, <em>pH=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">olm.general.</code><code class="sig-name descname">solution</code><span class="sig-paren">(</span><em class="sig-param">constituents</em>, <em class="sig-param">concentrations</em>, <em class="sig-param">units</em>, <em class="sig-param">T=25.0</em>, <em class="sig-param">T_units='C'</em>, <em class="sig-param">cond=None</em>, <em class="sig-param">pH=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution" title="Permalink to this definition">¶</a></dt>
 <dd><p>A solution class, that is used for calculations related to chemical solutions.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>constituents</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array like</span></dt>
-<dd><p class="first last">a list (or array) of strings with ion names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>constituents</strong><span class="classifier">array like</span></dt><dd><p>a list (or array) of strings with ion names</p>
 </dd>
-<dt><strong>concentrations</strong> <span class="classifier-delimiter">:</span> <span class="classifier">array like</span></dt>
-<dd><p class="first last">a list (or array) of ion concentrations</p>
+<dt><strong>concentrations</strong><span class="classifier">array like</span></dt><dd><p>a list (or array) of ion concentrations</p>
 </dd>
-<dt><strong>units</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string or list</span></dt>
-<dd><p class="first last">a string or list of strings containing concentration units (‘mg/L’, ‘mol/L’,  or ‘mmol/L’)</p>
+<dt><strong>units</strong><span class="classifier">string or list</span></dt><dd><p>a string or list of strings containing concentration units (‘mg/L’, ‘mol/L’,  or ‘mmol/L’)</p>
 </dd>
-<dt><strong>T</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">temperature in degrees Celsius (default=25)</p>
+<dt><strong>T</strong><span class="classifier">float</span></dt><dd><p>temperature in degrees Celsius (default=25)</p>
 </dd>
-<dt><strong>T_units</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">temperature units ‘C’ or ‘K’ (default=’C’)</p>
+<dt><strong>T_units</strong><span class="classifier">str</span></dt><dd><p>temperature units ‘C’ or ‘K’ (default=’C’)</p>
 </dd>
-<dt><strong>cond</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">specific conductance (default=None)</p>
+<dt><strong>cond</strong><span class="classifier">float</span></dt><dd><p>specific conductance (default=None)</p>
 </dd>
-<dt><strong>pH</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">pH of solution (default=None)</p>
+<dt><strong>pH</strong><span class="classifier">float</span></dt><dd><p>pH of solution (default=None)</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>ions</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
-<dd><p class="first last">A dictionary containing ion activities and concentrations.  The values for a given ion are accessed using a the name of the ion as a key.  Then, the additional keys ‘activity’, ‘conc_mg’, ‘conc_mol’, ‘conc_mmol’, and ‘meq’ access the ion activity (in units of mol/L), concentration in mg/L, concentration in mol/L, concentration in mmol/L and meq/L, respectively.</p>
 </dd>
-<dt><strong>T_C</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">temperature of solution in degrees C</p>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>ions</strong><span class="classifier">dict</span></dt><dd><p>A dictionary containing ion activities and concentrations.  The values for a given ion are accessed using a the name of the ion as a key.  Then, the additional keys ‘activity’, ‘conc_mg’, ‘conc_mol’, ‘conc_mmol’, and ‘meq’ access the ion activity (in units of mol/L), concentration in mg/L, concentration in mol/L, concentration in mmol/L and meq/L, respectively.</p>
 </dd>
-<dt><strong>T_K</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">temperature of solution in degrees K</p>
+<dt><strong>T_C</strong><span class="classifier">float</span></dt><dd><p>temperature of solution in degrees C</p>
+</dd>
+<dt><strong>T_K</strong><span class="classifier">float</span></dt><dd><p>temperature of solution in degrees K</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <dl class="method">
 <dt id="olm.general.solution.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>constituents</em>, <em>concentrations</em>, <em>units</em>, <em>T=25.0</em>, <em>T_units='C'</em>, <em>cond=None</em>, <em>pH=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.__init__" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">constituents</em>, <em class="sig-param">concentrations</em>, <em class="sig-param">units</em>, <em class="sig-param">T=25.0</em>, <em class="sig-param">T_units='C'</em>, <em class="sig-param">cond=None</em>, <em class="sig-param">pH=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
+</dd></dl>
 
 <p class="rubric">Methods</p>
-<table border="1" class="longtable docutils">
+<table class="longtable docutils align-default">
 <colgroup>
-<col width="10%" />
-<col width="90%" />
+<col style="width: 10%" />
+<col style="width: 90%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.I" title="olm.general.solution.I"><code class="xref py py-obj docutils literal"><span class="pre">I</span></code></a>()</td>
-<td>Function to calculate ionic strength of the solution object from full equation using known ion properties.</td>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#olm.general.solution.I" title="olm.general.solution.I"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I</span></code></a>(self)</p></td>
+<td><p>Function to calculate ionic strength of the solution object from full equation using known ion properties.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.__init__" title="olm.general.solution.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(constituents,&nbsp;concentrations,&nbsp;units)</td>
-<td></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#olm.general.solution.__init__" title="olm.general.solution.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(self, constituents, concentrations, …)</p></td>
+<td><p>Initialize self.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.activity" title="olm.general.solution.activity"><code class="xref py py-obj docutils literal"><span class="pre">activity</span></code></a>(ion)</td>
-<td>Retrieve the activity of a given ion in the solution in mol/L.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#olm.general.solution.activity" title="olm.general.solution.activity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">activity</span></code></a>(self, ion)</p></td>
+<td><p>Retrieve the activity of a given ion in the solution in mol/L.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.activity_coef" title="olm.general.solution.activity_coef"><code class="xref py py-obj docutils literal"><span class="pre">activity_coef</span></code></a>(ion[,&nbsp;I])</td>
-<td>Calculate activity coefficient, gamma, for a given ion in the solution.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#olm.general.solution.activity_coef" title="olm.general.solution.activity_coef"><code class="xref py py-obj docutils literal notranslate"><span class="pre">activity_coef</span></code></a>(self, ion[, I])</p></td>
+<td><p>Calculate activity coefficient, gamma, for a given ion in the solution.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.approxI" title="olm.general.solution.approxI"><code class="xref py py-obj docutils literal"><span class="pre">approxI</span></code></a>()</td>
-<td>Function to calculate approximate ionic strength of solution metal concentration.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#olm.general.solution.approxI" title="olm.general.solution.approxI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">approxI</span></code></a>(self)</p></td>
+<td><p>Function to calculate approximate ionic strength of solution metal concentration.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.charge_balance" title="olm.general.solution.charge_balance"><code class="xref py py-obj docutils literal"><span class="pre">charge_balance</span></code></a>([units])</td>
-<td>Calculate the charge balance error for this solution.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#olm.general.solution.charge_balance" title="olm.general.solution.charge_balance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">charge_balance</span></code></a>(self[, units])</p></td>
+<td><p>Calculate the charge balance error for this solution.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.meq" title="olm.general.solution.meq"><code class="xref py py-obj docutils literal"><span class="pre">meq</span></code></a>(ion)</td>
-<td>Retrieve meq for a given ion in the solution.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#olm.general.solution.meq" title="olm.general.solution.meq"><code class="xref py py-obj docutils literal notranslate"><span class="pre">meq</span></code></a>(self, ion)</p></td>
+<td><p>Retrieve meq for a given ion in the solution.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.mg" title="olm.general.solution.mg"><code class="xref py py-obj docutils literal"><span class="pre">mg</span></code></a>(ion)</td>
-<td>Retrieve the concentration of a given ion in the solution in mg/L.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#olm.general.solution.mg" title="olm.general.solution.mg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mg</span></code></a>(self, ion)</p></td>
+<td><p>Retrieve the concentration of a given ion in the solution in mg/L.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="#olm.general.solution.mmol" title="olm.general.solution.mmol"><code class="xref py py-obj docutils literal"><span class="pre">mmol</span></code></a>(ion)</td>
-<td>Retrieve the molar concentration of a given ion in the solution in mol/L.</td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#olm.general.solution.mmol" title="olm.general.solution.mmol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mmol</span></code></a>(self, ion)</p></td>
+<td><p>Retrieve the molar concentration of a given ion in the solution in mol/L.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#olm.general.solution.mol" title="olm.general.solution.mol"><code class="xref py py-obj docutils literal"><span class="pre">mol</span></code></a>(ion)</td>
-<td>Retrieve the molar concentration of a given ion in the solution in mol/L.</td>
+<tr class="row-even"><td><p><a class="reference internal" href="#olm.general.solution.mol" title="olm.general.solution.mol"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mol</span></code></a>(self, ion)</p></td>
+<td><p>Retrieve the molar concentration of a given ion in the solution in mol/L.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="olm.general.solution.I">
-<code class="descname">I</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.I"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.I" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">I</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.I"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.I" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to calculate ionic strength of the solution object from full equation using known ion properties.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>I - float</strong></dt>
-<dd><p class="first last">ionic strength</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>I - float</dt><dd><p>ionic strength</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="olm.general.solution.activity">
-<code class="descname">activity</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.activity" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">activity</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.activity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.activity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the activity of a given ion in the solution in mol/L.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ion</strong><span class="classifier">str</span></dt><dd><p>string containing ion name for which to calculate activity coefficient</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>activity</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Activity of the specified ion in mol/L.</p>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>activity</strong><span class="classifier">float</span></dt><dd><p>Activity of the specified ion in mol/L.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="olm.general.solution.activity_coef">
-<code class="descname">activity_coef</code><span class="sig-paren">(</span><em>ion</em>, <em>I=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.activity_coef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.activity_coef" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">activity_coef</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ion</em>, <em class="sig-param">I=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.activity_coef"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.activity_coef" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate activity coefficient, gamma, for a given ion in the solution.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ion</strong><span class="classifier">str</span></dt><dd><p>string containing ion name for which to calculate activity coefficient</p>
 </dd>
-<dt><strong>I</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Ionic strength of solution.  If None, it will be approximated from metal concentration. (default=None)</p>
+<dt><strong>I</strong><span class="classifier">float</span></dt><dd><p>Ionic strength of solution.  If None, it will be approximated from metal concentration. (default=None)</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>gamma</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Activity coefficient for the ion specified.</p>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>gamma</strong><span class="classifier">float</span></dt><dd><p>Activity coefficient for the ion specified.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="olm.general.solution.approxI">
-<code class="descname">approxI</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.approxI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.approxI" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">approxI</code><span class="sig-paren">(</span><em class="sig-param">self</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.approxI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.approxI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to calculate approximate ionic strength of solution metal concentration.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>I</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">ionic strength</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>I</strong><span class="classifier">float</span></dt><dd><p>ionic strength</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="olm.general.solution.charge_balance">
-<code class="descname">charge_balance</code><span class="sig-paren">(</span><em>units='%'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.charge_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.charge_balance" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">charge_balance</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">units='%'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.charge_balance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.charge_balance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate the charge balance error for this solution.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>units</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str (optional)</span></dt>
-<dd><p class="first last">If set to ‘%’ (default) then the function will return the percent charge balance error.  If set to ‘meq’, then the function will return the difference in cation and anion balance in meq/L.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>units</strong><span class="classifier">str (optional)</span></dt><dd><p>If set to ‘%’ (default) then the function will return the percent charge balance error.  If set to ‘meq’, then the function will return the difference in cation and anion balance in meq/L.</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>balance</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">The charge balance error for the solution.</p>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>balance</strong><span class="classifier">float</span></dt><dd><p>The charge balance error for the solution.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="olm.general.solution.meq">
-<code class="descname">meq</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.meq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.meq" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">meq</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.meq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.meq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve meq for a given ion in the solution.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ion</strong><span class="classifier">str</span></dt><dd><p>string containing ion name for which to calculate activity coefficient</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>meqL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Concentration of the specified ion in meq/L.</p>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>meqL</strong><span class="classifier">float</span></dt><dd><p>Concentration of the specified ion in meq/L.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="olm.general.solution.mg">
-<code class="descname">mg</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.mg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mg" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mg</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.mg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the concentration of a given ion in the solution in mg/L.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ion</strong><span class="classifier">str</span></dt><dd><p>string containing ion name for which to calculate activity coefficient</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>mgL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Concentration of the specified ion in mg/L.</p>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>mgL</strong><span class="classifier">float</span></dt><dd><p>Concentration of the specified ion in mg/L.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="olm.general.solution.mmol">
-<code class="descname">mmol</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.mmol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mmol" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mmol</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.mmol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mmol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the molar concentration of a given ion in the solution in mol/L.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ion</strong><span class="classifier">str</span></dt><dd><p>string containing ion name for which to calculate activity coefficient</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>mmolL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Concentration of the specified ion in mol/L.</p>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>mmolL</strong><span class="classifier">float</span></dt><dd><p>Concentration of the specified ion in mol/L.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="olm.general.solution.mol">
-<code class="descname">mol</code><span class="sig-paren">(</span><em>ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.mol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mol" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mol</code><span class="sig-paren">(</span><em class="sig-param">self</em>, <em class="sig-param">ion</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/general.html#solution.mol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.general.solution.mol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the molar concentration of a given ion in the solution in mol/L.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>ion</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">string containing ion name for which to calculate activity coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>ion</strong><span class="classifier">str</span></dt><dd><p>string containing ion name for which to calculate activity coefficient</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>molL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Concentration of the specified ion in mol/L.</p>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>molL</strong><span class="classifier">float</span></dt><dd><p>Concentration of the specified ion in mol/L.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -393,15 +305,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -427,7 +339,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>
