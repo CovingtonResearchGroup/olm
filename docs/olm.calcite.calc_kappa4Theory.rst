@@ -1,5 +1,5 @@
-olm\.calcite\.calc\_kappa4Theory
-================================
+olm.calcite.calc\_kappa4Theory
+==============================
 
 .. currentmodule:: olm.calcite
 

@@ -1,32 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2 &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.35',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2" href="olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2.html" />
     <link rel="prev" title="olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation" href="olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -57,40 +49,28 @@
 <h1>olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2<a class="headerlink" href="#olm-usgs-phreeqcpandas-phreeqcrunsetpco2" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2">
-<code class="descclassname">olm.USGS.PhreeqcPandas.</code><code class="descname">phreeqcRunSetPCO2</code><span class="sig-paren">(</span><em>logPCO2</em>, <em>phreeqcInputFile</em>, <em>PHREEQC_PATH</em>, <em>DATABASE_FILE</em>, <em>newInputFile=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#phreeqcRunSetPCO2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.USGS.PhreeqcPandas.</code><code class="sig-name descname">phreeqcRunSetPCO2</code><span class="sig-paren">(</span><em class="sig-param">logPCO2</em>, <em class="sig-param">phreeqcInputFile</em>, <em class="sig-param">PHREEQC_PATH</em>, <em class="sig-param">DATABASE_FILE</em>, <em class="sig-param">newInputFile=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#phreeqcRunSetPCO2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads a PHREEQC input file, modifies it to a set PCO2 and runs the modified file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>phreecInputFile</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">The name of the input file to modify.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>phreecInputFile</strong><span class="classifier">str</span></dt><dd><p>The name of the input file to modify.</p>
 </dd>
-<dt><strong>logPCO2</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Log10 of the PCO2 value to set the sample to.</p>
+<dt><strong>logPCO2</strong><span class="classifier">float</span></dt><dd><p>Log10 of the PCO2 value to set the sample to.</p>
 </dd>
-<dt><strong>PHREEQC_PATH</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">The path to the PHREEQC executable.</p>
+<dt><strong>PHREEQC_PATH</strong><span class="classifier">string</span></dt><dd><p>The path to the PHREEQC executable.</p>
 </dd>
-<dt><strong>DATABASE_FILE</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">The database file to be used by PHREEQC.</p>
+<dt><strong>DATABASE_FILE</strong><span class="classifier">string</span></dt><dd><p>The database file to be used by PHREEQC.</p>
 </dd>
-<dt><strong>newInputFile</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and ‘set-PCO2.phrq will be added.’</p>
+<dt><strong>newInputFile</strong><span class="classifier">string</span></dt><dd><p>The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and ‘set-PCO2.phrq will be added.’</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>simulationDict</strong> <span class="classifier-delimiter">:</span> <span class="classifier">Dict</span></dt>
-<dd><p class="first last">A dictionary that contains the output of readPhreeqcOutput() run on the set PCO2 simulation.</p>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>simulationDict</strong><span class="classifier">Dict</span></dt><dd><p>A dictionary that contains the output of readPhreeqcOutput() run on the set PCO2 simulation.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -115,15 +95,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -150,7 +130,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

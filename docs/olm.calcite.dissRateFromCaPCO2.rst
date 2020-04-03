@@ -1,5 +1,5 @@
-olm\.calcite\.dissRateFromCaPCO2
-================================
+olm.calcite.dissRateFromCaPCO2
+==============================
 
 .. currentmodule:: olm.calcite
 

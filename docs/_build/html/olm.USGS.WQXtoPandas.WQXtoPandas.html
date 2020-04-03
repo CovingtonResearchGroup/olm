@@ -1,32 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>olm.USGS.WQXtoPandas.WQXtoPandas &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.35',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.USGS.PhreeqcPandas.processPanel" href="olm.USGS.PhreeqcPandas.processPanel.html" />
     <link rel="prev" title="olm.USGS.WQXtoPandas.runWQXtoPandas" href="olm.USGS.WQXtoPandas.runWQXtoPandas.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -57,57 +49,41 @@
 <h1>olm.USGS.WQXtoPandas.WQXtoPandas<a class="headerlink" href="#olm-usgs-wqxtopandas-wqxtopandas" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.USGS.WQXtoPandas.WQXtoPandas">
-<code class="descclassname">olm.USGS.WQXtoPandas.</code><code class="descname">WQXtoPandas</code><span class="sig-paren">(</span><em>xmlLocation</em>, <em>charDict</em>, <em>outputPath='.'</em>, <em>fromFile=False</em>, <em>outputDirName='Processed-Sites'</em>, <em>RUN_PHREEQC=False</em>, <em>PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/'</em>, <em>DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat'</em>, <em>LOG_FILE='Result.log'</em>, <em>START_FILE=None</em>, <em>splittag=''</em>, <em>bracket_charge_balance=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#WQXtoPandas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.WQXtoPandas" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.USGS.WQXtoPandas.</code><code class="sig-name descname">WQXtoPandas</code><span class="sig-paren">(</span><em class="sig-param">xmlLocation</em>, <em class="sig-param">charDict</em>, <em class="sig-param">outputPath='.'</em>, <em class="sig-param">fromFile=False</em>, <em class="sig-param">outputDirName='Processed-Sites'</em>, <em class="sig-param">RUN_PHREEQC=False</em>, <em class="sig-param">PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/'</em>, <em class="sig-param">DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat'</em>, <em class="sig-param">LOG_FILE='Result.log'</em>, <em class="sig-param">START_FILE=None</em>, <em class="sig-param">splittag=''</em>, <em class="sig-param">bracket_charge_balance=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#WQXtoPandas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.WQXtoPandas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are stored in directories for each site.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>xmlLocation</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Content depends on mode in which WQXtoPandas is run. When fromFile is set to False (input methods 2 or 3 in excel file) this string contains the html for a query to the USGS NWIS database to obtain an xml file of the desired data.  Alternatively, if fromFile is True (input method 1 in excel file) then this string contains the name of the xml file from which to read the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>xmlLocation</strong><span class="classifier">string</span></dt><dd><p>Content depends on mode in which WQXtoPandas is run. When fromFile is set to False (input methods 2 or 3 in excel file) this string contains the html for a query to the USGS NWIS database to obtain an xml file of the desired data.  Alternatively, if fromFile is True (input method 1 in excel file) then this string contains the name of the xml file from which to read the data.</p>
 </dd>
-<dt><strong>charDict</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
-<dd><p class="first last">A dictionary containing information about the characteristics to be processed.  Keys are EPA SRS characteristic names. Each entry in the dictionary is a second dictionary that contains keys IsRequired, pcode, fraction, and quality. These entries tell WQXtoPandas whether a given characteristic is required in order to process a sample, and whether a specific pcode, fraction, or quality should be required.  See excel example file for more details.</p>
+<dt><strong>charDict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary containing information about the characteristics to be processed.  Keys are EPA SRS characteristic names. Each entry in the dictionary is a second dictionary that contains keys IsRequired, pcode, fraction, and quality. These entries tell WQXtoPandas whether a given characteristic is required in order to process a sample, and whether a specific pcode, fraction, or quality should be required.  See excel example file for more details.</p>
 </dd>
-<dt><strong>outputPath</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">path to directory that will contain output directory</p>
+<dt><strong>outputPath</strong><span class="classifier">string</span></dt><dd><p>path to directory that will contain output directory</p>
 </dd>
-<dt><strong>fromFile</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
-<dd><p class="first last">True if data will be read from an xml file already present on computer.  False if xml file should be queried from NWIS. (Default=False)</p>
+<dt><strong>fromFile</strong><span class="classifier">boolean</span></dt><dd><p>True if data will be read from an xml file already present on computer.  False if xml file should be queried from NWIS. (Default=False)</p>
 </dd>
-<dt><strong>outputDirName</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Name of output directory where all site data will be written out. (Default=’Processed-Sites’)</p>
+<dt><strong>outputDirName</strong><span class="classifier">string</span></dt><dd><p>Name of output directory where all site data will be written out. (Default=’Processed-Sites’)</p>
 </dd>
-<dt><strong>RUN_PHREEQC</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
-<dd><p class="first last">Set to true if samples should be processed through PHREEQC. (Default=False)</p>
+<dt><strong>RUN_PHREEQC</strong><span class="classifier">boolean</span></dt><dd><p>Set to true if samples should be processed through PHREEQC. (Default=False)</p>
 </dd>
-<dt><strong>PHREEQC_PATH</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Path to PHREEQC executable (folder only, not executable file name)</p>
+<dt><strong>PHREEQC_PATH</strong><span class="classifier">string</span></dt><dd><p>Path to PHREEQC executable (folder only, not executable file name)</p>
 </dd>
-<dt><strong>DATABASE_FILE</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Path to database file that PHREEQC should use, including database file name.</p>
+<dt><strong>DATABASE_FILE</strong><span class="classifier">string</span></dt><dd><p>Path to database file that PHREEQC should use, including database file name.</p>
 </dd>
-<dt><strong>LOG_FILE</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Name of log file that WQXtoPandas will create. (Default=’Result.log’)</p>
+<dt><strong>LOG_FILE</strong><span class="classifier">string</span></dt><dd><p>Name of log file that WQXtoPandas will create. (Default=’Result.log’)</p>
 </dd>
-<dt><strong>START_FILE</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Name of xls start file that was used to run this instance of WQXtoPandas. Name will be written out in log file.</p>
+<dt><strong>START_FILE</strong><span class="classifier">string</span></dt><dd><p>Name of xls start file that was used to run this instance of WQXtoPandas. Name will be written out in log file.</p>
 </dd>
-<dt><strong>bracket_charge_balance</strong> <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
-<dd><p class="first last">If set to true, WQXtoPandas will alternately force charge balance on calcium and alkalinity, while the latter is not physically meaningful, this provides a useful estimate of uncertainty for cases with high charge balance errors.  This is most useful for water that is very dilute or with high organic content, such that titrated alkalinity values are artificially high.</p>
+<dt><strong>bracket_charge_balance</strong><span class="classifier">bool</span></dt><dd><p>If set to true, WQXtoPandas will alternately force charge balance on calcium and alkalinity, while the latter is not physically meaningful, this provides a useful estimate of uncertainty for cases with high charge balance errors.  This is most useful for water that is very dilute or with high organic content, such that titrated alkalinity values are artificially high.</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>Returns 0 if execution successful.  Returns -1 in case of error.</strong></dt>
-<dd></dd>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>Returns 0 if execution successful.  Returns -1 in case of error.</dt><dd></dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Notes</p>
 <p>Designed to be run through convenience function runWQXtoPandas().</p>
 </dd></dl>
@@ -134,15 +110,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -169,7 +145,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

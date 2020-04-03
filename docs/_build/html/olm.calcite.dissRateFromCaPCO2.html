@@ -1,32 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>olm.calcite.dissRateFromCaPCO2 &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.35',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.calcite.pwp_to_mm_yr" href="olm.calcite.pwp_to_mm_yr.html" />
     <link rel="prev" title="olm.calcite.createPalmerInterpolationFunctions" href="olm.calcite.createPalmerInterpolationFunctions.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -56,64 +48,46 @@
 <h1>olm.calcite.dissRateFromCaPCO2<a class="headerlink" href="#olm-calcite-dissratefromcapco2" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.calcite.dissRateFromCaPCO2">
-<code class="descclassname">olm.calcite.</code><code class="descname">dissRateFromCaPCO2</code><span class="sig-paren">(</span><em>Ca</em>, <em>PCO2</em>, <em>T_C</em>, <em>rho=2.6</em>, <em>method=None</em>, <em>impure=True</em>, <em>per_tol=0.001</em>, <em>error=False</em>, <em>error_num=100</em>, <em>Ca_err=None</em>, <em>PCO2_err=None</em>, <em>molL=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/calcite.html#dissRateFromCaPCO2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.calcite.dissRateFromCaPCO2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.calcite.</code><code class="sig-name descname">dissRateFromCaPCO2</code><span class="sig-paren">(</span><em class="sig-param">Ca</em>, <em class="sig-param">PCO2</em>, <em class="sig-param">T_C</em>, <em class="sig-param">rho=2.6</em>, <em class="sig-param">method=None</em>, <em class="sig-param">impure=True</em>, <em class="sig-param">per_tol=0.001</em>, <em class="sig-param">error=False</em>, <em class="sig-param">error_num=100</em>, <em class="sig-param">Ca_err=None</em>, <em class="sig-param">PCO2_err=None</em>, <em class="sig-param">molL=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/calcite.html#dissRateFromCaPCO2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.calcite.dissRateFromCaPCO2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the calcite/limestone dissolution rate from given calcium concentration and PCO2. Optionally uses Monte Carlo error propagation to calculate uncertainty in rates.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>Ca</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray or pandas Series</span></dt>
-<dd><p class="first last">Calcium concentration, default units are mg/L. Change to mol/L by setting keyword mol_L=true.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>Ca</strong><span class="classifier">float, numpy.ndarray or pandas Series</span></dt><dd><p>Calcium concentration, default units are mg/L. Change to mol/L by setting keyword mol_L=true.</p>
 </dd>
-<dt><strong>PCO2</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
-<dd><p class="first last">The partial pressure of CO2 for the solution(s).</p>
+<dt><strong>PCO2</strong><span class="classifier">float, numpy.ndarray, or pandas Series</span></dt><dd><p>The partial pressure of CO2 for the solution(s).</p>
 </dd>
-<dt><strong>T_C</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
-<dd><p class="first last">The temperature of the water in degrees Celcius.</p>
+<dt><strong>T_C</strong><span class="classifier">float, numpy.ndarray, or pandas Series</span></dt><dd><p>The temperature of the water in degrees Celcius.</p>
 </dd>
-<dt><strong>rho</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">Density of rock in g/cm^3. (default=2.6)</p>
+<dt><strong>rho</strong><span class="classifier">float</span></dt><dd><p>Density of rock in g/cm^3. (default=2.6)</p>
 </dd>
-<dt><strong>method</strong> <span class="classifier-delimiter">:</span> <span class="classifier">string</span></dt>
-<dd><p class="first last">Determines method used to calculate dissolution rates. Set to either ‘PWP’ or ‘Palmer’. This keyword is required.</p>
+<dt><strong>method</strong><span class="classifier">string</span></dt><dd><p>Determines method used to calculate dissolution rates. Set to either ‘PWP’ or ‘Palmer’. This keyword is required.</p>
 </dd>
-<dt><strong>impure</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
-<dd><p class="first last">Used when calculating Palmer rates. Determines whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)</p>
+<dt><strong>impure</strong><span class="classifier">boolean</span></dt><dd><p>Used when calculating Palmer rates. Determines whether to use the table values for impure calcite (True) or pure calcite (False). Impure calcite is more representative of typical limestone. (default = True)</p>
 </dd>
-<dt><strong>per_tol</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">the fractional change in H concentration between iterations upon which the iteration is terminated (see solutionFromCaPCO2). default=0.001</p>
+<dt><strong>per_tol</strong><span class="classifier">float</span></dt><dd><p>the fractional change in H concentration between iterations upon which the iteration is terminated (see solutionFromCaPCO2). default=0.001</p>
 </dd>
-<dt><strong>error: boolean</strong></dt>
-<dd><p class="first last">Set to true if you want to use Monte Carlo Error propagation to estimate error in dissolution rate. Requires values for Ca_err and PCO2_err. (default=False)</p>
+<dt><strong>error: boolean</strong></dt><dd><p>Set to true if you want to use Monte Carlo Error propagation to estimate error in dissolution rate. Requires values for Ca_err and PCO2_err. (default=False)</p>
 </dd>
-<dt><strong>error_num</strong> <span class="classifier-delimiter">:</span> <span class="classifier">integer</span></dt>
-<dd><p class="first last">Size of random sample used in Monte Carlo Error propagation. default=100</p>
+<dt><strong>error_num</strong><span class="classifier">integer</span></dt><dd><p>Size of random sample used in Monte Carlo Error propagation. default=100</p>
 </dd>
-<dt><strong>Ca_err: float, numpy.ndarray, or pandas Series</strong></dt>
-<dd><p class="first last">Percent error in calcite concentration(s) (1=100%)</p>
+<dt><strong>Ca_err: float, numpy.ndarray, or pandas Series</strong></dt><dd><p>Percent error in calcite concentration(s) (1=100%)</p>
 </dd>
-<dt><strong>PCO2_err: float, numpy.ndarray, or pandas Series</strong></dt>
-<dd><p class="first last">Percent error in PCO2 values (1=100%)</p>
+<dt><strong>PCO2_err: float, numpy.ndarray, or pandas Series</strong></dt><dd><p>Percent error in PCO2 values (1=100%)</p>
 </dd>
-<dt><strong>molL</strong> <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
-<dd><p class="first last">Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)</p>
+<dt><strong>molL</strong><span class="classifier">boolean</span></dt><dd><p>Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>R</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
-<dd><p class="first last">calcite dissolution rate in mm/yr</p>
 </dd>
-<dt><strong>R_err</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float, numpy.ndarray, or pandas Series</span></dt>
-<dd><p class="first last">error in dissolution rate (returned with R if keyword error=True)</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>R</strong><span class="classifier">float, numpy.ndarray, or pandas Series</span></dt><dd><p>calcite dissolution rate in mm/yr</p>
+</dd>
+<dt><strong>R_err</strong><span class="classifier">float, numpy.ndarray, or pandas Series</span></dt><dd><p>error in dissolution rate (returned with R if keyword error=True)</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -138,15 +112,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -172,7 +146,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

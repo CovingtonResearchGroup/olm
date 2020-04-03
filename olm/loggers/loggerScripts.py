@@ -2,7 +2,7 @@
 Contains functions that are useful in general for manipulation of data logger data
 """
 
-from pandas import datetools, DataFrame, Series, notnull, Timestamp
+from pandas import DataFrame, Series, notnull, Timestamp
 from matplotlib.dates import date2num
 
 #accepts a list of logger DateFrame objects as first argument

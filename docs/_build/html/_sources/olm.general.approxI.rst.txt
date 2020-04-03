@@ -1,5 +1,5 @@
-olm\.general\.approxI
-=====================
+olm.general.approxI
+===================
 
 .. currentmodule:: olm.general
 

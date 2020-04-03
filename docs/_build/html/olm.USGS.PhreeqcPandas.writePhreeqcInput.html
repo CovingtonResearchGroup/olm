@@ -1,32 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>olm.USGS.PhreeqcPandas.writePhreeqcInput &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.35',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation" href="olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation.html" />
     <link rel="prev" title="olm.USGS.PhreeqcPandas.readPhreeqcOutput" href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -57,40 +49,28 @@
 <h1>olm.USGS.PhreeqcPandas.writePhreeqcInput<a class="headerlink" href="#olm-usgs-phreeqcpandas-writephreeqcinput" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.USGS.PhreeqcPandas.writePhreeqcInput">
-<code class="descclassname">olm.USGS.PhreeqcPandas.</code><code class="descname">writePhreeqcInput</code><span class="sig-paren">(</span><em>sample_row</em>, <em>phreeqc_file_name</em>, <em>phreeqcDict={'Alkalinity</em>, <em>total': 'Alkalinity'</em>, <em>'Calcium': 'Ca'</em>, <em>'Chloride': 'Cl'</em>, <em>'Magnesium': 'Mg'</em>, <em>'Nitrate': 'N'</em>, <em>'Potassium': 'K'</em>, <em>'Sodium': 'Na'</em>, <em>'Sulfate': 'S'</em>, <em>'Temperature</em>, <em>water': 'temp'</em>, <em>'pH': 'pH'}</em>, <em>datetext=''</em>, <em>charge=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#writePhreeqcInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.writePhreeqcInput" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.USGS.PhreeqcPandas.</code><code class="sig-name descname">writePhreeqcInput</code><span class="sig-paren">(</span><em class="sig-param">sample_row</em>, <em class="sig-param">phreeqc_file_name</em>, <em class="sig-param">phreeqcDict={'Temperature</em>, <em class="sig-param">water': 'temp'</em>, <em class="sig-param">'pH': 'pH'</em>, <em class="sig-param">'Alkalinity</em>, <em class="sig-param">total': 'Alkalinity'</em>, <em class="sig-param">'Calcium': 'Ca'</em>, <em class="sig-param">'Magnesium': 'Mg'</em>, <em class="sig-param">'Potassium': 'K'</em>, <em class="sig-param">'Sodium': 'Na'</em>, <em class="sig-param">'Sulfate': 'S'</em>, <em class="sig-param">'Nitrate': 'N'</em>, <em class="sig-param">'Chloride': 'Cl'}</em>, <em class="sig-param">datetext=''</em>, <em class="sig-param">charge=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#writePhreeqcInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.writePhreeqcInput" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a PHREEQC input file using the row from a site panel.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>sample_row</strong> <span class="classifier-delimiter">:</span> <span class="classifier">pandas data frame row</span></dt>
-<dd><p class="first last">The row from the pandas data frame for the site and date to be processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>sample_row</strong><span class="classifier">pandas data frame row</span></dt><dd><p>The row from the pandas data frame for the site and date to be processed.</p>
 </dd>
-<dt><strong>phreeqc_file_name</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">Name of PHREEQC input file to write.</p>
+<dt><strong>phreeqc_file_name</strong><span class="classifier">str</span></dt><dd><p>Name of PHREEQC input file to write.</p>
 </dd>
-<dt><strong>phreeqcDict</strong> <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
-<dd><p class="first last">a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</p>
+<dt><strong>phreeqcDict</strong><span class="classifier">dict</span></dt><dd><p>a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</p>
 </dd>
-<dt><strong>datetext</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">String containing the text that describes the date as it should be written into the PHREEQC input file.</p>
+<dt><strong>datetext</strong><span class="classifier">str</span></dt><dd><p>String containing the text that describes the date as it should be written into the PHREEQC input file.</p>
 </dd>
-<dt><strong>charge</strong> <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">String containing name of element (or pH) that should be adjusted to obtain charge balance. This is done internally by PHREEQC. (Default=None)</p>
+<dt><strong>charge</strong><span class="classifier">str</span></dt><dd><p>String containing name of element (or pH) that should be adjusted to obtain charge balance. This is done internally by PHREEQC. (Default=None)</p>
 </dd>
-<dt><strong>Returns</strong></dt>
-<dd></dd>
-<dt><strong>——-</strong></dt>
-<dd></dd>
-<dt><strong>status</strong> <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">OK if equal to 1. Error writing to file if equal to -1.</p>
+<dt><strong>Returns</strong></dt><dd></dd>
+<dt><strong>——-</strong></dt><dd></dd>
+<dt><strong>status</strong><span class="classifier">int</span></dt><dd><p>OK if equal to 1. Error writing to file if equal to -1.</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -115,15 +95,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -150,7 +130,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

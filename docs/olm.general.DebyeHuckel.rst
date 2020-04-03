@@ -1,5 +1,5 @@
-olm\.general\.DebyeHuckel
-=========================
+olm.general.DebyeHuckel
+=======================
 
 .. currentmodule:: olm.general
 

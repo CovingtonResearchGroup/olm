@@ -71,6 +71,10 @@ def read_hobo_csv(csv_file, all_columns=False):
             new_name = 'CondHigh'
             cond_count+=1
             wantcol=True
+        if 'Full Range' in label:
+            new_name = 'CondFull'
+            cond_count+=1
+            wantcol=True
         if wantcol==True:
             rename_dict[label]=new_name
     #If there is only one conductivity column, we'll label it as 'Cond'

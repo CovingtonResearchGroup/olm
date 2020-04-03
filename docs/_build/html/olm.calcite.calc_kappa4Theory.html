@@ -1,32 +1,24 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>olm.calcite.calc_kappa4Theory &#8212; olm 0.35 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.35',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="olm.calcite.calc_kappa4Pascal" href="olm.calcite.calc_kappa4Pascal.html" />
     <link rel="prev" title="olm.calcite.calc_kappa3" href="olm.calcite.calc_kappa3.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -56,34 +48,26 @@
 <h1>olm.calcite.calc_kappa4Theory<a class="headerlink" href="#olm-calcite-calc-kappa4theory" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.calcite.calc_kappa4Theory">
-<code class="descclassname">olm.calcite.</code><code class="descname">calc_kappa4Theory</code><span class="sig-paren">(</span><em>T_K</em>, <em>PCO2</em>, <em>a_H2CO3s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/calcite.html#calc_kappa4Theory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.calcite.calc_kappa4Theory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.calcite.</code><code class="sig-name descname">calc_kappa4Theory</code><span class="sig-paren">(</span><em class="sig-param">T_K</em>, <em class="sig-param">PCO2</em>, <em class="sig-param">a_H2CO3s</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/calcite.html#calc_kappa4Theory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.calcite.calc_kappa4Theory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates kappa4 in the PWP equation using the theoretical relation for kappa4 from Plummer, Wigley, and Parkhurst (1978) Equation 25 (as described in Dreybrodt [1988] equation 6.22b).  In this case, a_H in the equation for kappa4 is the equilibrium surface value for the given carbonic acid concentration, as specified in the theory.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
-<dt><strong>T_K</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">temperature Kelvin</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>T_K</strong><span class="classifier">float</span></dt><dd><p>temperature Kelvin</p>
 </dd>
-<dt><strong>PCO2</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">partial pressure of CO2 (atm)</p>
+<dt><strong>PCO2</strong><span class="classifier">float</span></dt><dd><p>partial pressure of CO2 (atm)</p>
 </dd>
-<dt><strong>a_H2CO3s</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">activity of carbonic acid (mol/L)</p>
+<dt><strong>a_H2CO3s</strong><span class="classifier">float</span></dt><dd><p>activity of carbonic acid (mol/L)</p>
 </dd>
 </dl>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>kappa4</strong> <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">constant kappa4 in the PWP equation (cm/s)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>kappa4</strong><span class="classifier">float</span></dt><dd><p>constant kappa4 in the PWP equation (cm/s)</p>
 </dd>
 </dl>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 <p class="rubric">Notes</p>
 <p>See more info under documentation for pwpRateTheory().</p>
 </dd></dl>
@@ -110,15 +94,15 @@
     </ul>
    </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -144,7 +128,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.6.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

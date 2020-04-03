@@ -1,5 +1,5 @@
-olm\.general\.HardnessFromCond
-==============================
+olm.general.HardnessFromCond
+============================
 
 .. currentmodule:: olm.general
 
