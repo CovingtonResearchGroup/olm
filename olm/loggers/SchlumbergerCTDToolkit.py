@@ -32,8 +32,8 @@ def readCTD(csvfile):
     index_col = 0
     names = ['Pressure', 'Temperature', 'Conductivity']
     parse_dates = True
-    skip_footer = 1
-    df = read_csv(csvfile, sep=sep, names=names, skiprows=skiprows, index_col=index_col, parse_dates=parse_dates, skip_footer=skip_footer)
+    skipfooter = 1
+    df = read_csv(csvfile, sep=sep, names=names, skiprows=skiprows, index_col=index_col, parse_dates=parse_dates, skipfooter=skipfooter)
     return df
 
 #read in the CSV file from a CTD diver and return a pandas DataFrame
@@ -60,8 +60,8 @@ def readBaro(csvfile):
     index_col = 0
     names = ['Pressure', 'Temperature']
     parse_dates = True
-    skip_footer = 1
-    df = read_csv(csvfile, sep=sep, names=names, skiprows=skiprows, index_col=index_col, parse_dates=parse_dates, skip_footer=skip_footer)
+    skipfooter = 1
+    df = read_csv(csvfile, sep=sep, names=names, skiprows=skiprows, index_col=index_col, parse_dates=parse_dates, skipfooter=skipfooter)
     return df
 
 
