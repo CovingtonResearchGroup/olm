@@ -1343,7 +1343,7 @@ def palmerFromSolution(sol, PCO2=np.array([]), rho=2.6, impure=True):
         return calc_rate(sol, PCO2, rho)
 
 
-def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol=0.001, error=False, error_num=100, Ca_err=None, PCO2_err=None, molL=False):
+def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol=0.001, error=False, error_num=100, Ca_err=None, PCO2_err=None, molL=False, confidence=0., return_samples = False):
     """
     Calculates the calcite/limestone dissolution rate from given calcium concentration and PCO2. Optionally uses Monte Carlo error propagation to calculate uncertainty in rates.
 
@@ -1373,6 +1373,10 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
        Percent error in PCO2 values (1=100%)
     molL : boolean
        Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)
+    confidence : float
+       If non-zero then confidence intervals will be used in error estimation (e.g. 90 = 90% confidence). Default is 0.
+    return_samples : boolean
+       If true (default is false), then return entire random samples within error arrays.
 
     Returns
     -------
@@ -1410,9 +1414,16 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
             else:
                 print( "Invalid method keyword!")
                 return None
-        #Estimated error is standard deviation from random sample
-        return np.std(rate_sample)
-
+        if return_samples:
+            return rate_sample
+        if confidence==0:
+            #Estimated error is standard deviation from random sample
+            return np.std(rate_sample)
+        else:
+            #Error estimated using confidence intervals
+            lower = np.percentile(rate_sample, 100.-confidence)
+            upper = np.percentile(rate_sample, confidence)
+            return [upper, lower]
 
 
     if not molL:
@@ -1422,7 +1433,12 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
     if (type(Ca)==np.ndarray) or is_series:
         rate_arr = np.empty(np.size(Ca), dtype=object)
         if error:
-            err_arr = np.empty(np.size(Ca), dtype=object)
+            if return_samples:
+                err_arr = np.empty((np.size(Ca),error_num), dtype=object)
+            elif confidence == 0:
+                err_arr = np.empty(np.size(Ca), dtype=object)
+            else:
+                err_arr = np.empty((np.size(Ca),2), dtype=object)
         for i, this_Ca in enumerate(Ca):
             if (i % 100)==0:
                 print( "Solution number "+str(i))
@@ -1443,7 +1459,10 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
             #Monte Carlo error estimate on rate
             if error:
                 if np.size(T_C)==1:
-                    err_arr[i] = err_est(this_Ca, PCO2[i], T_C, Ca_err, PCO2_err)
+                    if confidence == 0 and not return_samples:
+                        err_arr[i] = err_est(this_Ca, PCO2[i], T_C, Ca_err, PCO2_err)
+                    else:
+                        err_arr[i,:] = err_est(this_Ca, PCO2[i], T_C, Ca_err, PCO2_err)
                 else:
                     if np.size(Ca_err)==1:
                         this_Ca_err = Ca_err
@@ -1453,13 +1472,21 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
                         this_PCO2_err = PCO2_err
                     else:
                         this_PCO2_err = PCO2_err[i]
-                        
-                    err_arr[i] = err_est(this_Ca, PCO2[i], T_C[i], this_Ca_err, this_PCO2_err)
+                    if confidence == 0 and not return_samples:
+                        err_arr[i] = err_est(this_Ca, PCO2[i], T_C[i], this_Ca_err, this_PCO2_err)
+                    else:
+                        err_arr[i,:] = err_est(this_Ca, PCO2[i], T_C[i], this_Ca_err, this_PCO2_err)
 
         if is_series:
             rate_arr = pandas.Series(rate_arr, index=Ca.index)
             if error:
-                err_arr = pandas.Series(err_arr, index=Ca.index)
+                if confidence==0 and not return_samples:
+                    err_arr = pandas.Series(err_arr, index=Ca.index, dtype=float)
+                else:
+                    if return_samples:
+                        err_arr = pandas.DataFrame(err_arr, index=Ca.index, dtype=float)
+                    else:
+                        err_arr = pandas.DataFrame(err_arr, index=Ca.index, columns=['lower','upper'], dtype=float)
         if error:
             return rate_arr, err_arr
         else:
