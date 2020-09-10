@@ -1431,14 +1431,14 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
         Ca = mgL_to_molL(Ca, 'Ca')
     is_series = (type(Ca)==pandas.core.series.Series)
     if (type(Ca)==np.ndarray) or is_series:
-        rate_arr = np.empty(np.size(Ca), dtype=object)
+        rate_arr = np.empty(np.size(Ca), dtype=float)
         if error:
             if return_samples:
-                err_arr = np.empty((np.size(Ca),error_num), dtype=object)
+                err_arr = np.empty((np.size(Ca),error_num), dtype=float)
             elif confidence == 0:
-                err_arr = np.empty(np.size(Ca), dtype=object)
+                err_arr = np.empty(np.size(Ca), dtype=float)
             else:
-                err_arr = np.empty((np.size(Ca),2), dtype=object)
+                err_arr = np.empty((np.size(Ca),2), dtype=float)
         for i, this_Ca in enumerate(Ca):
             if (i % 100)==0:
                 print( "Solution number "+str(i))
