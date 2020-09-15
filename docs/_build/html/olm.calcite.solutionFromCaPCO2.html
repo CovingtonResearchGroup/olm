@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>olm.calcite.solutionFromCaPCO2 &#8212; olm 0.35 documentation</title>
+    <title>olm.calcite.solutionFromCaPCO2 &#8212; olm 0.36 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="olm.html" title="olm Package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.35 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" accesskey="U">olm Package</a> &#187;</li> 
       </ul>
     </div>  
@@ -48,7 +48,7 @@
 <h1>olm.calcite.solutionFromCaPCO2<a class="headerlink" href="#olm-calcite-solutionfromcapco2" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.calcite.solutionFromCaPCO2">
-<code class="sig-prename descclassname">olm.calcite.</code><code class="sig-name descname">solutionFromCaPCO2</code><span class="sig-paren">(</span><em class="sig-param">Ca</em>, <em class="sig-param">PCO2</em>, <em class="sig-param">T_C=25.0</em>, <em class="sig-param">per_tol=0.001</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/calcite.html#solutionFromCaPCO2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.calcite.solutionFromCaPCO2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.calcite.</code><code class="sig-name descname">solutionFromCaPCO2</code><span class="sig-paren">(</span><em class="sig-param">Ca</em>, <em class="sig-param">PCO2</em>, <em class="sig-param">T_C=25.0</em>, <em class="sig-param">per_tol=0.001</em>, <em class="sig-param">max_iter=1000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/calcite.html#solutionFromCaPCO2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.calcite.solutionFromCaPCO2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a solution object from a given concentration of calcium and PCO2.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -60,6 +60,8 @@
 <dt><strong>T_C</strong><span class="classifier">float, , numpy.ndarray, or pandas Series (optional)</span></dt><dd><p>temperature of solution in degrees Celsius (default = 25 C)</p>
 </dd>
 <dt><strong>per_tol</strong><span class="classifier">float</span></dt><dd><p>the fractional change in H concentration between iterations upon which the iteration is terminated</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier">int</span></dt><dd><p>the number of iterations allowed in the solution. Returns None if solution does not converge in max_iter.</p>
 </dd>
 </dl>
 </dd>
@@ -123,7 +125,7 @@
         <li class="right" >
           <a href="olm.html" title="olm Package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.35 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li> 
       </ul>
     </div>

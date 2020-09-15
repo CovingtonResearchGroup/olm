@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>olm.loggers.SchlumbergerCTDToolkit &#8212; olm 0.35 documentation</title>
+    <title>olm.loggers.SchlumbergerCTDToolkit &#8212; olm 0.36 documentation</title>
     <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.35 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.36 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -71,8 +71,8 @@
     <span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Pressure&#39;</span><span class="p">,</span> <span class="s1">&#39;Temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;Conductivity&#39;</span><span class="p">]</span>
     <span class="n">parse_dates</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">skip_footer</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="n">parse_dates</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="n">skip_footer</span><span class="p">)</span>
+    <span class="n">skipfooter</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="n">parse_dates</span><span class="p">,</span> <span class="n">skipfooter</span><span class="o">=</span><span class="n">skipfooter</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span></div>
 
 <span class="c1">#read in the CSV file from a CTD diver and return a pandas DataFrame</span>
@@ -99,8 +99,8 @@
     <span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Pressure&#39;</span><span class="p">,</span> <span class="s1">&#39;Temperature&#39;</span><span class="p">]</span>
     <span class="n">parse_dates</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">skip_footer</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="n">parse_dates</span><span class="p">,</span> <span class="n">skip_footer</span><span class="o">=</span><span class="n">skip_footer</span><span class="p">)</span>
+    <span class="n">skipfooter</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="n">skiprows</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="n">index_col</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="n">parse_dates</span><span class="p">,</span> <span class="n">skipfooter</span><span class="o">=</span><span class="n">skipfooter</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span></div>
 
 
@@ -199,7 +199,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.35 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.36 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

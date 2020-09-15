@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>olm.calcite &#8212; olm 0.35 documentation</title>
+    <title>olm.calcite &#8212; olm 0.36 documentation</title>
     <link rel="stylesheet" href="../../_static//default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.35 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.36 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -331,7 +331,7 @@
 
 <span class="c1">#Calculate H+ concentration given Ca and PCO2, makes no relaxed charge</span>
 <span class="c1">#balance assumption</span>
-<div class="viewcode-block" id="solutionFromCaPCO2"><a class="viewcode-back" href="../../olm.calcite.solutionFromCaPCO2.html#olm.calcite.solutionFromCaPCO2">[docs]</a><span class="k">def</span> <span class="nf">solutionFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">per_tol</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">):</span>
+<div class="viewcode-block" id="solutionFromCaPCO2"><a class="viewcode-back" href="../../olm.calcite.solutionFromCaPCO2.html#olm.calcite.solutionFromCaPCO2">[docs]</a><span class="k">def</span> <span class="nf">solutionFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">per_tol</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a solution object from a given concentration of calcium and PCO2.</span>
 
@@ -345,7 +345,8 @@
 <span class="sd">       temperature of solution in degrees Celsius (default = 25 C)</span>
 <span class="sd">    per_tol : float</span>
 <span class="sd">       the fractional change in H concentration between iterations upon which the iteration is terminated</span>
-
+<span class="sd">    max_iter : int</span>
+<span class="sd">       the number of iterations allowed in the solution. Returns None if solution does not converge in max_iter.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -366,6 +367,7 @@
         <span class="n">K_2</span> <span class="o">=</span> <span class="n">calc_K_2</span><span class="p">(</span><span class="n">T_K</span><span class="p">)</span>
         <span class="n">K_6</span> <span class="o">=</span> <span class="n">K_1</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="mf">1.</span><span class="o">/</span><span class="n">K_0</span><span class="p">)</span>
         <span class="n">found</span><span class="o">=</span><span class="kc">False</span>
+        <span class="n">niter</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span><span class="p">(</span><span class="n">found</span><span class="p">):</span>
             <span class="c1">#estimate activity coefficients</span>
             <span class="n">gamma_H</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">I_guess</span><span class="p">,</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C_in</span><span class="p">)</span>
@@ -387,6 +389,9 @@
                 <span class="n">H_guess</span> <span class="o">=</span> <span class="n">H_new</span>
                 <span class="n">I_guess</span> <span class="o">=</span> <span class="n">I_new</span>
             <span class="c1">#calculate non-charge ions</span>
+            <span class="n">niter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">niter</span> <span class="o">&gt;</span> <span class="n">max_iter</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
         <span class="n">CO2</span> <span class="o">=</span> <span class="n">K_H</span><span class="o">*</span><span class="n">PCO2_in</span>
         <span class="n">H2CO3</span> <span class="o">=</span> <span class="p">(</span><span class="n">K_H</span><span class="o">/</span><span class="n">K_0</span><span class="p">)</span><span class="o">*</span><span class="n">PCO2_in</span>
         <span class="n">H2CO3s</span> <span class="o">=</span> <span class="n">H2CO3</span> <span class="o">+</span> <span class="n">CO2</span>
@@ -1377,7 +1382,7 @@
         <span class="k">return</span> <span class="n">calc_rate</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="dissRateFromCaPCO2"><a class="viewcode-back" href="../../olm.calcite.dissRateFromCaPCO2.html#olm.calcite.dissRateFromCaPCO2">[docs]</a><span class="k">def</span> <span class="nf">dissRateFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">error_num</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ca_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PCO2_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">molL</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="dissRateFromCaPCO2"><a class="viewcode-back" href="../../olm.calcite.dissRateFromCaPCO2.html#olm.calcite.dissRateFromCaPCO2">[docs]</a><span class="k">def</span> <span class="nf">dissRateFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">error_num</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ca_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PCO2_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">molL</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">return_samples</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the calcite/limestone dissolution rate from given calcium concentration and PCO2. Optionally uses Monte Carlo error propagation to calculate uncertainty in rates.</span>
 
@@ -1407,6 +1412,10 @@
 <span class="sd">       Percent error in PCO2 values (1=100%)</span>
 <span class="sd">    molL : boolean</span>
 <span class="sd">       Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)</span>
+<span class="sd">    confidence : float</span>
+<span class="sd">       If non-zero then confidence intervals will be used in error estimation (e.g. 90 = 90% confidence). Default is 0.</span>
+<span class="sd">    return_samples : boolean</span>
+<span class="sd">       If true (default is false), then return entire random samples within error arrays.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -1417,7 +1426,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#Function for Monte Carlo error estimation</span>
-    <span class="k">def</span> <span class="nf">err_est</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span><span class="n">PCO2</span><span class="p">,</span><span class="n">T_C</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">err_est</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span><span class="n">PCO2</span><span class="p">,</span><span class="n">T_C</span><span class="p">,</span><span class="n">Ca_err</span><span class="p">,</span><span class="n">PCO2_err</span><span class="p">):</span>
         <span class="n">rate_sample</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">error_num</span><span class="p">)</span>
         <span class="n">Ca_factor</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">+</span> <span class="n">Ca_err</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">error_num</span><span class="p">)</span>
         <span class="n">Ca_sample</span> <span class="o">=</span> <span class="n">Ca</span><span class="o">*</span><span class="n">Ca_factor</span>
@@ -1426,7 +1435,16 @@
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">error_num</span><span class="p">):</span>
         <span class="c1">#    print j, Ca_sample[j], PCO2_sample[j]</span>
             <span class="c1">#Create solution object</span>
-            <span class="n">rand_sol</span> <span class="o">=</span> <span class="n">solutionFromCaPCO2</span><span class="p">(</span><span class="n">Ca_sample</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">PCO2_sample</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="n">per_tol</span><span class="p">)</span>
+            <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+                <span class="n">rand_sol</span> <span class="o">=</span> <span class="n">solutionFromCaPCO2</span><span class="p">(</span><span class="n">Ca_sample</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">PCO2_sample</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="n">per_tol</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">rand_sol</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">):</span>
+                    <span class="n">found</span><span class="o">=</span><span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_Ca_factor</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">+</span> <span class="n">Ca_err</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">Ca_sample</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ca</span><span class="o">*</span><span class="n">new_Ca_factor</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Solution did not converge for this error calculation.&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Ca_sample=&#39;</span><span class="p">,</span><span class="n">Ca_sample</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="s1">&#39;   PCO2_sample=&#39;</span><span class="p">,</span><span class="n">PCO2_sample</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
             <span class="c1">#Calculate dissolution rate</span>
             <span class="k">if</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;PWP&#39;</span><span class="p">:</span>
                 <span class="n">rate_sample</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">pwp_to_mm_yr</span><span class="p">(</span><span class="n">pwpFromSolution</span><span class="p">(</span><span class="n">rand_sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="n">PCO2_sample</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="n">rho</span><span class="o">=</span><span class="n">rho</span><span class="p">)</span>
@@ -1435,9 +1453,16 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Invalid method keyword!&quot;</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">None</span>
-        <span class="c1">#Estimated error is standard deviation from random sample</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">rate_sample</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="n">return_samples</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rate_sample</span>
+        <span class="k">if</span> <span class="n">confidence</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#Estimated error is standard deviation from random sample</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">rate_sample</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#Error estimated using confidence intervals</span>
+            <span class="n">lower</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">rate_sample</span><span class="p">,</span> <span class="mf">100.</span><span class="o">-</span><span class="n">confidence</span><span class="p">)</span>
+            <span class="n">upper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">rate_sample</span><span class="p">,</span> <span class="n">confidence</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">]</span>
 
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">molL</span><span class="p">:</span>
@@ -1445,12 +1470,18 @@
         <span class="n">Ca</span> <span class="o">=</span> <span class="n">mgL_to_molL</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="s1">&#39;Ca&#39;</span><span class="p">)</span>
     <span class="n">is_series</span> <span class="o">=</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">pandas</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">series</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">Ca</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_series</span><span class="p">:</span>
-        <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+        <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
-            <span class="n">err_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">return_samples</span><span class="p">:</span>
+                <span class="n">err_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span><span class="n">error_num</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">confidence</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">err_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">err_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca</span><span class="p">),</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">this_Ca</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Ca</span><span class="p">):</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">100</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Solution number &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                <span class="c1">#print( &quot;Ca = &quot;, this_Ca, &quot;  CO2 = &quot;, PCO2[i], &#39;  Ca_err = &#39;, Ca_err[i], &#39; CO2_err = &#39;, PCO2_err)</span>
             <span class="c1">#Create solution object</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">sol</span> <span class="o">=</span> <span class="n">solutionFromCaPCO2</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="o">=</span><span class="n">T_C</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="n">per_tol</span><span class="p">)</span>
@@ -1467,14 +1498,34 @@
             <span class="c1">#Monte Carlo error estimate on rate</span>
             <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">T_C</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
-                    <span class="n">err_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">confidence</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">return_samples</span><span class="p">:</span>
+                        <span class="n">err_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="p">,</span> <span class="n">Ca_err</span><span class="p">,</span> <span class="n">PCO2_err</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">err_arr</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="p">,</span> <span class="n">Ca_err</span><span class="p">,</span> <span class="n">PCO2_err</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">err_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">Ca_err</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="n">this_Ca_err</span> <span class="o">=</span> <span class="n">Ca_err</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">this_Ca_err</span> <span class="o">=</span> <span class="n">Ca_err</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">PCO2_err</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+                        <span class="n">this_PCO2_err</span> <span class="o">=</span> <span class="n">PCO2_err</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">this_PCO2_err</span> <span class="o">=</span> <span class="n">PCO2_err</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">confidence</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">return_samples</span><span class="p">:</span>
+                        <span class="n">err_arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">this_Ca_err</span><span class="p">,</span> <span class="n">this_PCO2_err</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">err_arr</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">this_Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">T_C</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">this_Ca_err</span><span class="p">,</span> <span class="n">this_PCO2_err</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">is_series</span><span class="p">:</span>
             <span class="n">rate_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">rate_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">Ca</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
-                <span class="n">err_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">err_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">Ca</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">confidence</span><span class="o">==</span><span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">return_samples</span><span class="p">:</span>
+                    <span class="n">err_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">err_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">Ca</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">return_samples</span><span class="p">:</span>
+                        <span class="n">err_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">err_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">Ca</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">err_arr</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">err_arr</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">Ca</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span><span class="s1">&#39;upper&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">rate_arr</span><span class="p">,</span> <span class="n">err_arr</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1491,7 +1542,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid method keyword!&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
-            <span class="n">err</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="p">)</span>
+            <span class="n">err</span> <span class="o">=</span> <span class="n">err_est</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="p">,</span> <span class="n">Ca_err</span><span class="p">,</span> <span class="n">PCO2_err</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">R</span><span class="p">,</span> <span class="n">err</span>
         <span class="k">return</span> <span class="n">R</span></div>
 </pre></div>
@@ -1524,7 +1575,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.35 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.36 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

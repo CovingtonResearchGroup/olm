@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>olm.calcite.dissRateFromCaPCO2 &#8212; olm 0.35 documentation</title>
+    <title>olm.calcite.dissRateFromCaPCO2 &#8212; olm 0.36 documentation</title>
     <link rel="stylesheet" href="_static//default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -34,7 +34,7 @@
         <li class="right" >
           <a href="olm.calcite.createPalmerInterpolationFunctions.html" title="olm.calcite.createPalmerInterpolationFunctions"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.35 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" accesskey="U">olm Package</a> &#187;</li> 
       </ul>
     </div>  
@@ -48,7 +48,7 @@
 <h1>olm.calcite.dissRateFromCaPCO2<a class="headerlink" href="#olm-calcite-dissratefromcapco2" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="olm.calcite.dissRateFromCaPCO2">
-<code class="sig-prename descclassname">olm.calcite.</code><code class="sig-name descname">dissRateFromCaPCO2</code><span class="sig-paren">(</span><em class="sig-param">Ca</em>, <em class="sig-param">PCO2</em>, <em class="sig-param">T_C</em>, <em class="sig-param">rho=2.6</em>, <em class="sig-param">method=None</em>, <em class="sig-param">impure=True</em>, <em class="sig-param">per_tol=0.001</em>, <em class="sig-param">error=False</em>, <em class="sig-param">error_num=100</em>, <em class="sig-param">Ca_err=None</em>, <em class="sig-param">PCO2_err=None</em>, <em class="sig-param">molL=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/calcite.html#dissRateFromCaPCO2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.calcite.dissRateFromCaPCO2" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">olm.calcite.</code><code class="sig-name descname">dissRateFromCaPCO2</code><span class="sig-paren">(</span><em class="sig-param">Ca</em>, <em class="sig-param">PCO2</em>, <em class="sig-param">T_C</em>, <em class="sig-param">rho=2.6</em>, <em class="sig-param">method=None</em>, <em class="sig-param">impure=True</em>, <em class="sig-param">per_tol=0.001</em>, <em class="sig-param">error=False</em>, <em class="sig-param">error_num=100</em>, <em class="sig-param">Ca_err=None</em>, <em class="sig-param">PCO2_err=None</em>, <em class="sig-param">molL=False</em>, <em class="sig-param">confidence=0.0</em>, <em class="sig-param">return_samples=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/calcite.html#dissRateFromCaPCO2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.calcite.dissRateFromCaPCO2" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the calcite/limestone dissolution rate from given calcium concentration and PCO2. Optionally uses Monte Carlo error propagation to calculate uncertainty in rates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -76,6 +76,10 @@
 <dt><strong>PCO2_err: float, numpy.ndarray, or pandas Series</strong></dt><dd><p>Percent error in PCO2 values (1=100%)</p>
 </dd>
 <dt><strong>molL</strong><span class="classifier">boolean</span></dt><dd><p>Are Ca units in mol/L. If so, set to true. Otherwise, units assumed are mg/L. (default=False, i.e. mg/L)</p>
+</dd>
+<dt><strong>confidence</strong><span class="classifier">float</span></dt><dd><p>If non-zero then confidence intervals will be used in error estimation (e.g. 90 = 90% confidence). Default is 0.</p>
+</dd>
+<dt><strong>return_samples</strong><span class="classifier">boolean</span></dt><dd><p>If true (default is false), then return entire random samples within error arrays.</p>
 </dd>
 </dl>
 </dd>
@@ -140,7 +144,7 @@
         <li class="right" >
           <a href="olm.calcite.createPalmerInterpolationFunctions.html" title="olm.calcite.createPalmerInterpolationFunctions"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.35 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li> 
       </ul>
     </div>

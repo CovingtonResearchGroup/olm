@@ -3,7 +3,7 @@ from distutils.core import setup
 
 
 setup(name='olm',
-    version='0.35',
+    version='0.36',
     author='Matt Covington',
     url='https://github.com/speleophysics/olm/',
     packages=['olm', 'olm.USGS', 'olm.loggers'],
