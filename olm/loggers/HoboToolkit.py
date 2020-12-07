@@ -11,7 +11,7 @@ def read_hobo_csv(csv_file, all_columns=False):
     csv_file : string
         A string containing the file name of the csv file to be read.
     all_columns : boolean (optional)
-        Determines whether to read in all columns or just ones that we search for and relabel (RH, DewPt, Abs Pres, Temp, Attached, Stopped, Connected, EOF, Cond High Range, Cond Low Range). Default = False
+        Determines whether to read in all columns or just ones that we search for and relabel (RH, DewPt, Abs Pres, Temp, Attached, Stopped, Connected, EOF, Cond High Range, Cond Low Range, DO). Default = False
        
     Returns
     -------
@@ -74,6 +74,9 @@ def read_hobo_csv(csv_file, all_columns=False):
         if 'Full Range' in label:
             new_name = 'CondFull'
             cond_count+=1
+            wantcol=True
+        if 'DO conc' in label:
+            new_name = 'DO'
             wantcol=True
         if wantcol==True:
             rename_dict[label]=new_name
