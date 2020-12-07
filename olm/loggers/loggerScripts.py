@@ -4,6 +4,7 @@ Contains functions that are useful in general for manipulation of data logger da
 
 from pandas import DataFrame, Series, notnull, Timestamp
 from matplotlib.dates import date2num
+from numpy import arange
 
 #accepts a list of logger DateFrame objects as first argument
 def joinLoggers(loggerlist, how='inner', interpolate = False):
@@ -73,7 +74,7 @@ def joinAndResampleLoggers(loggerlist, interval, suffixes=[], how='inner', inter
         for i,logger in enumerate(loggerlist):
             if suffixes[i]!=None:
                 logger.columns+='_'+suffixes[i]
-            resampledList.append(logger.resample(interval))
+            resampledList.append(logger.resample(interval).mean())
     elif type(loggerlist)==dict:
         #print "Processing dict type loggerlist..."
         for logger_key in list(loggerlist.keys()):            
@@ -81,7 +82,7 @@ def joinAndResampleLoggers(loggerlist, interval, suffixes=[], how='inner', inter
             if type(suffixes)==dict:
                 if suffixes[logger_key]!=None:
                     logger.columns+='_'+suffixes[logger_key]
-                resampledList.append(logger.resample(interval))
+                resampledList.append(logger.resample(interval).mean())
             else:
                 print("Problem with suffixes. If loggerlist is a dict, suffixes also must be a dict.")
                 return None
