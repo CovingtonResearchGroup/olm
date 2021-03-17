@@ -54,11 +54,11 @@ def loadSiteListData(siteListText = None,
     if not(siteListText == None):
         #check whether we have a valid site directory
         processedSitesDir = checkSitesDir(processedSitesDir)
-        siteList = siteListFromLine(siteListText, processedSitesDir = processedSitesDir)
+        siteList = siteListFromLine(siteListText)
     elif not(siteFile == None):
         #check whether we have a valid site directory
         processedSitesDir = checkSitesDir(processedSitesDir)
-        siteList = siteListFromFile(siteFile, processedSitesDir = processedSitesDir)
+        siteList = siteListFromFile(siteFile)
     elif not(regEx == None):
         #check whether we have a valid site directory
         processedSitesDir = checkSitesDir(processedSitesDir)
