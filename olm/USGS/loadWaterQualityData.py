@@ -9,9 +9,6 @@ from glob import glob
 
 DEFAULT_DIR = './Processed-Sites'
 
-# siteListText - list of sites separated by semi-colons
-# siteFile - text file with list of sites
-# regEx - a wildcard expression to use in directory
 def loadSiteListData(siteListText = None,
                      siteFile = None, 
                      regEx = 'USGS-*', 
@@ -45,7 +42,7 @@ def loadSiteListData(siteListText = None,
     Returns
     -------
     sitesDict : dict
-        A dictionary of site data panels keyed by site name.
+        A dictionary of site DataFrames keyed by site name.
 
     or if loadPhreeqc or loadMetaData are set to true
     (sitesDict, sitesPheeqcDict, sitesMetaDataDict) : tuple
@@ -102,9 +99,9 @@ def loadSiteListData(siteListText = None,
         sitesPhreeqcDict = {}
         sitesMetaDataDict = {}
         for site in siteList:            
-            sitePanel = loadSiteData(site, processedSitesDir = processedSitesDir)
-            if sitePanel is not None: #If site data does not read in correctly, loadSiteData returns None
-                sitesDict[site] = sitePanel
+            siteFrame = loadSiteData(site, processedSitesDir = processedSitesDir)
+            if siteFrame is not None: #If site data does not read in correctly, loadSiteData returns None
+                sitesDict[site] = siteFrame
                 if loadPhreeqc:
                     sitedf = loadSitePhreeqcData(site, processedSitesDir = processedSitesDir)
                     sitesPhreeqcDict[site] = sitedf
@@ -129,7 +126,7 @@ def loadSiteMetaData(site, processedSitesDir = DEFAULT_DIR):
         metaDataFile = os.path.join(processedSitesDir, site, site+'-Site-Description.pkl')
         siteMetaData = pickle.load(open(metaDataFile, 'rb'))
     except IOError:
-        print(("Problem reading pickle file: " + panelFile ))
+        print(("Problem reading pickle file: " + metaDataFile ))
         return None
     return siteMetaData
     
@@ -149,21 +146,20 @@ def loadSiteData(site, processedSitesDir = DEFAULT_DIR):
 
     Returns
     -------
-    sitePanel : pandas.core.panel.Panel
-        A pandas panel object with data from the requested site.
+    siteDataFrame : pandas.core.dataframe.DataFrame
+        A pandas multiindexed DataFrame object with data and metadata from the requested site.
 
     """
     #Add USGS tag if needed
     if not(site.startswith('USGS-')):
         site = 'USGS-'+site
     try:
-        panelFile = os.path.join(processedSitesDir, site, site+'-Panel.pkl')
-#        sitePanel = pickle.load(open(panelFile, 'rb'))
-        sitePanel = read_pickle(panelFile)
+        frameFile = os.path.join(processedSitesDir, site, site+'-Dataframe.pkl')
+        siteFrame = read_pickle(frameFile)
     except IOError:
-        print(("Problem reading pickle file: " + panelFile ))
+        print(("Problem reading pickle file: " + frameFile ))
         return None
-    return sitePanel
+    return siteFrame 
 
 def loadSitePhreeqcData(site, processedSitesDir = DEFAULT_DIR):
     """

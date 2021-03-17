@@ -14,7 +14,7 @@ from pandas import read_csv, DataFrame, to_datetime
 #import requests
 #import os
 
-def GetSiteData(location):#, writedir='.'): #Changed so that we don't write out data into text file, only keep dataframe
+def GetSiteData(location):
     """
     Retrieves meta data about a USGS site using the full site identifier.
 
@@ -128,7 +128,7 @@ def GetSiteData(location):#, writedir='.'): #Changed so that we don't write out 
     skiprows = list(range(0,59))
     skiprows.append(60)
     siteDF = read_csv(queryURL, sep='\t', skiprows=skiprows)
-    siteDF = siteDF.ix[0] #change axis so that we only have key-data pairs
+    siteDF = siteDF.iloc[0]#change axis so that we only have key-data pairs
     return siteDF
 
 def querySiteList(siteList, charList):
