@@ -1,7 +1,10 @@
 #! /usr/bin/env python
 
 """
-This script takes an input file in USGS/EPA WQX xml format and creates a Pandas panel that contains time series of water quality data and discharge combined with layers that contain meta data for each data value.  You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas function for calling within a Python session.
+This script takes an input file in USGS/EPA WQX xml format and creates a multi-indexed Pandas Dataframe that contains 
+time series of water quality data and discharge combined with layers that contain meta data for each data value.  
+You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas 
+function for calling within a Python session.
 """
 
 from __future__ import print_function
@@ -10,7 +13,7 @@ from glob import glob
 from math import ceil
 import pickle as pickle
 from lxml import etree
-from pandas import DataFrame, Panel, to_datetime, Series, concat
+from pandas import DataFrame, to_datetime, Series, concat
 from olm.USGS.PhreeqcPandas import processPanel
 
 #import functions from olm package
@@ -19,9 +22,13 @@ from olm.USGS.siteListExtraction import extractSitesFromText
 from olm.USGS.DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
 from olm.USGS.dataSlice import extractValues
 
-def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites', RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/', DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log', START_FILE = None, splittag='',bracket_charge_balance=False):
+def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites', 
+                RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/', 
+                DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log', 
+                START_FILE = None, splittag='',bracket_charge_balance=False):
     """
-    Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are stored in directories for each site.
+    Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are 
+    stored in directories for each site.
 
     Parameters
     ----------
@@ -128,7 +135,6 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
         samples_processed = []
         samples_not_processed = []
         sitesDict = {}
-        sitesMetaDict = {}
         for activity in wqxtree.getiterator(tag=WQX + "Activity"):
             processThisSample = True
             reason = ''
@@ -234,13 +240,12 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                                 if (addCharacteristic):
                                     sampleDict[characteristic] = value
                                     sampleMetaDict[characteristic] = {'samplefraction':samplefraction, 'units':units, 'pcode':pcode, 'quality':quality, 'count':count}
-                    #end results loop
                     except etree.XMLSyntaxError as detail:
                         print("File contains invalid XML syntax: ", detail)
                         processThisSample = False
                         reason = "Entry contains invalid XML syntax."
+            #end results loop
             #check whether sample has all the required constituents
-#            print "Checking for requirements."
             if (processThisSample):
                 for characteristic in charDict.keys():
                     if (charDict[characteristic]['IsRequired'] != '0'):
@@ -283,9 +288,8 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                     rowdate = to_datetime(datetext+' '+descriptionDict['time'])
                 else:
                     rowdate = to_datetime(datetext)
-                #sampleRow = DataFrame(sampleDict, index=[rowdate], dtype='float')
-                #Create Panel to contain sample meta data
-                samplePanelRow = Panel({
+                #Create Multiindex Dataframe to contain sample meta data
+                sampleMultiindexRow = concat({
                         'data':DataFrame(sampleDict, index=[rowdate], dtype='float'),
                         'time':DataFrame(descriptionDict['time'],index=[rowdate], columns=list(sampleMetaDict.keys())),
                         'timezone':DataFrame(descriptionDict['timezone'],index=[rowdate], columns=list(sampleMetaDict.keys())),
@@ -294,7 +298,9 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                         'fraction':DataFrame([extractValues(sampleMetaDict, ['samplefraction'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
                         'units':DataFrame([extractValues(sampleMetaDict, ['units'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
                         'count':DataFrame([extractValues(sampleMetaDict, ['count'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
-                        })
+                        },
+                        axis=1)
+
                 #sampleMetaRow = Series(sampleMetaDict, index=[to_datetime(datetext)], dtype='object')
                 #Previous solution was reading/writing from pickle files
                 #New solution will keep all data in memory until end.
@@ -304,10 +310,10 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 if location in sitesDict:
 #                    tempDF = sitesDict[location]
 #                    sitesDict[location] = tempDF.append(sampleRow)
-                    tempPanel = sitesDict[location]
-                    sitesDict[location] = concat([tempPanel, samplePanelRow], axis=1)
+                    tempMultiindex = sitesDict[location]
+                    sitesDict[location] = concat([tempMultiindex, sampleMultiindexRow], axis=0)
                 else:
-                    sitesDict[location] = samplePanelRow
+                    sitesDict[location] = sampleMultiindexRow
             #add one to number of samples processed
             if (processThisSample):
                 samples_processed.append(location + ' ' + datetext)
@@ -318,11 +324,11 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
 
         #Write out individual site data pickle and csv files in each site directory
         print('Writing out site data files...')
-        for location, pnl in sitesDict.items():
+        for location, midf in sitesDict.items():
             print(location)
-            pickleFile =  os.path.join(sitesdir, location, location + '-Panel.pkl')
-            pickle.dump(pnl, open(pickleFile, 'wb'))
-            pnl.to_excel(pickleFile[:-3]+'xls')
+            pickleFile =  os.path.join(sitesdir, location, location + '-Dataframe.pkl')
+            pickle.dump(midf, open(pickleFile, 'wb'))
+            #midf.to_excel(pickleFile[:-3]+'xls')
             #Retrieve and store site description metadata
             siteDescriptionDataDF = GetSiteData(location)
             siteDescriptionDataFileName = os.path.join(sitesdir,location,location+'-Site-Description.pkl')
@@ -407,7 +413,8 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
 
 def runWQXtoPandas(startfilename, autosplitnum=20):
     """
-    Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from the USGS NWIS database.
+    Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from 
+    the USGS NWIS database.
 
     Parameters
     ----------
@@ -415,7 +422,7 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
         A string containing the name of the excel file to be used for input parameters to WQXtoPandas
 
     autosplitnum : int (optional)
-        The number of sites at which a NWIS query is split into multiple queries. (default=?)
+        The number of sites at which a NWIS query is split into multiple queries. (default=20)
 
     Returns
     -------
@@ -424,7 +431,8 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
     Notes
     -----
 
-    Can be run from within a python shell or script, or as a standalone script from the command line where the start file name is provided as the first command line argument (e.g. WQXtoPandas <start file name> <autosplitnum>).
+    Can be run from within a python shell or script, or as a standalone script from the command line where the start 
+    file name is provided as the first command line argument (e.g. WQXtoPandas <start file name> <autosplitnum>).
     """
     #PHREEQC input file path
     PHREEQC_INPUT_PATH = './'
