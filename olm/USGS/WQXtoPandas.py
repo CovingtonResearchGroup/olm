@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 
 """
-This script takes an input file in USGS/EPA WQX xml format and creates a multi-indexed Pandas Dataframe that contains 
-time series of water quality data and discharge combined with layers that contain meta data for each data value.  
-You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas 
+This script takes an input file in USGS/EPA WQX xml format and creates a multi-indexed Pandas Dataframe that contains
+time series of water quality data and discharge combined with layers that contain meta data for each data value.
+You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas
 function for calling within a Python session.
 """
 
@@ -22,12 +22,12 @@ from olm.USGS.siteListExtraction import extractSitesFromText
 from olm.USGS.DataRetrieval import querySiteList, GetDailyDischarge, GetSiteData
 from olm.USGS.dataSlice import extractValues
 
-def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites', 
-                RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/', 
-                DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log', 
+def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDirName='Processed-Sites',
+                RUN_PHREEQC=False, PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/',
+                DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat', LOG_FILE = 'Result.log',
                 START_FILE = None, splittag='',bracket_charge_balance=False):
     """
-    Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are 
+    Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are
     stored in directories for each site.
 
     Parameters
@@ -170,9 +170,31 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                             quality = resultdesc.findtext(WQX + "ResultStatusIdentifier")
                             measure = resultdesc.find(WQX + "ResultMeasure")
                             count = 1.0
-                            if not(measure == None):
-                                value = measure.findtext(WQX + "ResultMeasureValue")
-                                units = measure.findtext(WQX + "MeasureUnitCode")
+                            detection = resultdesc.findtext(WQX + "ResultDetectionConditionText")
+                            #print('detection=',detection)
+                            if not(measure == None) or not(detection == None):
+                                if not(measure == None):
+                                    value = measure.findtext(WQX + "ResultMeasureValue")
+                                    #print('initial value = ',value)
+                                    units = measure.findtext(WQX + "MeasureUnitCode")
+                                    nondetect = False
+                                elif not(detection == None):
+                                    #print("entering nondetect...")
+                                    nondetect = True
+                                    value = None
+                                    labinfo = result.find(WQX + "ResultLabInformation")
+                                    if not(labinfo==None):
+                                        #print("labinfo present")
+                                        quantLimitMeasure = labinfo.find(WQX + "ResultDetectionQuantitationLimit")
+                                        if not(quantLimitMeasure==None):
+                                            #print("Quant limit present")
+                                            nondetectmeasure = quantLimitMeasure.find(WQX + "DetectionQuantitationLimitMeasure")
+                                            if not(nondetectmeasure == None):
+                                                #print("Quant limit measure present")
+                                                value = nondetectmeasure.findtext(WQX + "MeasureValue")
+                                                #print('measurevalue=',value)
+                                                #print(quantLimitMeasure)
+                                    #print("nondetect value=",value)
                                 #split pcode into list
                                 tempPcodeList = charDict[characteristic]['pcode'].split(';')
     #                            print("tempPcodeList="+str(tempPcodeList))
@@ -239,7 +261,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
 
                                 if (addCharacteristic):
                                     sampleDict[characteristic] = value
-                                    sampleMetaDict[characteristic] = {'samplefraction':samplefraction, 'units':units, 'pcode':pcode, 'quality':quality, 'count':count}
+                                    sampleMetaDict[characteristic] = {'samplefraction':samplefraction, 'units':units, 'pcode':pcode, 'quality':quality, 'count':count, 'nondetect':nondetect}
                     except etree.XMLSyntaxError as detail:
                         print("File contains invalid XML syntax: ", detail)
                         processThisSample = False
@@ -277,12 +299,12 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                         dischargeDict = None
                 if (dischargeDict != None):
                     sampleDict['Stream flow, mean. daily'] = dischargeDict['discharge']
-                    sampleMetaDict['Stream flow, mean. daily'] = {'units':'cfs', 'pcode':'00060', 'quality':dischargeDict['quality'], 'count':1, 'samplefraction':None}
+                    sampleMetaDict['Stream flow, mean. daily'] = {'units':'cfs', 'pcode':'00060', 'quality':dischargeDict['quality'], 'count':1, 'samplefraction':None, 'nondetect':False}
                     descriptionDict['name'] = dischargeDict['name']
                 else:
                     #Possibly allow this sample to be thrown out if no mean daily discharge, and/or similar for instantaneous discharge
                     sampleDict['Stream flow, mean. daily'] = None
-                    sampleMetaDict['Stream flow, mean. daily'] = {'units':'cfs', 'pcode':'00060', 'quality':None, 'count':1, 'samplefraction':None}
+                    sampleMetaDict['Stream flow, mean. daily'] = {'units':'cfs', 'pcode':'00060', 'quality':None, 'count':1, 'samplefraction':None, 'nondetect':False}
                 # Create data frame row for this sample date
                 if descriptionDict['time'] != '':
                     rowdate = to_datetime(datetext+' '+descriptionDict['time'])
@@ -298,9 +320,9 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                         'fraction':DataFrame([extractValues(sampleMetaDict, ['samplefraction'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
                         'units':DataFrame([extractValues(sampleMetaDict, ['units'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
                         'count':DataFrame([extractValues(sampleMetaDict, ['count'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
+                        'nondetect':DataFrame([extractValues(sampleMetaDict, ['nondetect'])['values']], index=[rowdate], columns=list(sampleMetaDict.keys())),
                         },
                         axis=1)
-
                 #sampleMetaRow = Series(sampleMetaDict, index=[to_datetime(datetext)], dtype='object')
                 #Previous solution was reading/writing from pickle files
                 #New solution will keep all data in memory until end.
@@ -413,7 +435,7 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
 
 def runWQXtoPandas(startfilename, autosplitnum=20):
     """
-    Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from 
+    Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from
     the USGS NWIS database.
 
     Parameters
@@ -431,7 +453,7 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
     Notes
     -----
 
-    Can be run from within a python shell or script, or as a standalone script from the command line where the start 
+    Can be run from within a python shell or script, or as a standalone script from the command line where the start
     file name is provided as the first command line argument (e.g. WQXtoPandas <start file name> <autosplitnum>).
     """
     #PHREEQC input file path
