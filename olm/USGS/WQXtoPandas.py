@@ -13,7 +13,7 @@ from glob import glob
 from math import ceil
 import pickle as pickle
 from lxml import etree
-from pandas import DataFrame, to_datetime, Series, concat
+from pandas import DataFrame, to_datetime, Series, concat, ExcelWriter
 from olm.USGS.PhreeqcPandas import processPanel
 
 #import functions from olm package
@@ -351,6 +351,10 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
             pickleFile =  os.path.join(sitesdir, location, location + '-Dataframe.pkl')
             pickle.dump(midf, open(pickleFile, 'wb'))
             #midf.to_excel(pickleFile[:-3]+'xls')
+            midx = midf.keys()
+            with ExcelWriter(pickleFile[:-3]+'xlsx') as writer:
+                for sheet in midx.droplevel(level=1).drop_duplicates().values:
+                    midf[sheet].to_excel(writer, sheet_name=sheet)
             #Retrieve and store site description metadata
             siteDescriptionDataDF = GetSiteData(location)
             siteDescriptionDataFileName = os.path.join(sitesdir,location,location+'-Site-Description.pkl')
