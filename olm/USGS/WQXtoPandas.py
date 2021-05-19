@@ -149,6 +149,10 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                     timetext = ''
                     timezone = ''
                 location = description.findtext(WQX + "MonitoringLocationIdentifier")
+                if (location[:5] =='USGS-'):
+                    USGS=True
+                else:
+                    USGS=False
                 descriptionDict = {'location':location, 'date':datetext, 'time':timetext, 'timezone':timezone}
             else:
                 descriptionDict = None
@@ -177,7 +181,13 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                                     value = measure.findtext(WQX + "ResultMeasureValue")
                                     #print('initial value = ',value)
                                     units = measure.findtext(WQX + "MeasureUnitCode")
-                                    nondetect = False
+                                    #EPA system does not have detection info.
+                                    #Check for < in value text.
+                                    if '<' in str(value):
+                                        value = value[1:]
+                                        nondetect = True
+                                    else:
+                                        nondetect = False
                                 elif not(detection == None):
                                     #print("entering nondetect...")
                                     nondetect = True
@@ -211,13 +221,14 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                                     if (charDict[characteristic]['fraction'] != samplefraction):
                                         addCharacteristic= False
                                 if (addCharacteristic):
-                                    if (charDict[characteristic]['pcode'] != '0'):
-                                        #test for correct pcode
-#                                        print("pcode = "+pcode)
-#                                        print("pcodeList = "+str(pcodeList))
-#                                        print("pcode in list="+str(pcode in pcodeList))
-                                        if not(pcode in pcodeDict):
-                                            addCharacteristic = False
+                                    if USGS:
+                                        if (charDict[characteristic]['pcode'] != '0'):
+                                            #test for correct pcode
+    #                                        print("pcode = "+pcode)
+    #                                        print("pcodeList = "+str(pcodeList))
+    #                                        print("pcode in list="+str(pcode in pcodeList))
+                                            if not(pcode in pcodeDict):
+                                                addCharacteristic = False
                                 if (addCharacteristic):
                                     if (charDict[characteristic]['quality'] != '0'):
                                         #test for correct data quality
@@ -227,37 +238,38 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                                 #Process duplicate characteristics
                                 if (addCharacteristic):
                                     if (characteristic in sampleDict):
-                                        priorPcode =sampleMetaDict[characteristic]['pcode']
-                                        #if there are already multiple pcodes get only first one
-                                        priorPcode = priorPcode.split(';')[0]
-                                        averageValue = False
-                                        if (len(pcodeDict) > 1):
-                                            thisPcodePriority = pcodeDict[pcode]
-                                            priorPcodePriority = \
-                                                pcodeDict[priorPcode]
-                                            if (thisPcodePriority >\
-                                                    priorPcodePriority):
-                                                #previous characteristic remains
-                                                addCharacteristic = False
-                                            elif (thisPcodePriority ==\
-                                                  priorPcodePriority):
+                                        if USGS:
+                                            priorPcode =sampleMetaDict[characteristic]['pcode']
+                                            #if there are already multiple pcodes get only first one
+                                            priorPcode = priorPcode.split(';')[0]
+                                            averageValue = False
+                                            if (len(pcodeDict) > 1):
+                                                thisPcodePriority = pcodeDict[pcode]
+                                                priorPcodePriority = \
+                                                    pcodeDict[priorPcode]
+                                                if (thisPcodePriority >\
+                                                        priorPcodePriority):
+                                                    #previous characteristic remains
+                                                    addCharacteristic = False
+                                                elif (thisPcodePriority ==\
+                                                      priorPcodePriority):
+                                                    averageValue = True
+                                            else:
                                                 averageValue = True
-                                        else:
-                                            averageValue = True
-                                        if averageValue:
-                                            #average this value with existing values
-                                            count = \
-                                                sampleMetaDict[characteristic]['count']
-                                            count += 1.
-                                            oldvalue = float(\
-                                                sampleDict[characteristic])
-                                            newvalue = (oldvalue * (count - 1.)\
-                                                            + float(value))/count
-                                            value = str(newvalue)
-                                            pcode = priorPcode + '; '+ pcode
-                                            priorUnits = \
-                                                sampleMetaDict[characteristic]['units']
-                                            units = priorUnits + '; ' + units
+                                            if averageValue:
+                                                #average this value with existing values
+                                                count = \
+                                                    sampleMetaDict[characteristic]['count']
+                                                count += 1.
+                                                oldvalue = float(\
+                                                    sampleDict[characteristic])
+                                                newvalue = (oldvalue * (count - 1.)\
+                                                                + float(value))/count
+                                                value = str(newvalue)
+                                                pcode = priorPcode + '; '+ pcode
+                                                priorUnits = \
+                                                    sampleMetaDict[characteristic]['units']
+                                                units = priorUnits + '; ' + units
 
                                 if (addCharacteristic):
                                     sampleDict[characteristic] = value
@@ -289,6 +301,11 @@ def WQXtoPandas(xmlLocation, charDict, outputPath='.', fromFile=False, outputDir
                 #Pull daily discharge data from USGS website
                 good_discharge_value = False
                 num_Q_tries = 0
+                if not USGS:
+                    #We do not have a USGS site, do not query discharge
+                    num_Q_tries = 99
+                    dischargeDict = None
+
                 #Try 5 times to retrieve discharge value
                 while (not good_discharge_value) and num_Q_tries<=5:
                     dischargeDict = GetDailyDischarge(location, datetext) #currently hard-wired to pcode 00060 (daily discharge, cfs)

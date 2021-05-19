@@ -10,8 +10,8 @@ from glob import glob
 DEFAULT_DIR = './Processed-Sites'
 
 def loadSiteListData(siteListText = None,
-                     siteFile = None, 
-                     regEx = 'USGS-*', 
+                     siteFile = None,
+                     regEx = 'USGS-*',
                      processedSitesDir = DEFAULT_DIR,
                      loadPhreeqc = False,
                      loadMetaData = False
@@ -32,10 +32,10 @@ def loadSiteListData(siteListText = None,
 
     processedSitesDir : string (optional)
         directory that contains all of the processed site directories. It is important to change this if the default is not correct. (default='./Processed-Sites')
-        
+
     loadPhreeqc : boolean
         If set to true, PHREEQC outputs will also be loaded for each site. (default=False)
-        
+
     loadMetaData : boolean
         If set to true, the site metadata will be loaded for each site. (default=False)
 
@@ -94,11 +94,11 @@ def loadSiteListData(siteListText = None,
             siteList = siteListFromRegEx(regEx)
     if (siteList != -1):
         #process the sites in the list
-        
+
         sitesDict = {}
         sitesPhreeqcDict = {}
         sitesMetaDataDict = {}
-        for site in siteList:            
+        for site in siteList:
             siteFrame = loadSiteData(site, processedSitesDir = processedSitesDir)
             if siteFrame is not None: #If site data does not read in correctly, loadSiteData returns None
                 sitesDict[site] = siteFrame
@@ -120,8 +120,8 @@ def loadSiteListData(siteListText = None,
 
 def loadSiteMetaData(site, processedSitesDir = DEFAULT_DIR):
     #Add USGS tag if needed
-    if not(site.startswith('USGS-')):
-        site = 'USGS-'+site
+#    if not(site.startswith('USGS-')):
+#        site = 'USGS-'+site
     try:
         metaDataFile = os.path.join(processedSitesDir, site, site+'-Site-Description.pkl')
         siteMetaData = pickle.load(open(metaDataFile, 'rb'))
@@ -129,7 +129,7 @@ def loadSiteMetaData(site, processedSitesDir = DEFAULT_DIR):
         print(("Problem reading pickle file: " + metaDataFile ))
         return None
     return siteMetaData
-    
+
 
 
 def loadSiteData(site, processedSitesDir = DEFAULT_DIR):
@@ -151,15 +151,15 @@ def loadSiteData(site, processedSitesDir = DEFAULT_DIR):
 
     """
     #Add USGS tag if needed
-    if not(site.startswith('USGS-')):
-        site = 'USGS-'+site
+#    if not(site.startswith('USGS-')):
+#        site = 'USGS-'+site
     try:
         frameFile = os.path.join(processedSitesDir, site, site+'-Dataframe.pkl')
         siteFrame = read_pickle(frameFile)
     except IOError:
         print(("Problem reading pickle file: " + frameFile ))
         return None
-    return siteFrame 
+    return siteFrame
 
 def loadSitePhreeqcData(site, processedSitesDir = DEFAULT_DIR):
     """
@@ -180,8 +180,8 @@ def loadSitePhreeqcData(site, processedSitesDir = DEFAULT_DIR):
 
     """
     #Add USGS tag if needed
-    if not(site.startswith('USGS-')):
-        site = 'USGS-'+site
+#    if not(site.startswith('USGS-')):
+#        site = 'USGS-'+site
     try:
         phreeqcFile = os.path.join(processedSitesDir, site, site+'-PHREEQC.pkl')
         sitedf = read_pickle(phreeqcFile)
@@ -189,17 +189,17 @@ def loadSitePhreeqcData(site, processedSitesDir = DEFAULT_DIR):
         print(("Problem reading pickle file: " + phreeqcFile ))
         return None
     return sitedf
-            
+
 def siteListFromLine(siteListText):
     siteList = siteListText.split(';')
     siteList = [x.strip() for x in siteList]
     #check for USGS Tag at beginning of site number
-    for i, site in enumerate(siteList):
-        if not(site.startswith('USGS-')):
-            siteList[i] = 'USGS-' + siteList[i]
+#    for i, site in enumerate(siteList):
+#        if not(site.startswith('USGS-')):
+#            siteList[i] = 'USGS-' + siteList[i]
     return siteList
 
-def siteListFromFile(siteFile, 
+def siteListFromFile(siteFile,
                      sitesDir = DEFAULT_DIR,
                      XML=False):
     if (siteFile.endswith('.xml') or (XML == True)):
@@ -207,9 +207,9 @@ def siteListFromFile(siteFile,
     else:
         siteList = extractSitesFromText(siteFile)
     #check for USGS Tag at beginning of site number
-    for i, site in enumerate(siteList):
-        if not(site.startswith('USGS-')):
-            siteList[i] = 'USGS-' + siteList[i]
+#    for i, site in enumerate(siteList):
+#        if not(site.startswith('USGS-')):
+#            siteList[i] = 'USGS-' + siteList[i]
  #   siteList = [os.path.join(processedSitesDir, x) for x in siteList]
     return siteList
 
@@ -220,8 +220,9 @@ def siteListFromRegEx(regEx,
     sitePath = glob(listText)
     siteList = []
     for site in sitePath:
-        head,tail = os.path.split(site)
-        siteList.append(tail)
+        if os.path.isdir(site):
+            head,tail = os.path.split(site)
+            siteList.append(tail)
     return siteList
 
 def checkSitesDir(processedSitesDir):
@@ -229,4 +230,3 @@ def checkSitesDir(processedSitesDir):
         print("Invalid path to processed sites directory.")
         processedSitesDir = input("Path of the processed sites directory (Default = ./Processed-Sites): ")
     return processedSitesDir
-

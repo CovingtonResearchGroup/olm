@@ -14,7 +14,35 @@ from pandas import read_csv, DataFrame, to_datetime
 #import requests
 #import os
 
+
 def GetSiteData(location):
+    """
+    Retrieves meta data about a Water Quality portal site using the site identifier.
+
+
+    Parameters
+    ----------
+    location : string
+        Full site number.
+
+    Returns
+    -------
+    siteDF : pandas.DataFrame
+        Returns a pandas DataFrame object that contains all of the site meta data.
+
+    Notes
+    -----
+
+    """
+    BASEURL = 'https://www.waterqualitydata.us/data/Station/search?siteid='
+    queryURL = BASEURL + location + '&mimeType=csv&Zip=no'
+    #Need to skip header, which is hopefully uniform across USGS queries
+    siteDF = read_csv(queryURL, sep=',')
+    siteDF = siteDF.iloc[0]#change axis so that we only have key-data pairs
+    return siteDF
+
+
+def GetNWISSiteData(location):
     """
     Retrieves meta data about a USGS site using the full site identifier.
 
@@ -137,8 +165,8 @@ def querySiteList(siteList, charList):
     #add sites to query
     for site in siteList:
         #check for USGS prefixes (are there others?  EPA?)
-        if not(site.startswith('USGS-')):
-            site = 'USGS-' + site
+        ##if not(site.startswith('USGS-')):
+        ##    site = 'USGS-' + site
         #add this site to list with trailing semi-colon
         queryText += site + ';'
     #remove final semi-colon
