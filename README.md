@@ -5,6 +5,14 @@ A python package for common water chemistry calculations and automated processin
 
 Installation
 ------------
+**Installing using pip**
+```sh
+pip install olm
+```
+
+
+**Installing from source**
+
 Unzip the source code and run:
 ```sh
 python setup.py install
