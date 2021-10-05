@@ -179,7 +179,7 @@ def manualCompare(logger, manual, value_name='', ltag='_log', mtag='_man'):
 
 def shiftLogger(logger, shift_to, align_at_start = True):
     """
-    Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.
+    Function to shift DataFrame timestamps to start or end at a specific datetime.
 
     Parameters
     ----------
