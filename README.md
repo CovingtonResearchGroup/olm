@@ -7,7 +7,7 @@ Installation
 ------------
 **Installing using pip**
 ```sh
-pip install olm
+pip install olm-karst
 ```
 
 
