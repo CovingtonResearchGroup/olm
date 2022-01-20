@@ -321,22 +321,43 @@ def WQXtoPandas(
                                                 ]["units"]
                                                 # Only average if we have the same units
                                                 if units == priorUnits:
-                                                    # average this value with existing values
-                                                    count = sampleMetaDict[
-                                                        characteristic
-                                                    ]["count"]
-                                                    count += 1.0
-                                                    oldvalue = float(
-                                                        sampleDict[characteristic]
-                                                    )
-                                                    newvalue = (
-                                                        oldvalue * (count - 1.0)
-                                                        + float(value)
-                                                    ) / count
-                                                    value = str(newvalue)
-                                                    pcode = priorPcode + "; " + pcode
-                                                    # Changed this behavior to not allow different units
-                                                    # units = priorUnits + '; ' + units
+                                                    # Check if this or prior was non-detect
+                                                    if sampleMetaDict[characteristic][
+                                                        "nondetect"
+                                                    ]:
+                                                        if nondetect:
+                                                            # If both are non-detect, no need to add
+                                                            averageValue = False
+                                                            addCharacteristic = False
+                                                        else:
+                                                            # If prior was non-detect, but this one isn't
+                                                            # Add this one instead
+                                                            averageValue = False
+                                                            addCharacteristic = True
+                                                    elif nondetect:
+                                                        # This one is non-detect, prior was not.
+                                                        averageValue = False
+                                                        addCharacteristic = False
+
+                                                    if averageValue:
+                                                        # average this value with existing values
+                                                        count = sampleMetaDict[
+                                                            characteristic
+                                                        ]["count"]
+                                                        count += 1.0
+                                                        oldvalue = float(
+                                                            sampleDict[characteristic]
+                                                        )
+                                                        newvalue = (
+                                                            oldvalue * (count - 1.0)
+                                                            + float(value)
+                                                        ) / count
+                                                        value = str(newvalue)
+                                                        pcode = (
+                                                            priorPcode + "; " + pcode
+                                                        )
+                                                        # Changed this behavior to not allow different units
+                                                        # units = priorUnits + '; ' + units
                                                 else:
                                                     # Do not add if units are different
                                                     addCharacteristic = False
