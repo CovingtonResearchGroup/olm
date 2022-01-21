@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Do fresh install of olm to make sure the latest code is installed
+python setup.py install
+
 #backup files we want to manually maintain
 mkdir ./tmp
 cp ./docs/conf.py ./tmp/
