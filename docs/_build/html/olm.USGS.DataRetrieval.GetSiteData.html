@@ -1,18 +1,19 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>olm.USGS.DataRetrieval.GetSiteData &#8212; olm 0.36 documentation</title>
-    <link rel="stylesheet" href="_static//default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>olm.USGS.DataRetrieval.GetSiteData &#8212; olm 0.38 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="/default.css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,9 +35,10 @@
         <li class="right" >
           <a href="olm.USGS.DataRetrieval.GetDailyDischargeRecord.html" title="olm.USGS.DataRetrieval.GetDailyDischargeRecord"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.DataRetrieval.GetSiteData</a></li> 
       </ul>
     </div>  
 
@@ -45,75 +47,32 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="olm-usgs-dataretrieval-getsitedata">
+  <section id="olm-usgs-dataretrieval-getsitedata">
 <h1>olm.USGS.DataRetrieval.GetSiteData<a class="headerlink" href="#olm-usgs-dataretrieval-getsitedata" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="olm.USGS.DataRetrieval.GetSiteData">
-<code class="sig-prename descclassname">olm.USGS.DataRetrieval.</code><code class="sig-name descname">GetSiteData</code><span class="sig-paren">(</span><em class="sig-param">location</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/DataRetrieval.html#GetSiteData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.DataRetrieval.GetSiteData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves meta data about a USGS site using the full site identifier.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="olm.USGS.DataRetrieval.GetSiteData">
+<span class="sig-prename descclassname"><span class="pre">olm.USGS.DataRetrieval.</span></span><span class="sig-name descname"><span class="pre">GetSiteData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/DataRetrieval.html#GetSiteData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.DataRetrieval.GetSiteData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves meta data about a Water Quality portal site using the site identifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>location</strong><span class="classifier">string</span></dt><dd><p>Full USGS site number starting with ‘USGS-‘ or the bare integer number of a USGS site.</p>
+<dt><strong>location</strong><span class="classifier">string</span></dt><dd><p>Full site number.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>siteDF</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>Returns a pandas DataFrame object that contains all of the site meta data from an expanded USGS site data query.  Data is indexed using field labels given in USGS file (see Notes).</p>
+<dt><strong>siteDF</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>Returns a pandas DataFrame object that contains all of the site meta data.</p>
 </dd>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>Pair of keys and descriptions from USGS site meta data.</p>
-<p>agency_cd       – Agency</p>
-<p>site_no         – Site identification number</p>
-<p>station_nm      – Site name</p>
-<p>site_tp_cd      – Site type</p>
-<p>lat_va          – DMS latitude</p>
-<p>long_va         – DMS longitude</p>
-<p>dec_lat_va      – Decimal latitude</p>
-<p>dec_long_va     – Decimal longitude</p>
-<p>coord_meth_cd   – Latitude-longitude method</p>
-<p>coord_acy_cd    – Latitude-longitude accuracy</p>
-<p>coord_datum_cd  – Latitude-longitude datum</p>
-<p>dec_coord_datum_cd – Decimal Latitude-longitude datum</p>
-<p>district_cd     – District code</p>
-<p>state_cd        – State code</p>
-<p>county_cd       – County code</p>
-<p>country_cd      – Country code</p>
-<p>land_net_ds     – Land net location description</p>
-<p>map_nm          – Name of location map</p>
-<p>map_scale_fc    – Scale of location map</p>
-<p>alt_va          – Altitude of Gage/land surface</p>
-<p>alt_meth_cd     – Method altitude determined</p>
-<p>alt_acy_va      – Altitude accuracy</p>
-<p>alt_datum_cd    – Altitude datum</p>
-<p>huc_cd          – Hydrologic unit code</p>
-<p>basin_cd        – Drainage basin code</p>
-<p>topo_cd         – Topographic setting code</p>
-<p>instruments_cd  – Flags for instruments at site</p>
-<p>construction_dt – Date of first construction</p>
-<p>inventory_dt    – Date site established or inventoried</p>
-<p>drain_area_va   – Drainage area</p>
-<p>contrib_drain_area_va – Contributing drainage area</p>
-<p>tz_cd           – Time Zone abbreviation</p>
-<p>local_time_fg   – Site honors Daylight Savings Time</p>
-<p>reliability_cd  – Data reliability code</p>
-<p>gw_file_cd      – Data-other GW files</p>
-<p>nat_aqfr_cd     – National aquifer code</p>
-<p>aqfr_cd         – Local aquifer code</p>
-<p>aqfr_type_cd    – Local aquifer type code</p>
-<p>well_depth_va   – Well depth</p>
-<p>hole_depth_va   – Hole depth</p>
-<p>depth_src_cd    – Source of depth data</p>
-<p>project_no      – Project number</p>
 </dd></dl>
 
-</div>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -161,14 +120,15 @@
         <li class="right" >
           <a href="olm.USGS.DataRetrieval.GetDailyDischargeRecord.html" title="olm.USGS.DataRetrieval.GetDailyDischargeRecord"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.DataRetrieval.GetSiteData</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+        &#169; Copyright 2014-2022 Matthew Covington.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

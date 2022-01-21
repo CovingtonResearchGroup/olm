@@ -1,4 +1,4 @@
-olm.calcite.PCO2EqFromCa
+﻿olm.calcite.PCO2EqFromCa
 ========================
 
 .. currentmodule:: olm.calcite

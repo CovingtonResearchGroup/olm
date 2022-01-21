@@ -1,4 +1,4 @@
-olm.calcite.palmerRate
+﻿olm.calcite.palmerRate
 ======================
 
 .. currentmodule:: olm.calcite

@@ -1,4 +1,4 @@
-olm.general.gamma
+﻿olm.general.gamma
 =================
 
 .. currentmodule:: olm.general

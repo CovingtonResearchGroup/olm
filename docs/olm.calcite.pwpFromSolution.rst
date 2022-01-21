@@ -1,4 +1,4 @@
-olm.calcite.pwpFromSolution
+﻿olm.calcite.pwpFromSolution
 ===========================
 
 .. currentmodule:: olm.calcite

@@ -1,18 +1,19 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>olm.USGS package &#8212; olm 0.36 documentation</title>
-    <link rel="stylesheet" href="_static//default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>olm.USGS package &#8212; olm 0.38 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="/default.css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,8 +35,9 @@
         <li class="right" >
           <a href="olm.general.getProperties.html" title="olm.general.getProperties"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="olm.html" accesskey="U">olm Package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" accesskey="U">olm Package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS package</a></li> 
       </ul>
     </div>  
 
@@ -44,7 +46,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="olm-usgs-package">
+  <section id="olm-usgs-package">
 <h1>olm.USGS package<a class="headerlink" href="#olm-usgs-package" title="Permalink to this headline">¶</a></h1>
 <p>This package contains functions for retrieving and processing data from the USGS National Water Information System database (NWIS).  Using these modules it is possible to retrieve water quality data, discharge data, and site metadata.  These data are then converted into Pandas data objects and stored in pickled and spreadsheet format for later usage. The package also contains functions for processing the Pandas data objects through the USGS water chemistry code PHREEQC.  For this, an installation of PHREEQC is required.</p>
 <p>The most typical entry point is to use the convenience function <code class="docutils literal notranslate"><span class="pre">runWQXtoPandas</span></code>.  This function can be used from within python by importing it from the <code class="docutils literal notranslate"><span class="pre">olm.USGS.WQXtoPandas</span></code> module.  It can additionally be used from the command line using:</p>
@@ -52,7 +54,7 @@
 </pre></div>
 </div>
 <p>Most functionality can be controlled from within the Excel file.  A template is provided with the olm package in the examples directory. The examples file also contains some brief code illustrating how data can be read in from the pickled outputs of <code class="docutils literal notranslate"><span class="pre">WQXtoPandas</span></code> and plotted.</p>
-<div class="section" id="olm-usgs-wqxtopandas-module">
+<section id="olm-usgs-wqxtopandas-module">
 <h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">olm.USGS.WQXtoPandas</span></code> module<a class="headerlink" href="#olm-usgs-wqxtopandas-module" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -68,8 +70,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="olm-usgs-phreeqcpandas-module">
+</section>
+<section id="olm-usgs-phreeqcpandas-module">
 <h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">olm.USGS.PhreeqcPandas</span></code> module<a class="headerlink" href="#olm-usgs-phreeqcpandas-module" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -97,8 +99,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="olm-usgs-dataretrieval-module">
+</section>
+<section id="olm-usgs-dataretrieval-module">
 <h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">olm.USGS.DataRetrieval</span></code> module<a class="headerlink" href="#olm-usgs-dataretrieval-module" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -113,15 +115,15 @@
 <td><p>Retrieve daily average discharge values from USGS database for given date range and USGS site.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="olm.USGS.DataRetrieval.GetSiteData.html#olm.USGS.DataRetrieval.GetSiteData" title="olm.USGS.DataRetrieval.GetSiteData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetSiteData</span></code></a>(location)</p></td>
-<td><p>Retrieves meta data about a USGS site using the full site identifier.</p></td>
+<td><p>Retrieves meta data about a Water Quality portal site using the site identifier.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="olm.USGS.DataRetrieval.querySiteList.html#olm.USGS.DataRetrieval.querySiteList" title="olm.USGS.DataRetrieval.querySiteList"><code class="xref py py-obj docutils literal notranslate"><span class="pre">querySiteList</span></code></a>(siteList, charList)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="olm-usgs-loadwaterqualitydata-module">
+</section>
+<section id="olm-usgs-loadwaterqualitydata-module">
 <h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">olm.USGS.loadWaterQualityData</span></code> module<a class="headerlink" href="#olm-usgs-loadwaterqualitydata-module" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -140,8 +142,8 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="olm-usgs-sitelistextraction-module">
+</section>
+<section id="olm-usgs-sitelistextraction-module">
 <h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">olm.USGS.siteListExtraction</span></code> module<a class="headerlink" href="#olm-usgs-sitelistextraction-module" title="Permalink to this headline">¶</a></h2>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -157,10 +159,11 @@
 </tr>
 </tbody>
 </table>
-</div>
-</div>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -220,13 +223,14 @@
         <li class="right" >
           <a href="olm.general.getProperties.html" title="olm.general.getProperties"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS package</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+        &#169; Copyright 2014-2022 Matthew Covington.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

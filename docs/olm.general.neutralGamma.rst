@@ -1,4 +1,4 @@
-olm.general.neutralGamma
+﻿olm.general.neutralGamma
 ========================
 
 .. currentmodule:: olm.general

@@ -1,4 +1,4 @@
-olm.general.getProperties
+﻿olm.general.getProperties
 =========================
 
 .. currentmodule:: olm.general

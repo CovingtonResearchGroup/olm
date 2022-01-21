@@ -1,4 +1,4 @@
-olm.calcite.solutionFrompHCaRelaxed
+﻿olm.calcite.solutionFrompHCaRelaxed
 ===================================
 
 .. currentmodule:: olm.calcite

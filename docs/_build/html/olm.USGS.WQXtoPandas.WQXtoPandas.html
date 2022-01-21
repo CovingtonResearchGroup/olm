@@ -1,18 +1,19 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>olm.USGS.WQXtoPandas.WQXtoPandas &#8212; olm 0.36 documentation</title>
-    <link rel="stylesheet" href="_static//default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>olm.USGS.WQXtoPandas.WQXtoPandas &#8212; olm 0.38 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="/default.css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,9 +35,10 @@
         <li class="right" >
           <a href="olm.USGS.WQXtoPandas.runWQXtoPandas.html" title="olm.USGS.WQXtoPandas.runWQXtoPandas"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas.WQXtoPandas</a></li> 
       </ul>
     </div>  
 
@@ -45,12 +47,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="olm-usgs-wqxtopandas-wqxtopandas">
+  <section id="olm-usgs-wqxtopandas-wqxtopandas">
 <h1>olm.USGS.WQXtoPandas.WQXtoPandas<a class="headerlink" href="#olm-usgs-wqxtopandas-wqxtopandas" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="olm.USGS.WQXtoPandas.WQXtoPandas">
-<code class="sig-prename descclassname">olm.USGS.WQXtoPandas.</code><code class="sig-name descname">WQXtoPandas</code><span class="sig-paren">(</span><em class="sig-param">xmlLocation</em>, <em class="sig-param">charDict</em>, <em class="sig-param">outputPath='.'</em>, <em class="sig-param">fromFile=False</em>, <em class="sig-param">outputDirName='Processed-Sites'</em>, <em class="sig-param">RUN_PHREEQC=False</em>, <em class="sig-param">PHREEQC_PATH='/home/mcoving/phreeqc-2.18.0/bin/'</em>, <em class="sig-param">DATABASE_FILE='/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat'</em>, <em class="sig-param">LOG_FILE='Result.log'</em>, <em class="sig-param">START_FILE=None</em>, <em class="sig-param">splittag=''</em>, <em class="sig-param">bracket_charge_balance=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#WQXtoPandas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.WQXtoPandas" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are stored in directories for each site.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="olm.USGS.WQXtoPandas.WQXtoPandas">
+<span class="sig-prename descclassname"><span class="pre">olm.USGS.WQXtoPandas.</span></span><span class="sig-name descname"><span class="pre">WQXtoPandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlLocation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputPath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputDirName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Processed-Sites'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RUN_PHREEQC</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PHREEQC_PATH</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/mcoving/phreeqc-2.18.0/bin/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DATABASE_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LOG_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Result.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">START_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splittag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bracket_charge_balance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#WQXtoPandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.WQXtoPandas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are
+stored in directories for each site.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -88,9 +91,10 @@
 <p>Designed to be run through convenience function runWQXtoPandas().</p>
 </dd></dl>
 
-</div>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -138,14 +142,15 @@
         <li class="right" >
           <a href="olm.USGS.WQXtoPandas.runWQXtoPandas.html" title="olm.USGS.WQXtoPandas.runWQXtoPandas"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas.WQXtoPandas</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+        &#169; Copyright 2014-2022 Matthew Covington.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

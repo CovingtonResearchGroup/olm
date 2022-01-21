@@ -1,4 +1,4 @@
-olm.USGS.DataRetrieval.GetDailyDischarge
+﻿olm.USGS.DataRetrieval.GetDailyDischarge
 ========================================
 
 .. currentmodule:: olm.USGS.DataRetrieval

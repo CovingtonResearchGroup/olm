@@ -1,4 +1,4 @@
-olm.calcite.calc\_kappa4Pascal
+﻿olm.calcite.calc\_kappa4Pascal
 ==============================
 
 .. currentmodule:: olm.calcite

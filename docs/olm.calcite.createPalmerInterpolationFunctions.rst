@@ -1,4 +1,4 @@
-olm.calcite.createPalmerInterpolationFunctions
+﻿olm.calcite.createPalmerInterpolationFunctions
 ==============================================
 
 .. currentmodule:: olm.calcite

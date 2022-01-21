@@ -1,4 +1,4 @@
-olm.calcite.palmerFromSolution
+﻿olm.calcite.palmerFromSolution
 ==============================
 
 .. currentmodule:: olm.calcite

@@ -1,18 +1,19 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>olm.USGS.WQXtoPandas.runWQXtoPandas &#8212; olm 0.36 documentation</title>
-    <link rel="stylesheet" href="_static//default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>olm.USGS.WQXtoPandas.runWQXtoPandas &#8212; olm 0.38 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="/default.css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,9 +35,10 @@
         <li class="right" >
           <a href="olm.USGS.html" title="olm.USGS package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas.runWQXtoPandas</a></li> 
       </ul>
     </div>  
 
@@ -45,18 +47,19 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="olm-usgs-wqxtopandas-runwqxtopandas">
+  <section id="olm-usgs-wqxtopandas-runwqxtopandas">
 <h1>olm.USGS.WQXtoPandas.runWQXtoPandas<a class="headerlink" href="#olm-usgs-wqxtopandas-runwqxtopandas" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="olm.USGS.WQXtoPandas.runWQXtoPandas">
-<code class="sig-prename descclassname">olm.USGS.WQXtoPandas.</code><code class="sig-name descname">runWQXtoPandas</code><span class="sig-paren">(</span><em class="sig-param">startfilename</em>, <em class="sig-param">autosplitnum=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#runWQXtoPandas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.runWQXtoPandas" title="Permalink to this definition">¶</a></dt>
-<dd><p>Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from the USGS NWIS database.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="olm.USGS.WQXtoPandas.runWQXtoPandas">
+<span class="sig-prename descclassname"><span class="pre">olm.USGS.WQXtoPandas.</span></span><span class="sig-name descname"><span class="pre">runWQXtoPandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autosplitnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#runWQXtoPandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.runWQXtoPandas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from
+the USGS NWIS database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>startfilename</strong><span class="classifier">string</span></dt><dd><p>A string containing the name of the excel file to be used for input parameters to WQXtoPandas</p>
 </dd>
-<dt><strong>autosplitnum</strong><span class="classifier">int (optional)</span></dt><dd><p>The number of sites at which a NWIS query is split into multiple queries. (default=?)</p>
+<dt><strong>autosplitnum</strong><span class="classifier">int (optional)</span></dt><dd><p>The number of sites at which a NWIS query is split into multiple queries. (default=20)</p>
 </dd>
 </dl>
 </dd>
@@ -67,12 +70,14 @@
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>Can be run from within a python shell or script, or as a standalone script from the command line where the start file name is provided as the first command line argument (e.g. WQXtoPandas &lt;start file name&gt; &lt;autosplitnum&gt;).</p>
+<p>Can be run from within a python shell or script, or as a standalone script from the command line where the start
+file name is provided as the first command line argument (e.g. WQXtoPandas &lt;start file name&gt; &lt;autosplitnum&gt;).</p>
 </dd></dl>
 
-</div>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -120,14 +125,15 @@
         <li class="right" >
           <a href="olm.USGS.html" title="olm.USGS package"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.36 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
-          <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li> 
+          <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas.runWQXtoPandas</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+        &#169; Copyright 2014-2022 Matthew Covington.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

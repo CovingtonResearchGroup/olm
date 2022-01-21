@@ -1,18 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>olm.general &#8212; olm 0.36 documentation</title>
-    <link rel="stylesheet" href="../../_static//default.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>olm.general &#8212; olm 0.38 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="/default.css" />
     
-    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -26,8 +26,9 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.36 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.38 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.general</a></li> 
       </ul>
     </div>  
 
@@ -459,7 +460,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Length of constituents and concentrations lists must be equal.&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="solution.I"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.I">[docs]</a>    <span class="k">def</span> <span class="nf">I</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">I</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to calculate ionic strength of the solution object from full equation using known ion properties.</span>
 
@@ -474,9 +475,9 @@
                 <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;charge&#39;</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">]):</span>
                     <span class="n">I</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">properties</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;charge&#39;</span><span class="p">]</span><span class="o">**</span><span class="mf">2.</span><span class="p">)</span><span class="o">*</span>\
                         <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">I</span></div>
+        <span class="k">return</span> <span class="n">I</span>
 
-<div class="viewcode-block" id="solution.approxI"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.approxI">[docs]</a>    <span class="k">def</span> <span class="nf">approxI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">approxI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Function to calculate approximate ionic strength of solution metal concentration.</span>
 
@@ -494,9 +495,9 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No known &quot;</span> <span class="o">+</span> <span class="n">metal</span> <span class="o">+</span> <span class="s2">&quot; concentration in mol/L.&quot;</span><span class="p">)</span>
         <span class="n">I</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">metals_conc</span>
-        <span class="k">return</span> <span class="n">I</span></div>
+        <span class="k">return</span> <span class="n">I</span>
 
-<div class="viewcode-block" id="solution.activity"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.activity">[docs]</a>    <span class="k">def</span> <span class="nf">activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">activity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the activity of a given ion in the solution in mol/L.</span>
 
@@ -511,9 +512,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
             <span class="n">activity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;activity&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">activity</span></div>
+            <span class="k">return</span> <span class="n">activity</span>
 
-<div class="viewcode-block" id="solution.mol"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.mol">[docs]</a>    <span class="k">def</span> <span class="nf">mol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">mol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the molar concentration of a given ion in the solution in mol/L.</span>
 
@@ -528,9 +529,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
             <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;conc_mol&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">conc</span></div>
+            <span class="k">return</span> <span class="n">conc</span>
 
-<div class="viewcode-block" id="solution.mmol"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.mmol">[docs]</a>    <span class="k">def</span> <span class="nf">mmol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">mmol</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the molar concentration of a given ion in the solution in mol/L.</span>
 
@@ -545,9 +546,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
             <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;conc_mmol&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">conc</span></div>
+            <span class="k">return</span> <span class="n">conc</span>
 
-<div class="viewcode-block" id="solution.mg"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.mg">[docs]</a>    <span class="k">def</span> <span class="nf">mg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">mg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the concentration of a given ion in the solution in mg/L.</span>
 
@@ -562,9 +563,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
             <span class="n">conc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;conc_mg&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">conc</span></div>
+            <span class="k">return</span> <span class="n">conc</span>
 
-<div class="viewcode-block" id="solution.meq"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.meq">[docs]</a>    <span class="k">def</span> <span class="nf">meq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">meq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve meq for a given ion in the solution.</span>
 
@@ -579,9 +580,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>           
         <span class="k">if</span> <span class="p">(</span><span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">):</span>
             <span class="n">meq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ions</span><span class="p">[</span><span class="n">ion</span><span class="p">][</span><span class="s1">&#39;meq&#39;</span><span class="p">]</span>
-            <span class="k">return</span> <span class="n">meq</span></div>
+            <span class="k">return</span> <span class="n">meq</span>
      
-<div class="viewcode-block" id="solution.activity_coef"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.activity_coef">[docs]</a>    <span class="k">def</span> <span class="nf">activity_coef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">activity_coef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ion</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate activity coefficient, gamma, for a given ion in the solution.</span>
 
@@ -619,9 +620,9 @@
             <span class="k">return</span> <span class="n">activity_coef</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ion not in properties list:&quot;</span> <span class="o">+</span> <span class="n">ion</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">None</span></div>
+            <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="solution.charge_balance"><a class="viewcode-back" href="../../olm.general.solution.html#olm.general.solution.charge_balance">[docs]</a>    <span class="k">def</span> <span class="nf">charge_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;%&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">charge_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;%&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculate the charge balance error for this solution.</span>
 
@@ -645,10 +646,11 @@
             <span class="k">return</span> <span class="n">numerator</span><span class="o">/</span><span class="n">denominator</span><span class="o">*</span><span class="mf">100.</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid value for units: &quot;</span><span class="p">,</span> <span class="n">units</span><span class="p">)</span>
-            <span class="k">return</span></div></div>
+            <span class="k">return</span></div>
         
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -677,13 +679,14 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.36 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../index.html">olm 0.38 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.general</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+        &#169; Copyright 2014-2022 Matthew Covington.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

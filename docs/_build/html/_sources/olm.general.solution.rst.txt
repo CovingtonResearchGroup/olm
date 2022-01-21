@@ -1,10 +1,10 @@
-olm.general.solution
-==========================
+﻿olm.general.solution
+====================
 
 .. currentmodule:: olm.general
 
 .. autoclass:: solution
-   :members:
+
    
    .. automethod:: __init__
 

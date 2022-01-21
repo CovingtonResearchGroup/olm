@@ -1,4 +1,4 @@
-olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation
+﻿olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation
 ==================================================
 
 .. currentmodule:: olm.USGS.PhreeqcPandas

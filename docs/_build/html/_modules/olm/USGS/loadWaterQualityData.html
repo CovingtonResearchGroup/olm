@@ -1,18 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>olm.USGS.loadWaterQualityData &#8212; olm 0.36 documentation</title>
-    <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>olm.USGS.loadWaterQualityData &#8212; olm 0.38 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="/default.css" />
     
-    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,8 +26,9 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.36 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.38 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.loadWaterQualityData</a></li> 
       </ul>
     </div>  
 
@@ -48,12 +49,9 @@
 
 <span class="n">DEFAULT_DIR</span> <span class="o">=</span> <span class="s1">&#39;./Processed-Sites&#39;</span>
 
-<span class="c1"># siteListText - list of sites separated by semi-colons</span>
-<span class="c1"># siteFile - text file with list of sites</span>
-<span class="c1"># regEx - a wildcard expression to use in directory</span>
 <div class="viewcode-block" id="loadSiteListData"><a class="viewcode-back" href="../../../olm.USGS.loadWaterQualityData.loadSiteListData.html#olm.USGS.loadWaterQualityData.loadSiteListData">[docs]</a><span class="k">def</span> <span class="nf">loadSiteListData</span><span class="p">(</span><span class="n">siteListText</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                     <span class="n">siteFile</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-                     <span class="n">regEx</span> <span class="o">=</span> <span class="s1">&#39;USGS-*&#39;</span><span class="p">,</span> 
+                     <span class="n">siteFile</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">regEx</span> <span class="o">=</span> <span class="s1">&#39;USGS-*&#39;</span><span class="p">,</span>
                      <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">,</span>
                      <span class="n">loadPhreeqc</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                      <span class="n">loadMetaData</span> <span class="o">=</span> <span class="kc">False</span>
@@ -74,17 +72,17 @@
 
 <span class="sd">    processedSitesDir : string (optional)</span>
 <span class="sd">        directory that contains all of the processed site directories. It is important to change this if the default is not correct. (default=&#39;./Processed-Sites&#39;)</span>
-<span class="sd">        </span>
+
 <span class="sd">    loadPhreeqc : boolean</span>
 <span class="sd">        If set to true, PHREEQC outputs will also be loaded for each site. (default=False)</span>
-<span class="sd">        </span>
+
 <span class="sd">    loadMetaData : boolean</span>
 <span class="sd">        If set to true, the site metadata will be loaded for each site. (default=False)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    sitesDict : dict</span>
-<span class="sd">        A dictionary of site data panels keyed by site name.</span>
+<span class="sd">        A dictionary of site DataFrames keyed by site name.</span>
 
 <span class="sd">    or if loadPhreeqc or loadMetaData are set to true</span>
 <span class="sd">    (sitesDict, sitesPheeqcDict, sitesMetaDataDict) : tuple</span>
@@ -96,11 +94,11 @@
     <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">siteListText</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
         <span class="c1">#check whether we have a valid site directory</span>
         <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
-        <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromLine</span><span class="p">(</span><span class="n">siteListText</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
+        <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromLine</span><span class="p">(</span><span class="n">siteListText</span><span class="p">)</span>
     <span class="k">elif</span> <span class="ow">not</span><span class="p">(</span><span class="n">siteFile</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
         <span class="c1">#check whether we have a valid site directory</span>
         <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
-        <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
+        <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">)</span>
     <span class="k">elif</span> <span class="ow">not</span><span class="p">(</span><span class="n">regEx</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
         <span class="c1">#check whether we have a valid site directory</span>
         <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">)</span>
@@ -136,14 +134,14 @@
             <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListFromRegEx</span><span class="p">(</span><span class="n">regEx</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">siteList</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
         <span class="c1">#process the sites in the list</span>
-        
+
         <span class="n">sitesDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">sitesPhreeqcDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">sitesMetaDataDict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteList</span><span class="p">:</span>            
-            <span class="n">sitePanel</span> <span class="o">=</span> <span class="n">loadSiteData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">sitePanel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="c1">#If site data does not read in correctly, loadSiteData returns None</span>
-                <span class="n">sitesDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">sitePanel</span>
+        <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">siteList</span><span class="p">:</span>
+            <span class="n">siteFrame</span> <span class="o">=</span> <span class="n">loadSiteData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">siteFrame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="c1">#If site data does not read in correctly, loadSiteData returns None</span>
+                <span class="n">sitesDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">siteFrame</span>
                 <span class="k">if</span> <span class="n">loadPhreeqc</span><span class="p">:</span>
                     <span class="n">sitedf</span> <span class="o">=</span> <span class="n">loadSitePhreeqcData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">processedSitesDir</span><span class="p">)</span>
                     <span class="n">sitesPhreeqcDict</span><span class="p">[</span><span class="n">site</span><span class="p">]</span> <span class="o">=</span> <span class="n">sitedf</span>
@@ -162,16 +160,16 @@
 
 <span class="k">def</span> <span class="nf">loadSiteMetaData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">):</span>
     <span class="c1">#Add USGS tag if needed</span>
-    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
-        <span class="n">site</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
+<span class="c1">#    if not(site.startswith(&#39;USGS-&#39;)):</span>
+<span class="c1">#        site = &#39;USGS-&#39;+site</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">metaDataFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Site-Description.pkl&#39;</span><span class="p">)</span>
         <span class="n">siteMetaData</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">metaDataFile</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">))</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">metaDataFile</span> <span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">siteMetaData</span>
-    
+
 
 
 <div class="viewcode-block" id="loadSiteData"><a class="viewcode-back" href="../../../olm.USGS.loadWaterQualityData.loadSiteData.html#olm.USGS.loadWaterQualityData.loadSiteData">[docs]</a><span class="k">def</span> <span class="nf">loadSiteData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">):</span>
@@ -188,21 +186,20 @@
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    sitePanel : pandas.core.panel.Panel</span>
-<span class="sd">        A pandas panel object with data from the requested site.</span>
+<span class="sd">    siteDataFrame : pandas.core.dataframe.DataFrame</span>
+<span class="sd">        A pandas multiindexed DataFrame object with data and metadata from the requested site.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#Add USGS tag if needed</span>
-    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
-        <span class="n">site</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
+<span class="c1">#    if not(site.startswith(&#39;USGS-&#39;)):</span>
+<span class="c1">#        site = &#39;USGS-&#39;+site</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">panelFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Panel.pkl&#39;</span><span class="p">)</span>
-<span class="c1">#        sitePanel = pickle.load(open(panelFile, &#39;rb&#39;))</span>
-        <span class="n">sitePanel</span> <span class="o">=</span> <span class="n">read_pickle</span><span class="p">(</span><span class="n">panelFile</span><span class="p">)</span>
+        <span class="n">frameFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-Dataframe.pkl&#39;</span><span class="p">)</span>
+        <span class="n">siteFrame</span> <span class="o">=</span> <span class="n">read_pickle</span><span class="p">(</span><span class="n">frameFile</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">panelFile</span> <span class="p">))</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">frameFile</span> <span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="k">return</span> <span class="n">sitePanel</span></div>
+    <span class="k">return</span> <span class="n">siteFrame</span></div>
 
 <div class="viewcode-block" id="loadSitePhreeqcData"><a class="viewcode-back" href="../../../olm.USGS.loadWaterQualityData.loadSitePhreeqcData.html#olm.USGS.loadWaterQualityData.loadSitePhreeqcData">[docs]</a><span class="k">def</span> <span class="nf">loadSitePhreeqcData</span><span class="p">(</span><span class="n">site</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -223,8 +220,8 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#Add USGS tag if needed</span>
-    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
-        <span class="n">site</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span><span class="o">+</span><span class="n">site</span>
+<span class="c1">#    if not(site.startswith(&#39;USGS-&#39;)):</span>
+<span class="c1">#        site = &#39;USGS-&#39;+site</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">phreeqcFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC.pkl&#39;</span><span class="p">)</span>
         <span class="n">sitedf</span> <span class="o">=</span> <span class="n">read_pickle</span><span class="p">(</span><span class="n">phreeqcFile</span><span class="p">)</span>
@@ -232,17 +229,17 @@
         <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem reading pickle file: &quot;</span> <span class="o">+</span> <span class="n">phreeqcFile</span> <span class="p">))</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">sitedf</span></div>
-            
+
 <span class="k">def</span> <span class="nf">siteListFromLine</span><span class="p">(</span><span class="n">siteListText</span><span class="p">):</span>
     <span class="n">siteList</span> <span class="o">=</span> <span class="n">siteListText</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
     <span class="n">siteList</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">siteList</span><span class="p">]</span>
     <span class="c1">#check for USGS Tag at beginning of site number</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">site</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">siteList</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
-            <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span> <span class="o">+</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="c1">#    for i, site in enumerate(siteList):</span>
+<span class="c1">#        if not(site.startswith(&#39;USGS-&#39;)):</span>
+<span class="c1">#            siteList[i] = &#39;USGS-&#39; + siteList[i]</span>
     <span class="k">return</span> <span class="n">siteList</span>
 
-<span class="k">def</span> <span class="nf">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">,</span> 
+<span class="k">def</span> <span class="nf">siteListFromFile</span><span class="p">(</span><span class="n">siteFile</span><span class="p">,</span>
                      <span class="n">sitesDir</span> <span class="o">=</span> <span class="n">DEFAULT_DIR</span><span class="p">,</span>
                      <span class="n">XML</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">siteFile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.xml&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">XML</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)):</span>
@@ -250,9 +247,9 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromText</span><span class="p">(</span><span class="n">siteFile</span><span class="p">)</span>
     <span class="c1">#check for USGS Tag at beginning of site number</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">site</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">siteList</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">site</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;USGS-&#39;</span><span class="p">)):</span>
-            <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;USGS-&#39;</span> <span class="o">+</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="c1">#    for i, site in enumerate(siteList):</span>
+<span class="c1">#        if not(site.startswith(&#39;USGS-&#39;)):</span>
+<span class="c1">#            siteList[i] = &#39;USGS-&#39; + siteList[i]</span>
  <span class="c1">#   siteList = [os.path.join(processedSitesDir, x) for x in siteList]</span>
     <span class="k">return</span> <span class="n">siteList</span>
 
@@ -263,8 +260,9 @@
     <span class="n">sitePath</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">listText</span><span class="p">)</span>
     <span class="n">siteList</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">site</span> <span class="ow">in</span> <span class="n">sitePath</span><span class="p">:</span>
-        <span class="n">head</span><span class="p">,</span><span class="n">tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
-        <span class="n">siteList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">site</span><span class="p">):</span>
+            <span class="n">head</span><span class="p">,</span><span class="n">tail</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">site</span><span class="p">)</span>
+            <span class="n">siteList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tail</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">siteList</span>
 
 <span class="k">def</span> <span class="nf">checkSitesDir</span><span class="p">(</span><span class="n">processedSitesDir</span><span class="p">):</span>
@@ -272,9 +270,9 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid path to processed sites directory.&quot;</span><span class="p">)</span>
         <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;Path of the processed sites directory (Default = ./Processed-Sites): &quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">processedSitesDir</span>
-
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -303,13 +301,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.36 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.38 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.loadWaterQualityData</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+        &#169; Copyright 2014-2022 Matthew Covington.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

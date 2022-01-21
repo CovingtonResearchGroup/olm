@@ -1,18 +1,18 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>olm.USGS.WQXtoPandas &#8212; olm 0.36 documentation</title>
-    <link rel="stylesheet" href="../../../_static//default.css" type="text/css" />
-    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>olm.USGS.WQXtoPandas &#8212; olm 0.38 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="/default.css" />
     
-    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
     <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,8 +26,9 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.36 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.38 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas</a></li> 
       </ul>
     </div>  
 
@@ -40,27 +41,45 @@
 <span></span><span class="ch">#! /usr/bin/env python</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This script takes an input file in USGS/EPA WQX xml format and creates a Pandas panel that contains time series of water quality data and discharge combined with layers that contain meta data for each data value.  You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas function for calling within a Python session.</span>
+<span class="sd">This script takes an input file in USGS/EPA WQX xml format and creates a multi-indexed Pandas Dataframe that contains</span>
+<span class="sd">time series of water quality data and discharge combined with layers that contain meta data for each data value.</span>
+<span class="sd">You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas</span>
+<span class="sd">function for calling within a Python session.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">xlrd</span><span class="o">,</span><span class="nn">os</span><span class="o">,</span><span class="nn">subprocess</span><span class="o">,</span><span class="nn">string</span><span class="o">,</span><span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">xlrd</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">string</span><span class="o">,</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
 <span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pickle</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">Panel</span><span class="p">,</span> <span class="n">to_datetime</span><span class="p">,</span> <span class="n">Series</span><span class="p">,</span> <span class="n">concat</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">to_datetime</span><span class="p">,</span> <span class="n">Series</span><span class="p">,</span> <span class="n">concat</span><span class="p">,</span> <span class="n">ExcelWriter</span>
 <span class="kn">from</span> <span class="nn">olm.USGS.PhreeqcPandas</span> <span class="kn">import</span> <span class="n">processPanel</span>
 
-<span class="c1">#import functions from olm package</span>
+<span class="c1"># import functions from olm package</span>
 <span class="kn">from</span> <span class="nn">olm.USGS.siteListExtraction</span> <span class="kn">import</span> <span class="n">extractSitesFromXML</span>
 <span class="kn">from</span> <span class="nn">olm.USGS.siteListExtraction</span> <span class="kn">import</span> <span class="n">extractSitesFromText</span>
 <span class="kn">from</span> <span class="nn">olm.USGS.DataRetrieval</span> <span class="kn">import</span> <span class="n">querySiteList</span><span class="p">,</span> <span class="n">GetDailyDischarge</span><span class="p">,</span> <span class="n">GetSiteData</span>
 <span class="kn">from</span> <span class="nn">olm.USGS.dataSlice</span> <span class="kn">import</span> <span class="n">extractValues</span>
 
-<div class="viewcode-block" id="WQXtoPandas"><a class="viewcode-back" href="../../../olm.USGS.WQXtoPandas.WQXtoPandas.html#olm.USGS.WQXtoPandas.WQXtoPandas">[docs]</a><span class="k">def</span> <span class="nf">WQXtoPandas</span><span class="p">(</span><span class="n">xmlLocation</span><span class="p">,</span> <span class="n">charDict</span><span class="p">,</span> <span class="n">outputPath</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">fromFile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">outputDirName</span><span class="o">=</span><span class="s1">&#39;Processed-Sites&#39;</span><span class="p">,</span> <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="s1">&#39;/home/mcoving/phreeqc-2.18.0/bin/&#39;</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="s1">&#39;/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat&#39;</span><span class="p">,</span> <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="s1">&#39;Result.log&#39;</span><span class="p">,</span> <span class="n">START_FILE</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">splittag</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="WQXtoPandas"><a class="viewcode-back" href="../../../olm.USGS.WQXtoPandas.WQXtoPandas.html#olm.USGS.WQXtoPandas.WQXtoPandas">[docs]</a><span class="k">def</span> <span class="nf">WQXtoPandas</span><span class="p">(</span>
+    <span class="n">xmlLocation</span><span class="p">,</span>
+    <span class="n">charDict</span><span class="p">,</span>
+    <span class="n">outputPath</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="n">fromFile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">outputDirName</span><span class="o">=</span><span class="s2">&quot;Processed-Sites&quot;</span><span class="p">,</span>
+    <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="s2">&quot;/home/mcoving/phreeqc-2.18.0/bin/&quot;</span><span class="p">,</span>
+    <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="s2">&quot;/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat&quot;</span><span class="p">,</span>
+    <span class="n">LOG_FILE</span><span class="o">=</span><span class="s2">&quot;Result.log&quot;</span><span class="p">,</span>
+    <span class="n">START_FILE</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">splittag</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are stored in directories for each site.</span>
+<span class="sd">    Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are</span>
+<span class="sd">    stored in directories for each site.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -106,190 +125,308 @@
 <span class="sd">    Designed to be run through convenience function runWQXtoPandas().</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="c1">#Check to see if output directory exists</span>
+        <span class="c1"># Check to see if output directory exists</span>
         <span class="n">absOutputDirPath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">outputPath</span><span class="p">)</span>
         <span class="n">sitesdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">absOutputDirPath</span><span class="p">,</span> <span class="n">outputDirName</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sitesdir&quot;</span><span class="p">,</span><span class="n">sitesdir</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sitesdir&quot;</span><span class="p">,</span> <span class="n">sitesdir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">)):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">os</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem creating output directory. Check output path name: &quot;</span><span class="o">+</span><span class="n">outputPath</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="p">(</span>
+                        <span class="s2">&quot;Problem creating output directory. Check output path name: &quot;</span>
+                        <span class="o">+</span> <span class="n">outputPath</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="c1">#create xml tree</span>
+        <span class="c1"># create xml tree</span>
         <span class="k">if</span> <span class="n">fromFile</span><span class="p">:</span>
-            <span class="c1">#read from file</span>
+            <span class="c1"># read from file</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;xmlLocation&quot;</span><span class="p">,</span> <span class="n">xmlLocation</span><span class="p">)</span>
             <span class="n">wqxtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">xmlLocation</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1">#check whether we already have a matching xml file</span>
-            <span class="n">xmlSaveFile</span> <span class="o">=</span> <span class="n">LOG_FILE</span> <span class="o">+</span> <span class="n">splittag</span> <span class="o">+</span> <span class="s1">&#39;.xml&#39;</span>
-            <span class="k">if</span> <span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">xmlSaveFile</span><span class="p">)</span> <span class="p">):</span>
+            <span class="c1"># check whether we already have a matching xml file</span>
+            <span class="n">xmlSaveFile</span> <span class="o">=</span> <span class="n">LOG_FILE</span> <span class="o">+</span> <span class="n">splittag</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">xmlSaveFile</span><span class="p">):</span>
                 <span class="n">goodAnswer</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="k">while</span> <span class="ow">not</span><span class="p">(</span><span class="n">goodAnswer</span><span class="p">):</span>
-                    <span class="n">answer</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;An xml file (&quot;</span><span class="o">+</span> <span class="n">xmlSaveFile</span><span class="o">+</span> <span class="s2">&quot;) already exists.  </span><span class="se">\n</span><span class="s2"> Use this instead of html query (y or n)?&quot;</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)):</span>
-                        <span class="c1">#read from file</span>
+                <span class="k">while</span> <span class="ow">not</span> <span class="p">(</span><span class="n">goodAnswer</span><span class="p">):</span>
+                    <span class="n">answer</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
+                        <span class="s2">&quot;An xml file (&quot;</span>
+                        <span class="o">+</span> <span class="n">xmlSaveFile</span>
+                        <span class="o">+</span> <span class="s2">&quot;) already exists.  </span><span class="se">\n</span><span class="s2"> Use this instead of html query (y or n)?&quot;</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">answer</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">):</span>
+                        <span class="c1"># read from file</span>
                         <span class="n">wqxtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">xmlSaveFile</span><span class="p">)</span>
                         <span class="n">goodAnswer</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="n">queryXML</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="k">elif</span> <span class="p">(</span><span class="n">answer</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)):</span>
+                    <span class="k">elif</span> <span class="n">answer</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">):</span>
                         <span class="n">goodAnswer</span> <span class="o">=</span> <span class="kc">True</span>
                         <span class="n">queryXML</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">queryXML</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="c1">#If we don&#39;t have a matching xml file, or we want to obtain a new one, then get the new xml</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">queryXML</span><span class="p">):</span>
+            <span class="c1"># If we don&#39;t have a matching xml file, or we want to obtain a new one, then get the new xml</span>
+            <span class="k">if</span> <span class="n">queryXML</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Obtaining xml file from USGS NWIS using html query...&quot;</span><span class="p">)</span>
-                <span class="c1">#parse from html query</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XML query string: &quot;</span><span class="p">,</span><span class="n">xmlLocation</span><span class="p">)</span>
+                <span class="c1"># parse from html query</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XML query string: &quot;</span><span class="p">,</span> <span class="n">xmlLocation</span><span class="p">)</span>
                 <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">xmlLocation</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
-                    <span class="c1">#There is some problem with the xml query</span>
+                    <span class="c1"># There is some problem with the xml query</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Response: &quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reason: &quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: &quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Warning&#39;</span><span class="p">])</span>
-                <span class="c1">#write to xml file</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: &quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Warning&quot;</span><span class="p">])</span>
+                <span class="c1"># write to xml file</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="c1">#write xml to file</span>
-                    <span class="n">xmlFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">xmlSaveFile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
+                    <span class="c1"># write xml to file</span>
+                    <span class="n">xmlFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">xmlSaveFile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
                     <span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">xmlFile</span><span class="p">)</span>
                     <span class="n">xmlFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-                    <span class="n">wqxtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="n">xmlSaveFile</span><span class="p">)</span>
+                    <span class="n">wqxtree</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">ElementTree</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">xmlSaveFile</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem writing to xml file to store html query: &quot;</span> <span class="o">+</span> <span class="n">xmlSaveFile</span><span class="p">))</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="p">(</span>
+                            <span class="s2">&quot;Problem writing to xml file to store html query: &quot;</span>
+                            <span class="o">+</span> <span class="n">xmlSaveFile</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
                     <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="c1">#begin parsing XML tree</span>
+        <span class="c1"># begin parsing XML tree</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">wqxtree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
-        <span class="c1">#get namespace map</span>
+        <span class="c1"># get namespace map</span>
         <span class="n">NSMAP</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">nsmap</span>
         <span class="n">WQX</span> <span class="o">=</span> <span class="s2">&quot;{</span><span class="si">%s</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="n">NSMAP</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>
-        <span class="c1">#iterate over all &lt;Activity&gt; tags within file and process each sample</span>
+        <span class="c1"># iterate over all &lt;Activity&gt; tags within file and process each sample</span>
         <span class="n">samples_processed</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">samples_not_processed</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">sitesDict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">sitesMetaDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">activity</span> <span class="ow">in</span> <span class="n">wqxtree</span><span class="o">.</span><span class="n">getiterator</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;Activity&quot;</span><span class="p">):</span>
             <span class="n">processThisSample</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
             <span class="n">description</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ActivityDescription&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">description</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">description</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">datetext</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ActivityStartDate&quot;</span><span class="p">)</span>
                 <span class="n">starttime</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ActivityStartTime&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">starttime</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">starttime</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">timetext</span> <span class="o">=</span> <span class="n">starttime</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;Time&quot;</span><span class="p">)</span>
                     <span class="n">timezone</span> <span class="o">=</span> <span class="n">starttime</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;TimeZoneCode&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">timetext</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                    <span class="n">timezone</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="n">timetext</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="n">timezone</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
                 <span class="n">location</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;MonitoringLocationIdentifier&quot;</span><span class="p">)</span>
-                <span class="n">descriptionDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;location&#39;</span><span class="p">:</span><span class="n">location</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="n">datetext</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="n">timetext</span><span class="p">,</span> <span class="s1">&#39;timezone&#39;</span><span class="p">:</span><span class="n">timezone</span><span class="p">}</span>
+                <span class="k">if</span> <span class="n">location</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;USGS-&quot;</span><span class="p">:</span>
+                    <span class="n">USGS</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">USGS</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">descriptionDict</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="n">location</span><span class="p">,</span>
+                    <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">datetext</span><span class="p">,</span>
+                    <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">timetext</span><span class="p">,</span>
+                    <span class="s2">&quot;timezone&quot;</span><span class="p">:</span> <span class="n">timezone</span><span class="p">,</span>
+                <span class="p">}</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">descriptionDict</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">processThisSample</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="n">reason</span> <span class="o">=</span> <span class="s1">&#39;No description&#39;</span>
-            <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;Processing sample from &#39;</span> <span class="o">+</span> <span class="n">location</span> <span class="o">+</span> <span class="s1">&#39; on &#39;</span> <span class="o">+</span> <span class="n">datetext</span><span class="p">))</span>
-            <span class="c1">#create null sample dict</span>
+                <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;No description&quot;</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Processing sample from &quot;</span> <span class="o">+</span> <span class="n">location</span> <span class="o">+</span> <span class="s2">&quot; on &quot;</span> <span class="o">+</span> <span class="n">datetext</span><span class="p">))</span>
+            <span class="c1"># create null sample dict</span>
             <span class="n">sampleDict</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">sampleMetaDict</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="c1">#iterate though all results for this activity</span>
-            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">activity</span><span class="o">.</span><span class="n">getiterator</span><span class="p">(</span><span class="n">tag</span> <span class="o">=</span> <span class="n">WQX</span> <span class="o">+</span> <span class="s1">&#39;Result&#39;</span><span class="p">):</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">processThisSample</span><span class="p">):</span>
+            <span class="c1"># iterate though all results for this activity</span>
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">activity</span><span class="o">.</span><span class="n">getiterator</span><span class="p">(</span><span class="n">tag</span><span class="o">=</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;Result&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">processThisSample</span><span class="p">:</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">resultdesc</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultDescription&quot;</span><span class="p">)</span>
                         <span class="n">characteristic</span> <span class="o">=</span> <span class="n">resultdesc</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;CharacteristicName&quot;</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">characteristic</span> <span class="ow">in</span> <span class="n">charDict</span><span class="p">):</span>
-                            <span class="n">samplefraction</span> <span class="o">=</span> <span class="n">resultdesc</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultSampleFractionText&quot;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="n">charDict</span><span class="p">:</span>
+                            <span class="n">samplefraction</span> <span class="o">=</span> <span class="n">resultdesc</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span>
+                                <span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultSampleFractionText&quot;</span>
+                            <span class="p">)</span>
                             <span class="n">pcode</span> <span class="o">=</span> <span class="n">resultdesc</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;USGSPCode&quot;</span><span class="p">)</span>
-                            <span class="n">quality</span> <span class="o">=</span> <span class="n">resultdesc</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultStatusIdentifier&quot;</span><span class="p">)</span>
+                            <span class="n">quality</span> <span class="o">=</span> <span class="n">resultdesc</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span>
+                                <span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultStatusIdentifier&quot;</span>
+                            <span class="p">)</span>
                             <span class="n">measure</span> <span class="o">=</span> <span class="n">resultdesc</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultMeasure&quot;</span><span class="p">)</span>
                             <span class="n">count</span> <span class="o">=</span> <span class="mf">1.0</span>
-                            <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">measure</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
-                                <span class="n">value</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultMeasureValue&quot;</span><span class="p">)</span>
-                                <span class="n">units</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;MeasureUnitCode&quot;</span><span class="p">)</span>
-                                <span class="c1">#split pcode into list</span>
-                                <span class="n">tempPcodeList</span> <span class="o">=</span> <span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;pcode&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
-    <span class="c1">#                            print(&quot;tempPcodeList=&quot;+str(tempPcodeList))</span>
+                            <span class="n">detection</span> <span class="o">=</span> <span class="n">resultdesc</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span>
+                                <span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultDetectionConditionText&quot;</span>
+                            <span class="p">)</span>
+                            <span class="c1"># print(&#39;detection=&#39;,detection)</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">measure</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="n">detection</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">measure</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                                    <span class="n">value</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultMeasureValue&quot;</span><span class="p">)</span>
+                                    <span class="c1"># print(&#39;initial value = &#39;,value)</span>
+                                    <span class="n">units</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;MeasureUnitCode&quot;</span><span class="p">)</span>
+                                    <span class="c1"># EPA system does not have detection info.</span>
+                                    <span class="c1"># Check for &lt; in value text.</span>
+                                    <span class="k">if</span> <span class="s2">&quot;&lt;&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                                        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                                        <span class="n">nondetect</span> <span class="o">=</span> <span class="kc">True</span>
+                                    <span class="k">else</span><span class="p">:</span>
+                                        <span class="n">nondetect</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="n">detection</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                                    <span class="c1"># print(&quot;entering nondetect...&quot;)</span>
+                                    <span class="n">nondetect</span> <span class="o">=</span> <span class="kc">True</span>
+                                    <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+                                    <span class="n">labinfo</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultLabInformation&quot;</span><span class="p">)</span>
+                                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">labinfo</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                                        <span class="c1"># print(&quot;labinfo present&quot;)</span>
+                                        <span class="n">quantLimitMeasure</span> <span class="o">=</span> <span class="n">labinfo</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+                                            <span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultDetectionQuantitationLimit&quot;</span>
+                                        <span class="p">)</span>
+                                        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">quantLimitMeasure</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                                            <span class="c1"># print(&quot;Quant limit present&quot;)</span>
+                                            <span class="n">nondetectmeasure</span> <span class="o">=</span> <span class="n">quantLimitMeasure</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+                                                <span class="n">WQX</span>
+                                                <span class="o">+</span> <span class="s2">&quot;DetectionQuantitationLimitMeasure&quot;</span>
+                                            <span class="p">)</span>
+                                            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">nondetectmeasure</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                                                <span class="c1"># print(&quot;Quant limit measure present&quot;)</span>
+                                                <span class="n">value</span> <span class="o">=</span> <span class="n">nondetectmeasure</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span>
+                                                    <span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;MeasureValue&quot;</span>
+                                                <span class="p">)</span>
+                                                <span class="c1"># print(&#39;measurevalue=&#39;,value)</span>
+                                                <span class="c1"># print(quantLimitMeasure)</span>
+                                    <span class="c1"># print(&quot;nondetect value=&quot;,value)</span>
+                                <span class="c1"># split pcode into list</span>
+                                <span class="n">tempPcodeList</span> <span class="o">=</span> <span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s2">&quot;pcode&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                                    <span class="s2">&quot;;&quot;</span>
+                                <span class="p">)</span>
+                                <span class="c1">#                            print(&quot;tempPcodeList=&quot;+str(tempPcodeList))</span>
                                 <span class="n">pcodeDict</span> <span class="o">=</span> <span class="p">{}</span>
                                 <span class="k">for</span> <span class="n">codePriority</span><span class="p">,</span> <span class="n">code</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tempPcodeList</span><span class="p">):</span>
                                     <span class="n">code</span> <span class="o">=</span> <span class="n">code</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                                    <span class="k">if</span> <span class="n">code</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                                    <span class="k">if</span> <span class="n">code</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
                                         <span class="n">pcodeDict</span><span class="p">[</span><span class="n">code</span><span class="p">]</span> <span class="o">=</span> <span class="n">codePriority</span>
-                                <span class="c1">#Check whether characteristic meets criteria</span>
-                                <span class="c1">#for inclusion, otherwise don&#39;t add to sampleDict</span>
+                                <span class="c1"># Check whether characteristic meets criteria</span>
+                                <span class="c1"># for inclusion, otherwise don&#39;t add to sampleDict</span>
                                 <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">True</span>
-                                <span class="k">if</span> <span class="p">(</span><span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;fraction&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
-                                    <span class="c1">#test for correct fraction</span>
-                                    <span class="k">if</span> <span class="p">(</span><span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;fraction&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">samplefraction</span><span class="p">):</span>
-                                        <span class="n">addCharacteristic</span><span class="o">=</span> <span class="kc">False</span>
-                                <span class="k">if</span> <span class="p">(</span><span class="n">addCharacteristic</span><span class="p">):</span>
-                                    <span class="k">if</span> <span class="p">(</span><span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;pcode&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
-                                        <span class="c1">#test for correct pcode</span>
-<span class="c1">#                                        print(&quot;pcode = &quot;+pcode)</span>
-<span class="c1">#                                        print(&quot;pcodeList = &quot;+str(pcodeList))</span>
-<span class="c1">#                                        print(&quot;pcode in list=&quot;+str(pcode in pcodeList))</span>
-                                        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">pcode</span> <span class="ow">in</span> <span class="n">pcodeDict</span><span class="p">):</span>
-                                            <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">False</span>
-                                <span class="k">if</span> <span class="p">(</span><span class="n">addCharacteristic</span><span class="p">):</span>
-                                    <span class="k">if</span> <span class="p">(</span><span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;quality&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
-                                        <span class="c1">#test for correct data quality</span>
-                                        <span class="k">if</span> <span class="p">(</span><span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;quality&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">quality</span><span class="p">):</span>
-                                           <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">False</span>
-                                <span class="c1">#end of characteristic criteria check</span>
-                                <span class="c1">#Process duplicate characteristics</span>
-                                <span class="k">if</span> <span class="p">(</span><span class="n">addCharacteristic</span><span class="p">):</span>
-                                    <span class="k">if</span> <span class="p">(</span><span class="n">characteristic</span> <span class="ow">in</span> <span class="n">sampleDict</span><span class="p">):</span>
-                                        <span class="n">priorPcode</span> <span class="o">=</span><span class="n">sampleMetaDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;pcode&#39;</span><span class="p">]</span>
-                                        <span class="c1">#if there are already multiple pcodes get only first one</span>
-                                        <span class="n">priorPcode</span> <span class="o">=</span> <span class="n">priorPcode</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                                        <span class="n">averageValue</span> <span class="o">=</span> <span class="kc">False</span>
-                                        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pcodeDict</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">):</span>
-                                            <span class="n">thisPcodePriority</span> <span class="o">=</span> <span class="n">pcodeDict</span><span class="p">[</span><span class="n">pcode</span><span class="p">]</span>
-                                            <span class="n">priorPcodePriority</span> <span class="o">=</span> \
-                                                <span class="n">pcodeDict</span><span class="p">[</span><span class="n">priorPcode</span><span class="p">]</span>
-                                            <span class="k">if</span> <span class="p">(</span><span class="n">thisPcodePriority</span> <span class="o">&gt;</span>\
-                                                    <span class="n">priorPcodePriority</span><span class="p">):</span>
-                                                <span class="c1">#previous characteristic remains</span>
+                                <span class="k">if</span> <span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s2">&quot;fraction&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+                                    <span class="c1"># test for correct fraction</span>
+                                    <span class="k">if</span> <span class="p">(</span>
+                                        <span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s2">&quot;fraction&quot;</span><span class="p">]</span>
+                                        <span class="o">!=</span> <span class="n">samplefraction</span>
+                                    <span class="p">):</span>
+                                        <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="k">if</span> <span class="n">addCharacteristic</span><span class="p">:</span>
+                                    <span class="k">if</span> <span class="n">USGS</span><span class="p">:</span>
+                                        <span class="k">if</span> <span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s2">&quot;pcode&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+                                            <span class="c1"># test for correct pcode</span>
+                                            <span class="c1"># print(&quot;pcode = &quot;+pcode)</span>
+                                            <span class="c1"># print(&quot;pcodeList = &quot;+str(pcodeList))</span>
+                                            <span class="c1"># print(&quot;pcode in list=&quot;+str(pcode in pcodeList))</span>
+                                            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">pcode</span> <span class="ow">in</span> <span class="n">pcodeDict</span><span class="p">):</span>
                                                 <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">False</span>
-                                            <span class="k">elif</span> <span class="p">(</span><span class="n">thisPcodePriority</span> <span class="o">==</span>\
-                                                  <span class="n">priorPcodePriority</span><span class="p">):</span>
+                                <span class="k">if</span> <span class="n">addCharacteristic</span><span class="p">:</span>
+                                    <span class="k">if</span> <span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s2">&quot;quality&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+                                        <span class="c1"># test for correct data quality</span>
+                                        <span class="k">if</span> <span class="p">(</span>
+                                            <span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s2">&quot;quality&quot;</span><span class="p">]</span>
+                                            <span class="o">!=</span> <span class="n">quality</span>
+                                        <span class="p">):</span>
+                                            <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="c1"># end of characteristic criteria check</span>
+                                <span class="c1"># Process duplicate characteristics</span>
+                                <span class="k">if</span> <span class="n">addCharacteristic</span><span class="p">:</span>
+                                    <span class="k">if</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="n">sampleDict</span><span class="p">:</span>
+                                        <span class="k">if</span> <span class="n">USGS</span><span class="p">:</span>
+                                            <span class="n">priorPcode</span> <span class="o">=</span> <span class="n">sampleMetaDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span>
+                                                <span class="s2">&quot;pcode&quot;</span>
+                                            <span class="p">]</span>
+                                            <span class="c1"># if there are already multiple pcodes get only first one</span>
+                                            <span class="n">priorPcode</span> <span class="o">=</span> <span class="n">priorPcode</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                                            <span class="n">averageValue</span> <span class="o">=</span> <span class="kc">False</span>
+                                            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pcodeDict</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                                                <span class="n">thisPcodePriority</span> <span class="o">=</span> <span class="n">pcodeDict</span><span class="p">[</span><span class="n">pcode</span><span class="p">]</span>
+                                                <span class="n">priorPcodePriority</span> <span class="o">=</span> <span class="n">pcodeDict</span><span class="p">[</span>
+                                                    <span class="n">priorPcode</span>
+                                                <span class="p">]</span>
+                                                <span class="k">if</span> <span class="p">(</span>
+                                                    <span class="n">thisPcodePriority</span>
+                                                    <span class="o">&gt;</span> <span class="n">priorPcodePriority</span>
+                                                <span class="p">):</span>
+                                                    <span class="c1"># previous characteristic remains</span>
+                                                    <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">False</span>
+                                                <span class="k">elif</span> <span class="p">(</span>
+                                                    <span class="n">thisPcodePriority</span>
+                                                    <span class="o">==</span> <span class="n">priorPcodePriority</span>
+                                                <span class="p">):</span>
+                                                    <span class="n">averageValue</span> <span class="o">=</span> <span class="kc">True</span>
+                                            <span class="k">else</span><span class="p">:</span>
                                                 <span class="n">averageValue</span> <span class="o">=</span> <span class="kc">True</span>
-                                        <span class="k">else</span><span class="p">:</span>
-                                            <span class="n">averageValue</span> <span class="o">=</span> <span class="kc">True</span>
-                                        <span class="k">if</span> <span class="n">averageValue</span><span class="p">:</span>
-                                            <span class="c1">#average this value with existing values</span>
-                                            <span class="n">count</span> <span class="o">=</span> \
-                                                <span class="n">sampleMetaDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
-                                            <span class="n">count</span> <span class="o">+=</span> <span class="mf">1.</span>
-                                            <span class="n">oldvalue</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>\
-                                                <span class="n">sampleDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">])</span>
-                                            <span class="n">newvalue</span> <span class="o">=</span> <span class="p">(</span><span class="n">oldvalue</span> <span class="o">*</span> <span class="p">(</span><span class="n">count</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span>\
-                                                            <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="o">/</span><span class="n">count</span>
-                                            <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">newvalue</span><span class="p">)</span>
-                                            <span class="n">pcode</span> <span class="o">=</span> <span class="n">priorPcode</span> <span class="o">+</span> <span class="s1">&#39;; &#39;</span><span class="o">+</span> <span class="n">pcode</span>
-                                            <span class="n">priorUnits</span> <span class="o">=</span> \
-                                                <span class="n">sampleMetaDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span>
-                                            <span class="n">units</span> <span class="o">=</span> <span class="n">priorUnits</span> <span class="o">+</span> <span class="s1">&#39;; &#39;</span> <span class="o">+</span> <span class="n">units</span>
+                                            <span class="k">if</span> <span class="n">averageValue</span><span class="p">:</span>
+                                                <span class="n">priorUnits</span> <span class="o">=</span> <span class="n">sampleMetaDict</span><span class="p">[</span>
+                                                    <span class="n">characteristic</span>
+                                                <span class="p">][</span><span class="s2">&quot;units&quot;</span><span class="p">]</span>
+                                                <span class="c1"># Only average if we have the same units</span>
+                                                <span class="k">if</span> <span class="n">units</span> <span class="o">==</span> <span class="n">priorUnits</span><span class="p">:</span>
+                                                    <span class="c1"># Check if this or prior was non-detect</span>
+                                                    <span class="k">if</span> <span class="n">sampleMetaDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span>
+                                                        <span class="s2">&quot;nondetect&quot;</span>
+                                                    <span class="p">]:</span>
+                                                        <span class="k">if</span> <span class="n">nondetect</span><span class="p">:</span>
+                                                            <span class="c1"># If both are non-detect, no need to add</span>
+                                                            <span class="n">averageValue</span> <span class="o">=</span> <span class="kc">False</span>
+                                                            <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">False</span>
+                                                        <span class="k">else</span><span class="p">:</span>
+                                                            <span class="c1"># If prior was non-detect, but this one isn&#39;t</span>
+                                                            <span class="c1"># Add this one instead</span>
+                                                            <span class="n">averageValue</span> <span class="o">=</span> <span class="kc">False</span>
+                                                            <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">True</span>
+                                                    <span class="k">elif</span> <span class="n">nondetect</span><span class="p">:</span>
+                                                        <span class="c1"># This one is non-detect, prior was not.</span>
+                                                        <span class="n">averageValue</span> <span class="o">=</span> <span class="kc">False</span>
+                                                        <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">False</span>
 
-                                <span class="k">if</span> <span class="p">(</span><span class="n">addCharacteristic</span><span class="p">):</span>
+                                                    <span class="k">if</span> <span class="n">averageValue</span><span class="p">:</span>
+                                                        <span class="c1"># average this value with existing values</span>
+                                                        <span class="n">count</span> <span class="o">=</span> <span class="n">sampleMetaDict</span><span class="p">[</span>
+                                                            <span class="n">characteristic</span>
+                                                        <span class="p">][</span><span class="s2">&quot;count&quot;</span><span class="p">]</span>
+                                                        <span class="n">count</span> <span class="o">+=</span> <span class="mf">1.0</span>
+                                                        <span class="n">oldvalue</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+                                                            <span class="n">sampleDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span>
+                                                        <span class="p">)</span>
+                                                        <span class="n">newvalue</span> <span class="o">=</span> <span class="p">(</span>
+                                                            <span class="n">oldvalue</span> <span class="o">*</span> <span class="p">(</span><span class="n">count</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+                                                            <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                                                        <span class="p">)</span> <span class="o">/</span> <span class="n">count</span>
+                                                        <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">newvalue</span><span class="p">)</span>
+                                                        <span class="n">pcode</span> <span class="o">=</span> <span class="p">(</span>
+                                                            <span class="n">priorPcode</span> <span class="o">+</span> <span class="s2">&quot;; &quot;</span> <span class="o">+</span> <span class="n">pcode</span>
+                                                        <span class="p">)</span>
+                                                        <span class="c1"># Changed this behavior to not allow different units</span>
+                                                        <span class="c1"># units = priorUnits + &#39;; &#39; + units</span>
+                                                <span class="k">else</span><span class="p">:</span>
+                                                    <span class="c1"># Do not add if units are different</span>
+                                                    <span class="n">addCharacteristic</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="k">if</span> <span class="n">addCharacteristic</span><span class="p">:</span>
                                     <span class="n">sampleDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-                                    <span class="n">sampleMetaDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;samplefraction&#39;</span><span class="p">:</span><span class="n">samplefraction</span><span class="p">,</span> <span class="s1">&#39;units&#39;</span><span class="p">:</span><span class="n">units</span><span class="p">,</span> <span class="s1">&#39;pcode&#39;</span><span class="p">:</span><span class="n">pcode</span><span class="p">,</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span><span class="n">quality</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">:</span><span class="n">count</span><span class="p">}</span>
-                    <span class="c1">#end results loop</span>
+                                    <span class="n">sampleMetaDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                                        <span class="s2">&quot;samplefraction&quot;</span><span class="p">:</span> <span class="n">samplefraction</span><span class="p">,</span>
+                                        <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="n">units</span><span class="p">,</span>
+                                        <span class="s2">&quot;pcode&quot;</span><span class="p">:</span> <span class="n">pcode</span><span class="p">,</span>
+                                        <span class="s2">&quot;quality&quot;</span><span class="p">:</span> <span class="n">quality</span><span class="p">,</span>
+                                        <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">,</span>
+                                        <span class="s2">&quot;nondetect&quot;</span><span class="p">:</span> <span class="n">nondetect</span><span class="p">,</span>
+                                    <span class="p">}</span>
                     <span class="k">except</span> <span class="n">etree</span><span class="o">.</span><span class="n">XMLSyntaxError</span> <span class="k">as</span> <span class="n">detail</span><span class="p">:</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File contains invalid XML syntax: &quot;</span><span class="p">,</span> <span class="n">detail</span><span class="p">)</span>
                         <span class="n">processThisSample</span> <span class="o">=</span> <span class="kc">False</span>
                         <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;Entry contains invalid XML syntax.&quot;</span>
-            <span class="c1">#check whether sample has all the required constituents</span>
-<span class="c1">#            print &quot;Checking for requirements.&quot;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">processThisSample</span><span class="p">):</span>
+            <span class="c1"># end results loop</span>
+            <span class="c1"># check whether sample has all the required constituents</span>
+            <span class="k">if</span> <span class="n">processThisSample</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="n">charDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s1">&#39;IsRequired&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">characteristic</span> <span class="ow">in</span> <span class="n">sampleDict</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">charDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">][</span><span class="s2">&quot;IsRequired&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">characteristic</span> <span class="ow">in</span> <span class="n">sampleDict</span><span class="p">):</span>
                             <span class="n">processThisSample</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="n">reason</span> <span class="o">+=</span> <span class="n">characteristic</span><span class="o">+</span> <span class="s1">&#39; not available. &#39;</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">processThisSample</span><span class="p">):</span>
-                <span class="c1">#check to see whether site directory exists, if not, create it</span>
+                            <span class="n">reason</span> <span class="o">+=</span> <span class="n">characteristic</span> <span class="o">+</span> <span class="s2">&quot; not available. &quot;</span>
+            <span class="k">if</span> <span class="n">processThisSample</span><span class="p">:</span>
+                <span class="c1"># check to see whether site directory exists, if not, create it</span>
                 <span class="n">sampledir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sampledir</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sampledir</span><span class="p">)):</span>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">sampledir</span><span class="p">)</span>
                     <span class="k">except</span> <span class="n">os</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
@@ -297,119 +434,213 @@
                         <span class="n">processThisSample</span> <span class="o">=</span> <span class="kc">False</span>
                         <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;Problem creating location directory: &quot;</span> <span class="o">+</span> <span class="n">sampledir</span>
 
-            <span class="k">if</span> <span class="p">(</span><span class="n">processThisSample</span><span class="p">):</span>
-                <span class="c1">#Pull daily discharge data from USGS website</span>
+            <span class="k">if</span> <span class="n">processThisSample</span><span class="p">:</span>
+                <span class="c1"># Pull daily discharge data from USGS website</span>
                 <span class="n">good_discharge_value</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">num_Q_tries</span> <span class="o">=</span> <span class="mi">0</span>
-                <span class="c1">#Try 5 times to retrieve discharge value</span>
-                <span class="k">while</span> <span class="p">(</span><span class="ow">not</span> <span class="n">good_discharge_value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">num_Q_tries</span><span class="o">&lt;=</span><span class="mi">5</span><span class="p">:</span>
-                    <span class="n">dischargeDict</span> <span class="o">=</span> <span class="n">GetDailyDischarge</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">datetext</span><span class="p">)</span> <span class="c1">#currently hard-wired to pcode 00060 (daily discharge, cfs)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">USGS</span><span class="p">:</span>
+                    <span class="c1"># We do not have a USGS site, do not query discharge</span>
+                    <span class="n">num_Q_tries</span> <span class="o">=</span> <span class="mi">99</span>
+                    <span class="n">dischargeDict</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="c1"># Try 5 times to retrieve discharge value</span>
+                <span class="k">while</span> <span class="p">(</span><span class="ow">not</span> <span class="n">good_discharge_value</span><span class="p">)</span> <span class="ow">and</span> <span class="n">num_Q_tries</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">:</span>
+                    <span class="n">dischargeDict</span> <span class="o">=</span> <span class="n">GetDailyDischarge</span><span class="p">(</span>
+                        <span class="n">location</span><span class="p">,</span> <span class="n">datetext</span>
+                    <span class="p">)</span>  <span class="c1"># currently hard-wired to pcode 00060 (daily discharge, cfs)</span>
                     <span class="k">if</span> <span class="n">dischargeDict</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                         <span class="n">good_discharge_value</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">num_Q_tries</span> <span class="o">+=</span> <span class="mi">1</span>
                         <span class="n">dischargeDict</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">dischargeDict</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-                    <span class="n">sampleDict</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dischargeDict</span><span class="p">[</span><span class="s1">&#39;discharge&#39;</span><span class="p">]</span>
-                    <span class="n">sampleMetaDict</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span><span class="s1">&#39;cfs&#39;</span><span class="p">,</span> <span class="s1">&#39;pcode&#39;</span><span class="p">:</span><span class="s1">&#39;00060&#39;</span><span class="p">,</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span><span class="n">dischargeDict</span><span class="p">[</span><span class="s1">&#39;quality&#39;</span><span class="p">],</span> <span class="s1">&#39;count&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;samplefraction&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">}</span>
-                    <span class="n">descriptionDict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dischargeDict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">dischargeDict</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">sampleDict</span><span class="p">[</span><span class="s2">&quot;Stream flow, mean. daily&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dischargeDict</span><span class="p">[</span><span class="s2">&quot;discharge&quot;</span><span class="p">]</span>
+                    <span class="n">sampleMetaDict</span><span class="p">[</span><span class="s2">&quot;Stream flow, mean. daily&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;cfs&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;pcode&quot;</span><span class="p">:</span> <span class="s2">&quot;00060&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;quality&quot;</span><span class="p">:</span> <span class="n">dischargeDict</span><span class="p">[</span><span class="s2">&quot;quality&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;samplefraction&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="s2">&quot;nondetect&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="p">}</span>
+                    <span class="n">descriptionDict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dischargeDict</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c1">#Possibly allow this sample to be thrown out if no mean daily discharge, and/or similar for instantaneous discharge</span>
-                    <span class="n">sampleDict</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-                    <span class="n">sampleMetaDict</span><span class="p">[</span><span class="s1">&#39;Stream flow, mean. daily&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span><span class="s1">&#39;cfs&#39;</span><span class="p">,</span> <span class="s1">&#39;pcode&#39;</span><span class="p">:</span><span class="s1">&#39;00060&#39;</span><span class="p">,</span> <span class="s1">&#39;quality&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;samplefraction&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">}</span>
+                    <span class="c1"># Possibly allow this sample to be thrown out if no mean daily discharge, and/or similar for instantaneous discharge</span>
+                    <span class="n">sampleDict</span><span class="p">[</span><span class="s2">&quot;Stream flow, mean. daily&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">sampleMetaDict</span><span class="p">[</span><span class="s2">&quot;Stream flow, mean. daily&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;cfs&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;pcode&quot;</span><span class="p">:</span> <span class="s2">&quot;00060&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;quality&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;samplefraction&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="s2">&quot;nondetect&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="p">}</span>
                 <span class="c1"># Create data frame row for this sample date</span>
-                <span class="k">if</span> <span class="n">descriptionDict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-                    <span class="n">rowdate</span> <span class="o">=</span> <span class="n">to_datetime</span><span class="p">(</span><span class="n">datetext</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span><span class="n">descriptionDict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">descriptionDict</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                    <span class="n">rowdate</span> <span class="o">=</span> <span class="n">to_datetime</span><span class="p">(</span><span class="n">datetext</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">descriptionDict</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">rowdate</span> <span class="o">=</span> <span class="n">to_datetime</span><span class="p">(</span><span class="n">datetext</span><span class="p">)</span>
-                <span class="c1">#sampleRow = DataFrame(sampleDict, index=[rowdate], dtype=&#39;float&#39;)</span>
-                <span class="c1">#Create Panel to contain sample meta data</span>
-                <span class="n">samplePanelRow</span> <span class="o">=</span> <span class="n">Panel</span><span class="p">({</span>
-                        <span class="s1">&#39;data&#39;</span><span class="p">:</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">sampleDict</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">),</span>
-                        <span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">descriptionDict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">],</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
-                        <span class="s1">&#39;timezone&#39;</span><span class="p">:</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">descriptionDict</span><span class="p">[</span><span class="s1">&#39;timezone&#39;</span><span class="p">],</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
-                        <span class="s1">&#39;pcode&#39;</span><span class="p">:</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;pcode&#39;</span><span class="p">])[</span><span class="s1">&#39;values&#39;</span><span class="p">]],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
-                        <span class="s1">&#39;quality&#39;</span><span class="p">:</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;quality&#39;</span><span class="p">])[</span><span class="s1">&#39;values&#39;</span><span class="p">]],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
-                        <span class="s1">&#39;fraction&#39;</span><span class="p">:</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;samplefraction&#39;</span><span class="p">])[</span><span class="s1">&#39;values&#39;</span><span class="p">]],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
-                        <span class="s1">&#39;units&#39;</span><span class="p">:</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">])[</span><span class="s1">&#39;values&#39;</span><span class="p">]],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
-                        <span class="s1">&#39;count&#39;</span><span class="p">:</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">])[</span><span class="s1">&#39;values&#39;</span><span class="p">]],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span>
-                        <span class="p">})</span>
-                <span class="c1">#sampleMetaRow = Series(sampleMetaDict, index=[to_datetime(datetext)], dtype=&#39;object&#39;)</span>
-                <span class="c1">#Previous solution was reading/writing from pickle files</span>
-                <span class="c1">#New solution will keep all data in memory until end.</span>
-                <span class="c1">#This could cause memory problems with large data sets</span>
+                <span class="c1"># Create Multiindex Dataframe to contain sample meta data</span>
+                <span class="n">sampleMultiindexRow</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">sampleDict</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">(</span>
+                            <span class="n">descriptionDict</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">],</span>
+                            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;timezone&quot;</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">(</span>
+                            <span class="n">descriptionDict</span><span class="p">[</span><span class="s2">&quot;timezone&quot;</span><span class="p">],</span>
+                            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;pcode&quot;</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;pcode&quot;</span><span class="p">])[</span><span class="s2">&quot;values&quot;</span><span class="p">]],</span>
+                            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;quality&quot;</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;quality&quot;</span><span class="p">])[</span><span class="s2">&quot;values&quot;</span><span class="p">]],</span>
+                            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;fraction&quot;</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">(</span>
+                            <span class="p">[</span>
+                                <span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;samplefraction&quot;</span><span class="p">])[</span>
+                                    <span class="s2">&quot;values&quot;</span>
+                                <span class="p">]</span>
+                            <span class="p">],</span>
+                            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">])[</span><span class="s2">&quot;values&quot;</span><span class="p">]],</span>
+                            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">])[</span><span class="s2">&quot;values&quot;</span><span class="p">]],</span>
+                            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;nondetect&quot;</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">(</span>
+                            <span class="p">[</span><span class="n">extractValues</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;nondetect&quot;</span><span class="p">])[</span><span class="s2">&quot;values&quot;</span><span class="p">]],</span>
+                            <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">rowdate</span><span class="p">],</span>
+                            <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">sampleMetaDict</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+                        <span class="p">),</span>
+                    <span class="p">},</span>
+                    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># sampleMetaRow = Series(sampleMetaDict, index=[to_datetime(datetext)], dtype=&#39;object&#39;)</span>
+                <span class="c1"># Previous solution was reading/writing from pickle files</span>
+                <span class="c1"># New solution will keep all data in memory until end.</span>
+                <span class="c1"># This could cause memory problems with large data sets</span>
 
-                <span class="c1">#Test whether a df for this location already exists</span>
+                <span class="c1"># Test whether a df for this location already exists</span>
                 <span class="k">if</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="p">:</span>
-<span class="c1">#                    tempDF = sitesDict[location]</span>
-<span class="c1">#                    sitesDict[location] = tempDF.append(sampleRow)</span>
-                    <span class="n">tempPanel</span> <span class="o">=</span> <span class="n">sitesDict</span><span class="p">[</span><span class="n">location</span><span class="p">]</span>
-                    <span class="n">sitesDict</span><span class="p">[</span><span class="n">location</span><span class="p">]</span> <span class="o">=</span> <span class="n">concat</span><span class="p">([</span><span class="n">tempPanel</span><span class="p">,</span> <span class="n">samplePanelRow</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="c1">#                    tempDF = sitesDict[location]</span>
+                    <span class="c1">#                    sitesDict[location] = tempDF.append(sampleRow)</span>
+                    <span class="n">tempMultiindex</span> <span class="o">=</span> <span class="n">sitesDict</span><span class="p">[</span><span class="n">location</span><span class="p">]</span>
+                    <span class="n">sitesDict</span><span class="p">[</span><span class="n">location</span><span class="p">]</span> <span class="o">=</span> <span class="n">concat</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">tempMultiindex</span><span class="p">,</span> <span class="n">sampleMultiindexRow</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+                    <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">sitesDict</span><span class="p">[</span><span class="n">location</span><span class="p">]</span> <span class="o">=</span> <span class="n">samplePanelRow</span>
-            <span class="c1">#add one to number of samples processed</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">processThisSample</span><span class="p">):</span>
-                <span class="n">samples_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">datetext</span><span class="p">)</span>
+                    <span class="n">sitesDict</span><span class="p">[</span><span class="n">location</span><span class="p">]</span> <span class="o">=</span> <span class="n">sampleMultiindexRow</span>
+            <span class="c1"># add one to number of samples processed</span>
+            <span class="k">if</span> <span class="n">processThisSample</span><span class="p">:</span>
+                <span class="n">samples_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">datetext</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">samples_not_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">datetext</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">reason</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;Number of Samples Processed = &#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_processed</span><span class="p">))))</span>
-        <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;Number of Samples Not Processed = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_not_processed</span><span class="p">))))</span>
+                <span class="n">samples_not_processed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">datetext</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="n">reason</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Number of Samples Processed = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_processed</span><span class="p">))))</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Number of Samples Not Processed = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_not_processed</span><span class="p">))))</span>
 
-        <span class="c1">#Write out individual site data pickle and csv files in each site directory</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Writing out site data files...&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">pnl</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Write out individual site data pickle and csv files in each site directory</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Writing out site data files...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">midf</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-            <span class="n">pickleFile</span> <span class="o">=</span>  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">location</span> <span class="o">+</span> <span class="s1">&#39;-Panel.pkl&#39;</span><span class="p">)</span>
-            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">pnl</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickleFile</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
-            <span class="n">pnl</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">pickleFile</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;xls&#39;</span><span class="p">)</span>
-            <span class="c1">#Retrieve and store site description metadata</span>
+            <span class="n">pickleFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">location</span> <span class="o">+</span> <span class="s2">&quot;-Dataframe.pkl&quot;</span><span class="p">)</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">midf</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickleFile</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+            <span class="c1"># midf.to_excel(pickleFile[:-3]+&#39;xls&#39;)</span>
+            <span class="n">midx</span> <span class="o">=</span> <span class="n">midf</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">ExcelWriter</span><span class="p">(</span><span class="n">pickleFile</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;xlsx&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">sheet</span> <span class="ow">in</span> <span class="n">midx</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                    <span class="n">midf</span><span class="p">[</span><span class="n">sheet</span><span class="p">]</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet</span><span class="p">)</span>
+            <span class="c1"># Retrieve and store site description metadata</span>
             <span class="n">siteDescriptionDataDF</span> <span class="o">=</span> <span class="n">GetSiteData</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
-            <span class="n">siteDescriptionDataFileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span><span class="n">location</span><span class="p">,</span><span class="n">location</span><span class="o">+</span><span class="s1">&#39;-Site-Description.pkl&#39;</span><span class="p">)</span>
-            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">siteDescriptionDataDF</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">siteDescriptionDataFileName</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
-            <span class="n">siteDescriptionDataDF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">siteDescriptionDataFileName</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span>
-        <span class="c1">#Process sites through PHREEQC</span>
+            <span class="n">siteDescriptionDataFileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">location</span> <span class="o">+</span> <span class="s2">&quot;-Site-Description.pkl&quot;</span>
+            <span class="p">)</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">siteDescriptionDataDF</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">siteDescriptionDataFileName</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+            <span class="n">siteDescriptionDataDF</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">siteDescriptionDataFileName</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
+        <span class="c1"># Process sites through PHREEQC</span>
         <span class="k">if</span> <span class="n">RUN_PHREEQC</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing site water chemisty data in PHREEQC...&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">pnl</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">phreeqc_df</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span><span class="n">pnl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span><span class="n">location</span><span class="p">),</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">)</span>
-                <span class="n">phreeqc_site_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span><span class="n">location</span><span class="p">,</span><span class="n">location</span><span class="o">+</span><span class="s1">&#39;-PHREEQC.pkl&#39;</span><span class="p">)</span>
+                <span class="n">phreeqc_df</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span>
+                    <span class="n">pnl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">),</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span>
+                <span class="p">)</span>
+                <span class="n">phreeqc_site_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">location</span> <span class="o">+</span> <span class="s2">&quot;-PHREEQC.pkl&quot;</span>
+                <span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
-                    <span class="n">phreeqc_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span>
+                    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+                    <span class="n">phreeqc_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Problem writing out PHREEQC data file.&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem writing out PHREEQC data file.&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">bracket_charge_balance</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">pnl</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="c1">#Force balance on Calcium</span>
-                    <span class="n">phreeqc_df_ca</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span><span class="n">pnl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span><span class="n">location</span><span class="p">),</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">force_balance</span><span class="o">=</span><span class="s1">&#39;Ca&#39;</span><span class="p">)</span>
-                    <span class="n">phreeqc_site_file_ca</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span><span class="n">location</span><span class="p">,</span><span class="n">location</span><span class="o">+</span><span class="s1">&#39;-PHREEQC-Ca.pkl&#39;</span><span class="p">)</span>
+                    <span class="c1"># Force balance on Calcium</span>
+                    <span class="n">phreeqc_df_ca</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span>
+                        <span class="n">pnl</span><span class="p">,</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">),</span>
+                        <span class="n">PHREEQC_PATH</span><span class="p">,</span>
+                        <span class="n">DATABASE_FILE</span><span class="p">,</span>
+                        <span class="n">force_balance</span><span class="o">=</span><span class="s2">&quot;Ca&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">phreeqc_site_file_ca</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">location</span> <span class="o">+</span> <span class="s2">&quot;-PHREEQC-Ca.pkl&quot;</span>
+                    <span class="p">)</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df_ca</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file_ca</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
-                        <span class="n">phreeqc_df_ca</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file_ca</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span>
+                        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df_ca</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file_ca</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+                        <span class="n">phreeqc_df_ca</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file_ca</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Problem writing out PHREEQC Ca data file.&#39;</span><span class="p">)</span>
-                    <span class="c1">#Force balance on Alkalinity</span>
-                    <span class="n">phreeqc_df_alk</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span><span class="n">pnl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span><span class="n">location</span><span class="p">),</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">force_balance</span><span class="o">=</span><span class="s1">&#39;Alk&#39;</span><span class="p">)</span>
-                    <span class="n">phreeqc_site_file_alk</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span><span class="n">location</span><span class="p">,</span><span class="n">location</span><span class="o">+</span><span class="s1">&#39;-PHREEQC-Alk.pkl&#39;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem writing out PHREEQC Ca data file.&quot;</span><span class="p">)</span>
+                    <span class="c1"># Force balance on Alkalinity</span>
+                    <span class="n">phreeqc_df_alk</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span>
+                        <span class="n">pnl</span><span class="p">,</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">),</span>
+                        <span class="n">PHREEQC_PATH</span><span class="p">,</span>
+                        <span class="n">DATABASE_FILE</span><span class="p">,</span>
+                        <span class="n">force_balance</span><span class="o">=</span><span class="s2">&quot;Alk&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">phreeqc_site_file_alk</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">location</span> <span class="o">+</span> <span class="s2">&quot;-PHREEQC-Alk.pkl&quot;</span>
+                    <span class="p">)</span>
                     <span class="k">try</span><span class="p">:</span>
-                        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df_alk</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file_alk</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
-                        <span class="n">phreeqc_df_alk</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file_alk</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span>
+                        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df_alk</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file_alk</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+                        <span class="n">phreeqc_df_alk</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file_alk</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
                     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Problem writing out PHREEQC Alk data file.&#39;</span><span class="p">)</span>
-        <span class="c1">#Create log file</span>
-        <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;Writing log file: &#39;</span><span class="o">+</span><span class="n">LOG_FILE</span><span class="o">+</span><span class="n">splittag</span><span class="p">))</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem writing out PHREEQC Alk data file.&quot;</span><span class="p">)</span>
+        <span class="c1"># Create log file</span>
+        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Writing log file: &quot;</span> <span class="o">+</span> <span class="n">LOG_FILE</span> <span class="o">+</span> <span class="n">splittag</span><span class="p">))</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">log_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">LOG_FILE</span><span class="o">+</span><span class="n">splittag</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Start file = &#39;</span> <span class="o">+</span> <span class="n">START_FILE</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of Samples Processed = &#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_processed</span><span class="p">)),</span> <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of Samples Not Processed = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_not_processed</span><span class="p">)),</span> <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
+            <span class="n">log_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">LOG_FILE</span> <span class="o">+</span> <span class="n">splittag</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Start file = &quot;</span> <span class="o">+</span> <span class="n">START_FILE</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Number of Samples Processed = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_processed</span><span class="p">)),</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Number of Samples Not Processed = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples_not_processed</span><span class="p">)),</span>
+                <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;###############&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Characteristics&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;###############&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
             <span class="n">printColumnNames</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">flags</span> <span class="ow">in</span> <span class="n">charDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">printColumnNames</span><span class="p">):</span>
-                    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;characteristic&#39;</span><span class="p">]</span><span class="c1"># + &#39;\t&#39;</span>
+                <span class="k">if</span> <span class="n">printColumnNames</span><span class="p">:</span>
+                    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;characteristic&quot;</span><span class="p">]</span>  <span class="c1"># + &#39;\t&#39;</span>
                     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">flags</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                         <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">))</span>
                     <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)),</span> <span class="n">file</span><span class="o">=</span><span class="n">log_file</span><span class="p">)</span>
@@ -432,11 +663,11 @@
         <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem opening log file: &quot;</span> <span class="o">+</span> <span class="n">LOG_FILE</span><span class="p">))</span>
             <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="c1">#exceptions for parsing of xml file</span>
+    <span class="c1"># exceptions for parsing of xml file</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Error opening xml file. Does it exist?&quot;</span><span class="p">)</span>
-        <span class="c1">#Note: can throw this error when discharge values are not read correctly,</span>
-        <span class="c1">#I should fix this, 6/16/2014</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error opening xml file. Does it exist?&quot;</span><span class="p">)</span>
+        <span class="c1"># Note: can throw this error when discharge values are not read correctly,</span>
+        <span class="c1"># I should fix this, 6/16/2014</span>
     <span class="k">except</span> <span class="n">etree</span><span class="o">.</span><span class="n">XMLSyntaxError</span> <span class="k">as</span> <span class="n">detail</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File contains invalid XML syntax: &quot;</span><span class="p">,</span> <span class="n">detail</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">detail</span><span class="p">:</span>
@@ -446,7 +677,8 @@
 
 <div class="viewcode-block" id="runWQXtoPandas"><a class="viewcode-back" href="../../../olm.USGS.WQXtoPandas.runWQXtoPandas.html#olm.USGS.WQXtoPandas.runWQXtoPandas">[docs]</a><span class="k">def</span> <span class="nf">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">autosplitnum</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from the USGS NWIS database.</span>
+<span class="sd">    Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from</span>
+<span class="sd">    the USGS NWIS database.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -454,7 +686,7 @@
 <span class="sd">        A string containing the name of the excel file to be used for input parameters to WQXtoPandas</span>
 
 <span class="sd">    autosplitnum : int (optional)</span>
-<span class="sd">        The number of sites at which a NWIS query is split into multiple queries. (default=?)</span>
+<span class="sd">        The number of sites at which a NWIS query is split into multiple queries. (default=20)</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -463,204 +695,233 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 
-<span class="sd">    Can be run from within a python shell or script, or as a standalone script from the command line where the start file name is provided as the first command line argument (e.g. WQXtoPandas &lt;start file name&gt; &lt;autosplitnum&gt;).</span>
+<span class="sd">    Can be run from within a python shell or script, or as a standalone script from the command line where the start</span>
+<span class="sd">    file name is provided as the first command line argument (e.g. WQXtoPandas &lt;start file name&gt; &lt;autosplitnum&gt;).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1">#PHREEQC input file path</span>
-    <span class="n">PHREEQC_INPUT_PATH</span> <span class="o">=</span> <span class="s1">&#39;./&#39;</span>
+    <span class="c1"># PHREEQC input file path</span>
+    <span class="n">PHREEQC_INPUT_PATH</span> <span class="o">=</span> <span class="s2">&quot;./&quot;</span>
     <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">num_processed</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">autosplitnum</span><span class="p">)</span><span class="o">==</span><span class="nb">int</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">autosplitnum</span><span class="p">)</span> <span class="o">==</span> <span class="nb">int</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;autosplitnum must be an integer.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-    <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;Processing: &#39;</span><span class="o">+</span> <span class="n">startfilename</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Processing: &quot;</span> <span class="o">+</span> <span class="n">startfilename</span><span class="p">))</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="c1">#open start file</span>
+        <span class="c1"># open start file</span>
         <span class="n">startfile</span> <span class="o">=</span> <span class="n">xlrd</span><span class="o">.</span><span class="n">open_workbook</span><span class="p">(</span><span class="n">startfilename</span><span class="p">)</span>
-        <span class="c1">#open sheet</span>
+        <span class="c1"># open sheet</span>
         <span class="n">sheet</span> <span class="o">=</span> <span class="n">startfile</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="c1">#parse start file to determine what should be done</span>
+        <span class="c1"># parse start file to determine what should be done</span>
         <span class="n">characteristicsBlockStarted</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">settingsDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">charDict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">rownum</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
             <span class="n">line</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">row_values</span><span class="p">(</span><span class="n">rownum</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">):</span> <span class="c1">#ignore comments</span>
-                <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">characteristicsBlockStarted</span><span class="p">):</span> <span class="c1">#read script settings</span>
-                    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Characteristic&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span><span class="p">):</span>  <span class="c1"># ignore comments</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">characteristicsBlockStarted</span><span class="p">):</span>  <span class="c1"># read script settings</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Characteristic&quot;</span><span class="p">):</span>
                         <span class="n">settingsDict</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                    <span class="k">else</span><span class="p">:</span> <span class="c1">#grab the characteristic block column headings</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># grab the characteristic block column headings</span>
                         <span class="n">column_headings</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
                         <span class="n">characteristicsBlockStarted</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">else</span><span class="p">:</span> <span class="c1">#we are in the characteristics block</span>
-                    <span class="n">charDict</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">column_headings</span><span class="p">,</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:])))</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># we are in the characteristics block</span>
+                    <span class="n">charDict</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">column_headings</span><span class="p">,</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:])))</span>
         <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to chemical database&#39;</span><span class="p">],</span>
-            <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of chemical database&#39;</span><span class="p">])</span>
+            <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to chemical database&quot;</span><span class="p">],</span>
+            <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of chemical database&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
         <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-            <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">],</span>
-            <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Log file name&#39;</span><span class="p">])</span>
-        <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Run PHREEQC?&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span>
-        <span class="n">bracket_charge_balance</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Force balance on Ca and Alk&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input method&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">):</span>
-            <span class="c1">#We already have an XML file to process that contains water quality data</span>
-            <span class="c1">#Check whether a wildcard was used and more than one xml file is available</span>
+            <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+            <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+            <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Log file name&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Run PHREEQC?&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span>
+        <span class="n">bracket_charge_balance</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Force balance on Ca and Alk&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span>
+        <span class="k">if</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Input method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+            <span class="c1"># We already have an XML file to process that contains water quality data</span>
+            <span class="c1"># Check whether a wildcard was used and more than one xml file is available</span>
             <span class="n">xml_file_string</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-                <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">],</span>
-                <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input file&#39;</span><span class="p">])</span>
+                <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+                <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+                <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Input file&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
             <span class="n">xml_list</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">xml_file_string</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">xml_list</span><span class="o">==</span><span class="p">[]:</span>
+            <span class="k">if</span> <span class="n">xml_list</span> <span class="o">==</span> <span class="p">[]:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empty xml file list. Check path for xml file.&quot;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;xml file string =&quot;</span><span class="p">,</span> <span class="n">xml_file_string</span><span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
             <span class="n">n_xml</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xml_list</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">n_xml</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">n_xml</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">xml_file</span> <span class="ow">in</span> <span class="n">xml_list</span><span class="p">:</span>
                     <span class="n">WQXtoPandas</span><span class="p">(</span>
                         <span class="n">xml_file</span><span class="p">,</span>
                         <span class="n">charDict</span><span class="p">,</span>
-                        <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-                        <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">],</span>
-                        <span class="n">fromFile</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                        <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                        <span class="n">outputPath</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+                        <span class="n">outputDirName</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+                        <span class="n">fromFile</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="n">RUN_PHREEQC</span><span class="p">,</span>
                         <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
-                        <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to PHREEQC&#39;</span><span class="p">],</span>
-                        <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span>
-                        <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
-                        <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
+                        <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to PHREEQC&quot;</span><span class="p">],</span>
+                        <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="n">DATABASE_FILE</span><span class="p">,</span>
+                        <span class="n">LOG_FILE</span><span class="o">=</span><span class="n">LOG_FILE</span><span class="p">,</span>
+                        <span class="n">START_FILE</span><span class="o">=</span><span class="n">startfilename</span><span class="p">,</span>
+                    <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">WQXtoPandas</span><span class="p">(</span>
-                    <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input file&#39;</span><span class="p">],</span>
+                    <span class="c1"># settingsDict[&quot;Input file&quot;], # appears to be a path bug</span>
+                    <span class="n">xml_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                     <span class="n">charDict</span><span class="p">,</span>
-                    <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-                    <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">],</span>
-                    <span class="n">fromFile</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-                    <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                    <span class="n">outputPath</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+                    <span class="n">outputDirName</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+                    <span class="n">fromFile</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="n">RUN_PHREEQC</span><span class="p">,</span>
                     <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
-                    <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to PHREEQC&#39;</span><span class="p">],</span>
-                    <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span>
-                    <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
-                    <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input method&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;2&#39;</span><span class="p">):</span>
+                    <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to PHREEQC&quot;</span><span class="p">],</span>
+                    <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="n">DATABASE_FILE</span><span class="p">,</span>
+                    <span class="n">LOG_FILE</span><span class="o">=</span><span class="n">LOG_FILE</span><span class="p">,</span>
+                    <span class="n">START_FILE</span><span class="o">=</span><span class="n">startfilename</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Input method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span><span class="p">:</span>
             <span class="c1">#   We will use a list of sites from a NWIS XML file and query these</span>
             <span class="c1">#   sites for water quality data</span>
-            <span class="c1">#First extract site list from XML file</span>
+            <span class="c1"># First extract site list from XML file</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromXML</span><span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input file&#39;</span><span class="p">])</span>
+                <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromXML</span><span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Input file&quot;</span><span class="p">])</span>
             <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem extracting sites from XML file &quot;</span><span class="o">+</span><span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input file&#39;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot; check to see if file name is correct and file is in right location.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Problem extracting sites from XML file &quot;</span>
+                    <span class="o">+</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Input file&quot;</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="s2">&quot; check to see if file name is correct and file is in right location.&quot;</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
             <span class="n">charList</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="c1">#collect list of characteristics to query</span>
+            <span class="c1"># collect list of characteristics to query</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">charDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="n">charList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span><span class="o">&gt;</span><span class="n">autosplitnum</span><span class="p">:</span>
-                <span class="c1">#We have too long of a list and should split into multiple queries</span>
-                <span class="n">n_groups</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">autosplitnum</span><span class="p">)))</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">):</span><span class="c1">#this doesn&#39;t work for even division cases</span>
-                    <span class="n">shortList</span> <span class="o">=</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">autosplitnum</span><span class="p">:</span><span class="n">i</span><span class="o">*</span><span class="n">autosplitnum</span><span class="o">+</span><span class="n">autosplitnum</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">autosplitnum</span><span class="p">:</span>
+                <span class="c1"># We have too long of a list and should split into multiple queries</span>
+                <span class="n">n_groups</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">autosplitnum</span><span class="p">)))</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">):</span>  <span class="c1"># this doesn&#39;t work for even division cases</span>
+                    <span class="n">shortList</span> <span class="o">=</span> <span class="n">siteList</span><span class="p">[</span>
+                        <span class="n">i</span> <span class="o">*</span> <span class="n">autosplitnum</span> <span class="p">:</span> <span class="n">i</span> <span class="o">*</span> <span class="n">autosplitnum</span> <span class="o">+</span> <span class="n">autosplitnum</span>
+                    <span class="p">]</span>
                     <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">shortList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">queryText</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">WQXtoPandas</span><span class="p">(</span>
                             <span class="n">queryText</span><span class="p">,</span>
                             <span class="n">charDict</span><span class="p">,</span>
-                            <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-                            <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">],</span>
-                            <span class="n">fromFile</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                            <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                            <span class="n">outputPath</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+                            <span class="n">outputDirName</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+                            <span class="n">fromFile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="n">RUN_PHREEQC</span><span class="p">,</span>
                             <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
-                            <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to PHREEQC&#39;</span><span class="p">],</span>
-                            <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span>
-                            <span class="n">splittag</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
-                            <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
-                            <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
+                            <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to PHREEQC&quot;</span><span class="p">],</span>
+                            <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="n">DATABASE_FILE</span><span class="p">,</span>
+                            <span class="n">splittag</span><span class="o">=</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                            <span class="n">LOG_FILE</span><span class="o">=</span><span class="n">LOG_FILE</span><span class="p">,</span>
+                            <span class="n">START_FILE</span><span class="o">=</span><span class="n">startfilename</span><span class="p">,</span>
+                        <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1">#get html for query</span>
+                <span class="c1"># get html for query</span>
                 <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">siteList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">queryText</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">WQXtoPandas</span><span class="p">(</span>
                         <span class="n">queryText</span><span class="p">,</span>
                         <span class="n">charDict</span><span class="p">,</span>
-                        <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-                        <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">],</span>
-                        <span class="n">fromFile</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                        <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                        <span class="n">outputPath</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+                        <span class="n">outputDirName</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+                        <span class="n">fromFile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="n">RUN_PHREEQC</span><span class="p">,</span>
                         <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
-                        <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to PHREEQC&#39;</span><span class="p">],</span>
-                        <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span>
-                        <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
-                        <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input method&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;3&#39;</span><span class="p">):</span>
+                        <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to PHREEQC&quot;</span><span class="p">],</span>
+                        <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="n">DATABASE_FILE</span><span class="p">,</span>
+                        <span class="n">LOG_FILE</span><span class="o">=</span><span class="n">LOG_FILE</span><span class="p">,</span>
+                        <span class="n">START_FILE</span><span class="o">=</span><span class="n">startfilename</span><span class="p">,</span>
+                    <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Input method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span><span class="p">:</span>
             <span class="c1">#   We will use a list of sites from a text file and query these</span>
             <span class="c1">#   sites for water quality data</span>
-            <span class="c1">#First extract site list from text file</span>
+            <span class="c1"># First extract site list from text file</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromText</span><span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input file&#39;</span><span class="p">])</span>
+                <span class="n">siteList</span> <span class="o">=</span> <span class="n">extractSitesFromText</span><span class="p">(</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Input file&quot;</span><span class="p">])</span>
             <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem extracting sites from text file &quot;</span><span class="o">+</span><span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input file&#39;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot; check to see if file name is correct and file is in right location.&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Problem extracting sites from text file &quot;</span>
+                    <span class="o">+</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Input file&quot;</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="s2">&quot; check to see if file name is correct and file is in right location.&quot;</span>
+                <span class="p">)</span>
                 <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">siteList</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">siteList</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
                 <span class="n">charList</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="c1">#collect list of characteristics to query</span>
+                <span class="c1"># collect list of characteristics to query</span>
                 <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">charDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                     <span class="n">charList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span><span class="o">&gt;</span><span class="n">autosplitnum</span><span class="p">:</span>
-                    <span class="c1">#We have too long of a list and should split into multiple queries</span>
-                    <span class="n">n_groups</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">autosplitnum</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">autosplitnum</span><span class="p">:</span>
+                    <span class="c1"># We have too long of a list and should split into multiple queries</span>
+                    <span class="n">n_groups</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">siteList</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">autosplitnum</span><span class="p">)))</span>
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_groups</span><span class="p">):</span>
-                        <span class="n">shortList</span> <span class="o">=</span> <span class="n">siteList</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">autosplitnum</span><span class="p">:</span><span class="n">i</span><span class="o">*</span><span class="n">autosplitnum</span><span class="o">+</span><span class="n">autosplitnum</span><span class="p">]</span>
+                        <span class="n">shortList</span> <span class="o">=</span> <span class="n">siteList</span><span class="p">[</span>
+                            <span class="n">i</span> <span class="o">*</span> <span class="n">autosplitnum</span> <span class="p">:</span> <span class="n">i</span> <span class="o">*</span> <span class="n">autosplitnum</span> <span class="o">+</span> <span class="n">autosplitnum</span>
+                        <span class="p">]</span>
                         <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">shortList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-                                     <span class="n">WQXtoPandas</span><span class="p">(</span>
-                                         <span class="n">queryText</span><span class="p">,</span>
-                                         <span class="n">charDict</span><span class="p">,</span>
-                                         <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-                                         <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">],</span>
-                                         <span class="n">fromFile</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                                         <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
-                                         <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
-                                         <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to PHREEQC&#39;</span><span class="p">],</span>
-                                         <span class="n">splittag</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
-                                         <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span>
-                                         <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
-                                         <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">queryText</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">WQXtoPandas</span><span class="p">(</span>
+                                <span class="n">queryText</span><span class="p">,</span>
+                                <span class="n">charDict</span><span class="p">,</span>
+                                <span class="n">outputPath</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+                                <span class="n">outputDirName</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+                                <span class="n">fromFile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                                <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
+                                <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to PHREEQC&quot;</span><span class="p">],</span>
+                                <span class="n">splittag</span><span class="o">=</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+                                <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="n">DATABASE_FILE</span><span class="p">,</span>
+                                <span class="n">LOG_FILE</span><span class="o">=</span><span class="n">LOG_FILE</span><span class="p">,</span>
+                                <span class="n">START_FILE</span><span class="o">=</span><span class="n">startfilename</span><span class="p">,</span>
+                            <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c1">#get html for query</span>
+                    <span class="c1"># get html for query</span>
                     <span class="n">queryText</span> <span class="o">=</span> <span class="n">querySiteList</span><span class="p">(</span><span class="n">siteList</span><span class="p">,</span> <span class="n">charList</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">queryText</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">queryText</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">WQXtoPandas</span><span class="p">(</span>
                             <span class="n">queryText</span><span class="p">,</span>
                             <span class="n">charDict</span><span class="p">,</span>
-                            <span class="n">outputPath</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-                            <span class="n">outputDirName</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">],</span>
-                            <span class="n">fromFile</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-                            <span class="n">RUN_PHREEQC</span> <span class="o">=</span> <span class="n">RUN_PHREEQC</span><span class="p">,</span>
+                            <span class="n">outputPath</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+                            <span class="n">outputDirName</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+                            <span class="n">fromFile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">RUN_PHREEQC</span><span class="o">=</span><span class="n">RUN_PHREEQC</span><span class="p">,</span>
                             <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
-                            <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to PHREEQC&#39;</span><span class="p">],</span>
-                            <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">DATABASE_FILE</span><span class="p">,</span>
-                            <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">LOG_FILE</span><span class="p">,</span>
-                            <span class="n">START_FILE</span> <span class="o">=</span> <span class="n">startfilename</span><span class="p">)</span>
+                            <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to PHREEQC&quot;</span><span class="p">],</span>
+                            <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="n">DATABASE_FILE</span><span class="p">,</span>
+                            <span class="n">LOG_FILE</span><span class="o">=</span><span class="n">LOG_FILE</span><span class="p">,</span>
+                            <span class="n">START_FILE</span><span class="o">=</span><span class="n">startfilename</span><span class="p">,</span>
+                        <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem obtaining site list.&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">((</span><span class="s1">&#39;Problem with &quot;Input Method&quot; of start file: &#39;</span> <span class="o">+</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Input method&#39;</span><span class="p">]))</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="p">(</span>
+                    <span class="s1">&#39;Problem with &quot;Input Method&quot; of start file: &#39;</span>
+                    <span class="o">+</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Input method&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
 
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem reading start file.  Check file name.&quot;</span><span class="p">)</span></div>
 
 
-<span class="c1">#Run as script</span>
-<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1">#pull in name of start file</span>
+<span class="c1"># Run as script</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># pull in name of start file</span>
     <span class="n">startfilename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="n">autosplitnum</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">autosplitnum</span><span class="o">=</span><span class="n">autosplitnum</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">)</span>
 </pre></div>
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
@@ -689,13 +950,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.36 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.38 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2018 Matthew Covington.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+        &#169; Copyright 2014-2022 Matthew Covington.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
   </body>
 </html>

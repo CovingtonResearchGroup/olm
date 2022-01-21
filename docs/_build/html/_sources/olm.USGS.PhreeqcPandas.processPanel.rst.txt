@@ -1,4 +1,4 @@
-olm.USGS.PhreeqcPandas.processPanel
+﻿olm.USGS.PhreeqcPandas.processPanel
 ===================================
 
 .. currentmodule:: olm.USGS.PhreeqcPandas

@@ -1,4 +1,4 @@
-olm.USGS.siteListExtraction.extractSitesFromText
+﻿olm.USGS.siteListExtraction.extractSitesFromText
 ================================================
 
 .. currentmodule:: olm.USGS.siteListExtraction

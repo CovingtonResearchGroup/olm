@@ -1,4 +1,4 @@
-olm.general.KtoC
+﻿olm.general.KtoC
 ================
 
 .. currentmodule:: olm.general

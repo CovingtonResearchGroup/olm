@@ -60,7 +60,6 @@ olm.loggers.loggerScripts module
    :undoc-members:
    :show-inheritance:
 
-
 Module contents
 ---------------
 

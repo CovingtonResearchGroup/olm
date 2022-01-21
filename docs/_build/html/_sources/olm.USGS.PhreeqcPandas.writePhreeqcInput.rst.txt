@@ -1,4 +1,4 @@
-olm.USGS.PhreeqcPandas.writePhreeqcInput
+﻿olm.USGS.PhreeqcPandas.writePhreeqcInput
 ========================================
 
 .. currentmodule:: olm.USGS.PhreeqcPandas
