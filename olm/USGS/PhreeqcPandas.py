@@ -19,6 +19,7 @@ default_phreeqc_to_WQX_translation = {
     "Temperature, water": "temp",
     "pH": "pH",
     "Alkalinity, total": "Alkalinity",
+    "Alkalinity": "Alkalinity",
     "Calcium": "Ca",
     "Magnesium": "Mg",
     "Potassium": "K",
