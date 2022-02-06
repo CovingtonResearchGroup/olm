@@ -4,9 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>olm.USGS.PhreeqcPandas.processPanel &#8212; olm 0.38 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>olm.USGS.PhreeqcPandas.processMidf &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="/default.css" />
     
@@ -35,10 +34,10 @@
         <li class="right" >
           <a href="olm.USGS.WQXtoPandas.WQXtoPandas.html" title="olm.USGS.WQXtoPandas.WQXtoPandas"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">olm.USGS.PhreeqcPandas.processPanel</a></li> 
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.PhreeqcPandas.processMidf</a></li> 
       </ul>
     </div>  
 
@@ -47,33 +46,43 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="olm-usgs-phreeqcpandas-processpanel">
-<h1>olm.USGS.PhreeqcPandas.processPanel<a class="headerlink" href="#olm-usgs-phreeqcpandas-processpanel" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="olm-usgs-phreeqcpandas-processmidf">
+<h1>olm.USGS.PhreeqcPandas.processMidf<a class="headerlink" href="#olm-usgs-phreeqcpandas-processmidf" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="olm.USGS.PhreeqcPandas.processPanel">
-<span class="sig-prename descclassname"><span class="pre">olm.USGS.PhreeqcPandas.</span></span><span class="sig-name descname"><span class="pre">processPanel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site_panel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PHREEQC_PATH</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DATABASE_FILE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phreeqcDict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_balance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#processPanel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.processPanel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes a WQXtoPandas site panel and runs all samples through PHREEQC, returning a dataframe of the outputs that is indexed by date. Will run automatically within WQXtoPandas if specified in the excel start file.  However, the function can also be called later by reading in a pickled site panel.</p>
+<dt class="sig sig-object py" id="olm.USGS.PhreeqcPandas.processMidf">
+<span class="sig-prename descclassname"><span class="pre">olm.USGS.PhreeqcPandas.</span></span><span class="sig-name descname"><span class="pre">processMidf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">site_midf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PHREEQC_PATH</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DATABASE_FILE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phreeqcDict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_balance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#processMidf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.processMidf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a WQXtoPandas site multi-indexed DataFrame and runs all samples through
+PHREEQC, returning a DataFrame of the outputs that is indexed by date. Will
+run automatically within WQXtoPandas if specified in the excel start file.
+However, the function can also be called later by reading in a pickled site
+multi-indexed DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>site_panel</strong><span class="classifier">Pandas panel</span></dt><dd><p>The Pandas panel object produced for each site by WQXtoPandas that is to be processed through PHREEQC.</p>
+<dt><strong>site_midf</strong><span class="classifier">Pandas DataFrame</span></dt><dd><p>The Pandas multi-indexed DataFrame object produced for each site by WQXtoPandas
+that is to be processed through PHREEQC.</p>
 </dd>
-<dt><strong>site_dir</strong><span class="classifier">string</span></dt><dd><p>The directory containing the site data and where the results should be written out.</p>
+<dt><strong>site_dir</strong><span class="classifier">string</span></dt><dd><p>The directory containing the site data, and where the results should be output.</p>
 </dd>
 <dt><strong>PHREEQC_PATH</strong><span class="classifier">string</span></dt><dd><p>The path to the PHREEQC executable.</p>
 </dd>
 <dt><strong>DATABASE_FILE</strong><span class="classifier">string</span></dt><dd><p>The database file to be used by PHREEQC.</p>
 </dd>
-<dt><strong>phreeqcDict</strong><span class="classifier">dict</span></dt><dd><p>a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</p>
+<dt><strong>phreeqcDict</strong><span class="classifier">dict</span></dt><dd><p>a dictionary with WQX characteristics as keys and phreeqc chemical names as
+entries. By default, processMidf will use the built in translation dict,
+default_phreeqc_to_WQX_translation.</p>
 </dd>
-<dt><strong>force_balance</strong><span class="classifier">str</span></dt><dd><p>PHREEQC should force charge balance on the ion indicated in this string. Use the string that represents the ion internally in PHREEQC. It is also possible to force balance on pH using force_balance=’pH’, or on alkalinity using force_balance=’Alk’</p>
+<dt><strong>force_balance</strong><span class="classifier">str</span></dt><dd><p>PHREEQC should force charge balance on the ion indicated in this string. Use
+the string that represents the ion internally in PHREEQC. It is also possible
+to force balance on pH using force_balance=’pH’, or on alkalinity using
+force_balance=’Alk’</p>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
 
-</section>
+</div>
 
 
             <div class="clearer"></div>
@@ -82,16 +91,20 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="olm.USGS.WQXtoPandas.WQXtoPandas.html"
-                        title="previous chapter">olm.USGS.WQXtoPandas.WQXtoPandas</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html"
-                        title="next chapter">olm.USGS.PhreeqcPandas.readPhreeqcOutput</a></p>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="olm.USGS.WQXtoPandas.WQXtoPandas.html"
+                          title="previous chapter">olm.USGS.WQXtoPandas.WQXtoPandas</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html"
+                          title="next chapter">olm.USGS.PhreeqcPandas.readPhreeqcOutput</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/olm.USGS.PhreeqcPandas.processPanel.rst.txt"
+      <li><a href="_sources/olm.USGS.PhreeqcPandas.processMidf.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -99,7 +112,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -124,15 +137,15 @@
         <li class="right" >
           <a href="olm.USGS.WQXtoPandas.WQXtoPandas.html" title="olm.USGS.WQXtoPandas.WQXtoPandas"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">olm.USGS.PhreeqcPandas.processPanel</a></li> 
+        <li class="nav-item nav-item-this"><a href="">olm.USGS.PhreeqcPandas.processMidf</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

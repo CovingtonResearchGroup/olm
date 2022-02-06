@@ -29,7 +29,7 @@ Most functionality can be controlled from within the Excel file.  A template is 
 .. autosummary::
    :toctree:
 
-   processPanel
+   processMidf
    readPhreeqcOutput
    writePhreeqcInput
    findPCO2atCalciteSaturation

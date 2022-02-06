@@ -4,9 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>olm.USGS.loadWaterQualityData.loadSiteListData &#8212; olm 0.38 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>olm.USGS.loadWaterQualityData.loadSiteListData &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="/default.css" />
     
@@ -35,7 +34,7 @@
         <li class="right" >
           <a href="olm.USGS.DataRetrieval.querySiteList.html" title="olm.USGS.DataRetrieval.querySiteList"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.loadWaterQualityData.loadSiteListData</a></li> 
@@ -47,7 +46,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="olm-usgs-loadwaterqualitydata-loadsitelistdata">
+  <div class="section" id="olm-usgs-loadwaterqualitydata-loadsitelistdata">
 <h1>olm.USGS.loadWaterQualityData.loadSiteListData<a class="headerlink" href="#olm-usgs-loadwaterqualitydata-loadsitelistdata" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="olm.USGS.loadWaterQualityData.loadSiteListData">
@@ -60,11 +59,14 @@
 </dd>
 <dt><strong>siteFile</strong><span class="classifier">string (optional)</span></dt><dd><p>a filename of a text file with a list of sites</p>
 </dd>
-<dt><strong>regEx</strong><span class="classifier">string (optional)</span></dt><dd><p>regular expression used to search for site directories within the processed sites directory (default = ‘USGS-‘)</p>
+<dt><strong>regEx</strong><span class="classifier">string (optional)</span></dt><dd><p>regular expression used to search for site directories within the processed
+sites directory (default = ‘USGS-‘).</p>
 </dd>
-<dt><strong>processedSitesDir</strong><span class="classifier">string (optional)</span></dt><dd><p>directory that contains all of the processed site directories. It is important to change this if the default is not correct. (default=’./Processed-Sites’)</p>
+<dt><strong>processedSitesDir</strong><span class="classifier">string (optional)</span></dt><dd><p>directory that contains all of the processed site directories. It is important
+to change this if the default is not correct. (default=’./Processed-Sites’)</p>
 </dd>
-<dt><strong>loadPhreeqc</strong><span class="classifier">boolean</span></dt><dd><p>If set to true, PHREEQC outputs will also be loaded for each site. (default=False)</p>
+<dt><strong>loadPhreeqc</strong><span class="classifier">boolean</span></dt><dd><p>If set to true, PHREEQC outputs will also be loaded for each site.
+(default=False)</p>
 </dd>
 <dt><strong>loadMetaData</strong><span class="classifier">boolean</span></dt><dd><p>If set to true, the site metadata will be loaded for each site. (default=False)</p>
 </dd>
@@ -75,14 +77,15 @@
 <dt><strong>sitesDict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary of site DataFrames keyed by site name.</p>
 </dd>
 <dt>or if loadPhreeqc or loadMetaData are set to true</dt><dd></dd>
-<dt><strong>(sitesDict, sitesPheeqcDict, sitesMetaDataDict)</strong><span class="classifier">tuple</span></dt><dd><p>A tuple containing the sitesDict and dicts of the PHREEQC data and/or metadata for each site. Order is as shown.</p>
+<dt><strong>(sitesDict, sitesPheeqcDict, sitesMetaDataDict)</strong><span class="classifier">tuple</span></dt><dd><p>A tuple containing the sitesDict and dicts of the PHREEQC data and/or metadata
+for each site. Order is as shown.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
 
-</section>
+</div>
 
 
             <div class="clearer"></div>
@@ -91,12 +94,16 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="olm.USGS.DataRetrieval.querySiteList.html"
-                        title="previous chapter">olm.USGS.DataRetrieval.querySiteList</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="olm.USGS.loadWaterQualityData.loadSiteData.html"
-                        title="next chapter">olm.USGS.loadWaterQualityData.loadSiteData</a></p>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="olm.USGS.DataRetrieval.querySiteList.html"
+                          title="previous chapter">olm.USGS.DataRetrieval.querySiteList</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="olm.USGS.loadWaterQualityData.loadSiteData.html"
+                          title="next chapter">olm.USGS.loadWaterQualityData.loadSiteData</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -108,7 +115,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -133,7 +140,7 @@
         <li class="right" >
           <a href="olm.USGS.DataRetrieval.querySiteList.html" title="olm.USGS.DataRetrieval.querySiteList"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.loadWaterQualityData.loadSiteListData</a></li> 
@@ -141,7 +148,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

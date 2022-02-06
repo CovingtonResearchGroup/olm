@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>olm.USGS.PhreeqcPandas &#8212; olm 0.38 documentation</title>
+    <title>olm.USGS.PhreeqcPandas &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="/default.css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.PhreeqcPandas</a></li> 
       </ul>
@@ -44,26 +44,31 @@
 <span class="sd">Collection of functions to interface between WaterChem and PHREEQC.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">isnan</span><span class="p">,</span><span class="n">size</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">isnan</span><span class="p">,</span> <span class="n">size</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">brentq</span>
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">to_numeric</span>
 <span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">xlrd</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">xlrd</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">olm.USGS.loadWaterQualityData</span> <span class="kn">import</span> <span class="n">loadSiteListData</span>
 <span class="kn">from</span> <span class="nn">olm.general</span> <span class="kn">import</span> <span class="n">molL_to_mgL</span>
 
 <span class="n">default_phreeqc_to_WQX_translation</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;Temperature, water&#39;</span><span class="p">:</span><span class="s1">&#39;temp&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;pH&#39;</span><span class="p">:</span><span class="s1">&#39;pH&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Alkalinity, total&#39;</span><span class="p">:</span><span class="s1">&#39;Alkalinity&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Calcium&#39;</span><span class="p">:</span><span class="s1">&#39;Ca&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Magnesium&#39;</span><span class="p">:</span><span class="s1">&#39;Mg&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Potassium&#39;</span><span class="p">:</span><span class="s1">&#39;K&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Sodium&#39;</span><span class="p">:</span><span class="s1">&#39;Na&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Sulfate&#39;</span><span class="p">:</span><span class="s1">&#39;S&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Nitrate&#39;</span><span class="p">:</span><span class="s1">&#39;N&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;Chloride&#39;</span><span class="p">:</span><span class="s1">&#39;Cl&#39;</span>
-    <span class="p">}</span>
+    <span class="s2">&quot;Temperature, water&quot;</span><span class="p">:</span> <span class="s2">&quot;temp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pH&quot;</span><span class="p">:</span> <span class="s2">&quot;pH&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Alkalinity, total&quot;</span><span class="p">:</span> <span class="s2">&quot;Alkalinity&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Alkalinity&quot;</span><span class="p">:</span> <span class="s2">&quot;Alkalinity&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Calcium&quot;</span><span class="p">:</span> <span class="s2">&quot;Ca&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Magnesium&quot;</span><span class="p">:</span> <span class="s2">&quot;Mg&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Potassium&quot;</span><span class="p">:</span> <span class="s2">&quot;K&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Sodium&quot;</span><span class="p">:</span> <span class="s2">&quot;Na&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Sulfate&quot;</span><span class="p">:</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Nitrate&quot;</span><span class="p">:</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Chloride&quot;</span><span class="p">:</span> <span class="s2">&quot;Cl&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
 
 <div class="viewcode-block" id="readPhreeqcOutput"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.readPhreeqcOutput.html#olm.USGS.PhreeqcPandas.readPhreeqcOutput">[docs]</a><span class="k">def</span> <span class="nf">readPhreeqcOutput</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -81,83 +86,93 @@
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">    While this function can be used on its own. It is primarily designed to be used by the processPanel function, which provides a more convenient interface.</span>
+<span class="sd">    While this function can be used on its own. It is primarily designed to be used by</span>
+<span class="sd">    the processMidf function, which provides a more convenient interface.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;latin_1&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">phreeqc_output</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;latin_1&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">phreeqc_output</span><span class="p">:</span>
         <span class="n">simulationDict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="c1">#loop through all lines of file</span>
-        <span class="n">block</span> <span class="o">=</span> <span class="s1">&#39;beginning&#39;</span>
+        <span class="c1"># loop through all lines of file</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="s2">&quot;beginning&quot;</span>
         <span class="n">endOfRun</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">phreeqc_output</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">endOfRun</span><span class="p">):</span>
-                <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;ERROR&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">endOfRun</span><span class="p">):</span>
+                <span class="k">if</span> <span class="s2">&quot;ERROR&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC has encountered an error while running this sample.&quot;</span><span class="p">)</span>
                     <span class="k">return</span> <span class="kc">None</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">block</span> <span class="o">==</span> <span class="s1">&#39;beginning&#39;</span><span class="p">):</span>
-<span class="c1">#                    print &#39;beginning&#39;</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Reading input data for simulation&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
-                        <span class="n">block</span> <span class="o">=</span> <span class="s1">&#39;simulation&#39;</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">block</span> <span class="o">==</span> <span class="s1">&#39;simulation&#39;</span><span class="p">):</span>
-                     <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Solution composition&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
-                        <span class="n">block</span> <span class="o">=</span> <span class="s1">&#39;composition&#39;</span>
-                     <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;End of run&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">block</span> <span class="o">==</span> <span class="s2">&quot;beginning&quot;</span><span class="p">:</span>
+                    <span class="c1">#                    print &#39;beginning&#39;</span>
+                    <span class="k">if</span> <span class="s2">&quot;Reading input data for simulation&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">block</span> <span class="o">=</span> <span class="s2">&quot;simulation&quot;</span>
+                <span class="k">elif</span> <span class="n">block</span> <span class="o">==</span> <span class="s2">&quot;simulation&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;Solution composition&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">block</span> <span class="o">=</span> <span class="s2">&quot;composition&quot;</span>
+                    <span class="k">if</span> <span class="s2">&quot;End of run&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                         <span class="n">endOfRun</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">block</span> <span class="o">==</span> <span class="s1">&#39;composition&#39;</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="s1">&#39;Elements&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                <span class="k">elif</span> <span class="n">block</span> <span class="o">==</span> <span class="s2">&quot;composition&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;Elements&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
                         <span class="n">linestrip</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                         <span class="n">linesplit</span> <span class="o">=</span> <span class="n">linestrip</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Description of solution&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
-                        <span class="n">block</span> <span class="o">=</span> <span class="s1">&#39;description&#39;</span>
-                    <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">linesplit</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span>
-                        <span class="n">simulationDict</span><span class="p">[</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">block</span> <span class="o">==</span> <span class="s1">&#39;description&#39;</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Electrical balance&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="s2">&quot;Description of solution&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">block</span> <span class="o">=</span> <span class="s2">&quot;description&quot;</span>
+                    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">linesplit</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                        <span class="n">simulationDict</span><span class="p">[</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">to_numeric</span><span class="p">(</span>
+                            <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
+                        <span class="p">)</span>
+                <span class="k">elif</span> <span class="n">block</span> <span class="o">==</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;Electrical balance&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                         <span class="n">linestrip</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                         <span class="n">linesplit</span> <span class="o">=</span> <span class="n">linestrip</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
                         <span class="n">balance</span> <span class="o">=</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-                        <span class="n">simulationDict</span><span class="p">[</span><span class="s1">&#39;Electrical balance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">balance</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Percent error&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                        <span class="n">simulationDict</span><span class="p">[</span><span class="s2">&quot;Electrical balance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_numeric</span><span class="p">(</span>
+                            <span class="n">balance</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">if</span> <span class="s2">&quot;Percent error&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                         <span class="n">linestrip</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                         <span class="n">linesplit</span> <span class="o">=</span> <span class="n">linestrip</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
                         <span class="n">error</span> <span class="o">=</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-                        <span class="n">simulationDict</span><span class="p">[</span><span class="s1">&#39;Percent error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Distribution of species&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
-                        <span class="n">block</span> <span class="o">=</span> <span class="s1">&#39;distribution&#39;</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">block</span> <span class="o">==</span> <span class="s1">&#39;distribution&#39;</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="s1">&#39;Species&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                        <span class="n">simulationDict</span><span class="p">[</span><span class="s2">&quot;Percent error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_numeric</span><span class="p">(</span>
+                            <span class="n">error</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">if</span> <span class="s2">&quot;Distribution of species&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">block</span> <span class="o">=</span> <span class="s2">&quot;distribution&quot;</span>
+                <span class="k">elif</span> <span class="n">block</span> <span class="o">==</span> <span class="s2">&quot;distribution&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;Species&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;Log&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
                         <span class="n">linestrip</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                         <span class="n">linesplit</span> <span class="o">=</span> <span class="n">linestrip</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Saturation indices&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
-                            <span class="c1">#this line should not be included in molality, hence the elif</span>
-                            <span class="n">block</span> <span class="o">=</span> <span class="s1">&#39;SI&#39;</span>
-                        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">linesplit</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
-<span class="c1">#                            if len(linesplit) == 2:</span>
-                                <span class="c1">#For now we won&#39;t get category totals</span>
-                                <span class="c1">#simulationDict[linesplit[0]] = linesplit[1]</span>
-                            <span class="c1">#line to retreive individual species</span>
-                            <span class="n">simulationDict</span><span class="p">[</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_Molality&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                            <span class="n">simulationDict</span><span class="p">[</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;_Activity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-<span class="c1">#Old code from when we weren&#39;t recording individual species but only category totals</span>
-<span class="c1">#                            else: #grab CO2</span>
-<span class="c1">#                                if (linesplit[0] == &#39;CO2&#39;):</span>
-<span class="c1">#                                    simulationDict[linesplit[0]] = linesplit[1]</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">block</span> <span class="o">==</span> <span class="s1">&#39;SI&#39;</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="s1">&#39;Phase&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="s2">&quot;Saturation indices&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                            <span class="c1"># this line should not be included in molality, hence the elif</span>
+                            <span class="n">block</span> <span class="o">=</span> <span class="s2">&quot;SI&quot;</span>
+                        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">linesplit</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                            <span class="c1"># line to retreive individual species</span>
+                            <span class="n">simulationDict</span><span class="p">[</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_Molality&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_numeric</span><span class="p">(</span>
+                                <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
+                            <span class="p">)</span>
+                            <span class="n">simulationDict</span><span class="p">[</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_Activity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_numeric</span><span class="p">(</span>
+                                <span class="n">linesplit</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
+                            <span class="p">)</span>
+                <span class="k">elif</span> <span class="n">block</span> <span class="o">==</span> <span class="s2">&quot;SI&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s2">&quot;Phase&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
                         <span class="n">linestrip</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                         <span class="n">linesplit</span> <span class="o">=</span> <span class="n">linestrip</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">linesplit</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">):</span>
-                            <span class="n">simulationDict</span><span class="p">[</span><span class="s1">&#39;SI_&#39;</span><span class="o">+</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;End of simulation&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
-                            <span class="c1">#add simulation to list</span>
-<span class="c1">#                            simData = {&#39;error&#39;:simulationError, &#39;molality&#39;:simulationMolality, &#39;species&#39;:simulationSpecies,&#39;SI&#39;:simulationSI}</span>
-<span class="c1">#                            simulationList.append(simData)</span>
-                            <span class="n">block</span> <span class="o">=</span> <span class="s1">&#39;simulation&#39;</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linesplit</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                            <span class="n">simulationDict</span><span class="p">[</span><span class="s2">&quot;SI_&quot;</span> <span class="o">+</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">to_numeric</span><span class="p">(</span>
+                                <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span>
+                            <span class="p">)</span>
+                        <span class="k">if</span> <span class="s2">&quot;End of simulation&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                            <span class="c1"># add simulation to list</span>
+                            <span class="n">block</span> <span class="o">=</span> <span class="s2">&quot;simulation&quot;</span>
         <span class="k">return</span> <span class="n">simulationDict</span></div>
 
 
-<div class="viewcode-block" id="writePhreeqcInput"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.writePhreeqcInput.html#olm.USGS.PhreeqcPandas.writePhreeqcInput">[docs]</a><span class="k">def</span> <span class="nf">writePhreeqcInput</span><span class="p">(</span><span class="n">sample_row</span><span class="p">,</span> <span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">default_phreeqc_to_WQX_translation</span><span class="p">,</span> <span class="n">datetext</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="writePhreeqcInput"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.writePhreeqcInput.html#olm.USGS.PhreeqcPandas.writePhreeqcInput">[docs]</a><span class="k">def</span> <span class="nf">writePhreeqcInput</span><span class="p">(</span>
+    <span class="n">sample_row</span><span class="p">,</span>
+    <span class="n">phreeqc_file_name</span><span class="p">,</span>
+    <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">default_phreeqc_to_WQX_translation</span><span class="p">,</span>
+    <span class="n">datetext</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Writes a PHREEQC input file using the row from a site panel.</span>
+<span class="sd">    Writes a PHREEQC input file using the row from a site DataFrame.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -168,44 +183,63 @@
 <span class="sd">       Name of PHREEQC input file to write.</span>
 
 <span class="sd">    phreeqcDict : dict</span>
-<span class="sd">       a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</span>
+<span class="sd">       a dictionary with WQX characteristics as keys and phreeqc chemical names as</span>
+<span class="sd">       entries. By default, processMidf will use the built in translation dict,</span>
+<span class="sd">       default_phreeqc_to_WQX_translation.</span>
 
 <span class="sd">    datetext : str</span>
-<span class="sd">       String containing the text that describes the date as it should be written into the PHREEQC input file.</span>
+<span class="sd">       String containing the text that describes the date as it should be written</span>
+<span class="sd">       into the PHREEQC input file.</span>
 
 <span class="sd">    charge : str</span>
-<span class="sd">        String containing name of element (or pH) that should be adjusted to obtain charge balance. This is done internally by PHREEQC. (Default=None)</span>
+<span class="sd">        String containing name of element (or pH) that should be adjusted to obtain</span>
+<span class="sd">        charge balance. This is done internally by PHREEQC. (Default=None)</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    status : int</span>
 <span class="sd">       OK if equal to 1. Error writing to file if equal to -1.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">phreeqc_input_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SOLUTION &#39;</span> <span class="o">+</span> <span class="s1">&#39; on &#39;</span> <span class="o">+</span> <span class="n">datetext</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;units mg/l&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
-        <span class="c1">#loop through all characteristics that should be included in PHREEQC analysis</span>
+        <span class="n">phreeqc_input_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SOLUTION &quot;</span> <span class="o">+</span> <span class="s2">&quot; on &quot;</span> <span class="o">+</span> <span class="n">datetext</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;units mg/l&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
+        <span class="c1"># loop through all characteristics that should be included in PHREEQC analysis</span>
         <span class="k">for</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="n">phreeqcDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-            <span class="c1">#Check to see if this characteristic is in our panel</span>
+            <span class="c1"># Check to see if this characteristic is in our DataFrame</span>
             <span class="k">if</span> <span class="n">characteristic</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-                <span class="c1">#Check for cases with duplicate dates and no time information</span>
-                <span class="c1">#In this case, get only first sample on that date</span>
-                <span class="k">if</span> <span class="n">size</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="nb">min</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-                    <span class="n">sample_row</span> <span class="o">=</span> <span class="n">sample_row</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">isnan</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="p">):</span>
-                    <span class="k">if</span> <span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span><span class="o">==</span><span class="n">charge</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">+</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">])</span><span class="o">+</span> <span class="s1">&#39; &#39;</span><span class="o">+</span><span class="s1">&#39;charge&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
+                <span class="c1"># Check for cases with duplicate dates and no time information</span>
+                <span class="c1"># In this case, get only first sample on that date</span>
+                <span class="k">if</span> <span class="n">size</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">min</span><span class="p">(</span><span class="n">sample_row</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">sample_row</span> <span class="o">=</span> <span class="n">sample_row</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">isnan</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]):</span>
+                    <span class="k">if</span> <span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">==</span> <span class="n">charge</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span>
+                            <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+                            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">])</span>
+                            <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+                            <span class="o">+</span> <span class="s2">&quot;charge&quot;</span><span class="p">,</span>
+                            <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">,</span>
+                        <span class="p">)</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span> <span class="o">+</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]),</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="n">phreeqcDict</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]</span>
+                            <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+                            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sample_row</span><span class="p">[</span><span class="n">characteristic</span><span class="p">]),</span>
+                            <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">,</span>
+                        <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;END&quot;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">phreeqc_input_file</span><span class="p">)</span>
         <span class="n">phreeqc_input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="mi">1</span>
     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
         <span class="n">phreeqc_input_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Problem opening sample PHREEQC input file.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem opening sample PHREEQC input file.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
 
-<div class="viewcode-block" id="phreeqcRunSetPCO2"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2.html#olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2">[docs]</a><span class="k">def</span> <span class="nf">phreeqcRunSetPCO2</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="phreeqcRunSetPCO2"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2.html#olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2">[docs]</a><span class="k">def</span> <span class="nf">phreeqcRunSetPCO2</span><span class="p">(</span>
+    <span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads a PHREEQC input file, modifies it to a set PCO2 and runs the modified file.</span>
 
@@ -224,63 +258,80 @@
 <span class="sd">       The database file to be used by PHREEQC.</span>
 
 <span class="sd">    newInputFile : string</span>
-<span class="sd">        The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and &#39;set-PCO2.phrq will be added.&#39;</span>
+<span class="sd">        The name of the set-PCO2 file to create and run. If not specified, the final 5</span>
+<span class="sd">        characters will be stripped off of phreeqcInputFile and &#39;set-PCO2.phrq&#39; will be</span>
+<span class="sd">        added.</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    simulationDict : Dict</span>
-<span class="sd">        A dictionary that contains the output of readPhreeqcOutput() run on the set PCO2 simulation.</span>
+<span class="sd">        A dictionary that contains the output of readPhreeqcOutput() run on the set PCO2</span>
+<span class="sd">        simulation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqcInputFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">input_file_text</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
     <span class="n">wrote_CO2_line</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="n">PCO2_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">C</span><span class="se">\t</span><span class="s1">1</span><span class="se">\t</span><span class="s1">CO2(g)</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="n">PCO2_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">C</span><span class="se">\t</span><span class="s2">1</span><span class="se">\t</span><span class="s2">CO2(g)</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
     <span class="k">for</span> <span class="n">linenum</span><span class="p">,</span> <span class="n">input_line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file_text</span><span class="p">):</span>
-        <span class="c1">#If there is a pH input line we will overwrite it</span>
-        <span class="k">if</span> <span class="s1">&#39;pH&#39;</span> <span class="ow">in</span> <span class="n">input_line</span><span class="p">:</span>
+        <span class="c1"># If there is a pH input line we will overwrite it</span>
+        <span class="k">if</span> <span class="s2">&quot;pH&quot;</span> <span class="ow">in</span> <span class="n">input_line</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">wrote_CO2_line</span><span class="p">:</span>
                 <span class="n">input_file_text</span><span class="p">[</span><span class="n">linenum</span><span class="p">]</span> <span class="o">=</span> <span class="n">PCO2_str</span>
                 <span class="n">wrote_CO2_line</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is more than one line with pH. This code only works for PHREEQC inputs with a single solution. Check input file!&quot;</span><span class="p">)</span>
-    <span class="c1">#If there was no pH line, we still need to add the PCO2 line</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;There is more than one line with pH. This code only works for PHREEQC inputs with a single solution. Check input file!&quot;</span>
+                <span class="p">)</span>
+    <span class="c1"># If there was no pH line, we still need to add the PCO2 line</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">wrote_CO2_line</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">linenum</span><span class="p">,</span> <span class="n">input_line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_file_text</span><span class="p">):</span>
-            <span class="k">if</span> <span class="s1">&#39;SOLUTION&#39;</span> <span class="ow">in</span> <span class="n">input_line</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;SOLUTION&quot;</span> <span class="ow">in</span> <span class="n">input_line</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">wrote_CO2_line</span><span class="p">:</span>
-                    <span class="n">input_file_text</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">linenum</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">PCO2_str</span><span class="p">)</span>
+                    <span class="n">input_file_text</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">linenum</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">PCO2_str</span><span class="p">)</span>
                     <span class="n">wrote_CO2_line</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;There is more than one line with SOLUTION. This code only works for PHREEQC inputs with a single solution. Check input file!&quot;</span><span class="p">)</span>
-    <span class="c1">#Write out new input file text with set PCO2</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="s2">&quot;There is more than one line with SOLUTION. This code only works for PHREEQC inputs with a single solution. Check input file!&quot;</span>
+                    <span class="p">)</span>
+    <span class="c1"># Write out new input file text with set PCO2</span>
     <span class="k">if</span> <span class="n">newInputFile</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">newInputFile</span> <span class="o">=</span> <span class="n">phreeqcInputFile</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;-set-PCO2.phrq&#39;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">newInputFile</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">newInputFile</span> <span class="o">=</span> <span class="n">phreeqcInputFile</span><span class="p">[:</span><span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-set-PCO2.phrq&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">newInputFile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">input_file_text</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-    <span class="c1">#run phreeqc on the input file just created</span>
-    <span class="n">blank</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="n">split_file_name</span> <span class="o">=</span> <span class="n">newInputFile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-    <span class="n">split_list</span> <span class="o">=</span> <span class="n">split_file_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="c1">#Trim off file ending</span>
-    <span class="n">phreeqcOutputFile</span> <span class="o">=</span> <span class="n">blank</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">split_list</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.out&#39;</span>
-    <span class="n">retcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PHREEQC_PATH</span><span class="p">,</span><span class="s1">&#39;phreeqc&#39;</span><span class="p">),</span> <span class="n">newInputFile</span><span class="p">,</span> <span class="n">phreeqcOutputFile</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">])</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC return code = &quot;</span><span class="p">,</span><span class="n">retcode</span><span class="p">)</span>
+    <span class="c1"># run phreeqc on the input file just created</span>
+    <span class="n">blank</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">split_file_name</span> <span class="o">=</span> <span class="n">newInputFile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+    <span class="n">split_list</span> <span class="o">=</span> <span class="n">split_file_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Trim off file ending</span>
+    <span class="n">phreeqcOutputFile</span> <span class="o">=</span> <span class="n">blank</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">split_list</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.out&quot;</span>
+    <span class="n">retcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="s2">&quot;phreeqc&quot;</span><span class="p">),</span>
+            <span class="n">newInputFile</span><span class="p">,</span>
+            <span class="n">phreeqcOutputFile</span><span class="p">,</span>
+            <span class="n">DATABASE_FILE</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC return code = &quot;</span><span class="p">,</span> <span class="n">retcode</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">retcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">simulationDict</span> <span class="o">=</span> <span class="n">readPhreeqcOutput</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1">#This catches cases where PHREEQC fails (e.g. doesn&#39;t converge)</span>
+        <span class="c1"># This catches cases where PHREEQC fails (e.g. doesn&#39;t converge)</span>
         <span class="n">simulationDict</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">simulationDict</span></div>
 
+    <span class="c1"># solution_inputs = readPhreeqcOutput(phreeqcOutputFile)</span>
+    <span class="c1"># solution_inputs[&#39;C&#39;]= &#39;   1   CO2(g)   &#39; + str(logPCO2)</span>
+    <span class="c1"># writePhreeqcInput(solution_inputs)</span>
 
-    <span class="c1">#solution_inputs = readPhreeqcOutput(phreeqcOutputFile)</span>
-    <span class="c1">#solution_inputs[&#39;C&#39;]= &#39;   1   CO2(g)   &#39; + str(logPCO2)</span>
-    <span class="c1">#writePhreeqcInput(solution_inputs)</span>
 
-<div class="viewcode-block" id="calciteSaturationAtFixedPCO2"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2.html#olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2">[docs]</a><span class="k">def</span> <span class="nf">calciteSaturationAtFixedPCO2</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="calciteSaturationAtFixedPCO2"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2.html#olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2">[docs]</a><span class="k">def</span> <span class="nf">calciteSaturationAtFixedPCO2</span><span class="p">(</span>
+    <span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function used in root finding of saturation PCO2.</span>
 
-<span class="sd">    Function is used by findPCO2atCalciteSaturation(). As a stand alone function, it&#39;s better to use phreeqcRunSetPCO2().</span>
+<span class="sd">    Function is used by findPCO2atCalciteSaturation(). As a stand alone function, it&#39;s</span>
+<span class="sd">    better to use phreeqcRunSetPCO2().</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -297,19 +348,30 @@
 <span class="sd">       The database file to be used by PHREEQC.</span>
 
 <span class="sd">    newInputFile : string</span>
-<span class="sd">        The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and &#39;set-PCO2.phrq will be added.&#39;</span>
+<span class="sd">        The name of the set-PCO2 file to create and run. If not specified, the final 5</span>
+<span class="sd">        characters will be stripped off of phreeqcInputFile and &#39;set-PCO2.phrq&#39; will be</span>
+<span class="sd">        added.</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    SI : float</span>
 <span class="sd">        Saturation index of calcite for given PCO2.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">simulationDict</span> <span class="o">=</span> <span class="n">phreeqcRunSetPCO2</span><span class="p">(</span><span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="n">newInputFile</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">simulationDict</span><span class="p">[</span><span class="s1">&#39;SI_Calcite&#39;</span><span class="p">])</span></div>
+    <span class="n">simulationDict</span> <span class="o">=</span> <span class="n">phreeqcRunSetPCO2</span><span class="p">(</span>
+        <span class="n">logPCO2</span><span class="p">,</span>
+        <span class="n">phreeqcInputFile</span><span class="p">,</span>
+        <span class="n">PHREEQC_PATH</span><span class="p">,</span>
+        <span class="n">DATABASE_FILE</span><span class="p">,</span>
+        <span class="n">newInputFile</span><span class="o">=</span><span class="n">newInputFile</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">simulationDict</span><span class="p">[</span><span class="s2">&quot;SI_Calcite&quot;</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="findPCO2atCalciteSaturation"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation.html#olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation">[docs]</a><span class="k">def</span> <span class="nf">findPCO2atCalciteSaturation</span><span class="p">(</span><span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;atm&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="findPCO2atCalciteSaturation"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation.html#olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation">[docs]</a><span class="k">def</span> <span class="nf">findPCO2atCalciteSaturation</span><span class="p">(</span>
+    <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;atm&quot;</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Finds the PCO2 where calcite would be saturated by modifing PCO2 of a PHREEQC input file.</span>
+<span class="sd">    Finds the PCO2 where calcite would be saturated by modifing PCO2 of a PHREEQC input</span>
+<span class="sd">    file.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -323,10 +385,13 @@
 <span class="sd">       The database file to be used by PHREEQC.</span>
 
 <span class="sd">    newInputFile : string</span>
-<span class="sd">        The name of the set-PCO2 file to create and run. If not specified, the final 5 characters will be stripped off of phreeqcInputFile and &#39;set-PCO2.phrq will be added.&#39;</span>
+<span class="sd">        The name of the set-PCO2 file to create and run. If not specified, the final 5</span>
+<span class="sd">        characters will be stripped off of phreeqcInputFile and &#39;set-PCO2.phrq&#39; will be</span>
+<span class="sd">        added.</span>
 
 <span class="sd">    units: string</span>
-<span class="sd">        The units in which to return the partial pressure of CO2. Currently, &#39;ppm&#39; and &#39;atm&#39; are allowed (Default=atm).</span>
+<span class="sd">        The units in which to return the partial pressure of CO2. Currently, &#39;ppm&#39; and</span>
+<span class="sd">        &#39;atm&#39; are allowed (Default=atm).</span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    PCO2 : float</span>
@@ -334,27 +399,40 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="p">)</span>
-    <span class="n">eqLogPCO2</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">calciteSaturationAtFixedPCO2</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">units</span> <span class="o">==</span> <span class="s1">&#39;ppm&#39;</span><span class="p">:</span>
-        <span class="n">PCO2</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="mf">10.</span><span class="o">**</span><span class="n">eqLogPCO2</span>
-    <span class="k">elif</span> <span class="n">units</span> <span class="o">==</span> <span class="s1">&#39;atm&#39;</span><span class="p">:</span>
-        <span class="n">PCO2</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="n">eqLogPCO2</span>
+    <span class="n">eqLogPCO2</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">calciteSaturationAtFixedPCO2</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">units</span> <span class="o">==</span> <span class="s2">&quot;ppm&quot;</span><span class="p">:</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="n">eqLogPCO2</span>
+    <span class="k">elif</span> <span class="n">units</span> <span class="o">==</span> <span class="s2">&quot;atm&quot;</span><span class="p">:</span>
+        <span class="n">PCO2</span> <span class="o">=</span> <span class="mf">10.0</span> <span class="o">**</span> <span class="n">eqLogPCO2</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Specified units were not valid, use &#39;ppm&#39; or &#39;atm&#39;.&quot;</span><span class="p">)</span>
         <span class="n">PCO2</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">PCO2</span></div>
 
-<div class="viewcode-block" id="processPanel"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.processPanel.html#olm.USGS.PhreeqcPandas.processPanel">[docs]</a><span class="k">def</span> <span class="nf">processPanel</span><span class="p">(</span><span class="n">site_panel</span><span class="p">,</span> <span class="n">site_dir</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force_balance</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="processMidf"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.processMidf.html#olm.USGS.PhreeqcPandas.processMidf">[docs]</a><span class="k">def</span> <span class="nf">processMidf</span><span class="p">(</span>
+    <span class="n">site_midf</span><span class="p">,</span>
+    <span class="n">site_dir</span><span class="p">,</span>
+    <span class="n">PHREEQC_PATH</span><span class="p">,</span>
+    <span class="n">DATABASE_FILE</span><span class="p">,</span>
+    <span class="n">phreeqcDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">force_balance</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Takes a WQXtoPandas site panel and runs all samples through PHREEQC, returning a dataframe of the outputs that is indexed by date. Will run automatically within WQXtoPandas if specified in the excel start file.  However, the function can also be called later by reading in a pickled site panel.</span>
+<span class="sd">    Takes a WQXtoPandas site multi-indexed DataFrame and runs all samples through</span>
+<span class="sd">    PHREEQC, returning a DataFrame of the outputs that is indexed by date. Will</span>
+<span class="sd">    run automatically within WQXtoPandas if specified in the excel start file.</span>
+<span class="sd">    However, the function can also be called later by reading in a pickled site</span>
+<span class="sd">    multi-indexed DataFrame.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    site_panel : Pandas panel</span>
-<span class="sd">       The Pandas panel object produced for each site by WQXtoPandas that is to be processed through PHREEQC.</span>
+<span class="sd">    site_midf : Pandas DataFrame</span>
+<span class="sd">       The Pandas multi-indexed DataFrame object produced for each site by WQXtoPandas</span>
+<span class="sd">       that is to be processed through PHREEQC.</span>
 
 <span class="sd">    site_dir : string</span>
-<span class="sd">       The directory containing the site data and where the results should be written out.</span>
+<span class="sd">       The directory containing the site data, and where the results should be output.</span>
 
 <span class="sd">    PHREEQC_PATH : string</span>
 <span class="sd">       The path to the PHREEQC executable.</span>
@@ -363,96 +441,149 @@
 <span class="sd">       The database file to be used by PHREEQC.</span>
 
 <span class="sd">    phreeqcDict : dict</span>
-<span class="sd">       a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</span>
+<span class="sd">       a dictionary with WQX characteristics as keys and phreeqc chemical names as</span>
+<span class="sd">       entries. By default, processMidf will use the built in translation dict,</span>
+<span class="sd">       default_phreeqc_to_WQX_translation.</span>
 
 <span class="sd">    force_balance : str</span>
-<span class="sd">       PHREEQC should force charge balance on the ion indicated in this string. Use the string that represents the ion internally in PHREEQC. It is also possible to force balance on pH using force_balance=&#39;pH&#39;, or on alkalinity using force_balance=&#39;Alk&#39;</span>
+<span class="sd">       PHREEQC should force charge balance on the ion indicated in this string. Use</span>
+<span class="sd">       the string that represents the ion internally in PHREEQC. It is also possible</span>
+<span class="sd">       to force balance on pH using force_balance=&#39;pH&#39;, or on alkalinity using</span>
+<span class="sd">       force_balance=&#39;Alk&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">phreeqcDict</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">phreeqcDict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">phreeqcDict</span> <span class="o">=</span> <span class="n">default_phreeqc_to_WQX_translation</span>
     <span class="n">output_dates</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">phreeqc_data_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">site_panel</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">site_midf</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
     <span class="n">dates</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span>
     <span class="n">num_converged</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">total_num</span> <span class="o">=</span> <span class="n">dates</span><span class="o">.</span><span class="n">size</span>
     <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">:</span>
-        <span class="n">sample_row</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">date</span><span class="p">]</span>
+        <span class="n">sample_row</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">date</span><span class="p">]</span>
         <span class="n">datetext</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">site_dir</span><span class="p">)):</span>
-                    <span class="k">try</span><span class="p">:</span>
-                        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">site_dir</span><span class="p">)</span>
-                    <span class="k">except</span> <span class="n">os</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem creating location directory: &quot;</span> <span class="o">+</span> <span class="n">sampledir</span><span class="p">))</span>
-                        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="k">if</span> <span class="n">force_balance</span><span class="o">==</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="n">phreeqc_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">site_dir</span><span class="p">,</span> <span class="n">datetext</span><span class="o">+</span><span class="s1">&#39;.phrq&#39;</span><span class="p">)</span>
-            <span class="n">writePhreeqcInput</span><span class="p">(</span><span class="n">sample_row</span><span class="p">,</span> <span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">,</span> <span class="n">datetext</span><span class="o">=</span><span class="n">datetext</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">site_dir</span><span class="p">)):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">site_dir</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">os</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Problem creating location directory: &quot;</span> <span class="o">+</span> <span class="n">site_dir</span><span class="p">))</span>
+                <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">force_balance</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">phreeqc_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">site_dir</span><span class="p">,</span> <span class="n">datetext</span> <span class="o">+</span> <span class="s2">&quot;.phrq&quot;</span><span class="p">)</span>
+            <span class="n">writePhreeqcInput</span><span class="p">(</span>
+                <span class="n">sample_row</span><span class="p">,</span>
+                <span class="n">phreeqc_file_name</span><span class="p">,</span>
+                <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">,</span>
+                <span class="n">datetext</span><span class="o">=</span><span class="n">datetext</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">phreeqc_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">site_dir</span><span class="p">,</span> <span class="n">datetext</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="n">force_balance</span><span class="o">+</span><span class="s1">&#39;.phrq&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">force_balance</span><span class="o">==</span><span class="s1">&#39;Alk&#39;</span><span class="p">:</span>
-                <span class="n">writePhreeqcInput</span><span class="p">(</span><span class="n">sample_row</span><span class="p">,</span> <span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">,</span> <span class="n">datetext</span><span class="o">=</span><span class="n">datetext</span><span class="p">)</span>
+            <span class="n">phreeqc_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">site_dir</span><span class="p">,</span> <span class="n">datetext</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">force_balance</span> <span class="o">+</span> <span class="s2">&quot;.phrq&quot;</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">force_balance</span> <span class="o">==</span> <span class="s2">&quot;Alk&quot;</span><span class="p">:</span>
+                <span class="n">writePhreeqcInput</span><span class="p">(</span>
+                    <span class="n">sample_row</span><span class="p">,</span>
+                    <span class="n">phreeqc_file_name</span><span class="p">,</span>
+                    <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">,</span>
+                    <span class="n">datetext</span><span class="o">=</span><span class="n">datetext</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">writePhreeqcInput</span><span class="p">(</span><span class="n">sample_row</span><span class="p">,</span> <span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">,</span> <span class="n">datetext</span><span class="o">=</span><span class="n">datetext</span><span class="p">,</span> <span class="n">charge</span><span class="o">=</span><span class="n">force_balance</span><span class="p">)</span>
-        <span class="c1">#run phreeqc on the input file just created</span>
-        <span class="n">phreeqcOutputFile</span> <span class="o">=</span> <span class="n">phreeqc_file_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;out&#39;</span>
-        <span class="n">retcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PHREEQC_PATH</span><span class="p">,</span><span class="s1">&#39;phreeqc&#39;</span><span class="p">),</span> <span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="n">phreeqcOutputFile</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC return code = &quot;</span><span class="p">,</span><span class="n">retcode</span><span class="p">)</span>
+                <span class="n">writePhreeqcInput</span><span class="p">(</span>
+                    <span class="n">sample_row</span><span class="p">,</span>
+                    <span class="n">phreeqc_file_name</span><span class="p">,</span>
+                    <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">,</span>
+                    <span class="n">datetext</span><span class="o">=</span><span class="n">datetext</span><span class="p">,</span>
+                    <span class="n">charge</span><span class="o">=</span><span class="n">force_balance</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="c1"># run phreeqc on the input file just created</span>
+        <span class="n">phreeqcOutputFile</span> <span class="o">=</span> <span class="n">phreeqc_file_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;out&quot;</span>
+        <span class="n">retcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="s2">&quot;phreeqc&quot;</span><span class="p">),</span>
+                <span class="n">phreeqc_file_name</span><span class="p">,</span>
+                <span class="n">phreeqcOutputFile</span><span class="p">,</span>
+                <span class="n">DATABASE_FILE</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC return code = &quot;</span><span class="p">,</span> <span class="n">retcode</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">retcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">simulationDict</span> <span class="o">=</span> <span class="n">readPhreeqcOutput</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="c1">#This catches cases where PHREEQC fails (e.g. doesn&#39;t converge)</span>
+            <span class="c1"># This catches cases where PHREEQC fails (e.g. doesn&#39;t converge)</span>
             <span class="n">simulationDict</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">force_balance</span><span class="o">==</span><span class="s1">&#39;Alk&#39;</span> <span class="ow">and</span> <span class="n">simulationDict</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
-            <span class="c1">#Force charge balance on Alkalinity</span>
-            <span class="n">alk_converged</span><span class="o">=</span><span class="kc">False</span>
+        <span class="k">if</span> <span class="n">force_balance</span> <span class="o">==</span> <span class="s2">&quot;Alk&quot;</span> <span class="ow">and</span> <span class="n">simulationDict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Force charge balance on Alkalinity</span>
+            <span class="n">alk_converged</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">number_of_iterations</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">max_iterations</span> <span class="o">=</span> <span class="mi">10</span>
-            <span class="k">while</span> <span class="ow">not</span><span class="p">(</span><span class="n">alk_converged</span><span class="p">):</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">simulationDict</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-                    <span class="c1">#Retrieve charge balance error</span>
-                    <span class="n">balance_eq</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">simulationDict</span><span class="p">[</span><span class="s1">&#39;Electrical balance&#39;</span><span class="p">])</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="p">(</span><span class="n">alk_converged</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">simulationDict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># Retrieve charge balance error</span>
+                    <span class="n">balance_eq</span> <span class="o">=</span> <span class="n">simulationDict</span><span class="p">[</span><span class="s2">&quot;Electrical balance&quot;</span><span class="p">]</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;balance_eq=&quot;</span><span class="p">,</span> <span class="n">balance_eq</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="s1">&#39;Alkalinity&#39;</span> <span class="ow">in</span> <span class="n">simulationDict</span><span class="p">:</span>
-                        <span class="n">alk</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">simulationDict</span><span class="p">[</span><span class="s1">&#39;Alkalinity&#39;</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="s2">&quot;Alkalinity&quot;</span> <span class="ow">in</span> <span class="n">simulationDict</span><span class="p">:</span>
+                        <span class="n">alk</span> <span class="o">=</span> <span class="n">simulationDict</span><span class="p">[</span><span class="s2">&quot;Alkalinity&quot;</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="c1">#Note: Some samples seem to have zero measured alkalinity</span>
+                        <span class="c1"># Note: Some samples seem to have zero measured alkalinity</span>
                         <span class="c1"># might think about conditions to test for under which</span>
                         <span class="c1"># convergence doesn&#39;t happen or we should quit trying.</span>
                         <span class="c1"># Perhaps negative alkalinity??</span>
                         <span class="n">alk</span> <span class="o">=</span> <span class="mf">0.0</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;alk=&quot;</span><span class="p">,</span> <span class="n">alk</span><span class="p">)</span>
-                    <span class="n">New_alk_molL</span> <span class="o">=</span> <span class="n">alk</span> <span class="o">+</span> <span class="n">balance_eq</span><span class="c1">#attempt to stabilize this using a factor of 0.9. Otherwise it seems to overshoot. this didn&#39;t work.</span>
-                    <span class="k">if</span> <span class="n">New_alk_molL</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span><span class="c1">#PHREEQC won&#39;t take negative alkalinity inputs</span>
-                        <span class="n">New_alk_molL</span> <span class="o">=</span> <span class="n">alk</span><span class="o">*</span><span class="mf">0.5</span>
+                    <span class="n">New_alk_molL</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">alk</span> <span class="o">+</span> <span class="n">balance_eq</span>
+                    <span class="p">)</span>  <span class="c1"># attempt to stabilize this using a factor of 0.9. Otherwise it seems to overshoot. this didn&#39;t work.</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">New_alk_molL</span> <span class="o">&lt;</span> <span class="mi">0</span>
+                    <span class="p">):</span>  <span class="c1"># PHREEQC won&#39;t take negative alkalinity inputs</span>
+                        <span class="n">New_alk_molL</span> <span class="o">=</span> <span class="n">alk</span> <span class="o">*</span> <span class="mf">0.5</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;new alk=&quot;</span><span class="p">,</span> <span class="n">New_alk_molL</span><span class="p">)</span>
-                    <span class="n">New_alk_mgL</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">molL_to_mgL</span><span class="p">(</span><span class="n">New_alk_molL</span><span class="p">,</span> <span class="s1">&#39;CaCO3&#39;</span><span class="p">)</span><span class="c1">#PHREEQC wants it as 0.5CaCO3</span>
+                    <span class="n">New_alk_mgL</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">molL_to_mgL</span><span class="p">(</span>
+                        <span class="n">New_alk_molL</span><span class="p">,</span> <span class="s2">&quot;CaCO3&quot;</span>
+                    <span class="p">)</span>  <span class="c1"># PHREEQC wants it as 0.5CaCO3</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;new alk mg/L=&quot;</span><span class="p">,</span> <span class="n">New_alk_mgL</span><span class="p">)</span>
-                    <span class="n">sample_row</span><span class="p">[</span><span class="s1">&#39;Alkalinity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">New_alk_mgL</span>
-                    <span class="n">writePhreeqcInput</span><span class="p">(</span><span class="n">sample_row</span><span class="p">,</span> <span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">,</span> <span class="n">datetext</span><span class="o">=</span><span class="n">datetext</span><span class="p">)</span>
-                    <span class="n">retcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">([</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PHREEQC_PATH</span><span class="p">,</span><span class="s1">&#39;phreeqc&#39;</span><span class="p">),</span> <span class="n">phreeqc_file_name</span><span class="p">,</span> <span class="n">phreeqcOutputFile</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">])</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC return code = &quot;</span><span class="p">,</span><span class="n">retcode</span><span class="p">)</span>
+                    <span class="n">sample_row</span><span class="p">[</span><span class="s2">&quot;Alkalinity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">New_alk_mgL</span>
+                    <span class="n">writePhreeqcInput</span><span class="p">(</span>
+                        <span class="n">sample_row</span><span class="p">,</span>
+                        <span class="n">phreeqc_file_name</span><span class="p">,</span>
+                        <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">,</span>
+                        <span class="n">datetext</span><span class="o">=</span><span class="n">datetext</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">retcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="s2">&quot;phreeqc&quot;</span><span class="p">),</span>
+                            <span class="n">phreeqc_file_name</span><span class="p">,</span>
+                            <span class="n">phreeqcOutputFile</span><span class="p">,</span>
+                            <span class="n">DATABASE_FILE</span><span class="p">,</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC return code = &quot;</span><span class="p">,</span> <span class="n">retcode</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">retcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                         <span class="n">simulationDict</span> <span class="o">=</span> <span class="n">readPhreeqcOutput</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">)</span>
                         <span class="n">number_of_iterations</span> <span class="o">=</span> <span class="n">number_of_iterations</span> <span class="o">+</span> <span class="mi">1</span>
-                        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">simulationDict</span><span class="p">[</span><span class="s1">&#39;Percent error&#39;</span><span class="p">]))</span><span class="o">&lt;</span><span class="mf">5.0</span><span class="p">:</span>
-                            <span class="n">alk_converged</span><span class="o">=</span><span class="kc">True</span>
+                        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">simulationDict</span><span class="p">[</span><span class="s2">&quot;Percent error&quot;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">5.0</span><span class="p">:</span>
+                            <span class="n">alk_converged</span> <span class="o">=</span> <span class="kc">True</span>
                             <span class="n">num_converged</span> <span class="o">=</span> <span class="n">num_converged</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="c1">#This catches cases where PHREEQC returns an error (e.g. doesn&#39;t converge)</span>
+                        <span class="c1"># This catches cases where PHREEQC returns an error (e.g. doesn&#39;t converge)</span>
                         <span class="n">simulationDict</span> <span class="o">=</span> <span class="kc">None</span>
-                    <span class="k">if</span> <span class="n">number_of_iterations</span><span class="o">&gt;</span><span class="n">max_iterations</span><span class="p">:</span>
-                        <span class="n">simulationDict</span><span class="o">=</span><span class="kc">None</span> <span class="c1">#This will cause this case to be thrown out below</span>
+                    <span class="k">if</span> <span class="n">number_of_iterations</span> <span class="o">&gt;</span> <span class="n">max_iterations</span><span class="p">:</span>
+                        <span class="n">simulationDict</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="kc">None</span>  <span class="c1"># This will cause this case to be thrown out below</span>
+                        <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">alk_converged</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="n">alk_converged</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC encountered an error while processing this sample.&quot;</span><span class="p">)</span>
                     <span class="n">phreeqcData</span> <span class="o">=</span> <span class="p">{}</span>
                     <span class="n">phreeqcError</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="n">processThisSample</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;PHREEQC encountered an error while processing this sample. Return code = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">retcode</span><span class="p">)</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">simulationDict</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="c1">#append dates and list of dicts to output lists</span>
-            <span class="n">output_dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="c1">#add this date to index list (row labels)</span>
+                    <span class="n">reason</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">&quot;PHREEQC encountered an error while processing this sample. Return code = &quot;</span>
+                        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">retcode</span><span class="p">)</span>
+                    <span class="p">)</span>
+        <span class="k">if</span> <span class="n">simulationDict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># append dates and list of dicts to output lists</span>
+            <span class="n">output_dates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>  <span class="c1"># add this date to index list (row labels)</span>
             <span class="n">phreeqc_data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">simulationDict</span><span class="p">)</span>
             <span class="n">phreeqcError</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
@@ -460,15 +591,30 @@
             <span class="n">phreeqcData</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">phreeqcError</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="n">processThisSample</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;PHREEQC encountered an error while processing this sample. Return code = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">retcode</span><span class="p">)</span>
-    <span class="c1">#create dataframe from phreeqc outputs</span>
-    <span class="n">phreeqc_df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">phreeqc_data_list</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">output_dates</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">force_balance</span><span class="o">==</span><span class="s1">&#39;Alk&#39;</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of converged alkalinity forced charge balance cases = &quot;</span><span class="p">,</span> <span class="n">num_converged</span><span class="p">)</span>
+            <span class="n">reason</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;PHREEQC encountered an error while processing this sample. Return code = &quot;</span>
+                <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">retcode</span><span class="p">)</span>
+            <span class="p">)</span>
+    <span class="c1"># create dataframe from phreeqc outputs</span>
+    <span class="n">phreeqc_df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">(</span><span class="n">phreeqc_data_list</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">output_dates</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">force_balance</span> <span class="o">==</span> <span class="s2">&quot;Alk&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;Number of converged alkalinity forced charge balance cases = &quot;</span><span class="p">,</span>
+            <span class="n">num_converged</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total number of samples = &quot;</span><span class="p">,</span> <span class="n">total_num</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">phreeqc_df</span></div>
 
-<span class="k">def</span> <span class="nf">processSites</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">regEx</span><span class="o">=</span><span class="s1">&#39;USGS-*&#39;</span><span class="p">,</span> <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">process_regular</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
+<span class="k">def</span> <span class="nf">processSites</span><span class="p">(</span>
+    <span class="n">sitesDir</span><span class="p">,</span>
+    <span class="n">PHREEQC_PATH</span><span class="p">,</span>
+    <span class="n">DATABASE_FILE</span><span class="p">,</span>
+    <span class="n">phreeqcDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">regEx</span><span class="o">=</span><span class="s2">&quot;USGS-*&quot;</span><span class="p">,</span>
+    <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">process_regular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes all data from site directories in PHREEQC.</span>
 
@@ -484,100 +630,138 @@
 <span class="sd">       The path to the phreeqc database file to be used.</span>
 
 <span class="sd">    phreeqcDict : dict</span>
-<span class="sd">       a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</span>
+<span class="sd">       a dictionary with WQX characteristics as keys and phreeqc chemical names as</span>
+<span class="sd">       entries. By default, processMidf will use the built in translation dict,</span>
+<span class="sd">       default_phreeqc_to_WQX_translation.</span>
 
 <span class="sd">    regEx : str (optional)</span>
 <span class="sd">       A regular expression to be used to locate site directories.  (default = &#39;USGS-&#39;)</span>
 
 <span class="sd">    bracket_charge_balance : bool</span>
-<span class="sd">       If set to True, then charge balance will be bracketed by forcing balance on Ca and Alkalinity alternately. Default = False.</span>
+<span class="sd">       If set to True, then charge balance will be bracketed by forcing balance on Ca</span>
+<span class="sd">       and Alkalinity alternately. Default = False.</span>
 <span class="sd">    process_regular : bool</span>
-<span class="sd">       If set to True, then PHREEQC will be run without any charge balance forcing. This can be set to False if the calculations without forced balance are already done and you only want to do the charge balance runs. Default = True.</span>
+<span class="sd">       If set to True, then PHREEQC will be run without any charge balance forcing.</span>
+<span class="sd">       This can be set to False if the calculations without forced balance are already</span>
+<span class="sd">       done and you only want to do the charge balance runs. Default = True.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sitesDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">regEx</span><span class="o">=</span><span class="n">regEx</span><span class="p">,</span> <span class="n">processedSitesDir</span> <span class="o">=</span> <span class="n">sitesDir</span><span class="p">)</span>
+    <span class="n">sitesDict</span> <span class="o">=</span> <span class="n">loadSiteListData</span><span class="p">(</span><span class="n">regEx</span><span class="o">=</span><span class="n">regEx</span><span class="p">,</span> <span class="n">processedSitesDir</span><span class="o">=</span><span class="n">sitesDir</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">process_regular</span><span class="p">:</span>
-        <span class="c1">#Run PHREEQC on sites without forced charge balance</span>
-        <span class="k">for</span> <span class="n">site</span><span class="p">,</span> <span class="n">site_panel</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Processing &quot;</span><span class="o">+</span><span class="n">site</span><span class="o">+</span><span class="s2">&quot; in PHREEQC&quot;</span><span class="p">))</span>
-            <span class="n">sitedf</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span><span class="n">site_panel</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span><span class="n">site</span><span class="p">),</span> <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">)</span>
-            <span class="n">phreeqc_site_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span><span class="n">site</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC.pkl&#39;</span><span class="p">)</span>
+        <span class="c1"># Run PHREEQC on sites without forced charge balance</span>
+        <span class="k">for</span> <span class="n">site</span><span class="p">,</span> <span class="n">site_midf</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Processing &quot;</span> <span class="o">+</span> <span class="n">site</span> <span class="o">+</span> <span class="s2">&quot; in PHREEQC&quot;</span><span class="p">))</span>
+            <span class="n">sitedf</span> <span class="o">=</span> <span class="n">processMidf</span><span class="p">(</span>
+                <span class="n">site_midf</span><span class="p">,</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">),</span>
+                <span class="n">PHREEQC_PATH</span><span class="o">=</span><span class="n">PHREEQC_PATH</span><span class="p">,</span>
+                <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="n">DATABASE_FILE</span><span class="p">,</span>
+                <span class="n">phreeqcDict</span><span class="o">=</span><span class="n">phreeqcDict</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">phreeqc_site_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span> <span class="o">+</span> <span class="s2">&quot;-PHREEQC.pkl&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">sitedf</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
-                <span class="n">sitedf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">sitedf</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+                <span class="n">sitedf</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Problem writing out PHREEQC data file.&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem writing out PHREEQC data file.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">bracket_charge_balance</span><span class="p">:</span>
-        <span class="c1">#Run PHREEQC using bracketed charge balance for sites</span>
-        <span class="k">for</span> <span class="n">site</span><span class="p">,</span> <span class="n">site_panel</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="c1">#Force balance on Calcium</span>
-            <span class="n">phreeqc_df_ca</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span><span class="n">site_panel</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span><span class="n">site</span><span class="p">),</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">force_balance</span><span class="o">=</span><span class="s1">&#39;Ca&#39;</span><span class="p">)</span>
-            <span class="n">phreeqc_site_file_ca</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span><span class="n">site</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC-Ca.pkl&#39;</span><span class="p">)</span>
+        <span class="c1"># Run PHREEQC using bracketed charge balance for sites</span>
+        <span class="k">for</span> <span class="n">site</span><span class="p">,</span> <span class="n">site_midf</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Force balance on Calcium</span>
+            <span class="n">phreeqc_df_ca</span> <span class="o">=</span> <span class="n">processMidf</span><span class="p">(</span>
+                <span class="n">site_midf</span><span class="p">,</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">),</span>
+                <span class="n">PHREEQC_PATH</span><span class="p">,</span>
+                <span class="n">DATABASE_FILE</span><span class="p">,</span>
+                <span class="n">force_balance</span><span class="o">=</span><span class="s2">&quot;Ca&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">phreeqc_site_file_ca</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span> <span class="o">+</span> <span class="s2">&quot;-PHREEQC-Ca.pkl&quot;</span>
+            <span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df_ca</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file_ca</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
-                <span class="n">phreeqc_df_ca</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file_ca</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df_ca</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file_ca</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+                <span class="n">phreeqc_df_ca</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file_ca</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Problem writing out PHREEQC Ca data file.&#39;</span><span class="p">)</span>
-            <span class="c1">#Force balance on Alkalinity</span>
-            <span class="n">phreeqc_df_alk</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span><span class="n">site_panel</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span><span class="n">site</span><span class="p">),</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">force_balance</span><span class="o">=</span><span class="s1">&#39;Alk&#39;</span><span class="p">)</span>
-            <span class="n">phreeqc_site_file_alk</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span><span class="n">site</span><span class="p">,</span><span class="n">site</span><span class="o">+</span><span class="s1">&#39;-PHREEQC-Alk.pkl&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem writing out PHREEQC Ca data file.&quot;</span><span class="p">)</span>
+            <span class="c1"># Force balance on Alkalinity</span>
+            <span class="n">phreeqc_df_alk</span> <span class="o">=</span> <span class="n">processMidf</span><span class="p">(</span>
+                <span class="n">site_midf</span><span class="p">,</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">),</span>
+                <span class="n">PHREEQC_PATH</span><span class="p">,</span>
+                <span class="n">DATABASE_FILE</span><span class="p">,</span>
+                <span class="n">force_balance</span><span class="o">=</span><span class="s2">&quot;Alk&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">phreeqc_site_file_alk</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">sitesDir</span><span class="p">,</span> <span class="n">site</span><span class="p">,</span> <span class="n">site</span> <span class="o">+</span> <span class="s2">&quot;-PHREEQC-Alk.pkl&quot;</span>
+            <span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df_alk</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file_alk</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">))</span>
-                <span class="n">phreeqc_df_alk</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file_alk</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;csv&#39;</span><span class="p">)</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">phreeqc_df_alk</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">phreeqc_site_file_alk</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+                <span class="n">phreeqc_df_alk</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">phreeqc_site_file_alk</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Problem writing out PHREEQC Alk data file.&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem writing out PHREEQC Alk data file.&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">runPHREEQC</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">process_regular</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">     Process all samples within a site directory using information from the start file.</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process all samples within a site directory using information from the start file.</span>
 
-<span class="sd">     Parameters</span>
-<span class="sd">     ----------</span>
-<span class="sd">     startfilename : str</span>
-<span class="sd">          Name of start file to find settings for running PHREEQC.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    startfilename : str</span>
+<span class="sd">         Name of start file to find settings for running PHREEQC.</span>
 
-<span class="sd">     &quot;&quot;&quot;</span>
-     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing site water chemisty data in PHREEQC...&quot;</span><span class="p">)</span>
-     <span class="n">startfile</span> <span class="o">=</span> <span class="n">xlrd</span><span class="o">.</span><span class="n">open_workbook</span><span class="p">(</span><span class="n">startfilename</span><span class="p">)</span>
-     <span class="n">sheet</span> <span class="o">=</span> <span class="n">startfile</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-     <span class="c1">#parse start file to determine what should be done</span>
-     <span class="n">characteristicsBlockStarted</span> <span class="o">=</span> <span class="kc">False</span>
-     <span class="n">settingsDict</span> <span class="o">=</span> <span class="p">{}</span>
-     <span class="k">for</span> <span class="n">rownum</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
-         <span class="n">line</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">row_values</span><span class="p">(</span><span class="n">rownum</span><span class="p">)</span>
-         <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">characteristicsBlockStarted</span><span class="p">):</span>
-             <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;#&#39;</span><span class="p">):</span> <span class="c1">#ignore comments</span>
-                 <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Characteristic&#39;</span><span class="p">):</span>
-                     <span class="n">settingsDict</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                 <span class="k">else</span><span class="p">:</span> <span class="c1">#grab the characteristic block column headings</span>
-                     <span class="n">characteristicsBlockStarted</span> <span class="o">=</span> <span class="kc">True</span>
-     <span class="n">sitesDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-         <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-         <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">])</span>
-     <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-         <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to chemical database&#39;</span><span class="p">],</span>
-         <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of chemical database&#39;</span><span class="p">])</span>
-     <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-         <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to output directory&#39;</span><span class="p">],</span>
-         <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Name of output directory&#39;</span><span class="p">],</span>
-         <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Log file name&#39;</span><span class="p">])</span>
-     <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Path to PHREEQC&#39;</span><span class="p">]</span>
-     <span class="n">bracket_charge_balance</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s1">&#39;Force balance on Ca and Alk&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Yes&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing site water chemisty data in PHREEQC...&quot;</span><span class="p">)</span>
+    <span class="n">startfile</span> <span class="o">=</span> <span class="n">xlrd</span><span class="o">.</span><span class="n">open_workbook</span><span class="p">(</span><span class="n">startfilename</span><span class="p">)</span>
+    <span class="n">sheet</span> <span class="o">=</span> <span class="n">startfile</span><span class="o">.</span><span class="n">sheet_by_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># parse start file to determine what should be done</span>
+    <span class="n">characteristicsBlockStarted</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">settingsDict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">rownum</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sheet</span><span class="o">.</span><span class="n">nrows</span><span class="p">):</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">row_values</span><span class="p">(</span><span class="n">rownum</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">characteristicsBlockStarted</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span><span class="p">):</span>  <span class="c1"># ignore comments</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Characteristic&quot;</span><span class="p">):</span>
+                    <span class="n">settingsDict</span><span class="p">[</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># grab the characteristic block column headings</span>
+                    <span class="n">characteristicsBlockStarted</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">sitesDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+        <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">DATABASE_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to chemical database&quot;</span><span class="p">],</span>
+        <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of chemical database&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">LOG_FILE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to output directory&quot;</span><span class="p">],</span>
+        <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Name of output directory&quot;</span><span class="p">],</span>
+        <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Log file name&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+    <span class="n">PHREEQC_PATH</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Path to PHREEQC&quot;</span><span class="p">]</span>
+    <span class="n">bracket_charge_balance</span> <span class="o">=</span> <span class="n">settingsDict</span><span class="p">[</span><span class="s2">&quot;Force balance on Ca and Alk&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span>
 
-     <span class="n">processSites</span><span class="p">(</span><span class="n">sitesDir</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">phreeqcDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">regEx</span><span class="o">=</span><span class="s1">&#39;USGS-*&#39;</span><span class="p">,</span> <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span> <span class="n">process_regular</span><span class="o">=</span><span class="n">process_regular</span><span class="p">)</span>
+    <span class="n">processSites</span><span class="p">(</span>
+        <span class="n">sitesDir</span><span class="p">,</span>
+        <span class="n">PHREEQC_PATH</span><span class="p">,</span>
+        <span class="n">DATABASE_FILE</span><span class="p">,</span>
+        <span class="n">phreeqcDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">regEx</span><span class="o">=</span><span class="s2">&quot;USGS-*&quot;</span><span class="p">,</span>
+        <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="n">bracket_charge_balance</span><span class="p">,</span>
+        <span class="n">process_regular</span><span class="o">=</span><span class="n">process_regular</span><span class="p">,</span>
+    <span class="p">)</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1">#get site directory  and charge bracketing from command line argument</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># get site directory  and charge bracketing from command line argument</span>
     <span class="n">startfilename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">process_regular</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;False&#39;</span><span class="p">:</span>
-            <span class="n">process_regular</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;False&quot;</span><span class="p">:</span>
+            <span class="n">process_regular</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">runPHREEQC</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">process_regular</span><span class="o">=</span><span class="n">process_regular</span><span class="p">)</span>
 </pre></div>
 
@@ -591,7 +775,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -610,14 +794,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.PhreeqcPandas</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>
