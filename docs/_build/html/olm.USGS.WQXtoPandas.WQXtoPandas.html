@@ -4,9 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>olm.USGS.WQXtoPandas.WQXtoPandas &#8212; olm 0.38 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>olm.USGS.WQXtoPandas.WQXtoPandas &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="/default.css" />
     
@@ -17,7 +16,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="olm.USGS.PhreeqcPandas.processPanel" href="olm.USGS.PhreeqcPandas.processPanel.html" />
+    <link rel="next" title="olm.USGS.PhreeqcPandas.processMidf" href="olm.USGS.PhreeqcPandas.processMidf.html" />
     <link rel="prev" title="olm.USGS.WQXtoPandas.runWQXtoPandas" href="olm.USGS.WQXtoPandas.runWQXtoPandas.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -30,12 +29,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="olm.USGS.PhreeqcPandas.processPanel.html" title="olm.USGS.PhreeqcPandas.processPanel"
+          <a href="olm.USGS.PhreeqcPandas.processMidf.html" title="olm.USGS.PhreeqcPandas.processMidf"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="olm.USGS.WQXtoPandas.runWQXtoPandas.html" title="olm.USGS.WQXtoPandas.runWQXtoPandas"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas.WQXtoPandas</a></li> 
@@ -47,25 +46,36 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="olm-usgs-wqxtopandas-wqxtopandas">
+  <div class="section" id="olm-usgs-wqxtopandas-wqxtopandas">
 <h1>olm.USGS.WQXtoPandas.WQXtoPandas<a class="headerlink" href="#olm-usgs-wqxtopandas-wqxtopandas" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="olm.USGS.WQXtoPandas.WQXtoPandas">
 <span class="sig-prename descclassname"><span class="pre">olm.USGS.WQXtoPandas.</span></span><span class="sig-name descname"><span class="pre">WQXtoPandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlLocation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputPath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputDirName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Processed-Sites'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RUN_PHREEQC</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PHREEQC_PATH</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/mcoving/phreeqc-2.18.0/bin/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DATABASE_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LOG_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Result.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">START_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splittag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bracket_charge_balance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#WQXtoPandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.WQXtoPandas" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are
-stored in directories for each site.</p>
+<dd><p>Processes a WQX xml data file and loads data for each site in the WQX file into
+Pandas data objects that are stored in directories for each site.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>xmlLocation</strong><span class="classifier">string</span></dt><dd><p>Content depends on mode in which WQXtoPandas is run. When fromFile is set to False (input methods 2 or 3 in excel file) this string contains the html for a query to the USGS NWIS database to obtain an xml file of the desired data.  Alternatively, if fromFile is True (input method 1 in excel file) then this string contains the name of the xml file from which to read the data.</p>
+<dt><strong>xmlLocation</strong><span class="classifier">string</span></dt><dd><p>Content depends on mode in which WQXtoPandas is run. When fromFile is set to
+False (input methods 2 or 3 in excel file) this string contains the html for
+a query to the USGS NWIS database to obtain an xml file of the desired data.
+Alternatively, if fromFile is True (input method 1 in excel file) then this
+string contains the name of the xml file from which to read the data.</p>
 </dd>
-<dt><strong>charDict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary containing information about the characteristics to be processed.  Keys are EPA SRS characteristic names. Each entry in the dictionary is a second dictionary that contains keys IsRequired, pcode, fraction, and quality. These entries tell WQXtoPandas whether a given characteristic is required in order to process a sample, and whether a specific pcode, fraction, or quality should be required.  See excel example file for more details.</p>
+<dt><strong>charDict</strong><span class="classifier">dict</span></dt><dd><p>A dictionary containing information about the characteristics to be processed.
+Keys are EPA SRS characteristic names. Each entry in the dictionary is a second
+dictionary that contains keys IsRequired, pcode, fraction, and quality. These
+entries tell WQXtoPandas whether a given characteristic is required in order to
+process a sample, and whether a specific pcode, fraction, or quality should be
+required.  See excel example file for more details.</p>
 </dd>
 <dt><strong>outputPath</strong><span class="classifier">string</span></dt><dd><p>path to directory that will contain output directory</p>
 </dd>
-<dt><strong>fromFile</strong><span class="classifier">boolean</span></dt><dd><p>True if data will be read from an xml file already present on computer.  False if xml file should be queried from NWIS. (Default=False)</p>
+<dt><strong>fromFile</strong><span class="classifier">boolean</span></dt><dd><p>True if data will be read from an xml file already present on computer.  False
+if xml file should be queried from NWIS. (Default=False)</p>
 </dd>
-<dt><strong>outputDirName</strong><span class="classifier">string</span></dt><dd><p>Name of output directory where all site data will be written out. (Default=’Processed-Sites’)</p>
+<dt><strong>outputDirName</strong><span class="classifier">string</span></dt><dd><p>Name of output directory where all site data will be written out.
+(Default=’Processed-Sites’)</p>
 </dd>
 <dt><strong>RUN_PHREEQC</strong><span class="classifier">boolean</span></dt><dd><p>Set to true if samples should be processed through PHREEQC. (Default=False)</p>
 </dd>
@@ -75,9 +85,14 @@ stored in directories for each site.</p>
 </dd>
 <dt><strong>LOG_FILE</strong><span class="classifier">string</span></dt><dd><p>Name of log file that WQXtoPandas will create. (Default=’Result.log’)</p>
 </dd>
-<dt><strong>START_FILE</strong><span class="classifier">string</span></dt><dd><p>Name of xls start file that was used to run this instance of WQXtoPandas. Name will be written out in log file.</p>
+<dt><strong>START_FILE</strong><span class="classifier">string</span></dt><dd><p>Name of xls start file that was used to run this instance of WQXtoPandas. Name
+will be written out in log file.</p>
 </dd>
-<dt><strong>bracket_charge_balance</strong><span class="classifier">bool</span></dt><dd><p>If set to true, WQXtoPandas will alternately force charge balance on calcium and alkalinity, while the latter is not physically meaningful, this provides a useful estimate of uncertainty for cases with high charge balance errors.  This is most useful for water that is very dilute or with high organic content, such that titrated alkalinity values are artificially high.</p>
+<dt><strong>bracket_charge_balance</strong><span class="classifier">bool</span></dt><dd><p>If set to true, WQXtoPandas will alternately force charge balance on calcium and
+alkalinity, while the latter is not physically meaningful, this provides a useful
+estimate of uncertainty for cases with high charge balance errors.  This is most
+useful for water that is very dilute or with high organic content, such that
+titrated alkalinity values are artificially high.</p>
 </dd>
 </dl>
 </dd>
@@ -91,7 +106,7 @@ stored in directories for each site.</p>
 <p>Designed to be run through convenience function runWQXtoPandas().</p>
 </dd></dl>
 
-</section>
+</div>
 
 
             <div class="clearer"></div>
@@ -100,12 +115,16 @@ stored in directories for each site.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="olm.USGS.WQXtoPandas.runWQXtoPandas.html"
-                        title="previous chapter">olm.USGS.WQXtoPandas.runWQXtoPandas</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="olm.USGS.PhreeqcPandas.processPanel.html"
-                        title="next chapter">olm.USGS.PhreeqcPandas.processPanel</a></p>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="olm.USGS.WQXtoPandas.runWQXtoPandas.html"
+                          title="previous chapter">olm.USGS.WQXtoPandas.runWQXtoPandas</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="olm.USGS.PhreeqcPandas.processMidf.html"
+                          title="next chapter">olm.USGS.PhreeqcPandas.processMidf</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -117,7 +136,7 @@ stored in directories for each site.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -137,12 +156,12 @@ stored in directories for each site.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="olm.USGS.PhreeqcPandas.processPanel.html" title="olm.USGS.PhreeqcPandas.processPanel"
+          <a href="olm.USGS.PhreeqcPandas.processMidf.html" title="olm.USGS.PhreeqcPandas.processMidf"
              >next</a> |</li>
         <li class="right" >
           <a href="olm.USGS.WQXtoPandas.runWQXtoPandas.html" title="olm.USGS.WQXtoPandas.runWQXtoPandas"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas.WQXtoPandas</a></li> 
@@ -150,7 +169,7 @@ stored in directories for each site.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

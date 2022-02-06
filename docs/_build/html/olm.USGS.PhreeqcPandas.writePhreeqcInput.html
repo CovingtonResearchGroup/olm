@@ -4,9 +4,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
-    <title>olm.USGS.PhreeqcPandas.writePhreeqcInput &#8212; olm 0.38 documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>olm.USGS.PhreeqcPandas.writePhreeqcInput &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="/default.css" />
     
@@ -35,7 +34,7 @@
         <li class="right" >
           <a href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html" title="olm.USGS.PhreeqcPandas.readPhreeqcOutput"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="olm.USGS.html" accesskey="U">olm.USGS package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.PhreeqcPandas.writePhreeqcInput</a></li> 
@@ -47,12 +46,12 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="olm-usgs-phreeqcpandas-writephreeqcinput">
+  <div class="section" id="olm-usgs-phreeqcpandas-writephreeqcinput">
 <h1>olm.USGS.PhreeqcPandas.writePhreeqcInput<a class="headerlink" href="#olm-usgs-phreeqcpandas-writephreeqcinput" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="olm.USGS.PhreeqcPandas.writePhreeqcInput">
-<span class="sig-prename descclassname"><span class="pre">olm.USGS.PhreeqcPandas.</span></span><span class="sig-name descname"><span class="pre">writePhreeqcInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phreeqc_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phreeqcDict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'Alkalinity,</span> <span class="pre">total':</span> <span class="pre">'Alkalinity',</span> <span class="pre">'Calcium':</span> <span class="pre">'Ca',</span> <span class="pre">'Chloride':</span> <span class="pre">'Cl',</span> <span class="pre">'Magnesium':</span> <span class="pre">'Mg',</span> <span class="pre">'Nitrate':</span> <span class="pre">'N',</span> <span class="pre">'Potassium':</span> <span class="pre">'K',</span> <span class="pre">'Sodium':</span> <span class="pre">'Na',</span> <span class="pre">'Sulfate':</span> <span class="pre">'S',</span> <span class="pre">'Temperature,</span> <span class="pre">water':</span> <span class="pre">'temp',</span> <span class="pre">'pH':</span> <span class="pre">'pH'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#writePhreeqcInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.writePhreeqcInput" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a PHREEQC input file using the row from a site panel.</p>
+<span class="sig-prename descclassname"><span class="pre">olm.USGS.PhreeqcPandas.</span></span><span class="sig-name descname"><span class="pre">writePhreeqcInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_row</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phreeqc_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phreeqcDict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'Alkalinity':</span> <span class="pre">'Alkalinity',</span> <span class="pre">'Alkalinity,</span> <span class="pre">total':</span> <span class="pre">'Alkalinity',</span> <span class="pre">'Calcium':</span> <span class="pre">'Ca',</span> <span class="pre">'Chloride':</span> <span class="pre">'Cl',</span> <span class="pre">'Magnesium':</span> <span class="pre">'Mg',</span> <span class="pre">'Nitrate':</span> <span class="pre">'N',</span> <span class="pre">'Potassium':</span> <span class="pre">'K',</span> <span class="pre">'Sodium':</span> <span class="pre">'Na',</span> <span class="pre">'Sulfate':</span> <span class="pre">'S',</span> <span class="pre">'Temperature,</span> <span class="pre">water':</span> <span class="pre">'temp',</span> <span class="pre">'pH':</span> <span class="pre">'pH'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datetext</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/PhreeqcPandas.html#writePhreeqcInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.PhreeqcPandas.writePhreeqcInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a PHREEQC input file using the row from a site DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
@@ -60,11 +59,15 @@
 </dd>
 <dt><strong>phreeqc_file_name</strong><span class="classifier">str</span></dt><dd><p>Name of PHREEQC input file to write.</p>
 </dd>
-<dt><strong>phreeqcDict</strong><span class="classifier">dict</span></dt><dd><p>a dictionary with WQX characteristics as keys and phreeqc chemical names as entries. By default, processPanel will use the built in translation dict, default_phreeqc_to_WQX_translation.</p>
+<dt><strong>phreeqcDict</strong><span class="classifier">dict</span></dt><dd><p>a dictionary with WQX characteristics as keys and phreeqc chemical names as
+entries. By default, processMidf will use the built in translation dict,
+default_phreeqc_to_WQX_translation.</p>
 </dd>
-<dt><strong>datetext</strong><span class="classifier">str</span></dt><dd><p>String containing the text that describes the date as it should be written into the PHREEQC input file.</p>
+<dt><strong>datetext</strong><span class="classifier">str</span></dt><dd><p>String containing the text that describes the date as it should be written
+into the PHREEQC input file.</p>
 </dd>
-<dt><strong>charge</strong><span class="classifier">str</span></dt><dd><p>String containing name of element (or pH) that should be adjusted to obtain charge balance. This is done internally by PHREEQC. (Default=None)</p>
+<dt><strong>charge</strong><span class="classifier">str</span></dt><dd><p>String containing name of element (or pH) that should be adjusted to obtain
+charge balance. This is done internally by PHREEQC. (Default=None)</p>
 </dd>
 <dt><strong>Returns</strong></dt><dd></dd>
 <dt><strong>——-</strong></dt><dd></dd>
@@ -75,7 +78,7 @@
 </dl>
 </dd></dl>
 
-</section>
+</div>
 
 
             <div class="clearer"></div>
@@ -84,12 +87,16 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html"
-                        title="previous chapter">olm.USGS.PhreeqcPandas.readPhreeqcOutput</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation.html"
-                        title="next chapter">olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation</a></p>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html"
+                          title="previous chapter">olm.USGS.PhreeqcPandas.readPhreeqcOutput</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation.html"
+                          title="next chapter">olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -101,7 +108,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -126,7 +133,7 @@
         <li class="right" >
           <a href="olm.USGS.PhreeqcPandas.readPhreeqcOutput.html" title="olm.USGS.PhreeqcPandas.readPhreeqcOutput"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="olm.html" >olm Package</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="olm.USGS.html" >olm.USGS package</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.PhreeqcPandas.writePhreeqcInput</a></li> 
@@ -134,7 +141,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

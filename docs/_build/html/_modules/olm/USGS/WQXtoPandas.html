@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>olm.USGS.WQXtoPandas &#8212; olm 0.38 documentation</title>
+    <title>olm.USGS.WQXtoPandas &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="/default.css" />
     
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas</a></li> 
       </ul>
@@ -41,20 +41,24 @@
 <span></span><span class="ch">#! /usr/bin/env python</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This script takes an input file in USGS/EPA WQX xml format and creates a multi-indexed Pandas Dataframe that contains</span>
-<span class="sd">time series of water quality data and discharge combined with layers that contain meta data for each data value.</span>
-<span class="sd">You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas</span>
+<span class="sd">This script takes an input file in USGS/EPA WQX xml format and creates a multi-indexed</span>
+<span class="sd">Pandas Dataframe that contains time series of water quality data and discharge combined</span>
+<span class="sd">with layers that contain meta data for each data value. You can call the script from</span>
+<span class="sd">the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas</span>
 <span class="sd">function for calling within a Python session.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">xlrd</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">string</span><span class="o">,</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">xlrd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
 <span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pickle</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
-<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">to_datetime</span><span class="p">,</span> <span class="n">Series</span><span class="p">,</span> <span class="n">concat</span><span class="p">,</span> <span class="n">ExcelWriter</span>
-<span class="kn">from</span> <span class="nn">olm.USGS.PhreeqcPandas</span> <span class="kn">import</span> <span class="n">processPanel</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span><span class="p">,</span> <span class="n">to_datetime</span><span class="p">,</span> <span class="n">concat</span><span class="p">,</span> <span class="n">ExcelWriter</span>
+<span class="kn">from</span> <span class="nn">olm.USGS.PhreeqcPandas</span> <span class="kn">import</span> <span class="n">processMidf</span>
 
 <span class="c1"># import functions from olm package</span>
 <span class="kn">from</span> <span class="nn">olm.USGS.siteListExtraction</span> <span class="kn">import</span> <span class="n">extractSitesFromXML</span>
@@ -78,25 +82,36 @@
     <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are</span>
-<span class="sd">    stored in directories for each site.</span>
+<span class="sd">    Processes a WQX xml data file and loads data for each site in the WQX file into</span>
+<span class="sd">    Pandas data objects that are stored in directories for each site.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    xmlLocation : string</span>
-<span class="sd">       Content depends on mode in which WQXtoPandas is run. When fromFile is set to False (input methods 2 or 3 in excel file) this string contains the html for a query to the USGS NWIS database to obtain an xml file of the desired data.  Alternatively, if fromFile is True (input method 1 in excel file) then this string contains the name of the xml file from which to read the data.</span>
+<span class="sd">       Content depends on mode in which WQXtoPandas is run. When fromFile is set to</span>
+<span class="sd">       False (input methods 2 or 3 in excel file) this string contains the html for</span>
+<span class="sd">       a query to the USGS NWIS database to obtain an xml file of the desired data.</span>
+<span class="sd">       Alternatively, if fromFile is True (input method 1 in excel file) then this</span>
+<span class="sd">       string contains the name of the xml file from which to read the data.</span>
 
 <span class="sd">    charDict : dict</span>
-<span class="sd">       A dictionary containing information about the characteristics to be processed.  Keys are EPA SRS characteristic names. Each entry in the dictionary is a second dictionary that contains keys IsRequired, pcode, fraction, and quality. These entries tell WQXtoPandas whether a given characteristic is required in order to process a sample, and whether a specific pcode, fraction, or quality should be required.  See excel example file for more details.</span>
+<span class="sd">       A dictionary containing information about the characteristics to be processed.</span>
+<span class="sd">       Keys are EPA SRS characteristic names. Each entry in the dictionary is a second</span>
+<span class="sd">       dictionary that contains keys IsRequired, pcode, fraction, and quality. These</span>
+<span class="sd">       entries tell WQXtoPandas whether a given characteristic is required in order to</span>
+<span class="sd">       process a sample, and whether a specific pcode, fraction, or quality should be</span>
+<span class="sd">       required.  See excel example file for more details.</span>
 
 <span class="sd">    outputPath : string</span>
 <span class="sd">       path to directory that will contain output directory</span>
 
 <span class="sd">    fromFile : boolean</span>
-<span class="sd">       True if data will be read from an xml file already present on computer.  False if xml file should be queried from NWIS. (Default=False)</span>
+<span class="sd">       True if data will be read from an xml file already present on computer.  False</span>
+<span class="sd">       if xml file should be queried from NWIS. (Default=False)</span>
 
 <span class="sd">    outputDirName : string</span>
-<span class="sd">       Name of output directory where all site data will be written out. (Default=&#39;Processed-Sites&#39;)</span>
+<span class="sd">       Name of output directory where all site data will be written out.</span>
+<span class="sd">       (Default=&#39;Processed-Sites&#39;)</span>
 
 <span class="sd">    RUN_PHREEQC : boolean</span>
 <span class="sd">       Set to true if samples should be processed through PHREEQC. (Default=False)</span>
@@ -109,10 +124,15 @@
 <span class="sd">       Name of log file that WQXtoPandas will create. (Default=&#39;Result.log&#39;)</span>
 
 <span class="sd">    START_FILE : string</span>
-<span class="sd">       Name of xls start file that was used to run this instance of WQXtoPandas. Name will be written out in log file.</span>
+<span class="sd">       Name of xls start file that was used to run this instance of WQXtoPandas. Name</span>
+<span class="sd">       will be written out in log file.</span>
 
 <span class="sd">    bracket_charge_balance : bool</span>
-<span class="sd">       If set to true, WQXtoPandas will alternately force charge balance on calcium and alkalinity, while the latter is not physically meaningful, this provides a useful estimate of uncertainty for cases with high charge balance errors.  This is most useful for water that is very dilute or with high organic content, such that titrated alkalinity values are artificially high.</span>
+<span class="sd">       If set to true, WQXtoPandas will alternately force charge balance on calcium and</span>
+<span class="sd">       alkalinity, while the latter is not physically meaningful, this provides a useful</span>
+<span class="sd">       estimate of uncertainty for cases with high charge balance errors.  This is most</span>
+<span class="sd">       useful for water that is very dilute or with high organic content, such that</span>
+<span class="sd">       titrated alkalinity values are artificially high.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -253,8 +273,8 @@
                                 <span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultDetectionConditionText&quot;</span>
                             <span class="p">)</span>
                             <span class="c1"># print(&#39;detection=&#39;,detection)</span>
-                            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">measure</span> <span class="o">==</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="n">detection</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
-                                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">measure</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">measure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="n">detection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">measure</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
                                     <span class="n">value</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;ResultMeasureValue&quot;</span><span class="p">)</span>
                                     <span class="c1"># print(&#39;initial value = &#39;,value)</span>
                                     <span class="n">units</span> <span class="o">=</span> <span class="n">measure</span><span class="o">.</span><span class="n">findtext</span><span class="p">(</span><span class="n">WQX</span> <span class="o">+</span> <span class="s2">&quot;MeasureUnitCode&quot;</span><span class="p">)</span>
@@ -265,7 +285,7 @@
                                         <span class="n">nondetect</span> <span class="o">=</span> <span class="kc">True</span>
                                     <span class="k">else</span><span class="p">:</span>
                                         <span class="n">nondetect</span> <span class="o">=</span> <span class="kc">False</span>
-                                <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="n">detection</span> <span class="o">==</span> <span class="kc">None</span><span class="p">):</span>
+                                <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="n">detection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
                                     <span class="c1"># print(&quot;entering nondetect...&quot;)</span>
                                     <span class="n">nondetect</span> <span class="o">=</span> <span class="kc">True</span>
                                     <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
@@ -453,7 +473,7 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">num_Q_tries</span> <span class="o">+=</span> <span class="mi">1</span>
                         <span class="n">dischargeDict</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">if</span> <span class="n">dischargeDict</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">dischargeDict</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">sampleDict</span><span class="p">[</span><span class="s2">&quot;Stream flow, mean. daily&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dischargeDict</span><span class="p">[</span><span class="s2">&quot;discharge&quot;</span><span class="p">]</span>
                     <span class="n">sampleMetaDict</span><span class="p">[</span><span class="s2">&quot;Stream flow, mean. daily&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                         <span class="s2">&quot;units&quot;</span><span class="p">:</span> <span class="s2">&quot;cfs&quot;</span><span class="p">,</span>
@@ -560,7 +580,6 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
             <span class="n">pickleFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">location</span> <span class="o">+</span> <span class="s2">&quot;-Dataframe.pkl&quot;</span><span class="p">)</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">midf</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">pickleFile</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
-            <span class="c1"># midf.to_excel(pickleFile[:-3]+&#39;xls&#39;)</span>
             <span class="n">midx</span> <span class="o">=</span> <span class="n">midf</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
             <span class="k">with</span> <span class="n">ExcelWriter</span><span class="p">(</span><span class="n">pickleFile</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;xlsx&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">sheet</span> <span class="ow">in</span> <span class="n">midx</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
@@ -575,9 +594,9 @@
         <span class="c1"># Process sites through PHREEQC</span>
         <span class="k">if</span> <span class="n">RUN_PHREEQC</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing site water chemisty data in PHREEQC...&quot;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">pnl</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">phreeqc_df</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span>
-                    <span class="n">pnl</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">),</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span>
+            <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">midf</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">phreeqc_df</span> <span class="o">=</span> <span class="n">processMidf</span><span class="p">(</span>
+                    <span class="n">midf</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">),</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span>
                 <span class="p">)</span>
                 <span class="n">phreeqc_site_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                     <span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">location</span> <span class="o">+</span> <span class="s2">&quot;-PHREEQC.pkl&quot;</span>
@@ -588,10 +607,10 @@
                 <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem writing out PHREEQC data file.&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">bracket_charge_balance</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">pnl</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">location</span><span class="p">,</span> <span class="n">midf</span> <span class="ow">in</span> <span class="n">sitesDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="c1"># Force balance on Calcium</span>
-                    <span class="n">phreeqc_df_ca</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span>
-                        <span class="n">pnl</span><span class="p">,</span>
+                    <span class="n">phreeqc_df_ca</span> <span class="o">=</span> <span class="n">processMidf</span><span class="p">(</span>
+                        <span class="n">midf</span><span class="p">,</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">),</span>
                         <span class="n">PHREEQC_PATH</span><span class="p">,</span>
                         <span class="n">DATABASE_FILE</span><span class="p">,</span>
@@ -606,8 +625,8 @@
                     <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
                         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem writing out PHREEQC Ca data file.&quot;</span><span class="p">)</span>
                     <span class="c1"># Force balance on Alkalinity</span>
-                    <span class="n">phreeqc_df_alk</span> <span class="o">=</span> <span class="n">processPanel</span><span class="p">(</span>
-                        <span class="n">pnl</span><span class="p">,</span>
+                    <span class="n">phreeqc_df_alk</span> <span class="o">=</span> <span class="n">processMidf</span><span class="p">(</span>
+                        <span class="n">midf</span><span class="p">,</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sitesdir</span><span class="p">,</span> <span class="n">location</span><span class="p">),</span>
                         <span class="n">PHREEQC_PATH</span><span class="p">,</span>
                         <span class="n">DATABASE_FILE</span><span class="p">,</span>
@@ -931,7 +950,7 @@
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../../../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -950,14 +969,14 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.38 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">olm 0.39 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">olm.USGS.WQXtoPandas</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
     </div>
   </body>
 </html>

@@ -1,20 +1,24 @@
 #! /usr/bin/env python
 
 """
-This script takes an input file in USGS/EPA WQX xml format and creates a multi-indexed Pandas Dataframe that contains
-time series of water quality data and discharge combined with layers that contain meta data for each data value.
-You can call the script from the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas
+This script takes an input file in USGS/EPA WQX xml format and creates a multi-indexed
+Pandas Dataframe that contains time series of water quality data and discharge combined
+with layers that contain meta data for each data value. You can call the script from
+the command line using WQXtoPandas [input WQX start file], or import the runWQXtoPandas
 function for calling within a Python session.
 """
 
 from __future__ import print_function
-import sys, xlrd, os, subprocess, string, requests
+import sys
+import xlrd
+import os
+import requests
 from glob import glob
 from math import ceil
 import pickle as pickle
 from lxml import etree
-from pandas import DataFrame, to_datetime, Series, concat, ExcelWriter
-from olm.USGS.PhreeqcPandas import processPanel
+from pandas import DataFrame, to_datetime, concat, ExcelWriter
+from olm.USGS.PhreeqcPandas import processMidf
 
 # import functions from olm package
 from olm.USGS.siteListExtraction import extractSitesFromXML
@@ -38,25 +42,36 @@ def WQXtoPandas(
     bracket_charge_balance=False,
 ):
     """
-    Processes a WQX xml data file and loads data for each site in the WQX file into Pandas data objects that are
-    stored in directories for each site.
+    Processes a WQX xml data file and loads data for each site in the WQX file into
+    Pandas data objects that are stored in directories for each site.
 
     Parameters
     ----------
     xmlLocation : string
-       Content depends on mode in which WQXtoPandas is run. When fromFile is set to False (input methods 2 or 3 in excel file) this string contains the html for a query to the USGS NWIS database to obtain an xml file of the desired data.  Alternatively, if fromFile is True (input method 1 in excel file) then this string contains the name of the xml file from which to read the data.
+       Content depends on mode in which WQXtoPandas is run. When fromFile is set to
+       False (input methods 2 or 3 in excel file) this string contains the html for
+       a query to the USGS NWIS database to obtain an xml file of the desired data.
+       Alternatively, if fromFile is True (input method 1 in excel file) then this
+       string contains the name of the xml file from which to read the data.
 
     charDict : dict
-       A dictionary containing information about the characteristics to be processed.  Keys are EPA SRS characteristic names. Each entry in the dictionary is a second dictionary that contains keys IsRequired, pcode, fraction, and quality. These entries tell WQXtoPandas whether a given characteristic is required in order to process a sample, and whether a specific pcode, fraction, or quality should be required.  See excel example file for more details.
+       A dictionary containing information about the characteristics to be processed.
+       Keys are EPA SRS characteristic names. Each entry in the dictionary is a second
+       dictionary that contains keys IsRequired, pcode, fraction, and quality. These
+       entries tell WQXtoPandas whether a given characteristic is required in order to
+       process a sample, and whether a specific pcode, fraction, or quality should be
+       required.  See excel example file for more details.
 
     outputPath : string
        path to directory that will contain output directory
 
     fromFile : boolean
-       True if data will be read from an xml file already present on computer.  False if xml file should be queried from NWIS. (Default=False)
+       True if data will be read from an xml file already present on computer.  False
+       if xml file should be queried from NWIS. (Default=False)
 
     outputDirName : string
-       Name of output directory where all site data will be written out. (Default='Processed-Sites')
+       Name of output directory where all site data will be written out.
+       (Default='Processed-Sites')
 
     RUN_PHREEQC : boolean
        Set to true if samples should be processed through PHREEQC. (Default=False)
@@ -69,10 +84,15 @@ def WQXtoPandas(
        Name of log file that WQXtoPandas will create. (Default='Result.log')
 
     START_FILE : string
-       Name of xls start file that was used to run this instance of WQXtoPandas. Name will be written out in log file.
+       Name of xls start file that was used to run this instance of WQXtoPandas. Name
+       will be written out in log file.
 
     bracket_charge_balance : bool
-       If set to true, WQXtoPandas will alternately force charge balance on calcium and alkalinity, while the latter is not physically meaningful, this provides a useful estimate of uncertainty for cases with high charge balance errors.  This is most useful for water that is very dilute or with high organic content, such that titrated alkalinity values are artificially high.
+       If set to true, WQXtoPandas will alternately force charge balance on calcium and
+       alkalinity, while the latter is not physically meaningful, this provides a useful
+       estimate of uncertainty for cases with high charge balance errors.  This is most
+       useful for water that is very dilute or with high organic content, such that
+       titrated alkalinity values are artificially high.
 
     Returns
     -------
@@ -213,8 +233,8 @@ def WQXtoPandas(
                                 WQX + "ResultDetectionConditionText"
                             )
                             # print('detection=',detection)
-                            if not (measure == None) or not (detection == None):
-                                if not (measure == None):
+                            if not (measure is None) or not (detection is None):
+                                if not (measure is None):
                                     value = measure.findtext(WQX + "ResultMeasureValue")
                                     # print('initial value = ',value)
                                     units = measure.findtext(WQX + "MeasureUnitCode")
@@ -225,7 +245,7 @@ def WQXtoPandas(
                                         nondetect = True
                                     else:
                                         nondetect = False
-                                elif not (detection == None):
+                                elif not (detection is None):
                                     # print("entering nondetect...")
                                     nondetect = True
                                     value = None
@@ -413,7 +433,7 @@ def WQXtoPandas(
                     else:
                         num_Q_tries += 1
                         dischargeDict = None
-                if dischargeDict != None:
+                if dischargeDict is not None:
                     sampleDict["Stream flow, mean. daily"] = dischargeDict["discharge"]
                     sampleMetaDict["Stream flow, mean. daily"] = {
                         "units": "cfs",
@@ -520,7 +540,6 @@ def WQXtoPandas(
             print(location)
             pickleFile = os.path.join(sitesdir, location, location + "-Dataframe.pkl")
             pickle.dump(midf, open(pickleFile, "wb"))
-            # midf.to_excel(pickleFile[:-3]+'xls')
             midx = midf.keys()
             with ExcelWriter(pickleFile[:-3] + "xlsx") as writer:
                 for sheet in midx.droplevel(level=1).drop_duplicates().values:
@@ -535,9 +554,9 @@ def WQXtoPandas(
         # Process sites through PHREEQC
         if RUN_PHREEQC:
             print("Processing site water chemisty data in PHREEQC...")
-            for location, pnl in sitesDict.items():
-                phreeqc_df = processPanel(
-                    pnl, os.path.join(sitesdir, location), PHREEQC_PATH, DATABASE_FILE
+            for location, midf in sitesDict.items():
+                phreeqc_df = processMidf(
+                    midf, os.path.join(sitesdir, location), PHREEQC_PATH, DATABASE_FILE
                 )
                 phreeqc_site_file = os.path.join(
                     sitesdir, location, location + "-PHREEQC.pkl"
@@ -548,10 +567,10 @@ def WQXtoPandas(
                 except IOError:
                     print("Problem writing out PHREEQC data file.")
             if bracket_charge_balance:
-                for location, pnl in sitesDict.items():
+                for location, midf in sitesDict.items():
                     # Force balance on Calcium
-                    phreeqc_df_ca = processPanel(
-                        pnl,
+                    phreeqc_df_ca = processMidf(
+                        midf,
                         os.path.join(sitesdir, location),
                         PHREEQC_PATH,
                         DATABASE_FILE,
@@ -566,8 +585,8 @@ def WQXtoPandas(
                     except IOError:
                         print("Problem writing out PHREEQC Ca data file.")
                     # Force balance on Alkalinity
-                    phreeqc_df_alk = processPanel(
-                        pnl,
+                    phreeqc_df_alk = processMidf(
+                        midf,
                         os.path.join(sitesdir, location),
                         PHREEQC_PATH,
                         DATABASE_FILE,
