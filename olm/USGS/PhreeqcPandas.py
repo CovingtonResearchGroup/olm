@@ -457,15 +457,21 @@ def processMidf(
                 )
         # run phreeqc on the input file just created
         phreeqcOutputFile = phreeqc_file_name[:-4] + "out"
-        retcode = subprocess.call(
-            [
-                os.path.join(PHREEQC_PATH, "phreeqc"),
-                phreeqc_file_name,
-                phreeqcOutputFile,
-                DATABASE_FILE,
-            ]
-        )
-        print("PHREEQC return code = ", retcode)
+        try:
+            retcode = subprocess.call(
+                [
+                    os.path.join(PHREEQC_PATH, "phreeqc"),
+                    phreeqc_file_name,
+                    phreeqcOutputFile,
+                    DATABASE_FILE,
+                ]
+            )
+            print("PHREEQC return code = ", retcode)
+        except IOError:
+            print("Problem running PHREEQC. Check path for executable and database.")
+            print("PHREEQC path used was: ", PHREEQC_PATH)
+            print("PHREEQC database path used was: ", DATABASE_FILE)
+            retcode = -1
         if retcode == 0:
             simulationDict = readPhreeqcOutput(phreeqcOutputFile)
         else:
