@@ -3,11 +3,11 @@ from distutils.core import setup
 
 
 setup(name='olm',
-    version='0.38',
+    version='0.39',
     author='Matthew D. Covington',
       author_email = 'mcoving@uark.edu',
     url='https://github.com/speleophysics/olm/',
-      download_url = 'https://github.com/CovingtonResearchGroup/olm/archive/refs/tags/0.38.tar.gz',
+      download_url = 'https://github.com/CovingtonResearchGroup/olm/archive/refs/tags/0.39.tar.gz',
     packages=['olm', 'olm.USGS', 'olm.loggers'],
       install_requires = ['numpy',
                           'scipy',
