@@ -44,3 +44,6 @@ http://www.github.com/speleophysics/olm
 This package is a work in progress and undergoes frequent updates. If you find that something is not working as expected, a potential bug, or have suggestions for features that would be useful to you, feel free to submit such comments as issues on Github. Alternatively, you can also find my contact information on my webpage:
 
 http://www.speleophysics.com
+
+**Tutorials**
+In addition to the documentation, there is a [Github repository containing tutorials](https://github.com/CovingtonResearchGroup/olm-examples) that cover the basic functionality of *Olm*. These example notebooks can be run either locally or on Colab.
