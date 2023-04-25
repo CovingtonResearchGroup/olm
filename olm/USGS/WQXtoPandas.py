@@ -140,7 +140,11 @@ def WQXtoPandas(
             xmlSaveFile = LOG_FILE + splittag + ".xml"
             if os.path.isfile(xmlSaveFile):
                 if restart:
-                    print("Skipping "+ xmlSaveFile + " because it exists and we are running in restart mode.")
+                    print(
+                        "Skipping "
+                        + xmlSaveFile
+                        + " because it exists and we are running in restart mode."
+                    )
                     # If we are restarting a failed run. Skip existing xml files.
                     return -1
                 goodAnswer = False
@@ -181,7 +185,9 @@ def WQXtoPandas(
                             print("Warning: ", r.headers["warning"])
                         ntries += 1
                         if ntries > max_xml_query_tries:
-                            print("Reached maximum number of tries. Stopping this query.")
+                            print(
+                                "Reached maximum number of tries. Stopping this query."
+                            )
                             return -1
                         print("Pausing for one minute and will retry...")
                         time.sleep(60)
@@ -923,14 +929,16 @@ def runWQXtoPandas(startfilename, autosplitnum=20, restart=False):
 # Run as script
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-r','--restart', action='store_true')
-    parser.add_argument('-a', '--autosplitnum')
-    parser.add_argument('startfilename')
+    parser.add_argument("-r", "--restart", action="store_true")
+    parser.add_argument("-a", "--autosplitnum")
+    parser.add_argument("startfilename")
 
     args = parser.parse_args()
     startfilename = args.startfilename
 
     if args.autosplitnum is not None:
-        runWQXtoPandas(startfilename, autosplitnum=args.autosplitnum, restart=args.restart)
+        runWQXtoPandas(
+            startfilename, autosplitnum=args.autosplitnum, restart=args.restart
+        )
     else:
         runWQXtoPandas(startfilename, restart=args.restart)
