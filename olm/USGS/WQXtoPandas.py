@@ -680,7 +680,7 @@ def WQXtoPandas(
     return 0
 
 
-def runWQXtoPandas(startfilename, autosplitnum=20):
+def runWQXtoPandas(startfilename, autosplitnum=20, restart=False):
     """
     Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from
     the USGS NWIS database.
@@ -692,6 +692,8 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
 
     autosplitnum : int (optional)
         The number of sites at which a NWIS query is split into multiple queries. (default=20)
+    restart : bool
+        Whether we are restarting a failed run and want to skip existing xmls. Default = False.
 
     Returns
     -------
@@ -825,6 +827,7 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
                             splittag="." + str(i),
                             LOG_FILE=LOG_FILE,
                             START_FILE=startfilename,
+                            restart=restart,
                         )
             else:
                 # get html for query
@@ -883,6 +886,7 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
                                 DATABASE_FILE=DATABASE_FILE,
                                 LOG_FILE=LOG_FILE,
                                 START_FILE=startfilename,
+                                restart=restart,
                             )
                 else:
                     # get html for query
