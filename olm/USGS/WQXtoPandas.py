@@ -12,6 +12,8 @@ from __future__ import print_function
 import sys
 import xlrd
 import os
+import time
+import argparse
 import requests
 from glob import glob
 from math import ceil
@@ -40,6 +42,8 @@ def WQXtoPandas(
     START_FILE=None,
     splittag="",
     bracket_charge_balance=False,
+    max_xml_query_tries=20,
+    restart=False,
 ):
     """
     Processes a WQX xml data file and loads data for each site in the WQX file into
@@ -93,6 +97,12 @@ def WQXtoPandas(
        estimate of uncertainty for cases with high charge balance errors.  This is most
        useful for water that is very dilute or with high organic content, such that
        titrated alkalinity values are artificially high.
+    max_xml_query_tries : int
+        Maximum number of times to try to retreive an xml file using a query to the Water
+        Quality Portal database. Default = 20.
+    restart : bool
+        Boolean to enable restarting failed run. If set to True, then the function will
+        skip over any queries that already have an xml file created. Default = False.
 
     Returns
     -------
@@ -129,6 +139,9 @@ def WQXtoPandas(
             # check whether we already have a matching xml file
             xmlSaveFile = LOG_FILE + splittag + ".xml"
             if os.path.isfile(xmlSaveFile):
+                if restart:
+                    # If we are restarting a failed run. Skip existing xml files.
+                    return -1
                 goodAnswer = False
                 while not (goodAnswer):
                     answer = input(
@@ -148,16 +161,29 @@ def WQXtoPandas(
                 queryXML = True
             # If we don't have a matching xml file, or we want to obtain a new one, then get the new xml
             if queryXML:
+                gotXML = False
+                ntries = 0
                 print("Obtaining xml file from USGS NWIS using html query...")
                 # parse from html query
-                print("XML query string: ", xmlLocation)
-                r = requests.get(xmlLocation)
-                if not r.ok:
-                    # There is some problem with the xml query
-                    print("Response: ", str(r))
-                    print("Reason: ", r.reason)
-                    print("Warning: ", r.headers["Warning"])
-                # write to xml file
+                while not gotXML and ntries <= max_xml_query_tries:
+                    if ntries > 0:
+                        print("Trying again: try number " + str(ntries))
+                    print("XML query string: ", xmlLocation)
+                    r = requests.get(xmlLocation)
+                    if r.ok:
+                        gotXML = True
+                    else:
+                        # There is some problem with the xml query
+                        print("Response: ", str(r))
+                        print("Reason: ", r.reason)
+                        if "warning" in r.headers:
+                            print("Warning: ", r.headers["warning"])
+                        ntries += 1
+                        if ntries > max_xml_query_tries:
+                            print("Reached maximum number of tries. Stopping this query.")
+                            return -1
+                        print("Pausing for one minute and will retry...")
+                        time.sleep(60)
                 try:
                     # write xml to file
                     xmlFile = open(xmlSaveFile, "w")
@@ -891,10 +917,15 @@ def runWQXtoPandas(startfilename, autosplitnum=20):
 
 # Run as script
 if __name__ == "__main__":
-    # pull in name of start file
-    startfilename = sys.argv[1]
-    if len(sys.argv) > 2:
-        autosplitnum = sys.argv[2]
-        runWQXtoPandas(startfilename, autosplitnum=autosplitnum)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-r','--restart', action='store_true')
+    parser.add_argument('-a', '--autosplitnum')
+    parser.add_argument('startfilename')
+
+    args = parser.parse_args()
+    startfilename = args.startfilename
+
+    if args.autosplitnum is not None:
+        runWQXtoPandas(startfilename, autosplitnum=args.autosplitnum, restart=args.restart)
     else:
-        runWQXtoPandas(startfilename)
+        runWQXtoPandas(startfilename, restart=args.restart)
