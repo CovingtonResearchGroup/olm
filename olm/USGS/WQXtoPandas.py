@@ -140,6 +140,7 @@ def WQXtoPandas(
             xmlSaveFile = LOG_FILE + splittag + ".xml"
             if os.path.isfile(xmlSaveFile):
                 if restart:
+                    print("Skipping "+ xmlSaveFile " because it exists and we are running in restart mode.")
                     # If we are restarting a failed run. Skip existing xml files.
                     return -1
                 goodAnswer = False
