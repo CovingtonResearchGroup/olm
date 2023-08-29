@@ -1,10 +1,11 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
     <title>olm.USGS.DataRetrieval.GetDailyDischarge &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="/default.css" />
@@ -12,6 +13,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
@@ -46,22 +48,22 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="olm-usgs-dataretrieval-getdailydischarge">
-<h1>olm.USGS.DataRetrieval.GetDailyDischarge<a class="headerlink" href="#olm-usgs-dataretrieval-getdailydischarge" title="Permalink to this headline">¶</a></h1>
+  <section id="olm-usgs-dataretrieval-getdailydischarge">
+<h1>olm.USGS.DataRetrieval.GetDailyDischarge<a class="headerlink" href="#olm-usgs-dataretrieval-getdailydischarge" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="olm.USGS.DataRetrieval.GetDailyDischarge">
 <span class="sig-prename descclassname"><span class="pre">olm.USGS.DataRetrieval.</span></span><span class="sig-name descname"><span class="pre">GetDailyDischarge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/DataRetrieval.html#GetDailyDischarge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.DataRetrieval.GetDailyDischarge" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve daily average discharge value from USGS database for given date and USGS site.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>location</strong><span class="classifier">string</span></dt><dd><p>Full USGS site number starting with ‘USGS-‘ or a string that just contains the bare integer number of a USGS site.</p>
+<dt><strong>location</strong><span class="classifier">string</span></dt><dd><p>Full USGS site number starting with ‘USGS-’ or a string that just contains the bare integer number of a USGS site.</p>
 </dd>
 <dt><strong>date</strong><span class="classifier">string</span></dt><dd><p>String containing the date for which discharge will be retrieved.  Should be given as YYYY-MM-DD.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><strong>data</strong><span class="classifier">dict {‘discharge’:float, ‘quality’:string, ‘name’:string}</span></dt><dd><p>Returns a dicionary that contains three items, the average discharge value for the site and date given, the quality code assigned to that discharge value, and the name of the site.</p>
 </dd>
@@ -72,7 +74,7 @@
 <p>Currently hard-wired to retrieve USGS pcode 00060, daily discharge in cfs.</p>
 </dd></dl>
 
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -107,7 +109,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -135,7 +137,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>

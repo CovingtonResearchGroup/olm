@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +12,7 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -497,15 +498,21 @@
                 <span class="p">)</span>
         <span class="c1"># run phreeqc on the input file just created</span>
         <span class="n">phreeqcOutputFile</span> <span class="o">=</span> <span class="n">phreeqc_file_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;out&quot;</span>
-        <span class="n">retcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="s2">&quot;phreeqc&quot;</span><span class="p">),</span>
-                <span class="n">phreeqc_file_name</span><span class="p">,</span>
-                <span class="n">phreeqcOutputFile</span><span class="p">,</span>
-                <span class="n">DATABASE_FILE</span><span class="p">,</span>
-            <span class="p">]</span>
-        <span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC return code = &quot;</span><span class="p">,</span> <span class="n">retcode</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">retcode</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="s2">&quot;phreeqc&quot;</span><span class="p">),</span>
+                    <span class="n">phreeqc_file_name</span><span class="p">,</span>
+                    <span class="n">phreeqcOutputFile</span><span class="p">,</span>
+                    <span class="n">DATABASE_FILE</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC return code = &quot;</span><span class="p">,</span> <span class="n">retcode</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Problem running PHREEQC. Check path for executable and database.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC path used was: &quot;</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PHREEQC database path used was: &quot;</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">)</span>
+            <span class="n">retcode</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="k">if</span> <span class="n">retcode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">simulationDict</span> <span class="o">=</span> <span class="n">readPhreeqcOutput</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -780,7 +787,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -801,7 +808,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>

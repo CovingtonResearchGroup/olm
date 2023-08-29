@@ -1,10 +1,11 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
     <title>olm.USGS.WQXtoPandas.WQXtoPandas &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="/default.css" />
@@ -12,6 +13,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
@@ -46,15 +48,15 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="olm-usgs-wqxtopandas-wqxtopandas">
-<h1>olm.USGS.WQXtoPandas.WQXtoPandas<a class="headerlink" href="#olm-usgs-wqxtopandas-wqxtopandas" title="Permalink to this headline">¶</a></h1>
+  <section id="olm-usgs-wqxtopandas-wqxtopandas">
+<h1>olm.USGS.WQXtoPandas.WQXtoPandas<a class="headerlink" href="#olm-usgs-wqxtopandas-wqxtopandas" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="olm.USGS.WQXtoPandas.WQXtoPandas">
-<span class="sig-prename descclassname"><span class="pre">olm.USGS.WQXtoPandas.</span></span><span class="sig-name descname"><span class="pre">WQXtoPandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlLocation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputPath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputDirName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Processed-Sites'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RUN_PHREEQC</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PHREEQC_PATH</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/mcoving/phreeqc-2.18.0/bin/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DATABASE_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LOG_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Result.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">START_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splittag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bracket_charge_balance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#WQXtoPandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.WQXtoPandas" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">olm.USGS.WQXtoPandas.</span></span><span class="sig-name descname"><span class="pre">WQXtoPandas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xmlLocation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">charDict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputPath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fromFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputDirName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Processed-Sites'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">RUN_PHREEQC</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PHREEQC_PATH</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/mcoving/phreeqc-2.18.0/bin/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DATABASE_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/mcoving/phreeqc-2.18.0/database/phreeqc.dat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LOG_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Result.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">START_FILE</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splittag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bracket_charge_balance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_xml_query_tries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restart</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/olm/USGS/WQXtoPandas.html#WQXtoPandas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#olm.USGS.WQXtoPandas.WQXtoPandas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a WQX xml data file and loads data for each site in the WQX file into
 Pandas data objects that are stored in directories for each site.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>xmlLocation</strong><span class="classifier">string</span></dt><dd><p>Content depends on mode in which WQXtoPandas is run. When fromFile is set to
 False (input methods 2 or 3 in excel file) this string contains the html for
@@ -94,9 +96,15 @@ estimate of uncertainty for cases with high charge balance errors.  This is most
 useful for water that is very dilute or with high organic content, such that
 titrated alkalinity values are artificially high.</p>
 </dd>
+<dt><strong>max_xml_query_tries</strong><span class="classifier">int</span></dt><dd><p>Maximum number of times to try to retreive an xml file using a query to the Water
+Quality Portal database. Default = 20.</p>
+</dd>
+<dt><strong>restart</strong><span class="classifier">bool</span></dt><dd><p>Boolean to enable restarting failed run. If set to True, then the function will
+skip over any queries that already have an xml file created. Default = False.</p>
+</dd>
 </dl>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt>Returns 0 if execution successful.  Returns -1 in case of error.</dt><dd></dd>
 </dl>
@@ -106,7 +114,7 @@ titrated alkalinity values are artificially high.</p>
 <p>Designed to be run through convenience function runWQXtoPandas().</p>
 </dd></dl>
 
-</div>
+</section>
 
 
             <div class="clearer"></div>
@@ -141,7 +149,7 @@ titrated alkalinity values are artificially high.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -169,7 +177,7 @@ titrated alkalinity values are artificially high.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>

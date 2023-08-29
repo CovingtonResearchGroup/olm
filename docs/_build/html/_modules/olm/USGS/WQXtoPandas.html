@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +12,7 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -52,6 +53,8 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">xlrd</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
@@ -80,6 +83,8 @@
     <span class="n">START_FILE</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">splittag</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">max_xml_query_tries</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">restart</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes a WQX xml data file and loads data for each site in the WQX file into</span>
@@ -133,6 +138,12 @@
 <span class="sd">       estimate of uncertainty for cases with high charge balance errors.  This is most</span>
 <span class="sd">       useful for water that is very dilute or with high organic content, such that</span>
 <span class="sd">       titrated alkalinity values are artificially high.</span>
+<span class="sd">    max_xml_query_tries : int</span>
+<span class="sd">        Maximum number of times to try to retreive an xml file using a query to the Water</span>
+<span class="sd">        Quality Portal database. Default = 20.</span>
+<span class="sd">    restart : bool</span>
+<span class="sd">        Boolean to enable restarting failed run. If set to True, then the function will</span>
+<span class="sd">        skip over any queries that already have an xml file created. Default = False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -169,6 +180,14 @@
             <span class="c1"># check whether we already have a matching xml file</span>
             <span class="n">xmlSaveFile</span> <span class="o">=</span> <span class="n">LOG_FILE</span> <span class="o">+</span> <span class="n">splittag</span> <span class="o">+</span> <span class="s2">&quot;.xml&quot;</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">xmlSaveFile</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">restart</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span>
+                        <span class="s2">&quot;Skipping &quot;</span>
+                        <span class="o">+</span> <span class="n">xmlSaveFile</span>
+                        <span class="o">+</span> <span class="s2">&quot; because it exists and we are running in restart mode.&quot;</span>
+                    <span class="p">)</span>
+                    <span class="c1"># If we are restarting a failed run. Skip existing xml files.</span>
+                    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
                 <span class="n">goodAnswer</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">while</span> <span class="ow">not</span> <span class="p">(</span><span class="n">goodAnswer</span><span class="p">):</span>
                     <span class="n">answer</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span>
@@ -188,16 +207,31 @@
                 <span class="n">queryXML</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="c1"># If we don&#39;t have a matching xml file, or we want to obtain a new one, then get the new xml</span>
             <span class="k">if</span> <span class="n">queryXML</span><span class="p">:</span>
+                <span class="n">gotXML</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">ntries</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Obtaining xml file from USGS NWIS using html query...&quot;</span><span class="p">)</span>
                 <span class="c1"># parse from html query</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XML query string: &quot;</span><span class="p">,</span> <span class="n">xmlLocation</span><span class="p">)</span>
-                <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">xmlLocation</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
-                    <span class="c1"># There is some problem with the xml query</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Response: &quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reason: &quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: &quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;Warning&quot;</span><span class="p">])</span>
-                <span class="c1"># write to xml file</span>
+                <span class="k">while</span> <span class="ow">not</span> <span class="n">gotXML</span> <span class="ow">and</span> <span class="n">ntries</span> <span class="o">&lt;=</span> <span class="n">max_xml_query_tries</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ntries</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Trying again: try number &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ntries</span><span class="p">))</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;XML query string: &quot;</span><span class="p">,</span> <span class="n">xmlLocation</span><span class="p">)</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">xmlLocation</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+                        <span class="n">gotXML</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># There is some problem with the xml query</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Response: &quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reason: &quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="s2">&quot;warning&quot;</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: &quot;</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;warning&quot;</span><span class="p">])</span>
+                        <span class="n">ntries</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">if</span> <span class="n">ntries</span> <span class="o">&gt;</span> <span class="n">max_xml_query_tries</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span>
+                                <span class="s2">&quot;Reached maximum number of tries. Stopping this query.&quot;</span>
+                            <span class="p">)</span>
+                            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pausing for one minute and will retry...&quot;</span><span class="p">)</span>
+                        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="c1"># write xml to file</span>
                     <span class="n">xmlFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">xmlSaveFile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
@@ -694,7 +728,7 @@
     <span class="k">return</span> <span class="mi">0</span></div>
 
 
-<div class="viewcode-block" id="runWQXtoPandas"><a class="viewcode-back" href="../../../olm.USGS.WQXtoPandas.runWQXtoPandas.html#olm.USGS.WQXtoPandas.runWQXtoPandas">[docs]</a><span class="k">def</span> <span class="nf">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">autosplitnum</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+<div class="viewcode-block" id="runWQXtoPandas"><a class="viewcode-back" href="../../../olm.USGS.WQXtoPandas.runWQXtoPandas.html#olm.USGS.WQXtoPandas.runWQXtoPandas">[docs]</a><span class="k">def</span> <span class="nf">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">autosplitnum</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Runs WQXtoPandas on an excel format input file where parameters can be set for an automatic query of data from</span>
 <span class="sd">    the USGS NWIS database.</span>
@@ -706,6 +740,8 @@
 
 <span class="sd">    autosplitnum : int (optional)</span>
 <span class="sd">        The number of sites at which a NWIS query is split into multiple queries. (default=20)</span>
+<span class="sd">    restart : bool</span>
+<span class="sd">        Whether we are restarting a failed run and want to skip existing xmls. Default = False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -839,6 +875,7 @@
                             <span class="n">splittag</span><span class="o">=</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
                             <span class="n">LOG_FILE</span><span class="o">=</span><span class="n">LOG_FILE</span><span class="p">,</span>
                             <span class="n">START_FILE</span><span class="o">=</span><span class="n">startfilename</span><span class="p">,</span>
+                            <span class="n">restart</span><span class="o">=</span><span class="n">restart</span><span class="p">,</span>
                         <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># get html for query</span>
@@ -897,6 +934,7 @@
                                 <span class="n">DATABASE_FILE</span><span class="o">=</span><span class="n">DATABASE_FILE</span><span class="p">,</span>
                                 <span class="n">LOG_FILE</span><span class="o">=</span><span class="n">LOG_FILE</span><span class="p">,</span>
                                 <span class="n">START_FILE</span><span class="o">=</span><span class="n">startfilename</span><span class="p">,</span>
+                                <span class="n">restart</span><span class="o">=</span><span class="n">restart</span><span class="p">,</span>
                             <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># get html for query</span>
@@ -931,13 +969,20 @@
 
 <span class="c1"># Run as script</span>
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1"># pull in name of start file</span>
-    <span class="n">startfilename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">autosplitnum</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">autosplitnum</span><span class="o">=</span><span class="n">autosplitnum</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="s2">&quot;--restart&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-a&quot;</span><span class="p">,</span> <span class="s2">&quot;--autosplitnum&quot;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;startfilename&quot;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">startfilename</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">startfilename</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">autosplitnum</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">runWQXtoPandas</span><span class="p">(</span>
+            <span class="n">startfilename</span><span class="p">,</span> <span class="n">autosplitnum</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">autosplitnum</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">restart</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">)</span>
+        <span class="n">runWQXtoPandas</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">restart</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">restart</span><span class="p">)</span>
 </pre></div>
 
             <div class="clearer"></div>
@@ -955,7 +1000,7 @@
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -976,7 +1021,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2014-2022 Matthew Covington.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.4.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
 </html>
