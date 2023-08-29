@@ -3,4 +3,5 @@ lxml
 xlrd
 requests
 pandas
+matplotlib
 
