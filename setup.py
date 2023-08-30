@@ -18,6 +18,7 @@ setup(name='olm-karst',
                           'xlwt',
                           'openpyxl',
                           'requests',
+                          'numpydoc',
       ],
       
     )
