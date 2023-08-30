@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>olm.loggers.loggerScripts &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="/default.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
@@ -49,7 +49,7 @@
 
 <span class="c1">#accepts a list of logger DateFrame objects as first argument</span>
 <div class="viewcode-block" id="joinLoggers"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.joinLoggers">[docs]</a><span class="k">def</span> <span class="nf">joinLoggers</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">interpolate</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Joins the data from a list of logger DataFrame objects together.</span>
 
 <span class="sd">    Parameters</span>
@@ -80,7 +80,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="joinAndResampleLoggers"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.joinAndResampleLoggers">[docs]</a><span class="k">def</span> <span class="nf">joinAndResampleLoggers</span><span class="p">(</span><span class="n">loggerlist</span><span class="p">,</span> <span class="n">interval</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">[],</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Joins and resamples data from DataFrame objects provided in a list.</span>
 
 <span class="sd">    Parameters</span>
@@ -150,7 +150,7 @@
 
 
 <div class="viewcode-block" id="linear_correction"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.linear_correction">[docs]</a><span class="k">def</span> <span class="nf">linear_correction</span><span class="p">(</span><span class="n">rawSeries</span><span class="p">,</span> <span class="n">correctionSeries</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses a Pandas Series of spot measured values to linearly correct time series data from a logger.</span>
 
 <span class="sd">    Parameters</span>
@@ -187,7 +187,7 @@
     <span class="k">return</span> <span class="n">rawSeries</span></div>
 
 <div class="viewcode-block" id="manualCompare"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.manualCompare">[docs]</a><span class="k">def</span> <span class="nf">manualCompare</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">manual</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">ltag</span><span class="o">=</span><span class="s1">&#39;_log&#39;</span><span class="p">,</span> <span class="n">mtag</span><span class="o">=</span><span class="s1">&#39;_man&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to extract logger data with same timestamps as manual measurements for comparison. Both data sets are resampled on an hourly interval to assure alignment of indicies.</span>
 
 <span class="sd">    Parameters</span>
@@ -219,7 +219,7 @@
 
 
 <div class="viewcode-block" id="shiftLogger"><a class="viewcode-back" href="../../../olm.loggers.html#olm.loggers.loggerScripts.shiftLogger">[docs]</a><span class="k">def</span> <span class="nf">shiftLogger</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">shift_to</span><span class="p">,</span> <span class="n">align_at_start</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to shift DataFrame timestamps to start or end at a specific datetime.</span>
 
 <span class="sd">    Parameters</span>
@@ -285,7 +285,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2022 Matthew Covington.
+        &#169; Copyright 2014-2023 Matthew Covington.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>

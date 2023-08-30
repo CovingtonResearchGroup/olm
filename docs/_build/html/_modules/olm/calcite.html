@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>olm.calcite &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="/default.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
     
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -55,7 +55,7 @@
 <span class="c1">#H2OmolPerL = 55.5</span>
 
 <div class="viewcode-block" id="PCO2FromSolution"><a class="viewcode-back" href="../../olm.calcite.PCO2FromSolution.html#olm.calcite.PCO2FromSolution">[docs]</a><span class="k">def</span> <span class="nf">PCO2FromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate partial pressure of CO2 from a solution object.</span>
 
 <span class="sd">    Parameters</span>
@@ -104,7 +104,7 @@
     <span class="k">return</span> <span class="n">pCO2</span></div>
 
 <div class="viewcode-block" id="concCaEqFromSolution"><a class="viewcode-back" href="../../olm.calcite.concCaEqFromSolution.html#olm.calcite.concCaEqFromSolution">[docs]</a><span class="k">def</span> <span class="nf">concCaEqFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the equilibrium concentration of calcium for a solution object.</span>
 
 <span class="sd">    First calculates the partial pressure of CO2, and then uses PCO2 and temperature to calculate equilibrium Ca.</span>
@@ -136,7 +136,7 @@
 
 <span class="c1">#Calculate the equilibrium concentration of Ca using PCO2 and T_C</span>
 <div class="viewcode-block" id="concCaEqFromPCO2"><a class="viewcode-back" href="../../olm.calcite.concCaEqFromPCO2.html#olm.calcite.concCaEqFromPCO2">[docs]</a><span class="k">def</span> <span class="nf">concCaEqFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the equilibrium concentration of calcium using PCO2 and temp.</span>
 
 <span class="sd">    Iteratively solves for the equilibrium concentration of calcium from PCO2 and temp.  First guesses that activity coefficients are 1, and then iterates to solution using scipy&#39;s brentq function.</span>
@@ -205,7 +205,7 @@
 
 <span class="c1">#Calculate the equilibrium concentration of Ca using PCO2 and T_C</span>
 <div class="viewcode-block" id="PCO2EqFromCa"><a class="viewcode-back" href="../../olm.calcite.PCO2EqFromCa.html#olm.calcite.PCO2EqFromCa">[docs]</a><span class="k">def</span> <span class="nf">PCO2EqFromCa</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">I</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the equilibrium PCO2 for a given concentration of calcium and temp.</span>
 
 <span class="sd">    Parameters</span>
@@ -255,7 +255,7 @@
 <span class="c1">#Calculates equilibrium activity of H+ given PCO2</span>
 <span class="c1">#  - uses relaxed charge balance assumption</span>
 <div class="viewcode-block" id="activityHFromPCO2"><a class="viewcode-back" href="../../olm.calcite.activityHFromPCO2.html#olm.calcite.activityHFromPCO2">[docs]</a><span class="k">def</span> <span class="nf">activityHFromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">CaEq</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates equilibrium activity of H+ given PCO2 using relaxed charge balance.</span>
 
 <span class="sd">    Calculates hydrogen activity at equilibrium given PCO2, temperature, and (optionally) equilibrium calcium concentration (mol/L).  Assumes a relaxed charge balance (see 2.18a in Dreybrodt [1988]).  If keyword CaEq is not given, then it is iteratively calculated using concCaEqFromPCO2().</span>
@@ -298,7 +298,7 @@
 
 <span class="c1">#Calculate H+ concentration from Ca and PCO2 assuming relaxed charge balance</span>
 <div class="viewcode-block" id="concHFromCaPCO2Relaxed"><a class="viewcode-back" href="../../olm.calcite.concHFromCaPCO2Relaxed.html#olm.calcite.concHFromCaPCO2Relaxed">[docs]</a><span class="k">def</span> <span class="nf">concHFromCaPCO2Relaxed</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates concentration of H+ from calcium concentration and PCO2 using relaxed charge balance.  Uses equation 2.30a from Dreybrodt (1988).</span>
 
 <span class="sd">    Parameters</span>
@@ -334,7 +334,7 @@
 <span class="c1">#Calculate H+ concentration given Ca and PCO2, makes no relaxed charge</span>
 <span class="c1">#balance assumption</span>
 <div class="viewcode-block" id="solutionFromCaPCO2"><a class="viewcode-back" href="../../olm.calcite.solutionFromCaPCO2.html#olm.calcite.solutionFromCaPCO2">[docs]</a><span class="k">def</span> <span class="nf">solutionFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">per_tol</span> <span class="o">=</span> <span class="mf">0.001</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a solution object from a given concentration of calcium and PCO2.</span>
 
 <span class="sd">    Parameters</span>
@@ -427,7 +427,7 @@
 <span class="c1">#   Ca = Calcium concentration mol/L</span>
 <span class="c1">#   PCO2 = partial pressure of CO2</span>
 <div class="viewcode-block" id="solutionFromCaPCO2Relaxed"><a class="viewcode-back" href="../../olm.calcite.solutionFromCaPCO2Relaxed.html#olm.calcite.solutionFromCaPCO2Relaxed">[docs]</a><span class="k">def</span> <span class="nf">solutionFromCaPCO2Relaxed</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a solution object from a given concentration of calcium, PCO2, and optional temperature.  Uses the approximate charge balance assumption (equation 2.30a in Dreybrodt [1988]).  This is valid when pH &lt; 8, such that CO3- and OH- species can be neglected.</span>
 
 <span class="sd">    Parameters</span>
@@ -488,7 +488,7 @@
 <span class="c1">#   Ca = Calcium concentration mol/L</span>
 <span class="c1">#   pH = partial pressure of CO2</span>
 <div class="viewcode-block" id="solutionFrompHCaRelaxed"><a class="viewcode-back" href="../../olm.calcite.solutionFrompHCaRelaxed.html#olm.calcite.solutionFrompHCaRelaxed">[docs]</a><span class="k">def</span> <span class="nf">solutionFrompHCaRelaxed</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">pH</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="mf">25.</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a solution object from a given concentration of calcium and pH.</span>
 
 <span class="sd">    Creates a solution object from a given concentration of calcium, pH, and optional temperature.  Uses the approximate charge balance assumption (equation 2.30a in Dreybrodt [1988]).  This is valid when pH &lt; 8, such that CO3- and OH- species can be neglected.</span>
@@ -567,7 +567,7 @@
 
 <span class="c1">#Calculate concentration of Carbonic acid in equilibrium with a certain pCO2</span>
 <div class="viewcode-block" id="H2CO3fromPCO2"><a class="viewcode-back" href="../../olm.calcite.H2CO3fromPCO2.html#olm.calcite.H2CO3fromPCO2">[docs]</a><span class="k">def</span> <span class="nf">H2CO3fromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_K</span> <span class="o">=</span> <span class="mf">273.15</span> <span class="o">+</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate concentration of carbonic acid in equilibrium with a certain PCO2.</span>
 
 <span class="sd">    Parameters</span>
@@ -592,7 +592,7 @@
 
 <span class="c1">#Calculate concentration of Carbonic acid in equilibrium with a certain pCO2</span>
 <div class="viewcode-block" id="H2CO3sfromPCO2"><a class="viewcode-back" href="../../olm.calcite.H2CO3sfromPCO2.html#olm.calcite.H2CO3sfromPCO2">[docs]</a><span class="k">def</span> <span class="nf">H2CO3sfromPCO2</span><span class="p">(</span><span class="n">PCO2</span><span class="p">,</span> <span class="n">T_K</span> <span class="o">=</span> <span class="mf">273.15</span> <span class="o">+</span> <span class="mf">25.</span><span class="p">,</span> <span class="n">T_C</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculate concentration of carbonic acid + aqueous CO2 in equilibrium with a certain PCO2. [H2CO3s] = [H2CO3] + [CO2]</span>
 
 <span class="sd">    Parameters</span>
@@ -616,7 +616,7 @@
     <span class="k">return</span> <span class="n">H2CO3s</span></div>
 
 <div class="viewcode-block" id="pwpFromSolution"><a class="viewcode-back" href="../../olm.calcite.pwpFromSolution.html#olm.calcite.pwpFromSolution">[docs]</a><span class="k">def</span> <span class="nf">pwpFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;theory&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the PWP dissolution rate from a solution object.</span>
 
 <span class="sd">    Parameters</span>
@@ -684,7 +684,7 @@
 <span class="c1">#Calculate dissolution rate from PWP equation using an input concentrations</span>
 <span class="c1"># kappa4 is calculated using relation from Dreybrodt&#39;s PASCAL code.</span>
 <div class="viewcode-block" id="pwpRatePascal"><a class="viewcode-back" href="../../olm.calcite.pwpRatePascal.html#olm.calcite.pwpRatePascal">[docs]</a><span class="k">def</span> <span class="nf">pwpRatePascal</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="mf">25.</span><span class="o">+</span><span class="mf">273.15</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates PWP rate using relation for kappa4 found in PASCAL code.</span>
 
 <span class="sd">    Calculates PWP dissolution rate for calcite using the relation for kappa4 that is found in the PASCAL code in Dreybrodt (1988).  This is also given in equation 3 from Buhmann and Dreybrodt (1985), The kinetics of calcite dissolution and precipitation in geologically relevant situations of karst areas: 1. Open system.  They say that it is a fit to the experimental data of Plummer et al. for values of PCO2 &lt; 0.05 atm.</span>
@@ -721,7 +721,7 @@
 <span class="c1"># concentrations kappa4 is calculated using theoretical relation with</span>
 <span class="c1"># a_H equal to current value, as done in Franci&#39;s code</span>
 <div class="viewcode-block" id="pwpRateFranci"><a class="viewcode-back" href="../../olm.calcite.pwpRateFranci.html#olm.calcite.pwpRateFranci">[docs]</a><span class="k">def</span> <span class="nf">pwpRateFranci</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="mf">25.</span><span class="o">+</span><span class="mf">273.15</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates PWP rate using relation for kappa4 used in Franci Gabrovsek&#39;s code.</span>
 
 <span class="sd">    Calculates PWP rate using relation for kappa4 used in Franci Gabrovsek&#39;s speleogenesis code (pers. commun.).  This slight difference was discovered during testing of this code against Franci&#39;s calculations.  In this case, a_H in the equation for kappa4 is the bulk value and not the equilibrium surface value for the given carbonic acid concentration.</span>
@@ -754,7 +754,7 @@
     <span class="k">return</span> <span class="n">R</span></div>
 
 <div class="viewcode-block" id="pwpRateTheory"><a class="viewcode-back" href="../../olm.calcite.pwpRateTheory.html#olm.calcite.pwpRateTheory">[docs]</a><span class="k">def</span> <span class="nf">pwpRateTheory</span><span class="p">(</span><span class="n">a_Ca</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_H</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_HCO3</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">T_K</span><span class="o">=</span><span class="mf">25.</span><span class="o">+</span><span class="mf">273.15</span><span class="p">,</span><span class="n">PCO2</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates PWP rate using theoretical relation for kappa4 from PWP.</span>
 
 <span class="sd">    Calculates PWP rate using theoretical relation for kappa4 from PWP (as described by equation 25 in Plummer, Wigley, and Parkhurst (1978) and in Dreybrodt [1988] equation 6.22b).  In this case, a_H in the equation for kappa4 is the equilibrium surface value for the given carbonic acid concentration, as specified in the theory.</span>
@@ -800,7 +800,7 @@
     <span class="k">return</span> <span class="n">R</span></div>
 
 <div class="viewcode-block" id="pwp_to_mm_yr"><a class="viewcode-back" href="../../olm.calcite.pwp_to_mm_yr.html#olm.calcite.pwp_to_mm_yr">[docs]</a><span class="k">def</span> <span class="nf">pwp_to_mm_yr</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts the PWP dissolution rates from mmol/cm^2/s to mm/year.</span>
 
 <span class="sd">    Parameters</span>
@@ -832,7 +832,7 @@
 <span class="c1">#Functions to calculate rate constants in PWP Equation from Equations</span>
 <span class="c1"># 6.13, 6.14, and 6.22b in Dreybrodt 1988</span>
 <div class="viewcode-block" id="calc_kappa1"><a class="viewcode-back" href="../../olm.calcite.calc_kappa1.html#olm.calcite.calc_kappa1">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa1</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa1 in the PWP equation.</span>
 
 <span class="sd">    Calculates kappa1 in the PWP equation, according to Equation 5 in Plummer, Wigley, and Parkhurst (1978) or Equation 6.13 of Dreybrodt (1988).</span>
@@ -851,7 +851,7 @@
     <span class="k">return</span> <span class="n">kappa1</span></div>
 
 <div class="viewcode-block" id="calc_kappa2"><a class="viewcode-back" href="../../olm.calcite.calc_kappa2.html#olm.calcite.calc_kappa2">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa2</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa2 in the PWP equation.</span>
 
 <span class="sd">    Calculates kappa2 in the PWP equation, according to Equation 7 in Plummer, Wigley, and Parkhurst (1978) or Equation 6.14 of Dreybrodt (1988).</span>
@@ -870,7 +870,7 @@
     <span class="n">kappa2</span> <span class="o">=</span> <span class="mf">10.</span><span class="o">**</span><span class="p">(</span><span class="mf">2.84</span> <span class="o">-</span> <span class="mf">2177.</span><span class="o">/</span><span class="n">T_K</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">kappa2</span></div>
 <div class="viewcode-block" id="calc_kappa3"><a class="viewcode-back" href="../../olm.calcite.calc_kappa3.html#olm.calcite.calc_kappa3">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa3</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa3 in the PWP equation.</span>
 
 <span class="sd">    Calculates kappa3 in the PWP equation, according to Equations 8 and 9 in Plummer, Wigley, and Parkhurst (1978) or Equations 6.14a and 6.14b of Dreybrodt (1988).</span>
@@ -901,7 +901,7 @@
     <span class="k">return</span> <span class="n">kappa3</span></div>
 
 <span class="k">def</span> <span class="nf">calc_kappa4Kaufmann</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa4 in the PWP equation using the relation from Kaufmann and Dreybrodt (2007).</span>
 
 <span class="sd">    Parameters</span>
@@ -929,7 +929,7 @@
 
 
 <div class="viewcode-block" id="calc_kappa4Pascal"><a class="viewcode-back" href="../../olm.calcite.calc_kappa4Pascal.html#olm.calcite.calc_kappa4Pascal">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa4Pascal</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span><span class="n">PCO2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa4 in the PWP equation using fit from Buhmann and Dreybrodt (1985).</span>
 
 <span class="sd">    Parameters</span>
@@ -954,7 +954,7 @@
     <span class="k">return</span> <span class="n">kappa4</span></div>
 
 <div class="viewcode-block" id="calc_kappa4Franci"><a class="viewcode-back" href="../../olm.calcite.calc_kappa4Franci.html#olm.calcite.calc_kappa4Franci">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa4Franci</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span> <span class="n">a_H</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa4 in the PWP equation using approach from Franci&#39;s code.</span>
 
 <span class="sd">    Parameters</span>
@@ -984,7 +984,7 @@
     <span class="k">return</span> <span class="n">kappa4</span></div>
 
 <div class="viewcode-block" id="calc_kappa4Theory"><a class="viewcode-back" href="../../olm.calcite.calc_kappa4Theory.html#olm.calcite.calc_kappa4Theory">[docs]</a><span class="k">def</span> <span class="nf">calc_kappa4Theory</span><span class="p">(</span><span class="n">T_K</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">a_H2CO3s</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates kappa4 in the PWP equation using the theoretical relation for kappa4 from Plummer, Wigley, and Parkhurst (1978) Equation 25 (as described in Dreybrodt [1988] equation 6.22b).  In this case, a_H in the equation for kappa4 is the equilibrium surface value for the given carbonic acid concentration, as specified in the theory.</span>
 
 <span class="sd">    Parameters</span>
@@ -1021,7 +1021,7 @@
 <span class="c1">#Functions for calculating mass action constants given temperature (K)</span>
 <span class="c1"># from Dreybrodt, 1988</span>
 <div class="viewcode-block" id="calc_K_c"><a class="viewcode-back" href="../../olm.calcite.calc_K_c.html#olm.calcite.calc_K_c">[docs]</a><span class="k">def</span> <span class="nf">calc_K_c</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates equilibrium constant for calcite.</span>
 
 <span class="sd">    Calculates equilibrium constant for calcite using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).</span>
@@ -1040,7 +1040,7 @@
     <span class="k">return</span> <span class="n">K_c</span></div>
 
 <div class="viewcode-block" id="calc_K_2"><a class="viewcode-back" href="../../olm.calcite.calc_K_2.html#olm.calcite.calc_K_2">[docs]</a><span class="k">def</span> <span class="nf">calc_K_2</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates mass action constant for dissociation of bicarbonate.</span>
 
 <span class="sd">    Calculates mass action constant for dissociation of bicarbonate using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).</span>
@@ -1059,7 +1059,7 @@
     <span class="k">return</span> <span class="n">K_2</span></div>
 
 <div class="viewcode-block" id="calc_K_1"><a class="viewcode-back" href="../../olm.calcite.calc_K_1.html#olm.calcite.calc_K_1">[docs]</a><span class="k">def</span> <span class="nf">calc_K_1</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates mass action constant for dissociation of carbonic acid.</span>
 
 <span class="sd">    Calculates mass action constant for dissociation of carbonic acid using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).</span>
@@ -1078,7 +1078,7 @@
     <span class="k">return</span> <span class="n">K_1</span></div>
 
 <div class="viewcode-block" id="calc_K_0"><a class="viewcode-back" href="../../olm.calcite.calc_K_0.html#olm.calcite.calc_K_0">[docs]</a><span class="k">def</span> <span class="nf">calc_K_0</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates mass action constant for conversion of CO2 to carbonic acid.</span>
 
 <span class="sd">    Calculates mass action constant for conversion of CO2 to carbonic acid using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).</span>
@@ -1098,7 +1098,7 @@
     <span class="k">return</span> <span class="n">K_0</span></div>
 
 <div class="viewcode-block" id="calc_K_H"><a class="viewcode-back" href="../../olm.calcite.calc_K_H.html#olm.calcite.calc_K_H">[docs]</a><span class="k">def</span> <span class="nf">calc_K_H</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates Henry&#39;s law constant for CO2.</span>
 
 <span class="sd">    Calculates Henry&#39;s law constant for CO2 using equation from Table 2.2 in Dreybrodt (1988), originally reported in Plummer and Busenberg (1982).</span>
@@ -1117,7 +1117,7 @@
     <span class="k">return</span> <span class="n">K_H</span></div>
 
 <div class="viewcode-block" id="calc_K_W"><a class="viewcode-back" href="../../olm.calcite.calc_K_W.html#olm.calcite.calc_K_W">[docs]</a><span class="k">def</span> <span class="nf">calc_K_W</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates mass action constant for dissociation water.</span>
 
 <span class="sd">    Calculates mass action constant for dissociation of water using equation from Table 2.2 in Dreybrodt (1988), originally Harned and Hamer (1933).</span>
@@ -1137,7 +1137,7 @@
     <span class="k">return</span> <span class="n">K_W</span></div>
 
 <div class="viewcode-block" id="calc_k1"><a class="viewcode-back" href="../../olm.calcite.calc_k1.html#olm.calcite.calc_k1">[docs]</a><span class="k">def</span> <span class="nf">calc_k1</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates k1+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</span>
 
 <span class="sd">    Parameters</span>
@@ -1159,7 +1159,7 @@
     <span class="k">return</span> <span class="n">k1</span></div>
 
 <div class="viewcode-block" id="calc_k2"><a class="viewcode-back" href="../../olm.calcite.calc_k2.html#olm.calcite.calc_k2">[docs]</a><span class="k">def</span> <span class="nf">calc_k2</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates k2+ kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</span>
 
 <span class="sd">    Parameters</span>
@@ -1181,7 +1181,7 @@
     <span class="k">return</span> <span class="n">k2</span></div>
 
 <div class="viewcode-block" id="calc_k_neg1"><a class="viewcode-back" href="../../olm.calcite.calc_k_neg1.html#olm.calcite.calc_k_neg1">[docs]</a><span class="k">def</span> <span class="nf">calc_k_neg1</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates k1- kinetic constant from Table 1 of Kaufmann and Dreybrodt (2007).</span>
 
 <span class="sd">    Parameters</span>
@@ -1202,7 +1202,7 @@
     <span class="k">return</span> <span class="n">k_neg1</span></div>
 
 <div class="viewcode-block" id="calc_k_neg2"><a class="viewcode-back" href="../../olm.calcite.calc_k_neg2.html#olm.calcite.calc_k_neg2">[docs]</a><span class="k">def</span> <span class="nf">calc_k_neg2</span><span class="p">(</span><span class="n">T_K</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates k2- kinetic constant from Table 1 in Kaufmann and Dreybrodt (2007).</span>
 
 <span class="sd">    Parameters</span>
@@ -1228,7 +1228,7 @@
 <span class="c1">### Palmer Dissolution</span>
 <span class="c1">#################</span>
 <div class="viewcode-block" id="createPalmerInterpolationFunctions"><a class="viewcode-back" href="../../olm.calcite.createPalmerInterpolationFunctions.html#olm.calcite.createPalmerInterpolationFunctions">[docs]</a><span class="k">def</span> <span class="nf">createPalmerInterpolationFunctions</span><span class="p">(</span><span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates interpolation functions for kinetic rate constants using linear interpolation from Table from Palmer (1991). PCO2 is interpolated linearly in log space, since it spans several orders of magnitude. Primarily intended for internal use by palmerRate() and palmerFromSolution().</span>
 
 <span class="sd">    Parameters</span>
@@ -1269,7 +1269,7 @@
 
 <span class="c1">#Dissolution rate function from Palmer (1991)</span>
 <div class="viewcode-block" id="palmerRate"><a class="viewcode-back" href="../../olm.calcite.palmerRate.html#olm.calcite.palmerRate">[docs]</a><span class="k">def</span> <span class="nf">palmerRate</span><span class="p">(</span><span class="n">T_C</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">Sat_Ratio</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">interp_funcs</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the calcite/limestone dissolution rate given temperature, PCO2, and a calcium saturation ratio using relationship from Palmer (1991).</span>
 
 <span class="sd">    Parameters</span>
@@ -1333,7 +1333,7 @@
     <span class="k">return</span> <span class="mf">10.</span><span class="o">*</span><span class="mf">31.56</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">Sat_Ratio</span><span class="p">)</span><span class="o">**</span><span class="n">n</span><span class="o">/</span><span class="n">rho</span></div>
 
 <div class="viewcode-block" id="palmerFromSolution"><a class="viewcode-back" href="../../olm.calcite.palmerFromSolution.html#olm.calcite.palmerFromSolution">[docs]</a><span class="k">def</span> <span class="nf">palmerFromSolution</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">PCO2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the calcite/limestone dissolution rate from a solution object using relationship from Palmer (1991).</span>
 
 <span class="sd">    Parameters</span>
@@ -1385,7 +1385,7 @@
 
 
 <div class="viewcode-block" id="dissRateFromCaPCO2"><a class="viewcode-back" href="../../olm.calcite.dissRateFromCaPCO2.html#olm.calcite.dissRateFromCaPCO2">[docs]</a><span class="k">def</span> <span class="nf">dissRateFromCaPCO2</span><span class="p">(</span><span class="n">Ca</span><span class="p">,</span> <span class="n">PCO2</span><span class="p">,</span> <span class="n">T_C</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">impure</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">per_tol</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">error</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">error_num</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">Ca_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PCO2_err</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">molL</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">return_samples</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the calcite/limestone dissolution rate from given calcium concentration and PCO2. Optionally uses Monte Carlo error propagation to calculate uncertainty in rates.</span>
 
 <span class="sd">    Parameters</span>
@@ -1584,7 +1584,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2022 Matthew Covington.
+        &#169; Copyright 2014-2023 Matthew Covington.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>

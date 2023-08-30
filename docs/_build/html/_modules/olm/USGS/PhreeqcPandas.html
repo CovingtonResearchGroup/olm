@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>olm.USGS.PhreeqcPandas &#8212; olm 0.39 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="/default.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
     
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
@@ -72,7 +72,7 @@
 
 
 <div class="viewcode-block" id="readPhreeqcOutput"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.readPhreeqcOutput.html#olm.USGS.PhreeqcPandas.readPhreeqcOutput">[docs]</a><span class="k">def</span> <span class="nf">readPhreeqcOutput</span><span class="p">(</span><span class="n">phreeqcOutputFile</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads the output file from a PHREEQC simulation run.</span>
 
 <span class="sd">    Parameters</span>
@@ -172,7 +172,7 @@
     <span class="n">datetext</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">charge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes a PHREEQC input file using the row from a site DataFrame.</span>
 
 <span class="sd">    Parameters</span>
@@ -241,7 +241,7 @@
 <div class="viewcode-block" id="phreeqcRunSetPCO2"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2.html#olm.USGS.PhreeqcPandas.phreeqcRunSetPCO2">[docs]</a><span class="k">def</span> <span class="nf">phreeqcRunSetPCO2</span><span class="p">(</span>
     <span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads a PHREEQC input file, modifies it to a set PCO2 and runs the modified file.</span>
 
 <span class="sd">    Parameters</span>
@@ -328,7 +328,7 @@
 <div class="viewcode-block" id="calciteSaturationAtFixedPCO2"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2.html#olm.USGS.PhreeqcPandas.calciteSaturationAtFixedPCO2">[docs]</a><span class="k">def</span> <span class="nf">calciteSaturationAtFixedPCO2</span><span class="p">(</span>
     <span class="n">logPCO2</span><span class="p">,</span> <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function used in root finding of saturation PCO2.</span>
 
 <span class="sd">    Function is used by findPCO2atCalciteSaturation(). As a stand alone function, it&#39;s</span>
@@ -370,7 +370,7 @@
 <div class="viewcode-block" id="findPCO2atCalciteSaturation"><a class="viewcode-back" href="../../../olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation.html#olm.USGS.PhreeqcPandas.findPCO2atCalciteSaturation">[docs]</a><span class="k">def</span> <span class="nf">findPCO2atCalciteSaturation</span><span class="p">(</span>
     <span class="n">phreeqcInputFile</span><span class="p">,</span> <span class="n">PHREEQC_PATH</span><span class="p">,</span> <span class="n">DATABASE_FILE</span><span class="p">,</span> <span class="n">newInputFile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;atm&quot;</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Finds the PCO2 where calcite would be saturated by modifing PCO2 of a PHREEQC input</span>
 <span class="sd">    file.</span>
 
@@ -419,7 +419,7 @@
     <span class="n">phreeqcDict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">force_balance</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes a WQXtoPandas site multi-indexed DataFrame and runs all samples through</span>
 <span class="sd">    PHREEQC, returning a DataFrame of the outputs that is indexed by date. Will</span>
 <span class="sd">    run automatically within WQXtoPandas if specified in the excel start file.</span>
@@ -622,7 +622,7 @@
     <span class="n">bracket_charge_balance</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">process_regular</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes all data from site directories in PHREEQC.</span>
 
 <span class="sd">    Parameters</span>
@@ -712,7 +712,7 @@
 
 
 <span class="k">def</span> <span class="nf">runPHREEQC</span><span class="p">(</span><span class="n">startfilename</span><span class="p">,</span> <span class="n">process_regular</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Process all samples within a site directory using information from the start file.</span>
 
 <span class="sd">    Parameters</span>
@@ -807,7 +807,7 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2014-2022 Matthew Covington.
+        &#169; Copyright 2014-2023 Matthew Covington.
       Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.2.
     </div>
   </body>
