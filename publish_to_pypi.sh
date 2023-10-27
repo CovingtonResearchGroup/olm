@@ -2,7 +2,9 @@
 
 #
 rm -r ./dist
-python -m build
+rm -r ./build
+#python -m build
+python setup.py sdist bdist_wheel
 twine upload dist/*
 
 
