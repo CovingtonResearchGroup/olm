@@ -399,17 +399,17 @@ class solution(object):
                 else:
                     print("Units for " + ion + " are incorrect, must either be mg/L, mmol/L, or mol/L")
             if T_units == 'C':
-                self.T_C = np.float(T)
+                self.T_C = np.float64(T)
                 self.T_K = CtoK(self.T_C)
             elif T_units == 'K':
-                self.T_K = np.float(T)
+                self.T_K = np.float64(T)
                 self.T_C = KtoC(self.T_K)
             else:
                 print("T_units must equal either C or K.")
             if cond != None:
-                self.cond = np.float(cond)
+                self.cond = np.float64(cond)
             if pH != None:
-                self.pH = np.float(pH)
+                self.pH = np.float64(pH)
             #loop through ions and calculate activities
             for key, ion_dict in self.ions.items():
                 if ('conc_mol' in ion_dict):
