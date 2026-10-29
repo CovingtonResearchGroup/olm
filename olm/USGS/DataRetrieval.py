@@ -160,7 +160,7 @@ def GetNWISSiteData(location):
     return siteDF
 
 def querySiteList(siteList, charList):
-    BASE_URL = 'https://www.waterqualitydata.us/Result/search?'
+    BASE_URL = 'https://www.waterqualitydata.us/data/Result/search?'
     queryText = BASE_URL + 'siteid='
     #add sites to query
     for site in siteList:
