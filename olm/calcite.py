@@ -13,6 +13,13 @@ from scipy.interpolate import LinearNDInterpolator, interp1d
 R = 8.3145 #J / (mol * K)
 #H2OmolPerL = 55.5
 
+def _pandas_array_and_index(obj):
+    """Return a NumPy array and pandas index for series-like objects."""
+    if isinstance(obj, pandas.Series):
+        return obj.to_numpy(), obj.index
+    return np.asarray(obj), None
+
+
 def PCO2FromSolution(sol):
     """
     Calculate partial pressure of CO2 from a solution object.
@@ -50,14 +57,15 @@ def PCO2FromSolution(sol):
         pCO2 = (gamma_H * gamma_HCO3 / (K_1*K_H*(1+1/K_0)) ) * \
                (H_conc**2. + 2.0*H_conc*Ca_conc)
         return pCO2
-    is_series = (type(sol)==pandas.core.series.Series)
+    is_series = isinstance(sol, pandas.Series)
     #or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
-        pCO2 = np.zeros(np.size(sol))
-        for i, single_sol in enumerate(sol):
+        sol_arr, index = _pandas_array_and_index(sol)
+        pCO2 = np.zeros(np.size(sol_arr))
+        for i, single_sol in enumerate(sol_arr):
             pCO2[i] = calc_PCO2(single_sol)
         if is_series:
-            pCO2 = pandas.Series(pCO2,index=sol.index)
+            pCO2 = pandas.Series(pCO2, index=index)
     else:
         pCO2 = calc_PCO2(sol)
     return pCO2
@@ -82,11 +90,12 @@ def concCaEqFromSolution(sol):
     Assumes a H20-CO2-CaCO3 system.
     """
     PCO2 = PCO2FromSolution(sol)
-    is_series = (type(sol)==pandas.core.series.Series)
+    is_series = isinstance(sol, pandas.Series)
     #or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
-        T_C = np.zeros(np.size(sol))
-        for i, single_sol in enumerate(sol):
+        sol_arr, _ = _pandas_array_and_index(sol)
+        T_C = np.zeros(np.size(sol_arr))
+        for i, single_sol in enumerate(sol_arr):
             T_C[i] = single_sol.T_C
     else:
         T_C = sol.T_C
@@ -142,19 +151,32 @@ def concCaEqFromPCO2(PCO2, T_C = 25.):
     guess_Ca = (PCO2*K_1*K_c*K_H/(4.*K_2))**(1./3.)
     maxCa = 10.*guess_Ca
     minCa = guess_Ca
-    is_series = (type(PCO2)==pandas.core.series.Series)
+    is_series = isinstance(PCO2, pandas.Series)
     #or (type(PCO2)==pandas.core.series.TimeSeries)
     if (type(PCO2)==np.ndarray) or is_series:
         #We have a numpy array or pandas Series. Loop through solutions.
-        CaEq = np.zeros(np.size(PCO2))
-        for i, single_PCO2 in enumerate(PCO2):
+        PCO2_arr, index = _pandas_array_and_index(PCO2)
+        T_C_arr = np.asarray(T_C)
+        K_c_arr = np.asarray(K_c)
+        K_2_arr = np.asarray(K_2)
+        K_1_arr = np.asarray(K_1)
+        K_H_arr = np.asarray(K_H)
+        guess_Ca_arr = np.asarray(guess_Ca)
+        CaEq = np.zeros(np.size(PCO2_arr))
+        for i, single_PCO2 in enumerate(PCO2_arr):
             try:
-                CaEq[i] = brentq(Ca_minimize, guess_Ca[i], 10.*guess_Ca[i], args=(T_C[i],K_c[i],K_2[i],K_1[i],K_H[i], PCO2[i]))
+                this_T = T_C_arr[i] if np.size(T_C_arr) > 1 else T_C_arr[0]
+                this_K_c = K_c_arr[i] if np.size(K_c_arr) > 1 else K_c_arr[0]
+                this_K_2 = K_2_arr[i] if np.size(K_2_arr) > 1 else K_2_arr[0]
+                this_K_1 = K_1_arr[i] if np.size(K_1_arr) > 1 else K_1_arr[0]
+                this_K_H = K_H_arr[i] if np.size(K_H_arr) > 1 else K_H_arr[0]
+                this_guess = guess_Ca_arr[i] if np.size(guess_Ca_arr) > 1 else guess_Ca_arr[0]
+                CaEq[i] = brentq(Ca_minimize, this_guess, 10.*this_guess, args=(this_T,this_K_c,this_K_2,this_K_1,this_K_H, PCO2_arr[i]))
             except RuntimeError:
                 CaEq[i] = np.nan
         if is_series:
             #Create a pandas series object from the CaEq array
-            CaEq = pandas.Series(CaEq, index=PCO2.index)
+            CaEq = pandas.Series(CaEq, index=index)
     else: #We only have a single value
         try:
             CaEq = brentq(Ca_minimize, guess_Ca, 10.*guess_Ca, args=(T_C,K_c,K_2,K_1,K_H,PCO2))
@@ -362,18 +384,21 @@ def solutionFromCaPCO2(Ca, PCO2, T_C = 25., per_tol = 0.001, max_iter=1000):
                        [H_new, OH, CO3, HCO3, Ca_in, CO2, H2CO3, H2CO3s],
                        "mol/L", T=T_C_in, pH = pH)
         return sol
-    is_series = (type(Ca)==pandas.core.series.Series)
+    is_series = isinstance(Ca, pandas.Series)
     #or (type(Ca)==pandas.core.series.TimeSeries)
     if (type(Ca)==np.ndarray) or is_series:
-        sol_arr = np.empty(np.size(Ca),dtype=object)
-        for i, this_Ca in enumerate(Ca):
-            if np.size(T_C)==1:
-                sol_arr[i] = calc_sol(Ca[i],PCO2[i],T_C,per_tol=per_tol)
+        Ca_arr, index = _pandas_array_and_index(Ca)
+        PCO2_arr = np.asarray(PCO2)
+        T_arr = np.asarray(T_C)
+        sol_arr = np.empty(np.size(Ca_arr),dtype=object)
+        for i, this_Ca in enumerate(Ca_arr):
+            if np.size(T_arr)==1:
+                sol_arr[i] = calc_sol(Ca_arr[i],PCO2_arr[i],T_arr[0],per_tol=per_tol)
             else:
-                sol_arr[i] = calc_sol(Ca[i],PCO2[i],T_C[i],per_tol=per_tol)
+                sol_arr[i] = calc_sol(Ca_arr[i],PCO2_arr[i],T_arr[i],per_tol=per_tol)
 
         if is_series:
-            sol_arr = pandas.Series(sol_arr,index=Ca.index)
+            sol_arr = pandas.Series(sol_arr,index=index)
         return sol_arr
     else:
         return calc_sol(Ca,PCO2,T_C,per_tol=per_tol)
@@ -507,17 +532,24 @@ def solutionFrompHCaRelaxed(Ca, pH, T_C = 25.):
     K_1 = calc_K_1(T_K)
     #equation 2.30a with chi-->infty
     HCO3 = 2.*Ca + H
-    is_series = (type(Ca)==pandas.core.series.Series)
+    is_series = isinstance(Ca, pandas.Series)
     #or (type(Ca)==pandas.core.series.TimeSeries)
     if (type(Ca)==np.ndarray) or is_series:
-        sol_arr = np.empty(np.size(Ca),dtype=object)
-        for i in range(np.size(Ca)):
-            if np.size(T_C)==1:
-                sol_arr[i] = solution(['H', 'Ca', 'HCO3', 'H2CO3', 'H2CO3s', 'CO3'], [H[i], Ca[i], HCO3[i], H2CO3[i], H2CO3s[i], CO3[i]], units="mol/L", T=T_C, T_units='C', pH=pH[i])
-            else:
-                sol_arr[i] = solution(['H', 'Ca', 'HCO3', 'H2CO3', 'H2CO3s', 'CO3'], [H[i], Ca[i], HCO3[i], H2CO3[i], H2CO3s[i], CO3[i]], units="mol/L", T=T_C[i], T_units='C', pH=pH[i])
+        Ca_arr, index = _pandas_array_and_index(Ca)
+        H_arr = np.asarray(H)
+        pH_arr = np.asarray(pH)
+        HCO3_arr = np.asarray(HCO3)
+        H2CO3_arr = np.asarray(H2CO3)
+        H2CO3s_arr = np.asarray(H2CO3s)
+        CO3_arr = np.asarray(CO3)
+        T_arr = np.asarray(T_C)
+        sol_arr = np.empty(np.size(Ca_arr),dtype=object)
+        for i in range(np.size(Ca_arr)):
+            this_T = T_arr[i] if np.size(T_arr) > 1 else T_arr[0]
+            this_pH = pH_arr[i] if np.size(pH_arr) > 1 else pH_arr[0]
+            sol_arr[i] = solution(['H', 'Ca', 'HCO3', 'H2CO3', 'H2CO3s', 'CO3'], [H_arr[i], Ca_arr[i], HCO3_arr[i], H2CO3_arr[i], H2CO3s_arr[i], CO3_arr[i]], units="mol/L", T=this_T, T_units='C', pH=this_pH)
         if is_series:
-            sol_arr = pandas.Series(sol_arr, index=Ca.index)
+            sol_arr = pandas.Series(sol_arr, index=index)
         return sol_arr
     else:
         sol = solution(['H', 'Ca', 'HCO3', 'H2CO3', 'H2CO3s', 'CO3'], [H, Ca, HCO3, H2CO3, H2CO3s, CO3], units="mol/L", T=T_C, T_units='C', pH=pH)
@@ -628,14 +660,17 @@ def pwpFromSolution(sol, PCO2=None, method='theory'):
         else:
             print("Not all necessary ions are present in the solution object.")
             return -1
-    is_series = (type(sol)==pandas.core.series.Series)
+    is_series = isinstance(sol, pandas.Series)
     #or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
-        rate_arr = np.empty(np.size(sol))
-        for i, this_sol in enumerate(sol):
-            rate_arr[i] = calc_rate(this_sol,PCO2[i])
+        sol_arr, index = _pandas_array_and_index(sol)
+        PCO2_arr = np.asarray(PCO2)
+        rate_arr = np.empty(np.size(sol_arr))
+        for i, this_sol in enumerate(sol_arr):
+            this_PCO2 = PCO2_arr[i] if np.size(PCO2_arr) > 1 else PCO2_arr[0]
+            rate_arr[i] = calc_rate(this_sol,this_PCO2)
         if is_series:
-            rate_arr = pandas.Series(rate_arr, index=sol.index)
+            rate_arr = pandas.Series(rate_arr, index=index)
         return rate_arr
     else:
         return calc_rate(sol,PCO2)
@@ -742,17 +777,31 @@ def pwpRateTheory(a_Ca=0., a_H2CO3s=0., a_H=0., a_HCO3=0., T_K=25.+273.15,PCO2=0
     kappa1 = calc_kappa1(T_K)
     kappa2 = calc_kappa2(T_K)
     kappa3 = calc_kappa3(T_K)
-    is_series = (type(a_Ca)==pandas.core.series.Series)
+    is_series = isinstance(a_Ca, pandas.Series)
     #or (type(a_Ca)==pandas.core.series.TimeSeries)
     if (type(a_Ca)==np.ndarray) or is_series:
         #We have a numpy array or pandas Series. Loop through and calculate rates individually
-        R = np.zeros(np.size(a_Ca))
+        a_Ca_arr, index = _pandas_array_and_index(a_Ca)
+        a_H_arr = np.asarray(a_H)
+        a_H2CO3s_arr = np.asarray(a_H2CO3s)
+        a_HCO3_arr = np.asarray(a_HCO3)
+        T_K_arr = np.asarray(T_K)
+        PCO2_arr = np.asarray(PCO2)
+        kappa1_arr = np.asarray(kappa1)
+        kappa2_arr = np.asarray(kappa2)
+        kappa3_arr = np.asarray(kappa3)
+        R = np.zeros(np.size(a_Ca_arr))
         for i, single_R in enumerate(R):
-            kappa4 = calc_kappa4Theory(T_K[i], PCO2[i], a_H2CO3s[i])
-            R[i] = kappa1[i]*a_H[i] + kappa2[i]*a_H2CO3s[i] + kappa3[i] - kappa4*a_Ca[i]*a_HCO3[i]
+            this_T_K = T_K_arr[i] if np.size(T_K_arr) > 1 else T_K_arr[0]
+            this_PCO2 = PCO2_arr[i] if np.size(PCO2_arr) > 1 else PCO2_arr[0]
+            this_a_H = a_H_arr[i] if np.size(a_H_arr) > 1 else a_H_arr[0]
+            this_a_H2CO3s = a_H2CO3s_arr[i] if np.size(a_H2CO3s_arr) > 1 else a_H2CO3s_arr[0]
+            this_a_HCO3 = a_HCO3_arr[i] if np.size(a_HCO3_arr) > 1 else a_HCO3_arr[0]
+            kappa4 = calc_kappa4Theory(this_T_K, this_PCO2, this_a_H2CO3s)
+            R[i] = kappa1_arr[i]*this_a_H + kappa2_arr[i]*this_a_H2CO3s + kappa3_arr[i] - kappa4*a_Ca_arr[i]*this_a_HCO3
         if is_series:
             #Create a pandas series object from the R array
-            R = pandas.Series(R, index=a_Ca.index)
+            R = pandas.Series(R, index=index)
     else:
         kappa4 = calc_kappa4Theory(T_K, PCO2, a_H2CO3s)
         R = kappa1*a_H + kappa2*a_H2CO3s + kappa3 - kappa4*a_Ca*a_HCO3
@@ -1322,20 +1371,22 @@ def palmerFromSolution(sol, PCO2=np.array([]), rho=2.6, impure=True):
         return palmerRate(T, PCO2, Sat_Ratio, rho, impure=impure, interp_funcs=interp_funcs)
 
     #Loop through series or array if we have one
-    is_series = (type(sol)==pandas.core.series.Series)
+    is_series = isinstance(sol, pandas.Series)
     #or (type(sol)==pandas.core.series.TimeSeries)
     if (type(sol)==np.ndarray) or is_series:
-        rate_arr = np.empty(np.size(sol))
-        for i, this_sol in enumerate(sol):
-            if np.size(PCO2)==0:
+        sol_arr, index = _pandas_array_and_index(sol)
+        PCO2_arr = np.asarray(PCO2)
+        rate_arr = np.empty(np.size(sol_arr))
+        for i, this_sol in enumerate(sol_arr):
+            if np.size(PCO2_arr)==0:
                 this_PCO2 = PCO2FromSolution(this_sol)
-            elif np.size(PCO2)==1:
-                this_PCO2 = PCO2
-            elif np.size(PCO2)>1:
-                this_PCO2=PCO2[i]
+            elif np.size(PCO2_arr)==1:
+                this_PCO2 = PCO2_arr[0]
+            else:
+                this_PCO2 = PCO2_arr[i]
             rate_arr[i] = calc_rate(this_sol, this_PCO2, rho)
         if is_series:
-            rate_arr = pandas.Series(rate_arr, index=sol.index)
+            rate_arr = pandas.Series(rate_arr, index=index)
         return rate_arr
     else:
         if np.size(PCO2)==0:
@@ -1429,40 +1480,43 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
     if not molL:
         #convert Ca units to mol/L
         Ca = mgL_to_molL(Ca, 'Ca')
-    is_series = (type(Ca)==pandas.core.series.Series)
+    is_series = isinstance(Ca, pandas.Series)
     if (type(Ca)==np.ndarray) or is_series:
-        rate_arr = np.empty(np.size(Ca), dtype=float)
+        Ca_arr, index = _pandas_array_and_index(Ca)
+        PCO2_arr = np.asarray(PCO2)
+        T_arr = np.asarray(T_C)
+        rate_arr = np.empty(np.size(Ca_arr), dtype=float)
         if error:
             if return_samples:
-                err_arr = np.empty((np.size(Ca),error_num), dtype=float)
+                err_arr = np.empty((np.size(Ca_arr),error_num), dtype=float)
             elif confidence == 0:
-                err_arr = np.empty(np.size(Ca), dtype=float)
+                err_arr = np.empty(np.size(Ca_arr), dtype=float)
             else:
-                err_arr = np.empty((np.size(Ca),2), dtype=float)
-        for i, this_Ca in enumerate(Ca):
+                err_arr = np.empty((np.size(Ca_arr),2), dtype=float)
+        for i, this_Ca in enumerate(Ca_arr):
             if (i % 100)==0:
                 print( "Solution number "+str(i))
-                #print( "Ca = ", this_Ca, "  CO2 = ", PCO2[i], '  Ca_err = ', Ca_err[i], ' CO2_err = ', PCO2_err)
+                #print( "Ca = ", this_Ca, "  CO2 = ", PCO2_arr[i], '  Ca_err = ', Ca_err[i], ' CO2_err = ', PCO2_err)
             #Create solution object
-            if np.size(T_C)==1:
-                sol = solutionFromCaPCO2(this_Ca, PCO2[i], T_C=T_C, per_tol=per_tol)
+            if np.size(T_arr)==1:
+                sol = solutionFromCaPCO2(this_Ca, PCO2_arr[i], T_C=T_arr[0], per_tol=per_tol)
             else:
-                sol = solutionFromCaPCO2(this_Ca, PCO2[i], T_C=T_C[i], per_tol=per_tol)
+                sol = solutionFromCaPCO2(this_Ca, PCO2_arr[i], T_C=T_arr[i], per_tol=per_tol)
             #Calculate dissolution rate
             if method=='PWP':
-                rate_arr[i] = pwp_to_mm_yr(pwpFromSolution(sol, PCO2=PCO2[i]), rho=rho)
+                rate_arr[i] = pwp_to_mm_yr(pwpFromSolution(sol, PCO2=PCO2_arr[i]), rho=rho)
             elif method=='Palmer':
-                rate_arr[i] = palmerFromSolution(sol, PCO2[i],rho=rho,impure=impure)
+                rate_arr[i] = palmerFromSolution(sol, PCO2_arr[i],rho=rho,impure=impure)
             else:
                 print("Invalid method keyword!")
                 return None
             #Monte Carlo error estimate on rate
             if error:
-                if np.size(T_C)==1:
+                if np.size(T_arr)==1:
                     if confidence == 0 and not return_samples:
-                        err_arr[i] = err_est(this_Ca, PCO2[i], T_C, Ca_err, PCO2_err)
+                        err_arr[i] = err_est(this_Ca, PCO2_arr[i], T_arr[0], Ca_err, PCO2_err)
                     else:
-                        err_arr[i,:] = err_est(this_Ca, PCO2[i], T_C, Ca_err, PCO2_err)
+                        err_arr[i,:] = err_est(this_Ca, PCO2_arr[i], T_arr[0], Ca_err, PCO2_err)
                 else:
                     if np.size(Ca_err)==1:
                         this_Ca_err = Ca_err
@@ -1473,20 +1527,20 @@ def dissRateFromCaPCO2(Ca, PCO2, T_C, rho=2.6, method=None, impure=True, per_tol
                     else:
                         this_PCO2_err = PCO2_err[i]
                     if confidence == 0 and not return_samples:
-                        err_arr[i] = err_est(this_Ca, PCO2[i], T_C[i], this_Ca_err, this_PCO2_err)
+                        err_arr[i] = err_est(this_Ca, PCO2_arr[i], T_arr[i], this_Ca_err, this_PCO2_err)
                     else:
-                        err_arr[i,:] = err_est(this_Ca, PCO2[i], T_C[i], this_Ca_err, this_PCO2_err)
+                        err_arr[i,:] = err_est(this_Ca, PCO2_arr[i], T_arr[i], this_Ca_err, this_PCO2_err)
 
         if is_series:
-            rate_arr = pandas.Series(rate_arr, index=Ca.index)
+            rate_arr = pandas.Series(rate_arr, index=index)
             if error:
                 if confidence==0 and not return_samples:
-                    err_arr = pandas.Series(err_arr, index=Ca.index, dtype=float)
+                    err_arr = pandas.Series(err_arr, index=index, dtype=float)
                 else:
                     if return_samples:
-                        err_arr = pandas.DataFrame(err_arr, index=Ca.index, dtype=float)
+                        err_arr = pandas.DataFrame(err_arr, index=index, dtype=float)
                     else:
-                        err_arr = pandas.DataFrame(err_arr, index=Ca.index, columns=['lower','upper'], dtype=float)
+                        err_arr = pandas.DataFrame(err_arr, index=index, columns=['lower','upper'], dtype=float)
         if error:
             return rate_arr, err_arr
         else:
