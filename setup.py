@@ -3,7 +3,7 @@ from distutils.core import setup
 
 
 setup(name='olm-karst',
-    version='0.40',
+    version='0.41',
     author='Matthew D. Covington',
       author_email = 'mcoving@uark.edu',
     url='https://github.com/speleophysics/olm/',
